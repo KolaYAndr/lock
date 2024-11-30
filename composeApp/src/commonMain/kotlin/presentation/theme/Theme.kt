@@ -1,4 +1,4 @@
-package ui.theme
+package presentation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -65,11 +65,15 @@ fun LockBoxTheme(
         Footnote,
         CaptionLarge,
         CaptionMedium,
-        CaptionSmall
+        CaptionSmall,
     )
 
     val lockBoxShape = LockBoxShape(
-        roundedCornerShape
+        roundedCornerShape8 = roundedCornerShape8,
+        roundedCornerShape10 = roundedCornerShape10,
+        roundedCornerShape24 = roundedCornerShape24,
+        roundedCornerShape999 = roundedCornerShape999,
+        circleShape = circleShape,
     )
 
     CompositionLocalProvider(

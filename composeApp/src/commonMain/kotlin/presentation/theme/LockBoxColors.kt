@@ -1,4 +1,4 @@
-package ui.theme
+package presentation.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
