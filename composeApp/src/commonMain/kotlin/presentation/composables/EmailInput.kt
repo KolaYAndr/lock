@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,8 +31,11 @@ fun EmailInput(
     email: String,
     onValueChange: (String) -> Unit,
     onClearText: () -> Unit,
+    isError: Boolean,
+    errorText: String,
     interactionSource: MutableInteractionSource,
     keyboardActions: KeyboardActions,
+    keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
 ) {
     BasicInput(
@@ -40,10 +43,9 @@ fun EmailInput(
         onValueChange = onValueChange::invoke,
         placeholderText = stringResource(R.string.email_placeholder),
         visualTransformation = VisualTransformation.None,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
-        ),
+        keyboardOptions = keyboardOptions,
+        isError = isError,
+        errorText = errorText,
         keyboardActions = keyboardActions,
         trailingContent = {
             AnimatedVisibility(email.isNotEmpty()) {
@@ -74,6 +76,9 @@ fun PreviewEmail() {
             onClearText = { value = "" },
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(),
+            isError = false,
+            keyboardOptions = KeyboardOptions(),
+            errorText = "",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)

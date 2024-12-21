@@ -3,12 +3,25 @@ package org.homesharing.lockbox
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.di.provideAppModules
+import org.homesharing.lockbox.di.provideViewModelModule
+import org.homesharing.lockbox.navigation.BottomNavigation
+import org.homesharing.lockbox.navigation.Navigation
+import org.homesharing.lockbox.navigation.routes.topLevelRoutes
+import org.koin.compose.KoinApplication
+import presentation.theme.LockBoxTheme
 
 private const val SPLASHSCREEN_TIME = 3_000L
 
@@ -25,13 +38,38 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            App()
+            val navController = rememberNavController()
+            KoinApplication(
+                application = {
+                    modules(provideAppModules + provideViewModelModule)
+                }
+            ) {
+                LockBoxTheme {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            val navBackStackEntry by navController.currentBackStackEntryAsState()
+                            BottomNavigation(
+                                topLevelRoutes = topLevelRoutes,
+                                navBackStackEntry = navBackStackEntry
+                            ) { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        }
+                    ) { paddingValues ->
+                        Navigation(
+                            navController = navController,
+                            modifier = Modifier.padding(paddingValues)
+                        )
+                    }
+                }
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }

@@ -20,7 +20,7 @@ import org.homesharing.lockbox.data.network.token.model.TokenInfo
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 
 private const val CLIENT_TIMEOUT = 5_000L
-private const val BASE_ENDPOINT = "api.lockboxes.ru"
+private const val BASE_ENDPOINT = "https://api.lockboxes.ru"
 
 private const val CLIENT_ID = "client_id"
 private const val PUBLIC_CLIENT = "public_client"

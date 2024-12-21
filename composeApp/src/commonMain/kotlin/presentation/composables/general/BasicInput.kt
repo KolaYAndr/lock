@@ -1,5 +1,6 @@
 package presentation.composables.general
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -10,15 +11,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import presentation.theme.LockBoxTheme
@@ -31,7 +30,7 @@ fun BasicInput(
     trailingContent: @Composable RowScope.() -> Unit,
     visualTransformation: VisualTransformation,
     interactionSource: MutableInteractionSource,
-    isError: Boolean = false,
+    isError: Boolean,
     errorText: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions(),
@@ -80,18 +79,20 @@ fun BasicInput(
             },
             textStyle = LockBoxTheme.typography.bodyLarge,
             shape = LockBoxTheme.shape.roundedCornerShape8,
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = LockBoxTheme.colors.grey100,
-                backgroundColor = LockBoxTheme.colors.grey800,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = LockBoxTheme.colors.grey100,
+                unfocusedTextColor = LockBoxTheme.colors.grey100,
+                disabledTextColor = LockBoxTheme.colors.grey100,
                 cursorColor = LockBoxTheme.colors.white,
-                disabledIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = LockBoxTheme.colors.grey800,
+                unfocusedContainerColor = LockBoxTheme.colors.grey800,
+                disabledContainerColor = LockBoxTheme.colors.grey800,
                 focusedIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
             ),
             modifier = borderModifier.fillMaxWidth()
         )
-        if (isError) {
+        AnimatedVisibility(isError) {
             Text(
                 text = errorText,
                 style = LockBoxTheme.typography.footnote,

@@ -5,8 +5,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -33,8 +33,11 @@ fun PasswordInput(
     isSeen: Boolean,
     onSeenChange: () -> Unit,
     onClearText: () -> Unit,
+    isError: Boolean,
+    errorText: String,
     interactionSource: MutableInteractionSource,
     keyboardActions: KeyboardActions,
+    keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
 ) {
     BasicInput(
@@ -42,10 +45,7 @@ fun PasswordInput(
         value = password,
         onValueChange = onValueChange::invoke,
         visualTransformation = if (isSeen) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ),
+        keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         trailingContent = {
             IconButton(onClick = onSeenChange::invoke) {
@@ -73,6 +73,8 @@ fun PasswordInput(
             }
         },
         placeholderText = stringResource(R.string.password_placeholder),
+        isError = isError,
+        errorText = errorText,
         modifier = modifier
     )
 }
@@ -93,7 +95,10 @@ fun PreviewPasswordInput() {
             onClearText = { value = "" },
             modifier = Modifier.fillMaxWidth(),
             interactionSource = interactionSource,
-            keyboardActions = KeyboardActions()
+            isError = false,
+            errorText = "",
+            keyboardActions = KeyboardActions(),
+            keyboardOptions = KeyboardOptions()
         )
     }
 }

@@ -20,6 +20,7 @@ fun LockBoxTheme(
         Grey800,
         Grey900,
         Grey950,
+        Grey1000,
         Red50,
         Red100,
         Red200,

@@ -2,9 +2,10 @@ package presentation.composables
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -16,20 +17,20 @@ import presentation.theme.LockBoxTheme
 
 @Composable
 fun CloseRoundButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    OutlinedButton(
+    Button(
         modifier = modifier
             .size(24.dp),
         onClick = onClick::invoke,
         shape = LockBoxTheme.shape.circleShape,
-        colors = ButtonDefaults.outlinedButtonColors(
-            backgroundColor = LockBoxTheme.colors.grey800,
-            contentColor = LockBoxTheme.colors.grey500
+        colors = ButtonDefaults.buttonColors(
+            containerColor = LockBoxTheme.colors.grey800
         ),
         contentPadding = PaddingValues(0.dp)
     ) {
         Icon(
             painter = painterResource(R.drawable.close),
             contentDescription = stringResource(R.string.close),
+            tint = LockBoxTheme.colors.grey500,
             modifier = Modifier.size(16.dp)
         )
     }

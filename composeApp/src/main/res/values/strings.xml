@@ -15,4 +15,25 @@
     <string name="privacy_policy">политикой конфиденциальности</string>
     <string name="no_account">Нет аккаунта?</string>
     <string name="register">Зарегистрируйтесь</string>
+    <string name="password_recovery">Восстановление пароля</string>
+    <string name="type_in_email">Введите электронную почту</string>
+    <string name="step_of">Шаг %1$d из %2$d</string>
+    <string name="promise_to_text_only_important_info">Будем писать только по важным вопросам</string>
+    <string name="Register">Регистрация</string>
+    <string name="confirm_email">Подтвердите почту</string>
+    <string name="have_an_account">Есть аккаунт?</string>
+    <string name="log_in">Войдите</string>
+    <string name="check_your_email">Проверьте почту</string>
+    <string name="link_sent_to_email">Мы отправили вам ссылку для подтверждения по указанному адресу:</string>
+    <string name="change">(Изм.)</string>
+    <string name="before_sending_one_more_time">Отправить ещё раз (%1$d:%2$d)</string>
+    <string name="send_one_more_time">Отправить ещё раз</string>
+    <string name="help">Помощь</string>
+    <string name="create_password">Придумайте пароль</string>
+    <string name="password_confirmation">Подтверждение пароля</string>
+    <string name="set_password">Установите пароль</string>
+    <string name="we_will_send_recovery_link">Мы отправим на нее ссылку для восстановления пароля</string>
+    <string name="create_new_password">Придумайте новый пароль</string>
+    <string name="main">Главная</string>
+    <string name="menu">Меню</string>
 </resources>
