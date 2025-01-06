@@ -6,6 +6,7 @@ import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordViewModel
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.account.AccountViewModel
+import org.homesharing.lockbox.presentation.security.SecurityViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -16,4 +17,5 @@ val provideViewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::AccountViewModel)
+    viewModelOf(::SecurityViewModel)
 }
