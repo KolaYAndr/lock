@@ -28,7 +28,7 @@ fun PolicyAndConditions(modifier: Modifier = Modifier) {
 
         pushStringAnnotation(tag = CONDITION_TAG, annotation = "") //Todo
         withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
-            append(stringResource(R.string.service_contidions))
+            append(stringResource(R.string.with_service_conditions))
         }
         pop()
 
@@ -36,7 +36,7 @@ fun PolicyAndConditions(modifier: Modifier = Modifier) {
 
         pushStringAnnotation(tag = POLICY_TAG, annotation = "") //Todo
         withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
-            append(stringResource(R.string.privacy_policy))
+            append(stringResource(R.string.with_privacy_policy))
         }
         pop()
     }

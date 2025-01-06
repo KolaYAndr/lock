@@ -20,9 +20,7 @@ fun SignUpCard(
     onPasswordSeenChange: () -> Unit,
     onPasswordRepeatedSeenChange: () -> Unit,
     onConfirmEmail: () -> Unit,
-    onToEmailInputStep: () -> Unit,
-    onToEmailConfirmationStep: () -> Unit,
-    onToPasswordInputStep: () -> Unit,
+    onToStep: (SignUpStep) -> Unit,
     onSetPassword: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -32,9 +30,9 @@ fun SignUpCard(
         CardTopRow(
             onBackPressed = {
                 when (signUpUiState.signUpStep) {
-                    SignUpStep.EmailConfirmation -> onToEmailInputStep()
+                    SignUpStep.EmailConfirmation -> onToStep(SignUpStep.EmailInput)
                     SignUpStep.EmailInput -> onSignIn()
-                    SignUpStep.PasswordInput -> onToEmailConfirmationStep()
+                    SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailConfirmation)
                 }
             },
             onDismiss = { onDismiss() },
@@ -53,16 +51,16 @@ fun SignUpCard(
                 EmailConfirmationStep(
                     email = signUpUiState.email,
                     onConfirmEmail = onConfirmEmail::invoke,
-                    onChangeClick = onToEmailInputStep::invoke
+                    onChangeClick = { onToStep(SignUpStep.EmailConfirmation) }
                 )
-                onToPasswordInputStep()
+                onToStep(SignUpStep.PasswordInput)
             }
             SignUpStep.EmailInput -> {
                 EmailInputStep(
                     onSignIn = onSignIn::invoke,
                     onConfirmEmail = {
                         onConfirmEmail()
-                        onToEmailConfirmationStep()
+                        onToStep(SignUpStep.EmailConfirmation)
                     },
                     email = signUpUiState.email,
                     onEmailChange = onEmailChange::invoke
@@ -90,5 +88,5 @@ fun SignUpCard(
 @Composable
 fun PreviewSingUp() {
     val state = SignUpUiState()
-    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }

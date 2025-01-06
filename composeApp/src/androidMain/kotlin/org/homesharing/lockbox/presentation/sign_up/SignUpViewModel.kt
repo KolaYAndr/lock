@@ -48,22 +48,8 @@ class SignUpViewModel: ViewModel() {
         }
     }
 
-    fun toPasswordInputStep() {
-        _uiState.update {
-            it.copy(signUpStep = SignUpStep.PasswordInput)
-        }
-    }
-
-    fun toEmailConfirmationStep() {
-        _uiState.update {
-            it.copy(signUpStep = SignUpStep.EmailConfirmation)
-        }
-    }
-
-    fun toEmailInputStep() {
-        _uiState.update {
-            it.copy(signUpStep = SignUpStep.EmailInput)
-        }
+    fun toStep(step: SignUpStep) {
+        _uiState.update { it.copy(signUpStep = step) }
     }
 }
 

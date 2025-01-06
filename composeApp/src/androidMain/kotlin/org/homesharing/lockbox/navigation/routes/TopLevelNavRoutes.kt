@@ -10,15 +10,7 @@ sealed class Routes {
     data object Main : Routes()
 
     @Serializable
-    data object Menu : Routes()
-}
-
-sealed class MainRoutes {
-    @Serializable
-    data object Main
-
-    @Serializable
-    data object Login
+    data object Settings : Routes()
 }
 
 data class TopLevelRoute<T : Any>(
@@ -29,5 +21,5 @@ data class TopLevelRoute<T : Any>(
 
 internal val topLevelRoutes = listOf(
     TopLevelRoute(R.string.main, Routes.Main, R.drawable.house),
-    TopLevelRoute(R.string.menu, Routes.Menu, R.drawable.menu)
+    TopLevelRoute(R.string.settings, Routes.Settings, R.drawable.settings)
 )

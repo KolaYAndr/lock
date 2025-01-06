@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordCard
-import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordStep
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordViewModel
 import org.homesharing.lockbox.presentation.sign_in.SignInCard
 import org.homesharing.lockbox.presentation.sign_in.SignInViewModel
@@ -87,13 +86,12 @@ fun LoginScreen(
                         val forgotPasswordState = forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
                         ForgotPasswordCard(
                             forgotPasswordUiState = forgotPasswordState.value,
-                            onSignIn = onSignIn::invoke,
+                            title = stringResource(R.string.password_recovery),
+                            onLastBackPress = onSignIn::invoke,
                             onDismiss = onDismiss::invoke,
                             onEmailChange = forgotPasswordViewModel::onChangeEmail,
                             onConfirmEmail = forgotPasswordViewModel::confirmEmail,
-                            onToEmailInputStep = forgotPasswordViewModel::toEmailInputStep,
-                            onToPasswordInputStep = forgotPasswordViewModel::toPasswordInputStep,
-                            onToEmailConfirmationStep = forgotPasswordViewModel::toEmailConfirmationStep,
+                            onToStep = forgotPasswordViewModel::toStep,
                             onPasswordChange = forgotPasswordViewModel::onChangePassword,
                             onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
                             onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
@@ -129,9 +127,7 @@ fun LoginScreen(
                             onDismiss = onDismiss::invoke,
                             onEmailChange = signUpViewModel::onChangeEmail,
                             onConfirmEmail = signUpViewModel::confirmEmail,
-                            onToEmailInputStep = signUpViewModel::toEmailInputStep,
-                            onToPasswordInputStep = signUpViewModel::toPasswordInputStep,
-                            onToEmailConfirmationStep = signUpViewModel::toEmailConfirmationStep,
+                            onToStep = signUpViewModel::toStep,
                             onPasswordChange = signUpViewModel::onChangePassword,
                             onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
                             onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,

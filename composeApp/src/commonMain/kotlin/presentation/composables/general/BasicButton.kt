@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,14 +15,20 @@ import androidx.compose.ui.unit.dp
 import presentation.theme.LockBoxTheme
 
 @Composable
-fun BasicButton(onClick: () -> Unit, text: String, paddingValues: PaddingValues = PaddingValues(8.dp), modifier: Modifier = Modifier) {
+fun BasicButton(
+    onClick: () -> Unit,
+    text: String,
+    paddingValues: PaddingValues = PaddingValues(8.dp),
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = LockBoxTheme.colors.green500,
+        contentColor = LockBoxTheme.colors.grey900
+    ),
+    modifier: Modifier = Modifier,
+) {
     Button(
         onClick = onClick::invoke,
         shape = LockBoxTheme.shape.roundedCornerShape8,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = LockBoxTheme.colors.green500,
-            contentColor = LockBoxTheme.colors.grey900
-        ),
+        colors = colors,
         contentPadding = paddingValues,
         modifier = modifier
     ) {
@@ -40,7 +47,9 @@ fun PreviewButton() {
         BasicButton(
             onClick = { },
             text = "Voyti",
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
         )
     }
 }

@@ -178,7 +178,7 @@ fun SignInCard(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
             Text(
-                text = stringResource(R.string.no_account),
+                text = stringResource(R.string.no_account_question),
                 color = LockBoxTheme.colors.grey500,
                 style = LockBoxTheme.typography.subHeadlineMedium,
                 modifier = Modifier.padding(vertical = 14.dp)

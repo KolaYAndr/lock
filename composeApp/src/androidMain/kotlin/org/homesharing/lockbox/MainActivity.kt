@@ -2,12 +2,16 @@ package org.homesharing.lockbox
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -37,6 +41,13 @@ class MainActivity : ComponentActivity() {
             keepSplash = false
         }
 
+        val systemBarStyle = SystemBarStyle.dark(ContextCompat.getColor(this, R.color.Grey950))
+
+        enableEdgeToEdge(
+            statusBarStyle = systemBarStyle,
+            navigationBarStyle = systemBarStyle
+        )
+
         setContent {
             val navController = rememberNavController()
             KoinApplication(
@@ -46,7 +57,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 LockBoxTheme {
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize(),
                         bottomBar = {
                             val navBackStackEntry by navController.currentBackStackEntryAsState()
                             BottomNavigation(
@@ -65,7 +77,9 @@ class MainActivity : ComponentActivity() {
                     ) { paddingValues ->
                         Navigation(
                             navController = navController,
-                            modifier = Modifier.padding(paddingValues)
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .background(LockBoxTheme.colors.grey950)
                         )
                     }
                 }

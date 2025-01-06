@@ -54,7 +54,7 @@ fun EmailConfirmationStep(
         Text(
             style = LockBoxTheme.typography.subHeadlineLarge,
             color = LockBoxTheme.colors.white,
-            text = stringResource(R.string.change),
+            text = stringResource(R.string.change_short),
             modifier = Modifier
                 .minimumInteractiveComponentSize()
                 .clickable { onChangeClick() }

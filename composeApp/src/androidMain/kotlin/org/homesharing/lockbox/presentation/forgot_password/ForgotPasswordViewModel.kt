@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.homesharing.lockbox.presentation.sign_up.SignUpStep
 
 class ForgotPasswordViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<ForgotPasswordUiState> =
@@ -49,24 +50,9 @@ class ForgotPasswordViewModel : ViewModel() {
         }
     }
 
-    fun toPasswordInputStep() {
-        _uiState.update {
-            it.copy(step = ForgotPasswordStep.PasswordInput)
-        }
+    fun toStep(step: ForgotPasswordStep) {
+        _uiState.update { it.copy(step = step) }
     }
-
-    fun toEmailConfirmationStep() {
-        _uiState.update {
-            it.copy(step = ForgotPasswordStep.EmailConfirmation)
-        }
-    }
-
-    fun toEmailInputStep() {
-        _uiState.update {
-            it.copy(step = ForgotPasswordStep.EmailInput)
-        }
-    }
-
 }
 
 data class ForgotPasswordUiState(

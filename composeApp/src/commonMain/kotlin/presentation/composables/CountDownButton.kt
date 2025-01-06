@@ -25,7 +25,11 @@ private val standardTime = TimeUnit.SECONDS.toMillis(3)
 //private val standardTime = TimeUnit.MINUTES.toMillis(1)
 
 @Composable
-fun CountDownButton(onClick: () -> Unit, startingTime: Long = standardTime, modifier: Modifier = Modifier) {
+fun CountDownButton(
+    onClick: () -> Unit,
+    startingTime: Long = standardTime,
+    modifier: Modifier = Modifier,
+) {
     var isEnabled by remember { mutableStateOf(false) }
     var timeData by remember { mutableLongStateOf(startingTime) }
     val timer = remember {
