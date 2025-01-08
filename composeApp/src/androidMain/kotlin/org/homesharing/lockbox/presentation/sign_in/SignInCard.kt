@@ -105,7 +105,8 @@ fun SignInCard(
             keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                showKeyboardOnFocus = true
             ),
             modifier = Modifier.padding(top = 6.dp, start = 16.dp, end = 16.dp)
         )
@@ -135,7 +136,8 @@ fun SignInCard(
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                showKeyboardOnFocus = true
             ),
             modifier = Modifier
                 .focusRequester(focusRequester)

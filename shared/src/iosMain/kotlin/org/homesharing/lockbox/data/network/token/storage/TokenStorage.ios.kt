@@ -1,12 +1,10 @@
 package org.homesharing.lockbox.data.network.token.storage
 
 import platform.Foundation.NSUserDefaults
-import platform .Foundation.stringForKey
-import platform.Foundation.setObject
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class TokenStorage {
-    private val userDefaults = NSUserDefaults.initWithSuiteName(TOKEN_STORAGE_NAME)
+    private val userDefaults = NSUserDefaults.standardUserDefaults
 
     actual fun getAccessToken(): String? {
         return userDefaults.stringForKey(ACCESS_TOKEN_NAME)

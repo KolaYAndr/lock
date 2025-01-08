@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
@@ -40,9 +42,8 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(LockBoxTheme.colors.grey950)
-            .then(modifier)
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -76,14 +77,16 @@ fun LoginScreen(
                 .minimumInteractiveComponentSize()
         )
 
-        if (state.showCart) {
+        if (state.showModal) {
             BasicBottomSheet(
                 onDismissRequest = onDismiss::invoke,
             ) {
                 when (state.loginType) {
                     LoginType.ForgotPassword -> {
                         val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
-                        val forgotPasswordState = forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
+                        val forgotPasswordState =
+                            forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
+
                         ForgotPasswordCard(
                             forgotPasswordUiState = forgotPasswordState.value,
                             title = stringResource(R.string.password_recovery),
@@ -103,6 +106,7 @@ fun LoginScreen(
                     LoginType.SignIn -> {
                         val signInViewModel = koinViewModel<SignInViewModel>()
                         val signInState = signInViewModel.uiState.collectAsStateWithLifecycle()
+
                         SignInCard(
                             signInUiState = signInState.value,
                             onDismiss = onDismiss::invoke,
@@ -121,6 +125,7 @@ fun LoginScreen(
                     LoginType.SignUp -> {
                         val signUpViewModel = koinViewModel<SignUpViewModel>()
                         val signUpState = signUpViewModel.uiState.collectAsStateWithLifecycle()
+
                         SignUpCard(
                             signUpUiState = signUpState.value,
                             onSignIn = onSignIn::invoke,
@@ -138,5 +143,18 @@ fun LoginScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreen() {
+    LockBoxTheme {
+        val uiState = LoginUiState()
+        LoginScreen(
+            state = uiState,
+            {}, {}, {}, {}, {},
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }

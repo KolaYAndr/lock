@@ -133,51 +133,56 @@ fun AccountScreen(
         BasicDialog(
             onDismiss = onHideDialog::invoke,
         ) {
-            Text(
-                text = stringResource(R.string.delete_account_question),
-                style = LockBoxTheme.typography.titleMedium,
-                color = LockBoxTheme.colors.grey100
-            )
-
-            Text(
-                text = stringResource(R.string.not_cancellable_action),
-                style = LockBoxTheme.typography.bodyMedium,
-                color = LockBoxTheme.colors.grey500,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Row(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-            ) {
-                Text(
-                    text = stringResource(R.string.cancel),
-                    style = LockBoxTheme.typography.headlineMedium,
-                    color = LockBoxTheme.colors.grey100,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .clickable { onHideDialog() }
-                )
-
-                BasicButton(
-                    onClick = onDelete::invoke,
-                    text = stringResource(R.string.delete),
-                    paddingValues = PaddingValues(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = LockBoxTheme.colors.red600,
-                        contentColor = LockBoxTheme.colors.grey100
-                    )
-                )
-            }
+            DialogContent(onHideDialog, onDelete)
         }
     }
 }
 
 @Composable
-internal fun ContactInfo(
+private fun DialogContent(onHideDialog: () -> Unit, onDelete: () -> Unit) {
+    Text(
+        text = stringResource(R.string.delete_account_question),
+        style = LockBoxTheme.typography.titleMedium,
+        color = LockBoxTheme.colors.grey100
+    )
+
+    Text(
+        text = stringResource(R.string.not_cancellable_action),
+        style = LockBoxTheme.typography.bodyMedium,
+        color = LockBoxTheme.colors.grey500,
+        modifier = Modifier.padding(top = 8.dp)
+    )
+
+    Row(
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+    ) {
+        Text(
+            text = stringResource(R.string.cancel),
+            style = LockBoxTheme.typography.headlineMedium,
+            color = LockBoxTheme.colors.grey100,
+            modifier = Modifier
+                .padding(10.dp)
+                .clickable { onHideDialog() }
+        )
+
+        BasicButton(
+            onClick = onDelete::invoke,
+            text = stringResource(R.string.delete),
+            paddingValues = PaddingValues(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = LockBoxTheme.colors.red600,
+                contentColor = LockBoxTheme.colors.grey100
+            )
+        )
+    }
+}
+
+@Composable
+private fun ContactInfo(
     title: String,
     subtitle: String,
     showChangeText: Boolean,

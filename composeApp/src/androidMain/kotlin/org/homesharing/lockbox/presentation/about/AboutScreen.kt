@@ -83,52 +83,44 @@ fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { uriHandler.openUri("https://t.me/@korolev_2512") },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.user_agreement),
-                    style = LockBoxTheme.typography.headlineLarge,
-                    color = LockBoxTheme.colors.white,
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                )
-
-                Icon(
-                    painter = painterResource(R.drawable.arrow_right),
-                    tint = LockBoxTheme.colors.grey500,
-                    contentDescription = null,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-            }
+            Agreement(
+                onClick = { uriHandler.openUri("https://t.me/@korolev_2512") },
+                text = stringResource(R.string.user_agreement),
+                modifier = Modifier.fillMaxWidth()
+            )
 
             BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { uriHandler.openUri("https://t.me/@korolev_2512") },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.privacy_policy),
-                    style = LockBoxTheme.typography.headlineLarge,
-                    color = LockBoxTheme.colors.white,
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                )
-
-                Icon(
-                    painter = painterResource(R.drawable.arrow_right),
-                    tint = LockBoxTheme.colors.grey500,
-                    contentDescription = null,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-            }
+            Agreement(
+                onClick = { uriHandler.openUri("https://t.me/@korolev_2512") },
+                text = stringResource(R.string.privacy_policy),
+                modifier = Modifier.fillMaxWidth()
+            )
         }
+    }
+}
+
+@Composable
+private fun Agreement(onClick: () -> Unit, text: String, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = text,
+            style = LockBoxTheme.typography.headlineLarge,
+            color = LockBoxTheme.colors.white,
+            modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
+        )
+
+        Icon(
+            painter = painterResource(R.drawable.arrow_right),
+            tint = LockBoxTheme.colors.grey500,
+            contentDescription = null,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+        )
     }
 }
 

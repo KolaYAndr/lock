@@ -179,7 +179,7 @@ fun SettingsScreen(
 }
 
 @Composable
-internal fun SettingsProperty(
+private fun SettingsProperty(
     property: SettingsProperty,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,

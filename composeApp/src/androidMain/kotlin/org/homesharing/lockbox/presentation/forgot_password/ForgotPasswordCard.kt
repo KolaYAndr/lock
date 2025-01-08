@@ -81,7 +81,21 @@ fun ForgotPasswordCard(
 
 @Preview
 @Composable
-fun PreviewForgotPassword() {
+fun PreviewForgotPasswordEmailInput() {
     val state = ForgotPasswordUiState()
+    ForgotPasswordCard(state, "", {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+}
+
+@Preview
+@Composable
+fun PreviewForgotPasswordPasswordInput() {
+    val state = ForgotPasswordUiState(step = ForgotPasswordStep.PasswordInput)
+    ForgotPasswordCard(state, "", {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+}
+
+@Preview
+@Composable
+fun PreviewForgotPasswordEmailConfirmation() {
+    val state = ForgotPasswordUiState(step = ForgotPasswordStep.EmailConfirmation)
     ForgotPasswordCard(state, "", {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }

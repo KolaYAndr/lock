@@ -12,31 +12,31 @@ class LoginViewModel: ViewModel() {
 
     fun showCard() {
         _uiState.update {
-            LoginUiState(showCart = true, loginType = LoginType.SignIn)
+            LoginUiState(showModal = true, loginType = LoginType.SignIn)
         }
     }
 
     fun signIn() {
         _uiState.update {
-            LoginUiState(showCart = true, loginType = LoginType.SignIn)
+            LoginUiState(showModal = true, loginType = LoginType.SignIn)
         }
     }
 
     fun signUp() {
         _uiState.update {
-            LoginUiState(showCart = true, loginType = LoginType.SignUp)
+            LoginUiState(showModal = true, loginType = LoginType.SignUp)
         }
     }
 
     fun forgotPassword() {
         _uiState.update {
-            LoginUiState(showCart = true, loginType = LoginType.ForgotPassword)
+            LoginUiState(showModal = true, loginType = LoginType.ForgotPassword)
         }
     }
 
     fun hideCard() {
         _uiState.update {
-            LoginUiState(showCart = false)
+            LoginUiState(showModal = false)
         }
     }
 }
@@ -48,6 +48,6 @@ sealed class LoginType {
 }
 
 data class LoginUiState(
-    val showCart: Boolean = false,
+    val showModal: Boolean = false,
     val loginType: LoginType = LoginType.SignIn
 )

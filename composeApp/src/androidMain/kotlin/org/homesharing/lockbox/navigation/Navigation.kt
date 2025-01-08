@@ -1,11 +1,14 @@
 package org.homesharing.lockbox.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +20,8 @@ import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.account.AccountViewModel
+import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
+import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.security.SecurityScreen
@@ -25,6 +30,22 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
+
+private const val ANIMATION_DURATION = 300
+private val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
+    {
+        slideOutOfContainer(
+            towards = AnimatedContentTransitionScope.SlideDirection.End,
+            animationSpec = tween(durationMillis = ANIMATION_DURATION)
+        )
+    }
+private val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
+    {
+        slideIntoContainer(
+            towards = AnimatedContentTransitionScope.SlideDirection.Start,
+            animationSpec = tween(durationMillis = ANIMATION_DURATION)
+        )
+    }
 
 @Composable
 fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -35,6 +56,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
             composable<MainRoutes.Login> {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state = loginViewModel.uiState.collectAsStateWithLifecycle()
+
                 LoginScreen(
                     state = state.value,
                     onDismiss = loginViewModel::hideCard,
@@ -53,6 +75,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
             composable<SettingsRoutes.Settings> {
                 val settingsViewModel = koinViewModel<SettingsViewModel>()
                 val settingsState = settingsViewModel.uiState.collectAsStateWithLifecycle()
+
                 SettingsScreen(
                     settingsUiState = settingsState.value,
                     onLogOut = {
@@ -66,16 +89,23 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 )
             }
 
-            composable<SettingsRoutes.AboutApp> {
+            composable<SettingsRoutes.AboutApp>(
+                enterTransition = enterAnimation,
+                exitTransition = exitAnimation,
+            ) {
                 AboutScreen(
                     onNavBack = { navController.navigateUp() },
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
-            composable<SettingsRoutes.Security> {
+            composable<SettingsRoutes.Security>(
+                enterTransition = enterAnimation,
+                exitTransition = exitAnimation,
+            ) {
                 val securityViewModel = koinViewModel<SecurityViewModel>()
                 val securityUiState = securityViewModel.uiState.collectAsStateWithLifecycle()
+
                 SecurityScreen(
                     securityUiState = securityUiState.value,
                     onNavBack = { navController.navigateUp() },
@@ -89,22 +119,13 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
 
             navigation<SettingsRoutes.Account>(
                 startDestination = AccountRoutes.Account,
-                enterTransition = {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(durationMillis = 300)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(durationMillis = 300)
-                    )
-                }
+                enterTransition = enterAnimation,
+                exitTransition = exitAnimation,
             ) {
                 composable<AccountRoutes.Account> {
                     val accountViewModel = koinViewModel<AccountViewModel>()
                     val accountUiState = accountViewModel.uiState.collectAsStateWithLifecycle()
+
                     AccountScreen(
                         accountUiState = accountUiState.value,
                         onNavigateBack = { navController.navigateUp() },
@@ -127,7 +148,19 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 }
 
                 composable<AccountRoutes.ChangeEmail> {
+                    val changeEmailViewModel = koinViewModel<ChangeEmailViewModel>()
+                    val changeEmailUiState =
+                        changeEmailViewModel.uiState.collectAsStateWithLifecycle()
 
+                    ChangeEmailScreen(
+                        uiState = changeEmailUiState.value,
+                        onNavBack = { navController.navigateUp() },
+                        onToStep = changeEmailViewModel::toStep,
+                        onEmailChange = changeEmailViewModel::onEmailChange,
+                        changeEmail = changeEmailViewModel::changeEmail,
+                        onDone = { navController.navigate(SettingsRoutes.Account) },
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
 
                 composable<AccountRoutes.ChangePhoneNumber> {

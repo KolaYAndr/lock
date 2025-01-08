@@ -61,4 +61,18 @@
     <string name="deletion_in_couple_of_days">Аккаунт будет полностью удалён в течение нескольких дней. Вы сможете создать новый аккаунт в любой момент.</string>
     <string name="change_password">Изменить пароль</string>
     <string name="password_changed">Пароль изменён</string>
+    <string name="change_email">Изменить электронную почту</string>
+    <string name="want_to_change">Хотите изменить почту?</string>
+    <string name="new_email_will_be_used_for">Новый адрес электронной почты будет использоваться для входа в аккаунт и важных уведомелний</string>
+    <string name="back">Назад</string>
+    <string name="input_new_email">Введите новую электронную почту</string>
+    <string name="indicate_email_for_use">Укажите адрес, который вы будете использовать для входа и получения уведомлений.</string>
+    <string name="new_email">Новая электронная почта</string>
+    <string name="change_mail">Изменить почту</string>
+    <string name="confirm_new_email">Подтвердите новый адрес</string>
+    <string name="we_sent_message_to_indicated_email">Мы отправили письмо на указанный адрес. Перейдите по ссылке в письме, чтобы завершить изменение.</string>
+    <string name="open_mail">Открыть почту</string>
+    <string name="send_again">Отправить снова</string>
+    <string name="email_successfully_changed">Почта успешно изменена</string>
+    <string name="now_you_can_use_new_email">Теперь вы можете использовать новый адрес для входа и получения уведомлений.</string>
 </resources>
