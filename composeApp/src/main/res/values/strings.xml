@@ -62,7 +62,7 @@
     <string name="change_password">Изменить пароль</string>
     <string name="password_changed">Пароль изменён</string>
     <string name="change_email">Изменить электронную почту</string>
-    <string name="want_to_change">Хотите изменить почту?</string>
+    <string name="want_to_change_email_question">Хотите изменить почту?</string>
     <string name="new_email_will_be_used_for">Новый адрес электронной почты будет использоваться для входа в аккаунт и важных уведомелний</string>
     <string name="back">Назад</string>
     <string name="input_new_email">Введите новую электронную почту</string>
@@ -75,4 +75,17 @@
     <string name="send_again">Отправить снова</string>
     <string name="email_successfully_changed">Почта успешно изменена</string>
     <string name="now_you_can_use_new_email">Теперь вы можете использовать новый адрес для входа и получения уведомлений.</string>
+    <string name="change_phone_number">Изменить номер телефона</string>
+    <string name="want_to_change_phone_number_question">Хотите изменить телефон?</string>
+    <string name="new_phone_number_will_be_used_for">Новый телефон будет использоваться для восстановления доступа и получения уведомлений</string>
+    <string name="phone_number_placeholder">+7 (ххх) ххх-хх-хх</string>
+    <string name="add_new_phone_number_suggestion">Добавьте номер телефона</string>
+    <string name="indicate_phone_number_for_use">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений.</string>
+    <string name="add_phone_number">Добавить номер телефона</string>
+    <string name="phone_number_successfully_changed">Телефон успешно добавлен</string>
+    <string name="now_you_can_use_new_phone_number">Теперь вы можете использовать новый телефон для восстановления доступа и получения уведомлений.</string>
+    <string name="pin_hint">_</string>
+    <string name="confirm_phone_number">Подтвердите номер телефона</string>
+    <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер.</string>
+    <string name="confirm">Подтвердить</string>
 </resources>

@@ -104,6 +104,7 @@ fun SignInCard(
             errorText = emailErrorText,
             keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
                 showKeyboardOnFocus = true
@@ -135,6 +136,7 @@ fun SignInCard(
                 }
             ),
             keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
                 showKeyboardOnFocus = true

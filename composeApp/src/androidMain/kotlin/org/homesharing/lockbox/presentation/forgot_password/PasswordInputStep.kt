@@ -94,6 +94,7 @@ fun PasswordInputStep(
             }
         ),
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),

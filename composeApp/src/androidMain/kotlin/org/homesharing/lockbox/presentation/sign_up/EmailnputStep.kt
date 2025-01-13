@@ -62,6 +62,7 @@ fun EmailInputStep(
         onClearText = { onEmailChange("") },
         interactionSource = emailInteractionSource,
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done
         ),

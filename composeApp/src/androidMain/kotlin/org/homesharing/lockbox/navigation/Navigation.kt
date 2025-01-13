@@ -20,6 +20,8 @@ import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.account.AccountViewModel
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScreen
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
@@ -164,7 +166,21 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 }
 
                 composable<AccountRoutes.ChangePhoneNumber> {
+                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
+                    val addPhoneUiState =
+                        addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
 
+                    AddPhoneNumberScreen(
+                        uiState = addPhoneUiState.value,
+                        onNavBack = { navController.navigateUp() },
+                        onToStep = addPhoneNumberViewModel::toStep,
+                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
+                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
+                        onDone = { navController.navigate(SettingsRoutes.Account) },
+                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
+                        onConfirm = addPhoneNumberViewModel::confirmCode,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }

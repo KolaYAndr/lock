@@ -80,6 +80,5 @@ fun PreviewEmail() {
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-
     }
 }

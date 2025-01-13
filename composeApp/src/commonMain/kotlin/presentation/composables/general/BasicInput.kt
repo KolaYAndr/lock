@@ -32,8 +32,8 @@ fun BasicInput(
     interactionSource: MutableInteractionSource,
     isError: Boolean,
     errorText: String = "",
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions(),
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,
 ) {
     Column(

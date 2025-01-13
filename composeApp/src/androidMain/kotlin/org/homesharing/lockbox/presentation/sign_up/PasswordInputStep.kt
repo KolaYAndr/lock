@@ -63,6 +63,7 @@ fun PasswordInputStep(
         errorText = "",
         keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next
         ),
@@ -94,6 +95,7 @@ fun PasswordInputStep(
             }
         ),
         keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),

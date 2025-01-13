@@ -191,8 +191,8 @@ private fun ContactInfo(
 ) {
     Row(
         modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {

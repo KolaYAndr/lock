@@ -16,9 +16,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -57,13 +60,13 @@ fun ChangeEmailScreen(
             ChangeEmailStep.ConfirmNewEmail -> {
                 ConfirmNewEmailStep(onToStep, changeEmail)
             }
-            
+
             ChangeEmailStep.EmailChangedSuccessfully -> {
                 EmailChangedSuccessfullyStep(onDone)
             }
 
             ChangeEmailStep.NewEmailInput -> {
-                NewEmailInputStep(uiState, onEmailChange, changeEmail, onToStep)
+                NewEmailInputStep(uiState.newEmail, onEmailChange, changeEmail, onToStep)
             }
 
             ChangeEmailStep.WantToChange -> {
@@ -171,11 +174,16 @@ private fun ConfirmNewEmailStep(
 
 @Composable
 private fun NewEmailInputStep(
-    uiState: ChangeEmailUiState,
+    email: String,
     onEmailChange: (String) -> Unit,
     changeEmail: () -> Unit,
     onToStep: (ChangeEmailStep) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -217,7 +225,7 @@ private fun NewEmailInputStep(
         )
 
         EmailInput(
-            email = uiState.newEmail,
+            email = email,
             onValueChange = onEmailChange::invoke,
             onClearText = { onEmailChange("") },
             isError = false,
@@ -232,10 +240,12 @@ private fun NewEmailInputStep(
                 }
             ),
             keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
                 keyboardType = KeyboardType.Email,
-                showKeyboardOnFocus = true,
-                imeAction = ImeAction.Done
-            )
+                imeAction = ImeAction.Done,
+                showKeyboardOnFocus = true
+            ),
+            modifier = Modifier.padding(top = 6.dp).focusRequester(focusRequester)
         )
 
         BasicButton(
@@ -287,7 +297,7 @@ private fun WantToChangeStep(
         )
 
         Text(
-            text = stringResource(R.string.want_to_change),
+            text = stringResource(R.string.want_to_change_email_question),
             style = LockBoxTheme.typography.titleMedium,
             color = LockBoxTheme.colors.grey100,
             textAlign = TextAlign.Center,

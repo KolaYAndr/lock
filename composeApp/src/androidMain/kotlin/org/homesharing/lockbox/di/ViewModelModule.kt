@@ -8,6 +8,7 @@ import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.account.AccountViewModel
 import org.homesharing.lockbox.presentation.security.SecurityViewModel
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -20,4 +21,5 @@ val provideViewModelModule = module {
     viewModelOf(::AccountViewModel)
     viewModelOf(::SecurityViewModel)
     viewModelOf(::ChangeEmailViewModel)
+    viewModelOf(::AddPhoneNumberViewModel)
 }
