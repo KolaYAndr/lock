@@ -26,4 +26,6 @@ actual class TokenStorage {
         userDefaults.removeObjectForKey(ACCESS_TOKEN_NAME)
         userDefaults.removeObjectForKey(REFRESH_TOKEN_NAME)
     }
+
+    actual fun canLogIn(): Boolean = userDefaults.stringForKey(ACCESS_TOKEN_NAME) != null
 }

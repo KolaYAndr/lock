@@ -4,9 +4,19 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -14,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
+import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
 import org.homesharing.lockbox.navigation.routes.MainRoutes
@@ -36,6 +47,7 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
+import presentation.theme.LockBoxTheme
 
 private const val ANIMATION_DURATION = 300
 private val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
@@ -68,14 +80,67 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     onDismiss = loginViewModel::hideCard,
                     onShowCard = loginViewModel::showCard,
                     onToTypeAuth = loginViewModel::toTypeAuth,
+                    onLoggedIn = { navController.navigate(MainRoutes.Main) },
+                    topRowContent = {
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 12.dp)
+                                .size(40.dp)
+                                .background(
+                                    color = LockBoxTheme.colors.grey800,
+                                    shape = LockBoxTheme.shape.circleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.user),
+                                tint = LockBoxTheme.colors.grey500,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(28.dp)
+
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.main),
+                            style = LockBoxTheme.typography.titleMedium,
+                            color = LockBoxTheme.colors.grey50
+                        )
+                    },
                     modifier = Modifier.fillMaxSize()
                 )
+            }
+
+            composable<MainRoutes.Main> {
+
             }
         }
 
         navigation<Routes.Settings>(
-            startDestination = SettingsRoutes.Settings,
+            startDestination = SettingsRoutes.Login,
         ) {
+            composable<SettingsRoutes.Login> {
+                val loginViewModel = koinViewModel<LoginViewModel>()
+                val state = loginViewModel.uiState.collectAsStateWithLifecycle()
+
+                LoginScreen(
+                    state = state.value,
+                    onDismiss = loginViewModel::hideCard,
+                    onShowCard = loginViewModel::showCard,
+                    onToTypeAuth = loginViewModel::toTypeAuth,
+                    onLoggedIn = { navController.navigate(SettingsRoutes.Settings) },
+                    topRowContent = {
+                        Text(
+                            text = stringResource(R.string.settings),
+                            style = LockBoxTheme.typography.titleSmall,
+                            color = LockBoxTheme.colors.grey100,
+                            modifier = Modifier.padding(12.dp)
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
             composable<SettingsRoutes.Settings> {
                 val settingsViewModel = koinViewModel<SettingsViewModel>()
                 val settingsState = settingsViewModel.uiState.collectAsStateWithLifecycle()
@@ -189,24 +254,24 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     }
                 }
 
-                    composable<AccountRoutes.ChangePhoneNumber> {
-                        val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
-                        val addPhoneUiState =
-                            addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
+                composable<AccountRoutes.ChangePhoneNumber> {
+                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
+                    val addPhoneUiState =
+                        addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
 
-                        AddPhoneNumberScreen(
-                            uiState = addPhoneUiState.value,
-                            onNavBack = { navController.navigateUp() },
-                            onToStep = addPhoneNumberViewModel::toStep,
-                            onNumberChange = addPhoneNumberViewModel::onNumberChange,
-                            onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
-                            onDone = { navController.navigate(SettingsRoutes.Account) },
-                            onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
-                            onConfirm = addPhoneNumberViewModel::confirmCode,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
+                    AddPhoneNumberScreen(
+                        uiState = addPhoneUiState.value,
+                        onNavBack = { navController.navigateUp() },
+                        onToStep = addPhoneNumberViewModel::toStep,
+                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
+                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
+                        onDone = { navController.navigate(SettingsRoutes.Account) },
+                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
+                        onConfirm = addPhoneNumberViewModel::confirmCode,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }
     }
+}

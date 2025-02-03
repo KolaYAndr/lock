@@ -14,4 +14,7 @@ sealed class SettingsRoutes {
 
     @Serializable
     data object AboutApp: SettingsRoutes()
+
+    @Serializable
+    data object Login: SettingsRoutes()
 }

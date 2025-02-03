@@ -26,4 +26,6 @@ actual class TokenStorage(context: Context) {
         prefs.edit().remove(ACCESS_TOKEN_NAME).apply()
         prefs.edit().remove(REFRESH_TOKEN_NAME).apply()
     }
+
+    actual fun canLogIn(): Boolean = prefs.contains(ACCESS_TOKEN_NAME)
 }

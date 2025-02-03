@@ -13,4 +13,6 @@ expect class TokenStorage {
     fun saveAccessToken(token: String)
 
     fun clearInfo()
+
+    fun canLogIn(): Boolean
 }

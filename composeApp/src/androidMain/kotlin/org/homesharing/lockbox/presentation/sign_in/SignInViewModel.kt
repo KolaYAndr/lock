@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.presentation.sign_in
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,7 +54,7 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
                         }
 
                         is InitialTokenLoadResponse.InitialTokenLoadSuccessResponse -> {
-                            _uiState.update { it.copy(emailErrorMessage = "Success") }
+                            _uiState.update { it.copy(loggedIn = true) }
                         }
                     }
                 } else _uiState.update { it.copy(emailErrorMessage = "Doesn't match email pattern") }
@@ -68,9 +67,10 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
 }
 
 data class SignInUiState(
-    val email: String = "aboba@mail.ru",
-    val password: String = "aboba",
+    val email: String = "",
+    val password: String = "",
     val isPasswordSeen: Boolean = false,
     val passwordErrorMessage: String? = null,
-    val emailErrorMessage: String? = null
+    val emailErrorMessage: String? = null,
+    val loggedIn: Boolean = false,
 )

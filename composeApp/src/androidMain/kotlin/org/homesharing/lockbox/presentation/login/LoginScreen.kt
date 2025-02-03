@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -37,43 +40,63 @@ fun LoginScreen(
     onDismiss: () -> Unit,
     onShowCard: () -> Unit,
     onToTypeAuth: (LoginType) -> Unit,
+    onLoggedIn: () -> Unit,
+    topRowContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (state.isLoggedIn) {
+        onLoggedIn()
+    }
+
     Column(
-        modifier = modifier
-            .background(LockBoxTheme.colors.grey950)
-            .padding(horizontal = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = modifier.background(LockBoxTheme.colors.grey950),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Icon(
-            painter = painterResource(R.drawable.log_in),
-            contentDescription = null,
-            tint = LockBoxTheme.colors.grey500,
-            modifier = Modifier.size(48.dp)
-        )
-        Text(
-            text = stringResource(R.string.log_in_your_profile),
-            style = LockBoxTheme.typography.titleMedium,
-            modifier = Modifier.padding(top = 12.dp),
-            color = LockBoxTheme.colors.grey100,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = stringResource(R.string.start_using_today),
-            style = LockBoxTheme.typography.bodyLarge,
-            modifier = Modifier.padding(top = 8.dp),
-            color = LockBoxTheme.colors.grey500,
-            textAlign = TextAlign.Center
-        )
-        BasicButton(
-            onClick = onShowCard::invoke,
-            text = stringResource(R.string.sing_in),
-            paddingValues = PaddingValues(10.dp),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            topRowContent()
+        }
+
+        Column(
             modifier = Modifier
-                .padding(top = 16.dp)
-                .minimumInteractiveComponentSize()
-        )
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.log_in),
+                contentDescription = null,
+                tint = LockBoxTheme.colors.grey500,
+                modifier = Modifier.size(48.dp)
+            )
+            Text(
+                text = stringResource(R.string.log_in_your_profile),
+                style = LockBoxTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 12.dp),
+                color = LockBoxTheme.colors.grey100,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = stringResource(R.string.start_using_today),
+                style = LockBoxTheme.typography.bodyLarge,
+                modifier = Modifier.padding(top = 8.dp),
+                color = LockBoxTheme.colors.grey500,
+                textAlign = TextAlign.Center
+            )
+            BasicButton(
+                onClick = onShowCard::invoke,
+                text = stringResource(R.string.sing_in),
+                paddingValues = PaddingValues(10.dp),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .minimumInteractiveComponentSize()
+            )
+
+        }
 
         if (state.showModal) {
             BasicBottomSheet(
@@ -97,7 +120,10 @@ fun LoginScreen(
                             onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
                             onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
                             onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
-                            onSetPassword = forgotPasswordViewModel::setPassword
+                            onSetPassword = {
+                                forgotPasswordViewModel.setPassword()
+                                onToTypeAuth(LoginType.SignIn)
+                            }
                         )
                     }
 
@@ -105,7 +131,9 @@ fun LoginScreen(
                         val signInViewModel = koinViewModel<SignInViewModel>()
                         val signInState = signInViewModel.uiState.collectAsStateWithLifecycle()
 
-                        SignInCard(
+                        if (signInState.value.loggedIn) {
+                            onLoggedIn()
+                        } else SignInCard(
                             signInUiState = signInState.value,
                             onDismiss = onDismiss::invoke,
                             onEmailChange = signInViewModel::editEmail,
@@ -135,7 +163,10 @@ fun LoginScreen(
                             onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
                             onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,
                             onPasswordRepeatedSeenChange = signUpViewModel::onPasswordRepeatedSeenChange,
-                            onSetPassword = signUpViewModel::setPassword
+                            onSetPassword = {
+                                signUpViewModel.setPassword()
+                                onToTypeAuth(LoginType.SignIn)
+                            }
                         )
                     }
                 }
@@ -151,7 +182,7 @@ fun PreviewLoginScreen() {
         val uiState = LoginUiState()
         LoginScreen(
             state = uiState,
-            {}, {}, {},
+            {}, {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

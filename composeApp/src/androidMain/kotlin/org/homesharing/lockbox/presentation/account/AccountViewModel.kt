@@ -49,5 +49,5 @@ data class AccountUiState(
     val surname: String = "",
     val email: String = "",
     val phoneNumber: String = "",
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
 )
