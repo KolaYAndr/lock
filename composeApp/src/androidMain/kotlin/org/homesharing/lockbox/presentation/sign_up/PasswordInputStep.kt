@@ -30,6 +30,7 @@ fun PasswordInputStep(
     isPasswordSeen: Boolean,
     onPasswordSeenChanged: () -> Unit,
     passwordRepeated: String,
+    passwordRepeatedError: String?,
     onPasswordRepeatedChange: (String) -> Unit,
     isPasswordRepeatedSeen: Boolean,
     onPasswordRepeatedSeenChange: () -> Unit,
@@ -84,8 +85,8 @@ fun PasswordInputStep(
         onValueChange = { onPasswordRepeatedChange(it) },
         onClearText = { onPasswordRepeatedChange("") },
         interactionSource = passwordRepeatedInteractionSource,
-        isError = false,
-        errorText = "",
+        isError = passwordRepeatedError != null,
+        errorText = passwordRepeatedError ?: "",
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { onPasswordRepeatedSeenChange() },
         keyboardActions = KeyboardActions(

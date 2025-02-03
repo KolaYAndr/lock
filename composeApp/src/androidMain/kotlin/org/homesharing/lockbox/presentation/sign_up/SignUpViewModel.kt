@@ -1,18 +1,24 @@
 package org.homesharing.lockbox.presentation.sign_up
 
+import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.repository.AuthRepository
 
-class SignUpViewModel: ViewModel() {
+class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> get() = _uiState.asStateFlow()
+    private val emailMatcher = Patterns.EMAIL_ADDRESS
 
     fun onChangeEmail(newEmail: String) {
         _uiState.update {
-            it.copy(email = newEmail)
+            it.copy(email = newEmail, emailError = null)
         }
     }
 
@@ -21,7 +27,27 @@ class SignUpViewModel: ViewModel() {
     }
 
     fun setPassword() {
-        //TODO
+        viewModelScope.launch {
+            if (uiState.value.password == uiState.value.passwordRepeated) {
+//                try {
+                    val response = authRepository.signUp(
+                        username = uiState.value.email,
+                        password = uiState.value.password,
+                        passwordRepeated = uiState.value.passwordRepeated
+                    )
+
+                    if (response.error) {
+                        _uiState.update { it.copy(passwordRepeatedError = response.errorText) }
+                    }
+//                } catch (e: Exception) {
+//                    _uiState.update { it.copy(passwordRepeatedError = e.message.toString()) }
+//                }
+
+            }
+            else {
+                _uiState.update { it.copy(passwordRepeatedError = "Passwords don't match") }
+            }
+        }
     }
 
     fun onChangePassword(newPassword: String) {
@@ -32,7 +58,7 @@ class SignUpViewModel: ViewModel() {
 
     fun onChangePasswordRepeat(newRepeatedPassword: String) {
         _uiState.update {
-            it.copy(passwordRepeated = newRepeatedPassword)
+            it.copy(passwordRepeated = newRepeatedPassword, passwordRepeatedError = null)
         }
     }
 
@@ -49,14 +75,23 @@ class SignUpViewModel: ViewModel() {
     }
 
     fun toStep(step: SignUpStep) {
-        _uiState.update { it.copy(signUpStep = step) }
+        when(step) {
+            SignUpStep.EmailConfirmation -> {
+                if (emailMatcher.matcher(uiState.value.email).matches()) {
+                    _uiState.update { it.copy(signUpStep = step) }
+                } else _uiState.update { it.copy(emailError = "Doesn't match email pattern") }
+            }
+            else -> _uiState.update { it.copy(signUpStep = step) }
+        }
     }
 }
 
 data class SignUpUiState(
-    val email: String = "",
-    val password: String = "",
-    val passwordRepeated: String = "",
+    val email: String = "kolayandr@gmail.com",
+    val emailError: String? = null,
+    val password: String = "ladida",
+    val passwordRepeated: String = "ladida",
+    val passwordRepeatedError: String? = null,
     val isPasswordSeen: Boolean = false,
     val isPasswordRepeatedSeen: Boolean = false,
     val signUpStep: SignUpStep = SignUpStep.EmailInput,
@@ -64,8 +99,9 @@ data class SignUpUiState(
 )
 
 private val entrances = SignUpStep::class.sealedSubclasses.size
+
 sealed class SignUpStep {
-    data object EmailInput: SignUpStep()
-    data object EmailConfirmation: SignUpStep()
-    data object PasswordInput: SignUpStep()
+    data object EmailInput : SignUpStep()
+    data object EmailConfirmation : SignUpStep()
+    data object PasswordInput : SignUpStep()
 }

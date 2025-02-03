@@ -32,7 +32,7 @@ fun SignUpCard(
                 when (signUpUiState.signUpStep) {
                     SignUpStep.EmailConfirmation -> onToStep(SignUpStep.EmailInput)
                     SignUpStep.EmailInput -> onSignIn()
-                    SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailConfirmation)
+                    SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailInput) // onToStep(SignUpStep.EmailConfirmation)
                 }
             },
             onDismiss = { onDismiss() },
@@ -63,6 +63,7 @@ fun SignUpCard(
                         onToStep(SignUpStep.EmailConfirmation)
                     },
                     email = signUpUiState.email,
+                    emailError = signUpUiState.emailError,
                     onEmailChange = onEmailChange::invoke
                 )
             }
@@ -72,11 +73,12 @@ fun SignUpCard(
                     password = signUpUiState.password,
                     onPasswordChange = onPasswordChange::invoke,
                     isPasswordSeen = signUpUiState.isPasswordSeen,
-                    onPasswordRepeatedSeenChange = onPasswordSeenChange::invoke,
+                    onPasswordRepeatedSeenChange = onPasswordRepeatedSeenChange::invoke,
                     passwordRepeated = signUpUiState.passwordRepeated,
+                    passwordRepeatedError = signUpUiState.passwordRepeatedError,
                     onPasswordRepeatedChange = onPasswordRepeatedChange::invoke,
                     isPasswordRepeatedSeen = signUpUiState.isPasswordRepeatedSeen,
-                    onPasswordSeenChanged = onPasswordRepeatedSeenChange::invoke,
+                    onPasswordSeenChanged = onPasswordSeenChange::invoke,
                     onSetPassword = onSetPassword::invoke
                 )
             }

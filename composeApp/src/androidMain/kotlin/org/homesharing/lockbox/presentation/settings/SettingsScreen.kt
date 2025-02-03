@@ -54,12 +54,12 @@ fun SettingsScreen(
         )
 
         RoundText(
-            text = "${settingsUiState.name[0]}${settingsUiState.surname[0]}",
+            text = settingsUiState.fullName,
             modifier = Modifier.padding(top = 24.dp)
         )
 
         Text(
-            text = "${settingsUiState.name} ${settingsUiState.surname}",
+            text = settingsUiState.fullName,
             style = LockBoxTheme.typography.titleMedium,
             color = LockBoxTheme.colors.grey50,
             modifier = Modifier.padding(top = 12.dp)

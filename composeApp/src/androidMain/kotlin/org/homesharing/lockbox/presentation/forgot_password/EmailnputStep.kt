@@ -25,6 +25,7 @@ import presentation.theme.LockBoxTheme
 @Composable
 fun EmailInputStep(
     email: String,
+    emailError: String?,
     onEmailChange: (String) -> Unit,
     onConfirmEmail: () -> Unit,
 ) {
@@ -63,8 +64,8 @@ fun EmailInputStep(
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(onDone = {}),
-        isError = false,
-        errorText = "",
+        isError = emailError != null,
+        errorText = emailError ?: "",
         modifier = Modifier.padding(
             top = 6.dp,
             start = 16.dp,

@@ -9,10 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import presentation.theme.LockBoxTheme
+import java.util.Locale
 
 @Composable
 fun RoundText(text: String, modifier: Modifier = Modifier) {
@@ -30,12 +32,27 @@ fun RoundText(text: String, modifier: Modifier = Modifier) {
             .size(64.dp),
         contentAlignment = Alignment.Center
     ) {
+        val shortName = if (text.isNotEmpty()) {
+            val splits = text.split(" ")
+            val name = splits[0]
+            val surname = splits[1]
+            getShortenedName(name, surname)
+        } else ""
         Text(
-            text = text,
+            text = shortName,
             color = LockBoxTheme.colors.grey500,
             textAlign = TextAlign.Center
         )
     }
+}
+
+private fun getShortenedName(name: String, surname: String): String {
+    val sb = StringBuilder()
+
+    if (name.isNotEmpty()) sb.append(name.first().uppercaseChar())
+    if (surname.isNotEmpty()) sb.append(surname.first().uppercaseChar())
+
+    return sb.toString()
 }
 
 @Preview

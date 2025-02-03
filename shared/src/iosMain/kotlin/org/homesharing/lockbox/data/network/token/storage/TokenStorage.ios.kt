@@ -3,7 +3,7 @@ package org.homesharing.lockbox.data.network.token.storage
 import platform.Foundation.NSUserDefaults
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-internal actual class TokenStorage {
+actual class TokenStorage {
     private val userDefaults = NSUserDefaults.standardUserDefaults
 
     actual fun getAccessToken(): String? {
@@ -20,5 +20,10 @@ internal actual class TokenStorage {
 
     actual fun saveRefreshToken(token: String) {
         userDefaults.setObject(token, forKey = REFRESH_TOKEN_NAME)
+    }
+
+    actual fun clearInfo() {
+        userDefaults.removeObjectForKey(ACCESS_TOKEN_NAME)
+        userDefaults.removeObjectForKey(REFRESH_TOKEN_NAME)
     }
 }

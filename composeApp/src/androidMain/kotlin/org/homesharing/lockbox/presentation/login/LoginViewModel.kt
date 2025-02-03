@@ -16,21 +16,9 @@ class LoginViewModel: ViewModel() {
         }
     }
 
-    fun signIn() {
+    fun toTypeAuth(authType: LoginType) {
         _uiState.update {
-            LoginUiState(showModal = true, loginType = LoginType.SignIn)
-        }
-    }
-
-    fun signUp() {
-        _uiState.update {
-            LoginUiState(showModal = true, loginType = LoginType.SignUp)
-        }
-    }
-
-    fun forgotPassword() {
-        _uiState.update {
-            LoginUiState(showModal = true, loginType = LoginType.ForgotPassword)
+            it.copy(loginType = authType)
         }
     }
 

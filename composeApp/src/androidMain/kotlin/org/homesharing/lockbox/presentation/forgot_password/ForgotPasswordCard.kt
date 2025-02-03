@@ -58,6 +58,7 @@ fun ForgotPasswordCard(
                         onToStep(ForgotPasswordStep.EmailConfirmation)
                     },
                     email = forgotPasswordUiState.email,
+                    emailError = forgotPasswordUiState.emailError,
                     onEmailChange = onEmailChange::invoke
                 )
             }
@@ -72,6 +73,7 @@ fun ForgotPasswordCard(
                     onPasswordRepeatedChange = onPasswordRepeatedChange::invoke,
                     isPasswordRepeatedSeen = forgotPasswordUiState.isPasswordRepeatedSeen,
                     onPasswordSeenChanged = onPasswordRepeatedSeenChange::invoke,
+                    passwordRepeatedError = forgotPasswordUiState.passwordRepeatedError,
                     onSetPassword = onSetPassword::invoke
                 )
             }

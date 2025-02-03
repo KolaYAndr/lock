@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 sealed class MainRoutes {
     @Serializable
-    data object Main
+    data object Main: MainRoutes()
 
     @Serializable
-    data object Login
+    data object Login : MainRoutes()
 }

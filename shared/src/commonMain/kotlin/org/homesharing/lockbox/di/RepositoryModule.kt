@@ -1,14 +1,24 @@
 package org.homesharing.lockbox.di
 
-import org.homesharing.lockbox.data.network.api.LockBoxApi
-import org.homesharing.lockbox.data.repository.LockBoxRepositoryImpl
-import org.homesharing.lockbox.domain.repository.LockBoxRepository
+import org.homesharing.lockbox.data.network.token.storage.TokenStorage
+import org.homesharing.lockbox.data.repository.AccountRepositoryImpl
+import org.homesharing.lockbox.data.repository.AuthRepositoryImpl
+import org.homesharing.lockbox.domain.api.AuthApi
+import org.homesharing.lockbox.domain.repository.AccountRepository
+import org.homesharing.lockbox.domain.repository.AuthRepository
 import org.koin.dsl.module
 
-val provideRepositoryModule = module {
-    single<LockBoxRepository> {
-        LockBoxRepositoryImpl(
-            get<LockBoxApi>()
+val repositoryModule = module {
+    single<AuthRepository> {
+        AuthRepositoryImpl(
+            get<AuthApi>(),
+            get<TokenStorage>()
+        )
+    }
+
+    single<AccountRepository> {
+        AccountRepositoryImpl(
+            get<TokenStorage>()
         )
     }
 }

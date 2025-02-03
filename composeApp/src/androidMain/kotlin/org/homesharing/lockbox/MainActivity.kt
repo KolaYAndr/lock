@@ -19,12 +19,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.homesharing.lockbox.di.provideAppModules
-import org.homesharing.lockbox.di.provideViewModelModule
 import org.homesharing.lockbox.navigation.BottomNavigation
 import org.homesharing.lockbox.navigation.Navigation
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
-import org.koin.compose.KoinApplication
+import org.koin.androidx.compose.KoinAndroidContext
 import presentation.theme.LockBoxTheme
 
 private const val SPLASHSCREEN_TIME = 3_000L
@@ -41,20 +39,17 @@ class MainActivity : ComponentActivity() {
             keepSplash = false
         }
 
-        val systemBarStyle = SystemBarStyle.dark(ContextCompat.getColor(this, R.color.Grey950))
+        window.statusBarColor = ContextCompat.getColor(this, R.color.Grey950)
+//        val systemBarStyle = SystemBarStyle.dark(ContextCompat.getColor(this, R.color.Grey950))
 
-        enableEdgeToEdge(
-            statusBarStyle = systemBarStyle,
-            navigationBarStyle = systemBarStyle
-        )
+//        enableEdgeToEdge(
+//            statusBarStyle = systemBarStyle,
+//            navigationBarStyle = systemBarStyle
+//        )
 
         setContent {
             val navController = rememberNavController()
-            KoinApplication(
-                application = {
-                    modules(provideAppModules + provideViewModelModule)
-                }
-            ) {
+            KoinAndroidContext {
                 LockBoxTheme {
                     Scaffold(
                         modifier = Modifier

@@ -12,7 +12,7 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewM
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val provideViewModelModule = module {
+val viewModelModule = module {
     viewModelOf(::SignInViewModel)
     viewModelOf(::SignUpViewModel)
     viewModelOf(::ForgotPasswordViewModel)

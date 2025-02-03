@@ -13,9 +13,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navDeepLink
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
+import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
 import org.homesharing.lockbox.navigation.routes.MainRoutes
 import org.homesharing.lockbox.navigation.routes.Routes
+import org.homesharing.lockbox.navigation.routes.SecurityRoutes
 import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
@@ -24,6 +27,7 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScree
 import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
+import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.security.SecurityScreen
@@ -63,9 +67,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     state = state.value,
                     onDismiss = loginViewModel::hideCard,
                     onShowCard = loginViewModel::showCard,
-                    onForgotPassword = loginViewModel::forgotPassword,
-                    onSignIn = loginViewModel::signIn,
-                    onSignUp = loginViewModel::signUp,
+                    onToTypeAuth = loginViewModel::toTypeAuth,
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -101,22 +103,30 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 )
             }
 
-            composable<SettingsRoutes.Security>(
+            navigation<SettingsRoutes.Security>(
                 enterTransition = enterAnimation,
                 exitTransition = exitAnimation,
+                startDestination = SecurityRoutes.Security
             ) {
-                val securityViewModel = koinViewModel<SecurityViewModel>()
-                val securityUiState = securityViewModel.uiState.collectAsStateWithLifecycle()
+                composable<SecurityRoutes.Security> {
+                    val securityViewModel = koinViewModel<SecurityViewModel>()
+                    val securityUiState = securityViewModel.uiState.collectAsStateWithLifecycle()
 
-                SecurityScreen(
-                    securityUiState = securityUiState.value,
-                    onNavBack = { navController.navigateUp() },
-                    onShowDialog = { securityViewModel.showDialog() },
-                    onHideDialog = { securityViewModel.hideDialog() },
-                    onPasswordSet = { securityViewModel.onPasswordChanged() },
-                    onReady = { navController.navigate(SettingsRoutes.Account) },
-                    modifier = Modifier.fillMaxSize()
-                )
+                    SecurityScreen(
+                        securityUiState = securityUiState.value,
+                        onNavBack = { navController.navigateUp() },
+                        onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
+                        onShowDialog = { securityViewModel.showDialog() },
+                        onHideDialog = { securityViewModel.hideDialog() },
+                        onPasswordSet = { securityViewModel.onPasswordChanged() },
+                        onReady = { navController.navigate(SettingsRoutes.Account) },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                composable<SecurityRoutes.ActiveSessions> {
+
+                }
             }
 
             navigation<SettingsRoutes.Account>(
@@ -149,40 +159,54 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     )
                 }
 
-                composable<AccountRoutes.ChangeEmail> {
-                    val changeEmailViewModel = koinViewModel<ChangeEmailViewModel>()
-                    val changeEmailUiState =
-                        changeEmailViewModel.uiState.collectAsStateWithLifecycle()
+                navigation<AccountRoutes.ChangeEmail>(
+                    startDestination = ChangeEmailRoutes.Main
+                ) {
+                    composable<ChangeEmailRoutes.Main> {
+                        val changeEmailViewModel = koinViewModel<ChangeEmailViewModel>()
+                        val changeEmailUiState =
+                            changeEmailViewModel.uiState.collectAsStateWithLifecycle()
 
-                    ChangeEmailScreen(
-                        uiState = changeEmailUiState.value,
-                        onNavBack = { navController.navigateUp() },
-                        onToStep = changeEmailViewModel::toStep,
-                        onEmailChange = changeEmailViewModel::onEmailChange,
-                        changeEmail = changeEmailViewModel::changeEmail,
-                        onDone = { navController.navigate(SettingsRoutes.Account) },
-                        modifier = Modifier.fillMaxSize()
-                    )
+                        ChangeEmailScreen(
+                            uiState = changeEmailUiState.value,
+                            onNavBack = { navController.navigateUp() },
+                            onToStep = changeEmailViewModel::toStep,
+                            onEmailChange = changeEmailViewModel::onEmailChange,
+                            changeEmail = changeEmailViewModel::changeEmail,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+
+                    composable<ChangeEmailRoutes.Successfully>(
+                        deepLinks = listOf(
+                            navDeepLink<ChangeEmailRoutes.Successfully>(basePath = "https://api.lockboxes.ru/successfully") //TODO изменить при согласовании диплинка
+                        )
+                    ) {
+                        EmailChangedSuccessfullyScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            onDone = { navController.navigate(SettingsRoutes.Account) }
+                        )
+                    }
                 }
 
-                composable<AccountRoutes.ChangePhoneNumber> {
-                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
-                    val addPhoneUiState =
-                        addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
+                    composable<AccountRoutes.ChangePhoneNumber> {
+                        val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
+                        val addPhoneUiState =
+                            addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
 
-                    AddPhoneNumberScreen(
-                        uiState = addPhoneUiState.value,
-                        onNavBack = { navController.navigateUp() },
-                        onToStep = addPhoneNumberViewModel::toStep,
-                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
-                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
-                        onDone = { navController.navigate(SettingsRoutes.Account) },
-                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
-                        onConfirm = addPhoneNumberViewModel::confirmCode,
-                        modifier = Modifier.fillMaxSize()
-                    )
+                        AddPhoneNumberScreen(
+                            uiState = addPhoneUiState.value,
+                            onNavBack = { navController.navigateUp() },
+                            onToStep = addPhoneNumberViewModel::toStep,
+                            onNumberChange = addPhoneNumberViewModel::onNumberChange,
+                            onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
+                            onDone = { navController.navigate(SettingsRoutes.Account) },
+                            onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
+                            onConfirm = addPhoneNumberViewModel::confirmCode,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
             }
         }
     }
-}

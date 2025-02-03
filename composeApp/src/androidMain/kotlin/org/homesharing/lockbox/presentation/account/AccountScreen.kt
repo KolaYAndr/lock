@@ -51,7 +51,7 @@ fun AccountScreen(
         )
 
         RoundText(
-            text = "ИИ",
+            text = "${accountUiState.name} ${accountUiState.surname}",
             modifier = Modifier.padding(top = 24.dp)
         )
 

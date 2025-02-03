@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.presentation.security
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,13 +28,12 @@ import org.koin.androidx.compose.koinViewModel
 import presentation.composables.TitledTopBar
 import presentation.composables.general.BasicBottomSheet
 import presentation.composables.general.BasicButton
-import presentation.composables.general.BasicGroup
 import presentation.theme.LockBoxTheme
 
 @Composable
 fun SecurityScreen(
     securityUiState: SecurityUiState,
-    onNavBack: () -> Unit,
+    onNavBack: () -> Unit, onToActiveSessions: () -> Unit,
     onShowDialog: () -> Unit,
     onHideDialog: () -> Unit,
     onPasswordSet: () -> Unit,
@@ -46,18 +46,32 @@ fun SecurityScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TitledTopBar(
-            title = stringResource(R.string.security),
-            onNavigate = onNavBack::invoke,
+            title = when (securityUiState) {
+                is SecurityUiState.ChangePassword ->
+                    stringResource(R.string.security)
+
+                SecurityUiState.PasswordChanged -> stringResource(R.string.change_password)
+            },
+            onNavigate = when(securityUiState) {
+                is SecurityUiState.ChangePassword -> onNavBack
+                SecurityUiState.PasswordChanged -> onHideDialog
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
         when (securityUiState) {
             is SecurityUiState.ChangePassword -> {
-                ChangePasswordScreen(onShowDialog, securityUiState, onHideDialog, onPasswordSet)
+                ChangePasswordScreen(
+                    onShowDialog = onShowDialog,
+                    onToActiveSessions = onToActiveSessions,
+                    showDialog = securityUiState.showDialog,
+                    onHideDialog = onHideDialog,
+                    onPasswordSet = onPasswordSet
+                )
             }
 
             SecurityUiState.PasswordChanged -> {
-                PasswordChangedScreen(onReady)
+                PasswordChangedScreen(onReady = onReady)
             }
         }
     }
@@ -95,70 +109,94 @@ private fun PasswordChangedScreen(onReady: () -> Unit) {
 @Composable
 private fun ChangePasswordScreen(
     onShowDialog: () -> Unit,
-    securityUiState: SecurityUiState.ChangePassword,
+    onToActiveSessions: () -> Unit,
+    showDialog: Boolean,
     onHideDialog: () -> Unit,
     onPasswordSet: () -> Unit
 ) {
-    BasicGroup(
+    SecurityElement(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 12.dp)
-            .padding(horizontal = 16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onShowDialog()
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 16.dp),
+        onClick = onShowDialog,
+        title = stringResource(R.string.change_password)
+    )
+
+    SecurityElement(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp)
+            .padding(horizontal = 16.dp),
+        title = stringResource(R.string.active_sessions),
+        onClick = onToActiveSessions
+    )
+
+    if (showDialog) {
+        BasicBottomSheet(
+            onDismissRequest = onHideDialog::invoke
         ) {
-            Text(
-                text = stringResource(R.string.change_password),
-                style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white,
-                modifier = Modifier
-                    .padding(vertical = 14.dp)
-                    .padding(start = 16.dp)
-            )
-
-            Icon(
-                painter = painterResource(R.drawable.arrow_right),
-                tint = LockBoxTheme.colors.grey500,
-                modifier = Modifier
-                    .padding(vertical = 12.dp)
-                    .padding(end = 16.dp),
-                contentDescription = null
-            )
-
-            if (securityUiState.showDialog) {
-                BasicBottomSheet(
-                    onDismissRequest = onHideDialog::invoke
-                ) {
-                    val forgotPasswordViewModel =
-                        koinViewModel<ForgotPasswordViewModel>()
-                    val forgotPasswordState =
-                        forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
-                    ForgotPasswordCard(
-                        forgotPasswordUiState = forgotPasswordState.value,
-                        title = stringResource(R.string.change_password),
-                        onLastBackPress = onHideDialog::invoke,
-                        onDismiss = onHideDialog::invoke,
-                        onEmailChange = forgotPasswordViewModel::onChangeEmail,
-                        onConfirmEmail = forgotPasswordViewModel::confirmEmail,
-                        onToStep = forgotPasswordViewModel::toStep,
-                        onPasswordChange = forgotPasswordViewModel::onChangePassword,
-                        onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
-                        onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
-                        onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
-                        onSetPassword = {
-                            forgotPasswordViewModel.setPassword()
-                            onPasswordSet()
-                        }
-                    )
+            val forgotPasswordViewModel =
+                koinViewModel<ForgotPasswordViewModel>()
+            val forgotPasswordState =
+                forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
+            ForgotPasswordCard(
+                forgotPasswordUiState = forgotPasswordState.value,
+                title = stringResource(R.string.change_password),
+                onLastBackPress = onHideDialog::invoke,
+                onDismiss = onHideDialog::invoke,
+                onEmailChange = forgotPasswordViewModel::onChangeEmail,
+                onConfirmEmail = forgotPasswordViewModel::confirmEmail,
+                onToStep = forgotPasswordViewModel::toStep,
+                onPasswordChange = forgotPasswordViewModel::onChangePassword,
+                onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
+                onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
+                onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
+                onSetPassword = {
+                    forgotPasswordViewModel.setPassword()
+                    onPasswordSet()
                 }
-            }
+            )
         }
+    }
+}
+
+@Composable
+private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .background(
+                color = LockBoxTheme.colors.grey900,
+                shape = LockBoxTheme.shape.roundedCornerShape8
+            )
+            .border(
+                width = 0.5.dp,
+                color = LockBoxTheme.colors.grey800,
+                shape = LockBoxTheme.shape.roundedCornerShape8
+            )
+            .clickable {
+                onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = title,
+            style = LockBoxTheme.typography.headlineLarge,
+            color = LockBoxTheme.colors.white,
+            modifier = Modifier
+                .padding(vertical = 14.dp)
+                .padding(start = 16.dp)
+        )
+
+        Icon(
+            painter = painterResource(R.drawable.arrow_right),
+            tint = LockBoxTheme.colors.grey500,
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+                .padding(end = 16.dp),
+            contentDescription = null
+        )
     }
 }
 
@@ -169,7 +207,7 @@ fun PreviewSecurityScreenChangePassword() {
         val state = SecurityUiState.ChangePassword()
         SecurityScreen(
             securityUiState = state,
-            {}, {}, {}, {}, {},
+            {}, {}, {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -182,7 +220,7 @@ fun PreviewSecurityScreenPasswordChanged() {
         val state = SecurityUiState.PasswordChanged
         SecurityScreen(
             securityUiState = state,
-            {}, {}, {}, {}, {},
+            {}, {}, {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

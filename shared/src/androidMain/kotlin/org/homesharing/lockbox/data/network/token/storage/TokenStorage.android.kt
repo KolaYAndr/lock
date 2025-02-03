@@ -3,7 +3,7 @@ package org.homesharing.lockbox.data.network.token.storage
 import android.content.Context
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-internal actual class TokenStorage(context: Context) {
+actual class TokenStorage(context: Context) {
     private val prefs = context.getSharedPreferences(TOKEN_STORAGE_NAME, Context.MODE_PRIVATE)
 
     actual fun getAccessToken(): String? {
@@ -20,5 +20,10 @@ internal actual class TokenStorage(context: Context) {
 
     actual fun saveAccessToken(token: String) {
         prefs.edit().putString(ACCESS_TOKEN_NAME, token).apply()
+    }
+
+    actual fun clearInfo() {
+        prefs.edit().remove(ACCESS_TOKEN_NAME).apply()
+        prefs.edit().remove(REFRESH_TOKEN_NAME).apply()
     }
 }

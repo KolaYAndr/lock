@@ -1,5 +1,8 @@
 package org.homesharing.lockbox.presentation.change_email
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -44,7 +47,6 @@ fun ChangeEmailScreen(
     onToStep: (ChangeEmailStep) -> Unit,
     onEmailChange: (String) -> Unit,
     changeEmail: () -> Unit,
-    onDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -58,68 +60,28 @@ fun ChangeEmailScreen(
 
         when (uiState.changeEmailStep) {
             ChangeEmailStep.ConfirmNewEmail -> {
-                ConfirmNewEmailStep(onToStep, changeEmail)
-            }
-
-            ChangeEmailStep.EmailChangedSuccessfully -> {
-                EmailChangedSuccessfullyStep(onDone)
+                ConfirmNewEmailStep(changeEmail = changeEmail)
             }
 
             ChangeEmailStep.NewEmailInput -> {
-                NewEmailInputStep(uiState.newEmail, onEmailChange, changeEmail, onToStep)
+                NewEmailInputStep(
+                    email = uiState.newEmail,
+                    emailError = uiState.emailError,
+                    onEmailChange = onEmailChange,
+                    changeEmail = changeEmail,
+                    onToStep = onToStep
+                )
             }
 
             ChangeEmailStep.WantToChange -> {
-                WantToChangeStep(onToStep, onNavBack)
+                WantToChangeStep(onToStep = onToStep, onNavBack = onNavBack)
             }
         }
     }
 }
 
 @Composable
-private fun EmailChangedSuccessfullyStep(onDone: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 32.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.circle_check),
-            contentDescription = null,
-            modifier = Modifier.size(48.dp),
-            tint = LockBoxTheme.colors.green600
-        )
-
-        Text(
-            text = stringResource(R.string.email_successfully_changed),
-            style = LockBoxTheme.typography.titleMedium,
-            color = LockBoxTheme.colors.grey100,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 12.dp)
-        )
-
-        Text(
-            text = stringResource(R.string.now_you_can_use_new_email),
-            style = LockBoxTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = LockBoxTheme.colors.grey500,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        BasicButton(
-            text = stringResource(R.string.ready),
-            modifier = Modifier.padding(top = 12.dp),
-            onClick = { onDone() },
-            paddingValues = PaddingValues(10.dp)
-        )
-    }
-}
-
-@Composable
 private fun ConfirmNewEmailStep(
-    onToStep: (ChangeEmailStep) -> Unit,
     changeEmail: () -> Unit
 ) {
     Column(
@@ -152,10 +114,20 @@ private fun ConfirmNewEmailStep(
             modifier = Modifier.padding(top = 8.dp)
         )
 
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult(),
+            onResult = {}
+        )
+
         BasicButton(
             text = stringResource(R.string.open_mail),
             modifier = Modifier.padding(top = 12.dp),
-            onClick = { onToStep(ChangeEmailStep.EmailChangedSuccessfully) },
+            onClick = {
+                val intent = Intent
+                    .makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                launcher.launch(Intent.createChooser(intent, "choose email app"))
+            },
             paddingValues = PaddingValues(10.dp)
         )
 
@@ -175,6 +147,7 @@ private fun ConfirmNewEmailStep(
 @Composable
 private fun NewEmailInputStep(
     email: String,
+    emailError: String?,
     onEmailChange: (String) -> Unit,
     changeEmail: () -> Unit,
     onToStep: (ChangeEmailStep) -> Unit
@@ -228,8 +201,8 @@ private fun NewEmailInputStep(
             email = email,
             onValueChange = onEmailChange::invoke,
             onClearText = { onEmailChange("") },
-            isError = false,
-            errorText = "",
+            isError = emailError != null,
+            errorText = emailError ?: "",
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -245,7 +218,9 @@ private fun NewEmailInputStep(
                 imeAction = ImeAction.Done,
                 showKeyboardOnFocus = true
             ),
-            modifier = Modifier.padding(top = 6.dp).focusRequester(focusRequester)
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .focusRequester(focusRequester)
         )
 
         BasicButton(
@@ -253,7 +228,6 @@ private fun NewEmailInputStep(
             paddingValues = PaddingValues(14.dp),
             onClick = {
                 changeEmail()
-                onToStep(ChangeEmailStep.ConfirmNewEmail)
             },
             modifier = Modifier
                 .padding(top = 24.dp)
@@ -339,7 +313,7 @@ fun PreviewWantToChange() {
         val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.WantToChange)
         ChangeEmailScreen(
             uiState = uiState,
-            {}, {}, {}, {}, {},
+            {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -352,7 +326,7 @@ fun PreviewNewEmailInput() {
         val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.NewEmailInput)
         ChangeEmailScreen(
             uiState = uiState,
-            {}, {}, {}, {}, {},
+            {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -365,20 +339,7 @@ fun PreviewConfirmNewEmail() {
         val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.ConfirmNewEmail)
         ChangeEmailScreen(
             uiState = uiState,
-            {}, {}, {}, {}, {},
-            modifier = Modifier.fillMaxSize()
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewEmailChangedSuccessfully() {
-    LockBoxTheme {
-        val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.EmailChangedSuccessfully)
-        ChangeEmailScreen(
-            uiState = uiState,
-            {}, {}, {}, {}, {},
+            {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

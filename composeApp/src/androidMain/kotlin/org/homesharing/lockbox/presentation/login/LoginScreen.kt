@@ -36,9 +36,7 @@ fun LoginScreen(
     state: LoginUiState,
     onDismiss: () -> Unit,
     onShowCard: () -> Unit,
-    onSignIn: () -> Unit,
-    onSignUp: () -> Unit,
-    onForgotPassword: () -> Unit,
+    onToTypeAuth: (LoginType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -90,7 +88,7 @@ fun LoginScreen(
                         ForgotPasswordCard(
                             forgotPasswordUiState = forgotPasswordState.value,
                             title = stringResource(R.string.password_recovery),
-                            onLastBackPress = onSignIn::invoke,
+                            onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
                             onDismiss = onDismiss::invoke,
                             onEmailChange = forgotPasswordViewModel::onChangeEmail,
                             onConfirmEmail = forgotPasswordViewModel::confirmEmail,
@@ -117,8 +115,8 @@ fun LoginScreen(
                             passwordErrorText = signInState.value.passwordErrorMessage ?: "",
                             emailError = signInState.value.emailErrorMessage != null,
                             emailErrorText = signInState.value.emailErrorMessage ?: "",
-                            onForgotPassword = onForgotPassword::invoke,
-                            onSignUp = onSignUp::invoke,
+                            onToTypeAuth = onToTypeAuth,
+                            onSignIn = signInViewModel::signIn
                         )
                     }
 
@@ -128,7 +126,7 @@ fun LoginScreen(
 
                         SignUpCard(
                             signUpUiState = signUpState.value,
-                            onSignIn = onSignIn::invoke,
+                            onSignIn = { onToTypeAuth(LoginType.SignIn) },
                             onDismiss = onDismiss::invoke,
                             onEmailChange = signUpViewModel::onChangeEmail,
                             onConfirmEmail = signUpViewModel::confirmEmail,
@@ -153,7 +151,7 @@ fun PreviewLoginScreen() {
         val uiState = LoginUiState()
         LoginScreen(
             state = uiState,
-            {}, {}, {}, {}, {},
+            {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

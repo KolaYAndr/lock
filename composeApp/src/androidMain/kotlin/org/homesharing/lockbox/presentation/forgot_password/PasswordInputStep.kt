@@ -33,6 +33,7 @@ fun PasswordInputStep(
     onPasswordRepeatedChange: (String) -> Unit,
     isPasswordRepeatedSeen: Boolean,
     onPasswordRepeatedSeenChange: () -> Unit,
+    passwordRepeatedError: String?,
     onSetPassword: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -83,8 +84,8 @@ fun PasswordInputStep(
         onValueChange = { onPasswordRepeatedChange(it) },
         onClearText = { onPasswordRepeatedChange("") },
         interactionSource = passwordRepeatedInteractionSource,
-        isError = false,
-        errorText = "",
+        isError = passwordRepeatedError != null,
+        errorText = passwordRepeatedError ?: "",
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { onPasswordRepeatedSeenChange() },
         keyboardActions = KeyboardActions(

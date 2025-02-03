@@ -88,4 +88,5 @@
     <string name="confirm_phone_number">Подтвердите номер телефона</string>
     <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер.</string>
     <string name="confirm">Подтвердить</string>
+    <string name="active_sessions">Активные сессии</string>
 </resources>

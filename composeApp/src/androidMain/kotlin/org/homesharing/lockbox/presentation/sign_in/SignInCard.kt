@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.login.LoginType
 import presentation.composables.CloseRoundButton
 import presentation.composables.EmailInput
 import presentation.composables.PasswordInput
@@ -48,8 +49,8 @@ fun SignInCard(
     passwordErrorText: String,
     emailErrorText: String,
     onPasswordSeenChange: (Boolean) -> Unit,
-    onForgotPassword: () -> Unit,
-    onSignUp: () -> Unit,
+    onToTypeAuth: (LoginType) -> Unit,
+    onSignIn: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BasicCard(
@@ -78,7 +79,6 @@ fun SignInCard(
                     .padding(top = 12.dp)
             )
         }
-
 
         Text(
             text = stringResource(R.string.log_in_your_profile),
@@ -153,12 +153,12 @@ fun SignInCard(
             modifier = Modifier
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
-                .clickable { onForgotPassword() },
+                .clickable { onToTypeAuth(LoginType.ForgotPassword) },
             textDecoration = TextDecoration.Underline
         )
 
         BasicButton(
-            onClick = {},
+            onClick = { onSignIn() },
             text = stringResource(R.string.sing_in),
             paddingValues = PaddingValues(14.dp),
             modifier = Modifier
@@ -195,7 +195,7 @@ fun SignInCard(
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
                     .padding(vertical = 14.dp)
-                    .clickable { onSignUp() }
+                    .clickable { onToTypeAuth(LoginType.SignUp) }
             )
         }
     }
