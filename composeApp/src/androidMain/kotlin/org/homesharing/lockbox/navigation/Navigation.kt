@@ -24,7 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
-import androidx.paging.compose.collectAsLazyPagingItems
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes

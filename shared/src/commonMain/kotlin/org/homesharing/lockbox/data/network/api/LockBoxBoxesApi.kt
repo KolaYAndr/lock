@@ -18,7 +18,6 @@ import org.homesharing.lockbox.data.network.model.BoxStatusResponse
 private const val BASE_URL = "https://api.lockboxes.ru:8445/boxes"
 private const val WEB = "web"
 private const val ACCESS = "access"
-private const val LIST = "list"
 private const val MAC = "mac"
 private const val STATUS = "status"
 

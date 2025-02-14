@@ -13,13 +13,12 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.parameters
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.data.network.model.AvatarResponse
 import org.homesharing.lockbox.data.network.model.InitialTokenLoadResponse
-import org.homesharing.lockbox.data.network.model.PostImageBody
 import org.homesharing.lockbox.data.network.model.PostImageResponse
 import org.homesharing.lockbox.data.network.model.SignUpRequest
 import org.homesharing.lockbox.data.network.model.SignUpResponse
+import org.homesharing.lockbox.domain.api.AccountApi
 
 private const val ACCOUNTS = "accounts"
 private const val SIGN_UP = "signup"

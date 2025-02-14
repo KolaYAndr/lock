@@ -64,7 +64,7 @@ fun AccountScreen(
         onResult = { uri ->
             uri?.let { path ->
                 context.contentResolver.openInputStream(path).use { stream ->
-                    val byteArray = stream?.readBytes()?.let { data ->
+                    stream?.readBytes()?.let { data ->
                         onSendImage(data)
                     }
                 }
