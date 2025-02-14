@@ -89,4 +89,17 @@
     <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер.</string>
     <string name="confirm">Подтвердить</string>
     <string name="active_sessions">Активные сессии</string>
+    <string name="input_name">Введите имя</string>
+    <string name="input_surname">Введите фамилию</string>
+    <string name="email_not_set">Почта не указана</string>
+    <string name="add_full">Добавить</string>
+    <string name="manage_devices">Управляйте устройствами</string>
+    <string name="here_will_be_devices_you_add">Здесь будут отображаться устройства, которые Вы добавите</string>
+    <string name="add_device">Добавить устройство</string>
+    <string name="device_connection">Подключение устройства</string>
+    <string name="connect_to_lockbox_network">Подключитесь к сети:  LockBox-Network</string>
+    <string name="go_to_wifi_settings_to_connect">Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети LockBox-Network.</string>
+    <string name="open_wifi_settings">Открыть настройки Wi-Fi</string>
+    <string name="search_with_device_properties">Название устройства, адрес и т.д.</string>
+    <string name="device_search">Поиск устройсва</string>
 </resources>

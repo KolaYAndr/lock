@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model
+package org.homesharing.lockbox.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,13 +15,13 @@ data class AccountInfo(
     val emailVerified: Boolean,
     val exp: Int,
     @SerialName("family_name")
-    val familyName: String,
+    val familyName: String? = null,
     @SerialName("given_name")
-    val givenName: String,
+    val givenName: String? = null,
     val iat: Int,
     val iss: String,
     val jti: String,
-    val name: String,
+    val name: String? = null,
     @SerialName("preferred_username")
     val preferredUsername: String,
     @SerialName("realm_access")

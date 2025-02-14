@@ -26,7 +26,7 @@ import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 
 private const val CLIENT_TIMEOUT = 5_000L
 private const val BASE_ENDPOINT = "https://api.lockboxes.ru"
-private const val REALM = "realms/spring-app-realm"
+private const val REALM = "realms/lockbox"
 private const val TOKEN_URL = "protocol/openid-connect/token"
 private const val TOKEN_PORT = "8443"
 
@@ -38,7 +38,7 @@ private const val GRANT_TYPE = "grant_type"
 expect val networkEngine: HttpClientEngine
 expect val myLogger: Logger
 
-internal fun createNetworkClient(engine: HttpClientEngine, /*tokenStorage: TokenStorage,*/ mLogger: Logger = myLogger): HttpClient {
+internal fun createNetworkClient(engine: HttpClientEngine, mLogger: Logger = myLogger): HttpClient {
     return HttpClient(engine) {
         install(HttpTimeout) {
             socketTimeoutMillis = CLIENT_TIMEOUT
@@ -66,39 +66,44 @@ internal fun createNetworkClient(engine: HttpClientEngine, /*tokenStorage: Token
                 takeFrom(BASE_ENDPOINT)
             }
             contentType(ContentType.Application.Json)
-
-//            headers {
-//                bearerAuth(tokenStorage.getAccessToken())
-//            }
         }
 
-//        install(Auth) {
-//            bearer {
-//                loadTokens {
-//                    val accessToken = tokenStorage.getAccessToken()
-//                    val refresh = tokenStorage.getRefreshToken()
-//                    BearerTokens(accessToken = accessToken, refreshToken = refresh)
-//                }
-//
-//                refreshTokens {
-//                    val tokenInfo: TokenInfo = client.submitForm(
-//                        url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
-//                        formParameters = parameters {
-//                            append(CLIENT_ID, PUBLIC_CLIENT)
-//                            append(REFRESH_TOKEN, oldTokens?.refreshToken ?: "")
-//                            append(GRANT_TYPE, REFRESH_TOKEN)
-//                        }
-//                    ) {
-//                        markAsRefreshTokenRequest()
-//                    }.body()
-//
-//                    tokenStorage.apply {
-//                        saveAccessToken(tokenInfo.accessToken)
-//                        saveRefreshToken(tokenInfo.refreshToken)
-//                    }
-//                    BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
-//                }
-//            }
-//        }
+    }
+}
+
+internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
+    defaultRequest {
+        headers {
+            bearerAuth(tokenStorage.getAccessToken())
+        }
+    }
+
+    install(Auth) {
+        bearer {
+            loadTokens {
+                val accessToken = tokenStorage.getAccessToken()
+                val refresh = tokenStorage.getRefreshToken()
+                BearerTokens(accessToken = accessToken, refreshToken = refresh)
+            }
+
+            refreshTokens {
+                val tokenInfo: TokenInfo = client.submitForm(
+                    url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
+                    formParameters = parameters {
+                        append(CLIENT_ID, PUBLIC_CLIENT)
+                        append(REFRESH_TOKEN, oldTokens?.refreshToken ?: "")
+                        append(GRANT_TYPE, REFRESH_TOKEN)
+                    }
+                ) {
+                    markAsRefreshTokenRequest()
+                }.body()
+
+                tokenStorage.apply {
+                    saveAccessToken(tokenInfo.accessToken)
+                    saveRefreshToken(tokenInfo.refreshToken)
+                }
+                BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
+            }
+        }
     }
 }

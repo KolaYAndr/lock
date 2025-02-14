@@ -6,12 +6,12 @@ import android.content.Context
 actual class TokenStorage(context: Context) {
     private val prefs = context.getSharedPreferences(TOKEN_STORAGE_NAME, Context.MODE_PRIVATE)
 
-    actual fun getAccessToken(): String? {
-        return prefs.getString(ACCESS_TOKEN_NAME, "")
+    actual fun getAccessToken(): String {
+        return prefs.getString(ACCESS_TOKEN_NAME, "")!!
     }
 
-    actual fun getRefreshToken(): String? {
-        return prefs.getString(REFRESH_TOKEN_NAME, "")
+    actual fun getRefreshToken(): String {
+        return prefs.getString(REFRESH_TOKEN_NAME, "")!!
     }
 
     actual fun saveRefreshToken(token: String) {

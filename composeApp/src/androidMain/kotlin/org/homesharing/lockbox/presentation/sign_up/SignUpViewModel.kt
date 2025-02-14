@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.presentation.sign_up
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -87,10 +86,10 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
 }
 
 data class SignUpUiState(
-    val email: String = "kolayandr@gmail.com",
+    val email: String = "",
     val emailError: String? = null,
-    val password: String = "ladida",
-    val passwordRepeated: String = "ladida",
+    val password: String = "",
+    val passwordRepeated: String = "",
     val passwordRepeatedError: String? = null,
     val isPasswordSeen: Boolean = false,
     val isPasswordRepeatedSeen: Boolean = false,

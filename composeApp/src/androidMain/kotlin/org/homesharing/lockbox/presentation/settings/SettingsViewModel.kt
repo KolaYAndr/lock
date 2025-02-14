@@ -22,10 +22,13 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
             val info = repository.parseAccountInfo()
             _uiState.update {
                 it.copy(
-                    fullName = info.name,
-                    email = info.email
+                    fullName = info.name ?: "",
+                    email = info.email,
+                    sub = info.sub
                 )
             }
+            val imageLink = repository.getAvatarLink(info.sub)
+            _uiState.update { it.copy(imageLink = imageLink) }
         }
     }
 
@@ -53,4 +56,6 @@ data class SettingsUiState(
     val fullName: String = "",
     val email: String = "",
     val showDialog: Boolean = false,
+    val imageLink: String = "",
+    val sub: String = "",
 )

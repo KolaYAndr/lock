@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.homesharing.lockbox.domain.model.InitialTokenLoadResponse
+import org.homesharing.lockbox.data.network.model.InitialTokenLoadResponse
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -38,23 +38,23 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
         viewModelScope.launch {
             try {
                 if (emailPattern.matcher(uiState.value.email).matches()) {
-                    val response = authRepository.loadTokensInitially(
+                    authRepository.loadTokensInitially(
                         uiState.value.email,
                         uiState.value.password
-                    )
-
-                    when (response) {
-                        is InitialTokenLoadResponse.InitialTokenLoadFailResponse -> {
-                            _uiState.update {
-                                it.copy(
-                                    passwordErrorMessage = response.errorDescription,
-                                    emailErrorMessage = response.errorDescription
-                                )
+                    ).also { response ->
+                        when (response) {
+                            is InitialTokenLoadResponse.InitialTokenLoadFailResponse -> {
+                                _uiState.update { state ->
+                                    state.copy(
+                                        passwordErrorMessage = response.errorDescription,
+                                        emailErrorMessage = response.errorDescription
+                                    )
+                                }
                             }
-                        }
 
-                        is InitialTokenLoadResponse.InitialTokenLoadSuccessResponse -> {
-                            _uiState.update { it.copy(loggedIn = true) }
+                            is InitialTokenLoadResponse.InitialTokenLoadSuccessResponse -> {
+                                _uiState.update { state -> state.copy(loggedIn = true) }
+                            }
                         }
                     }
                 } else _uiState.update { it.copy(emailErrorMessage = "Doesn't match email pattern") }

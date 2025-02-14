@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
+import androidx.paging.compose.collectAsLazyPagingItems
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
@@ -39,6 +40,8 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewM
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
+import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
+import org.homesharing.lockbox.presentation.lockboxes.LockBoxesViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.security.SecurityScreen
@@ -80,7 +83,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     onDismiss = loginViewModel::hideCard,
                     onShowCard = loginViewModel::showCard,
                     onToTypeAuth = loginViewModel::toTypeAuth,
-                    onLoggedIn = { navController.navigate(MainRoutes.Main) },
+                    onLoggedIn = { navController.navigate(MainRoutes.Boxes) },
                     topRowContent = {
                         Box(
                             modifier = Modifier
@@ -111,8 +114,19 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 )
             }
 
-            composable<MainRoutes.Main> {
+            composable<MainRoutes.Boxes> {
+                val lockBoxesViewModel = koinViewModel<LockBoxesViewModel>()
+                val uiState = lockBoxesViewModel.uiState.collectAsStateWithLifecycle()
 
+                LockBoxesScreen(
+                    state = uiState.value,
+                    boxes = lockBoxesViewModel.boxes,
+                    onSearchChange = lockBoxesViewModel::onSearchChange,
+                    onNavigateToBox = {},
+                    onShowModal = lockBoxesViewModel::showModal,
+                    onHideModal = lockBoxesViewModel::hideModal,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
 
@@ -213,6 +227,11 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                             navController.navigate(AccountRoutes.Warning)
                         },
                         onNavigate = { route -> navController.navigate(route) },
+                        onChangeName = accountViewModel::onNameChange,
+                        onSurnameChanged = accountViewModel::onSurnameChanged,
+                        onNameChanged = accountViewModel::onNameChanged,
+                        onChangeSurname = accountViewModel::onSurnameChange,
+                        onSendImage = accountViewModel::sendImage,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

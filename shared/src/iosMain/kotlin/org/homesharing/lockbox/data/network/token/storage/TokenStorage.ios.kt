@@ -6,16 +6,16 @@ import platform.Foundation.NSUserDefaults
 actual class TokenStorage {
     private val userDefaults = NSUserDefaults.standardUserDefaults
 
-    actual fun getAccessToken(): String? {
-        return userDefaults.stringForKey(ACCESS_TOKEN_NAME)
+    actual fun getAccessToken(): String {
+        return userDefaults.stringForKey(ACCESS_TOKEN_NAME)!!
     }
 
     actual fun saveAccessToken(token: String) {
         userDefaults.setObject(token, forKey = ACCESS_TOKEN_NAME)
     }
 
-    actual fun getRefreshToken(): String? {
-        return userDefaults.stringForKey(REFRESH_TOKEN_NAME)
+    actual fun getRefreshToken(): String {
+        return userDefaults.stringForKey(REFRESH_TOKEN_NAME)!!
     }
 
     actual fun saveRefreshToken(token: String) {

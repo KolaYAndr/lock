@@ -31,6 +31,7 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.koin.core)
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.paging)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

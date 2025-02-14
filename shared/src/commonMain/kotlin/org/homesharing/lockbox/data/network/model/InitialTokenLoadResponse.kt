@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model
+package org.homesharing.lockbox.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

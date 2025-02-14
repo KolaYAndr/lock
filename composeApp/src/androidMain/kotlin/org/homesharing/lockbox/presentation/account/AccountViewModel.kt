@@ -18,17 +18,51 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
             val info = repository.parseAccountInfo()
             _uiState.update {
                 it.copy(
-                    name = info.givenName,
-                    surname = info.familyName,
+                    name = info.givenName ?: "",
+                    surname = info.familyName ?: "",
                     email = info.email,
-                    phoneNumber = info.preferredUsername
+                    sub = info.sub
                 )
             }
+
+            getAvatarLink(info.sub)
         }
+    }
+
+    private suspend fun getAvatarLink(sub: String) {
+        val avatarLink =  repository.getAvatarLink(sub)
+        _uiState.update { it.copy(imageUri = avatarLink) }
     }
 
     init {
         fetchInfo()
+    }
+
+    fun onNameChange(newName: String) {
+        _uiState.update {
+            it.copy(name = newName)
+        }
+    }
+
+    fun onSurnameChange(newSurname: String) {
+        _uiState.update {
+            it.copy(surname = newSurname)
+        }
+    }
+
+    fun onSurnameChanged() {
+
+    }
+
+    fun onNameChanged() {
+
+    }
+
+    fun sendImage(data: ByteArray) {
+        viewModelScope.launch {
+            repository.sendImage(data)
+            getAvatarLink(uiState.value.sub)
+        }
     }
 
     fun showDialog() {
@@ -50,4 +84,6 @@ data class AccountUiState(
     val email: String = "",
     val phoneNumber: String = "",
     val showDialog: Boolean = false,
+    val imageUri: String = "",
+    val sub: String = "",
 )
