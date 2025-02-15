@@ -14,6 +14,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,16 +41,14 @@ import presentation.theme.LockBoxTheme
 @Composable
 fun LoginScreen(
     state: LoginUiState,
-    onDismiss: () -> Unit,
-    onShowCard: () -> Unit,
     onToTypeAuth: (LoginType) -> Unit,
     onLoggedIn: () -> Unit,
     topRowContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.isLoggedIn) {
-        onLoggedIn()
-    }
+    if (state.isLoggedIn) { onLoggedIn() }
+
+    var showModal by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
@@ -88,7 +90,7 @@ fun LoginScreen(
                 textAlign = TextAlign.Center
             )
             BasicButton(
-                onClick = onShowCard::invoke,
+                onClick = { showModal = true },
                 text = stringResource(R.string.sing_in),
                 paddingValues = PaddingValues(10.dp),
                 modifier = Modifier
@@ -98,9 +100,9 @@ fun LoginScreen(
 
         }
 
-        if (state.showModal) {
+        if (showModal) {
             BasicBottomSheet(
-                onDismissRequest = onDismiss::invoke,
+                onDismissRequest = { showModal = false },
             ) {
                 when (state.loginType) {
                     LoginType.ForgotPassword -> {
@@ -112,7 +114,7 @@ fun LoginScreen(
                             forgotPasswordUiState = forgotPasswordState.value,
                             title = stringResource(R.string.password_recovery),
                             onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
-                            onDismiss = onDismiss::invoke,
+                            onDismiss = { showModal = false },
                             onEmailChange = forgotPasswordViewModel::onChangeEmail,
                             onConfirmEmail = forgotPasswordViewModel::confirmEmail,
                             onToStep = forgotPasswordViewModel::toStep,
@@ -135,7 +137,7 @@ fun LoginScreen(
                             onLoggedIn()
                         } else SignInCard(
                             signInUiState = signInState.value,
-                            onDismiss = onDismiss::invoke,
+                            onDismiss = { showModal = false },
                             onEmailChange = signInViewModel::editEmail,
                             onPasswordChange = signInViewModel::editPassword,
                             onPasswordSeenChange = signInViewModel::showPasswordToggle,
@@ -155,7 +157,7 @@ fun LoginScreen(
                         SignUpCard(
                             signUpUiState = signUpState.value,
                             onSignIn = { onToTypeAuth(LoginType.SignIn) },
-                            onDismiss = onDismiss::invoke,
+                            onDismiss = { showModal = false },
                             onEmailChange = signUpViewModel::onChangeEmail,
                             onConfirmEmail = signUpViewModel::confirmEmail,
                             onToStep = signUpViewModel::toStep,
@@ -182,7 +184,7 @@ fun PreviewLoginScreen() {
         val uiState = LoginUiState()
         LoginScreen(
             state = uiState,
-            {}, {}, {}, {}, {},
+            {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

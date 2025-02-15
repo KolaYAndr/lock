@@ -30,10 +30,12 @@ val networkModule = module {
         )
     }
 
-    single<BoxesPagingSource> {
-        BoxesPagingSource(
-            get<BoxesApi>()
-        )
+    factory<() -> BoxesPagingSource> {
+        {
+            BoxesPagingSource(
+                get<BoxesApi>()
+            )
+        }
     }
 
     single<HttpClient>(

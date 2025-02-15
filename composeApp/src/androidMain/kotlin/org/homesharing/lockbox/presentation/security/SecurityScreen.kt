@@ -14,6 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -33,13 +37,14 @@ import presentation.theme.LockBoxTheme
 @Composable
 fun SecurityScreen(
     securityUiState: SecurityUiState,
-    onNavBack: () -> Unit, onToActiveSessions: () -> Unit,
-    onShowDialog: () -> Unit,
-    onHideDialog: () -> Unit,
+    onNavBack: () -> Unit,
+    onToActiveSessions: () -> Unit,
+    onBackToChangePassword: () -> Unit,
     onPasswordSet: () -> Unit,
     onReady: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.Top,
@@ -52,9 +57,12 @@ fun SecurityScreen(
 
                 SecurityUiState.PasswordChanged -> stringResource(R.string.change_password)
             },
-            onNavigate = when(securityUiState) {
-                is SecurityUiState.ChangePassword -> onNavBack
-                SecurityUiState.PasswordChanged -> onHideDialog
+            onNavigate = when (securityUiState) {
+                SecurityUiState.ChangePassword ->
+                    onNavBack
+
+                SecurityUiState.PasswordChanged ->
+                    onBackToChangePassword.also { showDialog = false }
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -62,10 +70,10 @@ fun SecurityScreen(
         when (securityUiState) {
             is SecurityUiState.ChangePassword -> {
                 ChangePasswordScreen(
-                    onShowDialog = onShowDialog,
+                    onShowDialog = { showDialog = true },
                     onToActiveSessions = onToActiveSessions,
-                    showDialog = securityUiState.showDialog,
-                    onHideDialog = onHideDialog,
+                    showDialog = showDialog,
+                    onHideDialog = { showDialog = false },
                     onPasswordSet = onPasswordSet
                 )
             }
@@ -204,10 +212,10 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
 @Composable
 fun PreviewSecurityScreenChangePassword() {
     LockBoxTheme {
-        val state = SecurityUiState.ChangePassword()
+        val state = SecurityUiState.ChangePassword
         SecurityScreen(
             securityUiState = state,
-            {}, {}, {}, {}, {}, {},
+            {}, {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -220,7 +228,7 @@ fun PreviewSecurityScreenPasswordChanged() {
         val state = SecurityUiState.PasswordChanged
         SecurityScreen(
             securityUiState = state,
-            {}, {}, {}, {}, {}, {},
+            {}, {}, {}, {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

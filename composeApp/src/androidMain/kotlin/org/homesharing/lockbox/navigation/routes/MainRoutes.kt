@@ -7,7 +7,7 @@ sealed class MainRoutes {
     data object Boxes: MainRoutes()
 
     @Serializable
-    data object DetailedBox: MainRoutes()
+    data class DetailedBox(val macAddress: String): MainRoutes()
 
     @Serializable
     data object Login : MainRoutes()

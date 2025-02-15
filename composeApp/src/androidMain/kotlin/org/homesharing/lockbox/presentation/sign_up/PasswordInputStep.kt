@@ -48,6 +48,7 @@ fun PasswordInputStep(
         modifier = Modifier
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
+
     Text(
         text = stringResource(R.string.password),
         style = LockBoxTheme.typography.subHeadlineLarge,

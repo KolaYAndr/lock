@@ -9,6 +9,11 @@ import org.homesharing.lockbox.R
 import presentation.composables.CardTopRow
 import presentation.composables.general.BasicCard
 
+private const val TOTAL_STEPS = 3
+private const val STEP_ONE = 1
+private const val STEP_TWO = 2
+private const val STEP_THREE = 3
+
 @Composable
 fun SignUpCard(
     signUpUiState: SignUpUiState,
@@ -38,11 +43,11 @@ fun SignUpCard(
             onDismiss = { onDismiss() },
             titleText = stringResource(R.string.register),
             stepNumber = when (signUpUiState.signUpStep) {
-                SignUpStep.EmailInput -> 1
-                SignUpStep.EmailConfirmation -> 2
-                SignUpStep.PasswordInput -> 3
+                SignUpStep.EmailInput -> STEP_ONE
+                SignUpStep.EmailConfirmation -> STEP_TWO
+                SignUpStep.PasswordInput -> STEP_THREE
             },
-            totalSteps = signUpUiState.totalSteps,
+            totalSteps = TOTAL_STEPS,
             modifier = Modifier.fillMaxWidth()
         )
 

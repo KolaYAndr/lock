@@ -94,10 +94,7 @@ data class SignUpUiState(
     val isPasswordSeen: Boolean = false,
     val isPasswordRepeatedSeen: Boolean = false,
     val signUpStep: SignUpStep = SignUpStep.EmailInput,
-    val totalSteps: Int = entrances
 )
-
-private val entrances = SignUpStep::class.sealedSubclasses.size
 
 sealed class SignUpStep {
     data object EmailInput : SignUpStep()

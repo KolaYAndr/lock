@@ -13,6 +13,10 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
     private val _uiState: MutableStateFlow<AccountUiState> = MutableStateFlow(AccountUiState())
     val uiState: StateFlow<AccountUiState> get() = _uiState.asStateFlow()
 
+    init {
+        fetchInfo()
+    }
+
     private fun fetchInfo() {
         viewModelScope.launch {
             val info = repository.parseAccountInfo()
@@ -34,9 +38,6 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         _uiState.update { it.copy(imageUri = avatarLink) }
     }
 
-    init {
-        fetchInfo()
-    }
 
     fun onNameChange(newName: String) {
         _uiState.update {
@@ -65,14 +66,6 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         }
     }
 
-    fun showDialog() {
-        _uiState.update { it.copy(showDialog = true) }
-    }
-
-    fun hideDialog() {
-        _uiState.update { it.copy(showDialog = false) }
-    }
-
     fun deleteAccount() {
 
     }
@@ -83,7 +76,6 @@ data class AccountUiState(
     val surname: String = "",
     val email: String = "",
     val phoneNumber: String = "",
-    val showDialog: Boolean = false,
     val imageUri: String = "",
     val sub: String = "",
 )

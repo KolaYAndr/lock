@@ -19,11 +19,11 @@ class BoxesPagingSource(
         val offset = params.loadSize
 
         val response = api.getBoxes(start, offset)
-        return if (response.error) LoadResult.Page(
+        val endOfPagination = response.body.boxes.isEmpty()
+        return  LoadResult.Page(
             data = response.body.boxes,
             prevKey = if (start == 0) null else start - offset,
-            nextKey = start + offset
+            nextKey = if (endOfPagination) null else start + offset
         )
-        else LoadResult.Error(throwable = Throwable(response.errorText))
     }
 }

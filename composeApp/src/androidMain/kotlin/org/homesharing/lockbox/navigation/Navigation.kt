@@ -4,19 +4,9 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -24,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
-import org.homesharing.lockbox.R
+import androidx.navigation.toRoute
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
 import org.homesharing.lockbox.navigation.routes.MainRoutes
@@ -49,7 +39,8 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
-import presentation.theme.LockBoxTheme
+import presentation.composables.LockBoxesTopRow
+import presentation.composables.SettingsTopRowText
 
 private const val ANIMATION_DURATION = 300
 private val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
@@ -79,36 +70,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
 
                 LoginScreen(
                     state = state.value,
-                    onDismiss = loginViewModel::hideCard,
-                    onShowCard = loginViewModel::showCard,
                     onToTypeAuth = loginViewModel::toTypeAuth,
                     onLoggedIn = { navController.navigate(MainRoutes.Boxes) },
-                    topRowContent = {
-                        Box(
-                            modifier = Modifier
-                                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 12.dp)
-                                .size(40.dp)
-                                .background(
-                                    color = LockBoxTheme.colors.grey800,
-                                    shape = LockBoxTheme.shape.circleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.user),
-                                tint = LockBoxTheme.colors.grey500,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(28.dp)
-
-                            )
-                        }
-                        Text(
-                            text = stringResource(R.string.main),
-                            style = LockBoxTheme.typography.titleMedium,
-                            color = LockBoxTheme.colors.grey50
-                        )
-                    },
+                    topRowContent = { LockBoxesTopRow() },
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -121,11 +85,21 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     state = uiState.value,
                     boxes = lockBoxesViewModel.boxes,
                     onSearchChange = lockBoxesViewModel::onSearchChange,
-                    onNavigateToBox = {},
-                    onShowModal = lockBoxesViewModel::showModal,
-                    onHideModal = lockBoxesViewModel::hideModal,
+                    onNavigateToBox = { macAddress ->
+                        navController.navigate(
+                            MainRoutes.DetailedBox(macAddress = macAddress)
+                        )
+                    },
                     modifier = Modifier.fillMaxSize()
                 )
+            }
+
+            composable<MainRoutes.DetailedBox>(
+                enterTransition = enterAnimation,
+                exitTransition = exitAnimation,
+            ) { backStackEntry: NavBackStackEntry ->
+                val args = backStackEntry.toRoute<MainRoutes.DetailedBox>()
+                val macAddress = args.macAddress
             }
         }
 
@@ -138,18 +112,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
 
                 LoginScreen(
                     state = state.value,
-                    onDismiss = loginViewModel::hideCard,
-                    onShowCard = loginViewModel::showCard,
                     onToTypeAuth = loginViewModel::toTypeAuth,
                     onLoggedIn = { navController.navigate(SettingsRoutes.Settings) },
-                    topRowContent = {
-                        Text(
-                            text = stringResource(R.string.settings),
-                            style = LockBoxTheme.typography.titleSmall,
-                            color = LockBoxTheme.colors.grey100,
-                            modifier = Modifier.padding(12.dp)
-                        )
-                    },
+                    topRowContent = { SettingsTopRowText() },
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -162,10 +127,8 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     settingsUiState = settingsState.value,
                     onLogOut = {
                         settingsViewModel.logOut()
-                        navController.navigate(MainRoutes.Login)
+                        navController.navigateToDestinationPoppingBackStack(MainRoutes.Login)
                     },
-                    onHideLogOut = settingsViewModel::hideDialog,
-                    onShowLogOut = settingsViewModel::showDialog,
                     onNavigate = { route -> navController.navigate(route) },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -194,10 +157,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                         securityUiState = securityUiState.value,
                         onNavBack = { navController.navigateUp() },
                         onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
-                        onShowDialog = { securityViewModel.showDialog() },
-                        onHideDialog = { securityViewModel.hideDialog() },
                         onPasswordSet = { securityViewModel.onPasswordChanged() },
                         onReady = { navController.navigate(SettingsRoutes.Account) },
+                        onBackToChangePassword = { securityViewModel.backToChangePassword() },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -219,11 +181,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                     AccountScreen(
                         accountUiState = accountUiState.value,
                         onNavigateBack = { navController.navigateUp() },
-                        onHideDialog = { accountViewModel.hideDialog() },
-                        onShowDialog = { accountViewModel.showDialog() },
                         onDelete = {
                             accountViewModel.deleteAccount()
-                            navController.navigate(AccountRoutes.Warning)
+                            navController.navigateToDestinationPoppingBackStack(AccountRoutes.Warning)
                         },
                         onNavigate = { route -> navController.navigate(route) },
                         onChangeName = accountViewModel::onNameChange,
@@ -237,7 +197,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
 
                 composable<AccountRoutes.Warning> {
                     WarningScreen(
-                        onNavigate = { navController.navigate(MainRoutes.Login) },
+                        onNavigate = {
+                            navController.navigateToDestinationPoppingBackStack(MainRoutes.Login)
+                        },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -291,5 +253,13 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 }
             }
         }
+    }
+}
+
+private fun <T: Any> NavHostController.navigateToDestinationPoppingBackStack(destination: T) {
+    this.popBackStack()
+    this.navigate(destination) {
+        launchSingleTop = true
+        restoreState = false
     }
 }

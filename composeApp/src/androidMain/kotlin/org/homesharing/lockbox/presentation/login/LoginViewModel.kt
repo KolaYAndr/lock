@@ -23,21 +23,9 @@ class LoginViewModel(private val repository: AccountRepository): ViewModel() {
         }
     }
 
-    fun showCard() {
-        _uiState.update {
-            LoginUiState(showModal = true, loginType = LoginType.SignIn)
-        }
-    }
-
     fun toTypeAuth(authType: LoginType) {
         _uiState.update {
             it.copy(loginType = authType)
-        }
-    }
-
-    fun hideCard() {
-        _uiState.update {
-            LoginUiState(showModal = false)
         }
     }
 }
@@ -49,7 +37,6 @@ sealed class LoginType {
 }
 
 data class LoginUiState(
-    val showModal: Boolean = false,
     val loginType: LoginType = LoginType.SignIn,
     val isLoggedIn: Boolean = false,
 )

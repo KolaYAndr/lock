@@ -13,6 +13,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -35,8 +39,6 @@ fun SettingsScreen(
     settingsUiState: SettingsUiState,
     onNavigate: (SettingsRoutes) -> Unit,
     onLogOut: () -> Unit,
-    onShowLogOut: () -> Unit,
-    onHideLogOut: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -44,6 +46,7 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var showDialog by remember { mutableStateOf(false) }
         Text(
             text = stringResource(R.string.settings),
             style = LockBoxTheme.typography.titleSmall,
@@ -65,6 +68,7 @@ fun SettingsScreen(
                 color = LockBoxTheme.colors.grey50,
                 modifier = Modifier.padding(top = 12.dp)
             )
+
         Text(
             text = settingsUiState.email,
             style = LockBoxTheme.typography.subHeadlineMedium,
@@ -120,9 +124,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 24.dp)
-                .clickable {
-                    onShowLogOut()
-                },
+                .clickable { showDialog = true },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
         ) {
@@ -139,9 +141,9 @@ fun SettingsScreen(
             )
         }
 
-        if (settingsUiState.showDialog) {
+        if (showDialog) {
             BasicDialog(
-                onDismiss = onHideLogOut::invoke
+                onDismiss = { showDialog = false }
             ) {
                 Text(
                     text = stringResource(R.string.log_out_question),
@@ -161,11 +163,14 @@ fun SettingsScreen(
                         color = LockBoxTheme.colors.grey100,
                         modifier = Modifier
                             .padding(10.dp)
-                            .clickable { onHideLogOut() }
+                            .clickable { showDialog = false }
                     )
 
                     BasicButton(
-                        onClick = onLogOut::invoke,
+                        onClick = {
+                            onLogOut()
+                            showDialog = false
+                        },
                         text = stringResource(R.string.log_out),
                         paddingValues = PaddingValues(10.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -222,6 +227,6 @@ private fun SettingsProperty(
 fun PreviewSettings() {
     LockBoxTheme {
         val settingsUiState = SettingsUiState()
-        SettingsScreen(settingsUiState, {}, {}, {}, {}, Modifier.fillMaxSize())
+        SettingsScreen(settingsUiState, {}, {}, Modifier.fillMaxSize())
     }
 }

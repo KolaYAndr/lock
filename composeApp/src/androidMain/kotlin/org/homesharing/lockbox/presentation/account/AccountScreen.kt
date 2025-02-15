@@ -18,7 +18,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -51,12 +54,11 @@ fun AccountScreen(
     onChangeSurname: (String) -> Unit,
     onSendImage: (ByteArray) -> Unit,
     onNavigateBack: () -> Unit,
-    onHideDialog: () -> Unit,
-    onShowDialog: () -> Unit,
     onDelete: () -> Unit,
     onNavigate: (AccountRoutes) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     val surnameFocusRequester = remember { FocusRequester() }
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
@@ -170,7 +172,7 @@ fun AccountScreen(
         }
 
         BasicButton(
-            onClick = { onShowDialog() },
+            onClick = { showDialog = true },
             text = stringResource(R.string.delete_account),
             paddingValues = PaddingValues(14.dp),
             colors = ButtonDefaults.buttonColors(
@@ -184,11 +186,11 @@ fun AccountScreen(
         )
     }
 
-    if (accountUiState.showDialog) {
+    if (showDialog) {
         BasicDialog(
-            onDismiss = onHideDialog::invoke,
+            onDismiss = { showDialog = false },
         ) {
-            DialogContent(onHideDialog, onDelete)
+            DialogContent(onHideDialog = { showDialog = false }, onDelete = onDelete)
         }
     }
 }
@@ -265,7 +267,6 @@ private fun ContactInfo(
             }
         }
 
-
         Text(
             text = if (isValueSet) stringResource(R.string.change_full)
             else stringResource(R.string.add_full),
@@ -291,8 +292,6 @@ fun PreviewSettings() {
         val accountUiState = AccountUiState()
         AccountScreen(
             accountUiState,
-            {},
-            {},
             {},
             {},
             {},

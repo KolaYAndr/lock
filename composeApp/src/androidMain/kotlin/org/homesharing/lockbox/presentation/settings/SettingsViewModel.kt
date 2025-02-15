@@ -32,22 +32,9 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
         }
     }
 
-    fun showDialog() {
-        _uiState.update {
-            it.copy(showDialog = true)
-        }
-    }
-
-    fun hideDialog() {
-        _uiState.update {
-            it.copy(showDialog = false)
-        }
-    }
-
     fun logOut() {
         viewModelScope.launch {
             repository.logOut()
-            hideDialog()
         }
     }
 }
@@ -55,7 +42,6 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
 data class SettingsUiState(
     val fullName: String = "",
     val email: String = "",
-    val showDialog: Boolean = false,
     val imageLink: String = "",
     val sub: String = "",
 )
