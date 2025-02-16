@@ -31,7 +31,7 @@ private const val TOKEN_URL = "protocol/openid-connect/token"
 private const val TOKEN_PORT = "8443"
 
 private const val CLIENT_ID = "client_id"
-private const val PUBLIC_CLIENT = "public_client"
+private const val PUBLIC_CLIENT = "public-client"
 private const val REFRESH_TOKEN = "refresh_token"
 private const val GRANT_TYPE = "grant_type"
 
@@ -91,7 +91,7 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
                     url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
                     formParameters = parameters {
                         append(CLIENT_ID, PUBLIC_CLIENT)
-                        append(REFRESH_TOKEN, oldTokens?.refreshToken ?: "")
+                        append(REFRESH_TOKEN, tokenStorage.getRefreshToken())
                         append(GRANT_TYPE, REFRESH_TOKEN)
                     }
                 ) {

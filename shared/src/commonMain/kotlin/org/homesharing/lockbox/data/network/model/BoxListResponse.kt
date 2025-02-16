@@ -26,5 +26,11 @@ data class BoxDto(
 
 @Serializable
 data class BoxListBody(
-    val boxes: List<BoxDto>
+    val boxes: List<BoxDto>,
+    @SerialName("total_boxes")
+    val totalBoxes: Int,
+    @SerialName("current_page")
+    val currentPage: Int,
+    @SerialName("boxes_on_page")
+    val boxesOnPage: Int,
 )

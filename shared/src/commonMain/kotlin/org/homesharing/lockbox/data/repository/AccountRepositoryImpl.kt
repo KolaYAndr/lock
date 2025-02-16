@@ -2,7 +2,6 @@ package org.homesharing.lockbox.data.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
@@ -16,16 +15,16 @@ class AccountRepositoryImpl(
     private val tokenStorage: TokenStorage
 ) : AccountRepository {
     override suspend fun parseAccountInfo(): AccountInfo =
-        withContext(Dispatchers.Default) {
-            val token = async(Dispatchers.IO) { tokenStorage.getAccessToken() }
-            decodeJWT(token.await())
+        withContext(Dispatchers.IO) {
+            val token =  tokenStorage.getAccessToken()
+            decodeJWT(token)
         }
 
-    private fun decodeJWT(jwt: String): AccountInfo {
+    private suspend fun decodeJWT(jwt: String): AccountInfo = withContext(Dispatchers.Default) {
         val parts = jwt.split(".")
         val payload = parts[1].decodeBase64String()
 
-        return Json.decodeFromString<AccountInfo>(payload)
+        Json.decodeFromString<AccountInfo>(payload)
     }
 
 

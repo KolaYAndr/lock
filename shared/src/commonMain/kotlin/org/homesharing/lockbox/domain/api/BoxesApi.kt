@@ -6,7 +6,6 @@ import org.homesharing.lockbox.data.network.model.BoxStatusResponse
 
 interface BoxesApi {
     suspend fun createCode()
-    suspend fun generate()
     suspend fun getBoxes(page: Int, size: Int): BoxListResponse
     suspend fun getBoxByMac(address: String): BoxResponse
     suspend fun createShareToken()

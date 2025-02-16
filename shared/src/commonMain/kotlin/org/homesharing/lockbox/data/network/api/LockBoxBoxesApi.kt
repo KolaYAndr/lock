@@ -29,10 +29,6 @@ class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
         TODO("Not yet implemented")
     }
 
-    override suspend fun generate() {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getBoxes(page: Int, size: Int): BoxListResponse {
         return client.get {
             url(BASE_URL)

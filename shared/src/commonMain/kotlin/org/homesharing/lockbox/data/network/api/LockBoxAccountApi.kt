@@ -31,7 +31,7 @@ private const val CLIENT_ID = "client_id"
 private const val GRANT_TYPE = "grant_type"
 private const val SCOPE = "scope"
 
-private const val TOKEN_INITIAL_URL =
+private const val TOKEN_URL =
     "https://api.lockboxes.ru:8443/realms/lockbox/protocol/openid-connect/token"
 private const val SIGN_UP_URL = "https://api.lockboxes.ru:8445/accounts/signup"
 private const val AVATARS_URL = "https://api.lockboxes.ru:8445/avatars/get"
@@ -42,6 +42,7 @@ class LockBoxAccountApi(
     private val unsignedClient: HttpClient,
     private val signedClient: HttpClient
 ) : AccountApi {
+
     override suspend fun signUp(
         username: String,
         password: String,
@@ -64,7 +65,7 @@ class LockBoxAccountApi(
         password: String
     ): InitialTokenLoadResponse {
         val response = unsignedClient.submitForm(
-            url = TOKEN_INITIAL_URL,
+            url = TOKEN_URL,
             formParameters = parameters {
                 append(GRANT_TYPE, PASSWORD)
                 append(CLIENT_ID, PUBLIC_CLIENT)
