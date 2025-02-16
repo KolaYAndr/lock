@@ -14,6 +14,7 @@ class AccountRepositoryImpl(
     private val api: AccountApi,
     private val tokenStorage: TokenStorage
 ) : AccountRepository {
+
     override suspend fun parseAccountInfo(): AccountInfo =
         withContext(Dispatchers.IO) {
             val token =  tokenStorage.getAccessToken()
@@ -26,7 +27,6 @@ class AccountRepositoryImpl(
 
         Json.decodeFromString<AccountInfo>(payload)
     }
-
 
     override suspend fun logOut() = withContext(Dispatchers.IO) {
         tokenStorage.clearInfo()

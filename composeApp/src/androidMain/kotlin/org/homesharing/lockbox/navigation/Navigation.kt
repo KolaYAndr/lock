@@ -59,11 +59,15 @@ private val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.(
     }
 
 @Composable
-fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) {
+fun Navigation(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    startFromLogin: Boolean
+) {
     NavHost(
         navController = navController, startDestination = Routes.Main, modifier = modifier
     ) {
-        navigation<Routes.Main>(startDestination = MainRoutes.Login) {
+        navigation<Routes.Main>(startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes) {
             composable<MainRoutes.Login> {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state = loginViewModel.uiState.collectAsStateWithLifecycle()
@@ -71,7 +75,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 LoginScreen(
                     state = state.value,
                     onToTypeAuth = loginViewModel::toTypeAuth,
-                    onLoggedIn = { navController.navigate(MainRoutes.Boxes) },
+                    onLoggedIn = {
+                        navController.navigateToDestinationPoppingBackStack(MainRoutes.Boxes)
+                    },
                     topRowContent = { LockBoxesTopRow() },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -104,7 +110,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
         }
 
         navigation<Routes.Settings>(
-            startDestination = SettingsRoutes.Login,
+            startDestination = if (startFromLogin) SettingsRoutes.Login else SettingsRoutes.Settings,
         ) {
             composable<SettingsRoutes.Login> {
                 val loginViewModel = koinViewModel<LoginViewModel>()
@@ -113,7 +119,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
                 LoginScreen(
                     state = state.value,
                     onToTypeAuth = loginViewModel::toTypeAuth,
-                    onLoggedIn = { navController.navigate(SettingsRoutes.Settings) },
+                    onLoggedIn = {
+                        navController.navigateToDestinationPoppingBackStack(SettingsRoutes.Settings)
+                    },
                     topRowContent = { SettingsTopRowText() },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -256,7 +264,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
     }
 }
 
-private fun <T: Any> NavHostController.navigateToDestinationPoppingBackStack(destination: T) {
+private fun <T : Any> NavHostController.navigateToDestinationPoppingBackStack(destination: T) {
     this.popBackStack()
     this.navigate(destination) {
         launchSingleTop = true

@@ -102,6 +102,7 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
                     saveAccessToken(tokenInfo.accessToken)
                     saveRefreshToken(tokenInfo.refreshToken)
                 }
+
                 BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
             }
         }

@@ -92,9 +92,12 @@ fun LockBoxesScreen(
             }
 
             is LoadState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize())
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(),
+                    color = LockBoxTheme.colors.green500
+                )
             }
 
             else -> {
@@ -175,7 +178,7 @@ private fun LockBox(
             Icon(
                 imageVector = Icons.Default.Lock,
                 contentDescription = null,
-                modifier = Modifier.size(64.dp),
+                modifier = Modifier.padding(vertical = 6.dp).size(64.dp),
                 tint = LockBoxTheme.colors.grey500
             )
 
