@@ -132,6 +132,11 @@
     <string name="right_now">Сейчас</string>
     <string name="finish_all_other_sessions">Завершить все другие сеансы</string>
     <string name="unknown_device">Неизвестное устройство</string>
+    <string name="contact_us">Связаться с нами</string>
+    <string name="we_will_try_to_solve_your_issue">Мы постараемся решить ваш вопрос. Выберите удобный способ связи ниже.</string>
+    <string name="lockbox_email">help@lockbox.ru</string>
+    <string name="telegram">Telegram</string>
+    <string name="whatsapp">WhatsApp</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

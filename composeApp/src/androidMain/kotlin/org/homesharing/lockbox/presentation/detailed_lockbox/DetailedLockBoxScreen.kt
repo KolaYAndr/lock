@@ -36,12 +36,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import presentation.composables.HelpModalSheet
+import presentation.composables.IconTextArrow
 import presentation.composables.LockBoxPropertyInput
 import presentation.composables.general.BasicBottomSheet
 import presentation.composables.general.BasicButton
 import presentation.composables.general.BasicDialog
 import presentation.composables.general.BasicGroup
 import presentation.composables.general.BasicHorizontalDivider
+import presentation.composables.TitledTopWithCloseAndBackButtons
 import presentation.composables.general.BasicModal
 import presentation.theme.LockBoxTheme
 
@@ -61,6 +64,8 @@ fun DetailedLockBoxScreen(
     var showAboutDeviceModal by remember { mutableStateOf(false) }
     var showChangeNameBottomSheet by remember { mutableStateOf(false) }
     var showChangeAddressBottomSheet by remember { mutableStateOf(false) }
+    var showHelpModal by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.Top,
@@ -236,17 +241,17 @@ fun DetailedLockBoxScreen(
                         .fillMaxWidth()
                         .padding(vertical = 12.dp)
                 ) {
-                    ActionableProperty(
+                    IconTextArrow(
                         painter = painterResource(R.drawable.circle_alert),
-                        title = stringResource(R.string.about_device),
+                        text = stringResource(R.string.about_device),
                         onClick = { showAboutDeviceModal = true },
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    ActionableProperty(
+                    IconTextArrow(
                         painter = painterResource(R.drawable.headset),
-                        title = stringResource(R.string.help),
-                        onClick = { }, //TODO
+                        text = stringResource(R.string.help),
+                        onClick = { showHelpModal = true },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -319,6 +324,13 @@ fun DetailedLockBoxScreen(
         AboutDeviceModal(
             onDismiss = { showAboutDeviceModal = false },
             boxName = uiState.boxName,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+
+    if (showHelpModal) {
+        HelpModalSheet(
+            onDismiss = { showHelpModal = false },
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -447,7 +459,7 @@ private fun AboutDeviceModal(
         onDismiss = onDismiss,
         modifier = modifier
     ) {
-        ModalTopRow(
+        TitledTopWithCloseAndBackButtons(
             onDismiss = onDismiss,
             title = stringResource(R.string.about_device),
             subtitle = boxName
@@ -537,56 +549,6 @@ private fun AboutDeviceModal(
                 text = stringResource(R.string.help),
                 style = LockBoxTheme.typography.headlineMedium,
                 color = LockBoxTheme.colors.grey100
-            )
-        }
-    }
-}
-
-@Composable
-private fun ModalTopRow(onDismiss: () -> Unit, title: String, subtitle: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 5.dp, horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        IconButton(
-            onClick = onDismiss,
-            modifier = Modifier.size(48.dp),
-            colors = IconButtonDefaults.iconButtonColors(contentColor = LockBoxTheme.colors.grey500)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.arrow_back),
-                contentDescription = null,
-            )
-        }
-
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                style = LockBoxTheme.typography.titleSmall,
-                color = LockBoxTheme.colors.grey100,
-            )
-
-            Text(
-                text = subtitle,
-                style = LockBoxTheme.typography.subHeadlineMedium,
-                color = LockBoxTheme.colors.grey500
-            )
-        }
-        IconButton(
-            onClick = onDismiss,
-            modifier = Modifier.size(48.dp),
-            colors = IconButtonDefaults.iconButtonColors(contentColor = LockBoxTheme.colors.grey500)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.close),
-                contentDescription = null,
             )
         }
     }
@@ -744,7 +706,6 @@ private fun OpenDeviceDialog(
 
 @Composable
 private fun ActionableProperty(
-    painter: Painter? = null,
     title: String,
     text: String = "",
     onClick: () -> Unit,
@@ -758,15 +719,6 @@ private fun ActionableProperty(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (painter != null) {
-            Icon(
-                painter = painter,
-                contentDescription = null,
-                tint = LockBoxTheme.colors.grey100,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,

@@ -46,6 +46,7 @@ import org.homesharing.lockbox.data.network.dto.BoxDto
 import presentation.composables.LockBoxCircularProgress
 import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.NetworkImage
+import presentation.composables.TitledTopWithCloseAndBackButtons
 import presentation.composables.general.BasicButton
 import presentation.composables.general.BasicHorizontalDivider
 import presentation.composables.general.BasicModal
@@ -280,43 +281,12 @@ private fun ConnectModalSheet(
         onDismiss = onDismiss,
         modifier = Modifier.fillMaxSize()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 5.dp, horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = onDismiss,
-                modifier = Modifier.size(48.dp),
-                colors = IconButtonDefaults.iconButtonColors(contentColor = LockBoxTheme.colors.grey500)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                )
-            }
+        TitledTopWithCloseAndBackButtons(
+            title = stringResource(R.string.device_connection),
+            onDismiss = onDismiss,
+            modifier = Modifier.fillMaxWidth()
+        )
 
-            Text(
-                text = stringResource(R.string.device_connection),
-                style = LockBoxTheme.typography.titleSmall,
-                color = LockBoxTheme.colors.grey100,
-                modifier = Modifier
-                    .padding(12.dp)
-            )
-
-            IconButton(
-                onClick = onDismiss,
-                modifier = Modifier.size(48.dp),
-                colors = IconButtonDefaults.iconButtonColors(contentColor = LockBoxTheme.colors.grey500)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.close),
-                    contentDescription = null,
-                )
-            }
-        }
         BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
         Column(

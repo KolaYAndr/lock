@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.SettingsRoutes
+import presentation.composables.HelpModalSheet
+import presentation.composables.IconTextArrow
 import presentation.composables.NetworkImage
 import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.RoundText
@@ -99,9 +101,9 @@ fun SettingsScreen(
                             .padding(top = 24.dp, start = 16.dp, end = 16.dp)
                     ) {
                         accountProperties.forEachIndexed { index, property ->
-                            SettingsProperty(
-                                title = property.title,
-                                icon = property.icon,
+                            IconTextArrow(
+                                text = stringResource(property.title),
+                                painter = painterResource(property.icon),
                                 onClick = { onNavigate(property.route) },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -118,18 +120,18 @@ fun SettingsScreen(
                             .fillMaxWidth()
                             .padding(top = 24.dp, start = 16.dp, end = 16.dp)
                     ) {
-                        SettingsProperty(
-                            title = aboutProperty.title,
-                            icon = aboutProperty.icon,
+                        IconTextArrow(
+                            text = stringResource(aboutProperty.title),
+                            painter = painterResource(aboutProperty.icon),
                             onClick = { onNavigate(aboutProperty.route) },
                             modifier = Modifier.fillMaxWidth()
 
                         )
                         BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-                        SettingsProperty(
-                            title = R.string.help,
-                            icon = R.drawable.headset,
+                        IconTextArrow(
+                            text = stringResource(R.string.help),
+                            painter = painterResource(R.drawable.headset),
                             onClick = { showHelpModal = true },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -143,7 +145,10 @@ fun SettingsScreen(
                             .padding(start = 16.dp, end = 16.dp, top = 24.dp)
                             .clickable { showExitDialog = true },
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+                        horizontalArrangement = Arrangement.spacedBy(
+                            12.dp,
+                            Alignment.CenterHorizontally
+                        )
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.log_out),
@@ -165,6 +170,13 @@ fun SettingsScreen(
             ExitDialog(
                 onDismiss = { showExitDialog = false },
                 onLogOut = onLogOut
+            )
+        }
+
+        if (showHelpModal) {
+            HelpModalSheet(
+                onDismiss = { showHelpModal = false },
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -209,45 +221,6 @@ private fun ExitDialog(onDismiss: () -> Unit, onLogOut: () -> Unit) {
                 )
             )
         }
-    }
-}
-
-@Composable
-private fun SettingsProperty(
-    title: Int,
-    icon: Int,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = modifier
-            .clickable {
-                onClick()
-            }
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = LockBoxTheme.colors.grey100,
-            modifier = Modifier.padding(end = 12.dp)
-        )
-        Text(
-            text = stringResource(title),
-            style = LockBoxTheme.typography.headlineLarge,
-            color = LockBoxTheme.colors.white,
-            modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 14.dp)
-        )
-        Icon(
-            painter = painterResource(R.drawable.arrow_right),
-            contentDescription = null,
-            tint = LockBoxTheme.colors.grey500,
-            modifier = Modifier.padding(start = 12.dp)
-        )
     }
 }
 
