@@ -27,8 +27,21 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
                     sub = info.sub
                 )
             }
-            val imageLink = repository.getAvatarLink(info.sub)
+            val imageLink = repository.getImageLink(info.sub)
             _uiState.update { it.copy(imageLink = imageLink) }
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true) }
+            val info = repository.parseAccountInfo()
+            _uiState.update {
+                it.copy(
+                    fullName = info.name ?: ""
+                )
+            }
+            _uiState.update { it.copy(isRefreshing = false) }
         }
     }
 
@@ -44,4 +57,5 @@ data class SettingsUiState(
     val email: String = "",
     val imageLink: String = "",
     val sub: String = "",
+    val isRefreshing: Boolean = false
 )

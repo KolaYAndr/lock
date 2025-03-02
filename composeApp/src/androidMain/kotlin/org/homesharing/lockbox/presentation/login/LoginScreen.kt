@@ -49,7 +49,6 @@ fun LoginScreen(
     if (state.isLoggedIn) { onLoggedIn() }
 
     var showModal by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.SpaceBetween

@@ -1,10 +1,10 @@
-package org.homesharing.lockbox.data.network.model
+package org.homesharing.lockbox.data.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AccountInfo(
+data class AccountInfoDto(
     val acr: String,
     @SerialName("allowed-origins")
     val allowedOrigins: List<String>,

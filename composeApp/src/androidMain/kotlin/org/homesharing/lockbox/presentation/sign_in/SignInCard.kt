@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,9 +59,12 @@ fun SignInCard(
     ) {
         val emailInteractionSource = remember { MutableInteractionSource() }
         val passwordInteractionSource = remember { MutableInteractionSource() }
-        val focusRequester = remember { FocusRequester() }
+        val passwordFocusRequester = remember { FocusRequester() }
+        val emailFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
+
+        LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
 
         Box(modifier = Modifier.fillMaxWidth()) {
             CloseRoundButton(
@@ -102,14 +106,16 @@ fun SignInCard(
             interactionSource = emailInteractionSource,
             isError = emailError,
             errorText = emailErrorText,
-            keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
+            keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
                 autoCorrectEnabled = false,
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
                 showKeyboardOnFocus = true
             ),
-            modifier = Modifier.padding(top = 6.dp, start = 16.dp, end = 16.dp)
+            modifier = Modifier
+                .focusRequester(emailFocusRequester)
+                .padding(top = 6.dp, start = 16.dp, end = 16.dp)
         )
 
         Text(
@@ -142,7 +148,7 @@ fun SignInCard(
                 showKeyboardOnFocus = true
             ),
             modifier = Modifier
-                .focusRequester(focusRequester)
+                .focusRequester(passwordFocusRequester)
                 .padding(top = 6.dp, start = 16.dp, end = 16.dp)
         )
 

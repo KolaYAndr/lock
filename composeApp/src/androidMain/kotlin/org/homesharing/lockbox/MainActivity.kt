@@ -9,18 +9,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.navigation.BottomNavigation
 import org.homesharing.lockbox.navigation.Navigation
@@ -28,6 +26,8 @@ import org.homesharing.lockbox.navigation.routes.topLevelRoutes
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
 import presentation.theme.LockBoxTheme
+
+private const val SPLASH_SCREEN_TIME = 1000L
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,23 +44,25 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = systemBarStyle
         )
 
+        lifecycleScope.launch {
+            delay(SPLASH_SCREEN_TIME)
+            keepSplash = false
+        }
+
         setContent {
             val mainActivityViewModel = koinViewModel<MainActivityViewModel>()
-            var canLogin by remember { mutableStateOf(false) }
-            SideEffect {
-                lifecycleScope.launch {
-                    canLogin = mainActivityViewModel.canLogin().await()
-                    keepSplash = false
-                }
-            }
+            val isLoggedIn =
+                mainActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
 
             val navController = rememberNavController()
             KoinAndroidContext {
                 LockBoxTheme {
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(LockBoxTheme.colors.grey950),
                         bottomBar = {
-                            val navBackStackEntry by navController.currentBackStackEntryAsState()
                             BottomNavigation(
                                 topLevelRoutes = topLevelRoutes,
                                 navBackStackEntry = navBackStackEntry
@@ -73,14 +75,12 @@ class MainActivity : ComponentActivity() {
                                     restoreState = true
                                 }
                             }
-                        }
+                        },
                     ) { paddingValues ->
                         Navigation(
                             navController = navController,
-                            startFromLogin = !canLogin,
-                            modifier = Modifier
-                                .padding(paddingValues)
-                                .background(LockBoxTheme.colors.grey950)
+                            startFromLogin = !isLoggedIn.value,
+                            modifier = Modifier.padding(paddingValues)
                         )
                     }
                 }

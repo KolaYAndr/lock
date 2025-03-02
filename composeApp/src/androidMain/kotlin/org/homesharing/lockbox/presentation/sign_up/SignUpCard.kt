@@ -37,7 +37,7 @@ fun SignUpCard(
                 when (signUpUiState.signUpStep) {
                     SignUpStep.EmailConfirmation -> onToStep(SignUpStep.EmailInput)
                     SignUpStep.EmailInput -> onSignIn()
-                    SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailInput) // onToStep(SignUpStep.EmailConfirmation)
+                    SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailConfirmation)
                 }
             },
             onDismiss = { onDismiss() },
@@ -58,8 +58,8 @@ fun SignUpCard(
                     onConfirmEmail = onConfirmEmail::invoke,
                     onChangeClick = { onToStep(SignUpStep.EmailConfirmation) }
                 )
-                onToStep(SignUpStep.PasswordInput)
             }
+            
             SignUpStep.EmailInput -> {
                 EmailInputStep(
                     onSignIn = onSignIn::invoke,

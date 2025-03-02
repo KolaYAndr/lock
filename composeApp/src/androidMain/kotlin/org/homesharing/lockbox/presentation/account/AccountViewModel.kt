@@ -2,24 +2,50 @@ package org.homesharing.lockbox.presentation.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AccountRepository
+
+private const val UPDATE_TIME = 500L
 
 class AccountViewModel(private val repository: AccountRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<AccountUiState> = MutableStateFlow(AccountUiState())
     val uiState: StateFlow<AccountUiState> get() = _uiState.asStateFlow()
 
+    private var initialLoadComplete = false
+
     init {
         fetchInfo()
+        sendUpdates()
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun sendUpdates() {
+        viewModelScope.launch {
+            uiState
+                .map { it.name to it.surname }
+                .distinctUntilChanged()
+                .debounce(UPDATE_TIME)
+                .collectLatest { (name, surname) ->
+                    if (initialLoadComplete) {
+                        repository.updateInfo(name = name, surname = surname)
+                    }
+                }
+        }
     }
 
     private fun fetchInfo() {
         viewModelScope.launch {
             val info = repository.parseAccountInfo()
+
             _uiState.update {
                 it.copy(
                     name = info.givenName ?: "",
@@ -28,13 +54,14 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
                     sub = info.sub
                 )
             }
-
             getAvatarLink(info.sub)
+
+            initialLoadComplete = true
         }
     }
 
     private suspend fun getAvatarLink(sub: String) {
-        val avatarLink =  repository.getAvatarLink(sub)
+        val avatarLink = repository.getImageLink(sub)
         _uiState.update { it.copy(imageUri = avatarLink) }
     }
 
@@ -51,23 +78,16 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         }
     }
 
-    fun onSurnameChanged() {
-
-    }
-
-    fun onNameChanged() {
-
-    }
-
     fun sendImage(data: ByteArray) {
         viewModelScope.launch {
             repository.sendImage(data)
-            getAvatarLink(uiState.value.sub)
         }
     }
 
     fun deleteAccount() {
-
+        viewModelScope.launch {
+            repository.deactivateUser()
+        }
     }
 }
 

@@ -48,9 +48,7 @@ import presentation.theme.LockBoxTheme
 @Composable
 fun AccountScreen(
     accountUiState: AccountUiState,
-    onNameChanged: () -> Unit,
     onChangeName: (String) -> Unit,
-    onSurnameChanged: () -> Unit,
     onChangeSurname: (String) -> Unit,
     onSendImage: (ByteArray) -> Unit,
     onNavigateBack: () -> Unit,
@@ -58,7 +56,7 @@ fun AccountScreen(
     onNavigate: (AccountRoutes) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
     val surnameFocusRequester = remember { FocusRequester() }
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
@@ -92,7 +90,7 @@ fun AccountScreen(
                 }
                 .padding(top = 24.dp)
         ) {
-            if (accountUiState.imageUri.isNotEmpty()) NetworkImage(model = accountUiState.imageUri)
+            if (accountUiState.imageUri.isNotEmpty()) NetworkImage(url = accountUiState.imageUri)
             else RoundText(text = "${accountUiState.name} ${accountUiState.surname}")
 
             Text(
@@ -121,7 +119,6 @@ fun AccountScreen(
                 ),
                 keyboardActions = KeyboardActions(onNext = {
                     surnameFocusRequester.requestFocus()
-                    onNameChanged()
                 }),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -137,9 +134,6 @@ fun AccountScreen(
                     imeAction = ImeAction.Done,
                     showKeyboardOnFocus = true
                 ),
-                keyboardActions = KeyboardActions(onDone = {
-                    onSurnameChanged()
-                }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(surnameFocusRequester)
@@ -172,7 +166,7 @@ fun AccountScreen(
         }
 
         BasicButton(
-            onClick = { showDialog = true },
+            onClick = { showDeleteAccountDialog = true },
             text = stringResource(R.string.delete_account),
             paddingValues = PaddingValues(14.dp),
             colors = ButtonDefaults.buttonColors(
@@ -186,17 +180,17 @@ fun AccountScreen(
         )
     }
 
-    if (showDialog) {
+    if (showDeleteAccountDialog) {
         BasicDialog(
-            onDismiss = { showDialog = false },
+            onDismiss = { showDeleteAccountDialog = false },
         ) {
-            DialogContent(onHideDialog = { showDialog = false }, onDelete = onDelete)
+            DeleteAccountDialog(onHideDialog = { showDeleteAccountDialog = false }, onDelete = onDelete)
         }
     }
 }
 
 @Composable
-private fun DialogContent(onHideDialog: () -> Unit, onDelete: () -> Unit) {
+private fun DeleteAccountDialog(onHideDialog: () -> Unit, onDelete: () -> Unit) {
     Text(
         text = stringResource(R.string.delete_account_question),
         style = LockBoxTheme.typography.titleMedium,
@@ -204,7 +198,7 @@ private fun DialogContent(onHideDialog: () -> Unit, onDelete: () -> Unit) {
     )
 
     Text(
-        text = stringResource(R.string.not_cancellable_action),
+        text = stringResource(R.string.not_cancellable_delete_account),
         style = LockBoxTheme.typography.bodyMedium,
         color = LockBoxTheme.colors.grey500,
         modifier = Modifier.padding(top = 8.dp)
@@ -292,8 +286,6 @@ fun PreviewSettings() {
         val accountUiState = AccountUiState()
         AccountScreen(
             accountUiState,
-            {},
-            {},
             {},
             {},
             {},

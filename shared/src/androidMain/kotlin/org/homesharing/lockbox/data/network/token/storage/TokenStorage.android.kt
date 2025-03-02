@@ -1,31 +1,62 @@
 package org.homesharing.lockbox.data.network.token.storage
 
 import android.content.Context
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+
+private val Context.dataStore by preferencesDataStore(
+    name = TOKEN_STORAGE_NAME,
+    produceMigrations = ::sharedPreferencesMigration
+)
+
+private fun sharedPreferencesMigration(context: Context) =
+    listOf(SharedPreferencesMigration(context, TOKEN_STORAGE_NAME))
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class TokenStorage(context: Context) {
-    private val prefs = context.getSharedPreferences(TOKEN_STORAGE_NAME, Context.MODE_PRIVATE)
+    private val dataStore = context.dataStore
 
-    actual fun getAccessToken(): String {
-        return prefs.getString(ACCESS_TOKEN_NAME, "")!!
+    actual suspend fun getAccessToken(): String {
+        return dataStore.data.map { preferences ->
+            preferences[ACCESS_TOKEN_KEY] ?: ""
+        }.first()
     }
 
-    actual fun getRefreshToken(): String {
-        return prefs.getString(REFRESH_TOKEN_NAME, "")!!
+    actual suspend fun getRefreshToken(): String {
+        return dataStore.data.map { preferences ->
+            preferences[REFRESH_TOKEN_KEY] ?: ""
+        }.first()
     }
 
-    actual fun saveRefreshToken(token: String) {
-        prefs.edit().putString(REFRESH_TOKEN_NAME, token).apply()
+    actual suspend fun saveRefreshToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[REFRESH_TOKEN_KEY] = token
+        }
     }
 
-    actual fun saveAccessToken(token: String) {
-        prefs.edit().putString(ACCESS_TOKEN_NAME, token).apply()
+    actual suspend fun saveAccessToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[ACCESS_TOKEN_KEY] = token
+        }
     }
 
-    actual fun clearInfo() {
-        prefs.edit().remove(ACCESS_TOKEN_NAME).apply()
-        prefs.edit().remove(REFRESH_TOKEN_NAME).apply()
+    actual suspend fun clearInfo() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
     }
 
-    actual fun canLogIn(): Boolean = prefs.contains(ACCESS_TOKEN_NAME)
+    actual fun loggedIn(): Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences.contains(ACCESS_TOKEN_KEY)
+    }
+
+    private companion object {
+        private val REFRESH_TOKEN_KEY = stringPreferencesKey(REFRESH_TOKEN_NAME)
+        private val ACCESS_TOKEN_KEY = stringPreferencesKey(ACCESS_TOKEN_NAME)
+    }
 }

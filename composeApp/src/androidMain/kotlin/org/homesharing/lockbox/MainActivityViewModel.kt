@@ -1,12 +1,10 @@
 package org.homesharing.lockbox
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
-class MainActivityViewModel(private val accountRepository: AccountRepository) : ViewModel() {
-    fun canLogin() = viewModelScope.async {
-        accountRepository.canLogin()
-    }
+class MainActivityViewModel(accountRepository: AccountRepository) : ViewModel() {
+    val isLoggedIn: Flow<Boolean> = accountRepository.loggedIn()
 }
+

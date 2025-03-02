@@ -3,9 +3,13 @@ package org.homesharing.lockbox.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -29,12 +33,16 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewM
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
+import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxScreen
+import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxViewModel
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.security.SecurityScreen
 import org.homesharing.lockbox.presentation.security.SecurityViewModel
+import org.homesharing.lockbox.presentation.sessions.ActiveSessionScreen
+import org.homesharing.lockbox.presentation.sessions.ActiveSessionsViewModel
 import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
@@ -42,30 +50,45 @@ import org.koin.androidx.compose.koinViewModel
 import presentation.composables.LockBoxesTopRow
 import presentation.composables.SettingsTopRowText
 
-private const val ANIMATION_DURATION = 300
+private const val EXIT_ANIMATION_DURATION = 300
+private const val ENTER_ANIMATION_DURATION = 200
 private val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
     {
-        slideOutOfContainer(
-            towards = AnimatedContentTransitionScope.SlideDirection.End,
-            animationSpec = tween(durationMillis = ANIMATION_DURATION)
+        fadeOut(
+            animationSpec = tween(
+                EXIT_ANIMATION_DURATION, easing = LinearEasing
+            )
+        ) + slideOutOfContainer(
+            animationSpec = tween(EXIT_ANIMATION_DURATION, easing = LinearEasing),
+            towards = AnimatedContentTransitionScope.SlideDirection.Start,
+            targetOffset = { -it / 4 }
         )
     }
 private val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
     {
-        slideIntoContainer(
+        fadeIn(
+            animationSpec = tween(
+                ENTER_ANIMATION_DURATION, easing = LinearEasing
+            )
+        ) + slideIntoContainer(
+            animationSpec = tween(ENTER_ANIMATION_DURATION, easing = LinearEasing),
             towards = AnimatedContentTransitionScope.SlideDirection.Start,
-            animationSpec = tween(durationMillis = ANIMATION_DURATION)
+            initialOffset = { it }
         )
     }
 
 @Composable
 fun Navigation(
     navController: NavHostController,
-    modifier: Modifier = Modifier,
-    startFromLogin: Boolean
+    startFromLogin: Boolean,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController = navController, startDestination = Routes.Main, modifier = modifier
+        navController = navController,
+        startDestination = Routes.Main,
+        modifier = modifier,
+        exitTransition = { ExitTransition.None },
+        enterTransition = { EnterTransition.None }
     ) {
         navigation<Routes.Main>(startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes) {
             composable<MainRoutes.Login> {
@@ -90,7 +113,7 @@ fun Navigation(
                 LockBoxesScreen(
                     state = uiState.value,
                     boxes = lockBoxesViewModel.boxes,
-                    onSearchChange = lockBoxesViewModel::onSearchChange,
+//                    onSearchChange = lockBoxesViewModel::onSearchChange,
                     onNavigateToBox = { macAddress ->
                         navController.navigate(
                             MainRoutes.DetailedBox(macAddress = macAddress)
@@ -106,6 +129,22 @@ fun Navigation(
             ) { backStackEntry: NavBackStackEntry ->
                 val args = backStackEntry.toRoute<MainRoutes.DetailedBox>()
                 val macAddress = args.macAddress
+
+                val detailedLockBoxViewModel = koinViewModel<DetailedLockBoxViewModel>()
+                LaunchedEffect(macAddress) {
+                    detailedLockBoxViewModel.findBoxByMac(macAddress)
+                }
+                val state = detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
+
+                DetailedLockBoxScreen(
+                    uiState = state.value,
+                    onNavBack = { navController.navigateUp() },
+                    onOpenBox = detailedLockBoxViewModel::openBox,
+                    onUnbindDevice = { detailedLockBoxViewModel.unbindDevice(macAddress) },
+                    onSaveAddress = detailedLockBoxViewModel::saveAddress,
+                    onSaveName = detailedLockBoxViewModel::saveName,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
 
@@ -137,6 +176,7 @@ fun Navigation(
                         settingsViewModel.logOut()
                         navController.navigateToDestinationPoppingBackStack(MainRoutes.Login)
                     },
+                    onRefresh = settingsViewModel::refresh,
                     onNavigate = { route -> navController.navigate(route) },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -153,11 +193,12 @@ fun Navigation(
             }
 
             navigation<SettingsRoutes.Security>(
-                enterTransition = enterAnimation,
-                exitTransition = exitAnimation,
                 startDestination = SecurityRoutes.Security
             ) {
-                composable<SecurityRoutes.Security> {
+                composable<SecurityRoutes.Security>(
+                    enterTransition = enterAnimation,
+                    exitTransition = exitAnimation,
+                ) {
                     val securityViewModel = koinViewModel<SecurityViewModel>()
                     val securityUiState = securityViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -173,16 +214,25 @@ fun Navigation(
                 }
 
                 composable<SecurityRoutes.ActiveSessions> {
+                    val activeSessionsViewModel = koinViewModel<ActiveSessionsViewModel>()
+                    val uiState = activeSessionsViewModel.uiState.collectAsStateWithLifecycle()
 
+                    ActiveSessionScreen(
+                        activeSessionsUiState = uiState.value,
+                        onNavBack = navController::navigateUp,
+                        onFinishSessions = activeSessionsViewModel::finishOtherSessions,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
 
             navigation<SettingsRoutes.Account>(
                 startDestination = AccountRoutes.Account,
-                enterTransition = enterAnimation,
-                exitTransition = exitAnimation,
             ) {
-                composable<AccountRoutes.Account> {
+                composable<AccountRoutes.Account>(
+                    enterTransition = enterAnimation,
+                    exitTransition = exitAnimation,
+                ) {
                     val accountViewModel = koinViewModel<AccountViewModel>()
                     val accountUiState = accountViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -195,8 +245,6 @@ fun Navigation(
                         },
                         onNavigate = { route -> navController.navigate(route) },
                         onChangeName = accountViewModel::onNameChange,
-                        onSurnameChanged = accountViewModel::onSurnameChanged,
-                        onNameChanged = accountViewModel::onNameChanged,
                         onChangeSurname = accountViewModel::onSurnameChange,
                         onSendImage = accountViewModel::sendImage,
                         modifier = Modifier.fillMaxSize()
@@ -213,7 +261,7 @@ fun Navigation(
                 }
 
                 navigation<AccountRoutes.ChangeEmail>(
-                    startDestination = ChangeEmailRoutes.Main
+                    startDestination = ChangeEmailRoutes.Main,
                 ) {
                     composable<ChangeEmailRoutes.Main> {
                         val changeEmailViewModel = koinViewModel<ChangeEmailViewModel>()

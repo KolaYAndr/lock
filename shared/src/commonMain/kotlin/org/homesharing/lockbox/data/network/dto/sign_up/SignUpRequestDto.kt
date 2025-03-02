@@ -1,10 +1,10 @@
-package org.homesharing.lockbox.data.network.model
+package org.homesharing.lockbox.data.network.dto.sign_up
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignUpRequest(
+data class SignUpRequestDto(
     @SerialName("password")
     val password: String,
     @SerialName("password_repeat")

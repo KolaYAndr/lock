@@ -21,8 +21,16 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
         }
     }
 
+    fun checkIfConfirmed() {
+        viewModelScope.launch {
+
+        }
+    }
+
     fun confirmEmail() {
-        //TODO
+        viewModelScope.launch {
+            authRepository.sendConfirmation(uiState.value.email)
+        }
     }
 
     fun setPassword() {

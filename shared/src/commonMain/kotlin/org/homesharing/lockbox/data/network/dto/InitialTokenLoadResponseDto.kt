@@ -1,12 +1,12 @@
-package org.homesharing.lockbox.data.network.model
+package org.homesharing.lockbox.data.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class InitialTokenLoadResponse {
+sealed class InitialTokenLoadResponseDto {
     @Serializable
-    data class InitialTokenLoadSuccessResponse(
+    data class InitialTokenLoadSuccessResponseDto(
         @SerialName("access_token")
         val accessToken: String,
         @SerialName("expires_in")
@@ -25,13 +25,13 @@ sealed class InitialTokenLoadResponse {
         val sessionState: String,
         @SerialName("scope")
         val scope: String,
-    ): InitialTokenLoadResponse()
+    ): InitialTokenLoadResponseDto()
 
     @Serializable
-    data class InitialTokenLoadFailResponse(
+    data class InitialTokenLoadFailResponseDto(
         @SerialName("error")
         val error: String,
         @SerialName("error_description")
         val errorDescription: String,
-    ): InitialTokenLoadResponse()
+    ): InitialTokenLoadResponseDto()
 }

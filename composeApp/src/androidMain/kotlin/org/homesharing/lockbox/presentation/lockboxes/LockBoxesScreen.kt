@@ -1,8 +1,13 @@
 package org.homesharing.lockbox.presentation.lockboxes
 
+import android.content.Intent
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,22 +15,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -45,26 +42,31 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.data.network.model.BoxDto
+import org.homesharing.lockbox.data.network.dto.BoxDto
+import presentation.composables.LockBoxCircularProgress
+import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.NetworkImage
-import presentation.composables.SearchBar
 import presentation.composables.general.BasicButton
 import presentation.composables.general.BasicHorizontalDivider
+import presentation.composables.general.BasicModal
 import presentation.theme.LockBoxTheme
 import presentation.theme.White
 
-private const val BATTERY_LEVEL_LOW = 20
+private const val BATTERY_LEVEL_LOW = 10
 
 @Composable
 fun LockBoxesScreen(
     state: LockBoxesUiState,
     boxes: Flow<PagingData<BoxDto>>,
-    onSearchChange: (String) -> Unit,
+//    onSearchChange: (String) -> Unit,
     onNavigateToBox: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+//    val keyboardController = LocalSoftwareKeyboardController.current
     var showModal by remember { mutableStateOf(false) }
+    val settingsLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
     ) {
@@ -74,16 +76,16 @@ fun LockBoxesScreen(
             is LoadState.NotLoading -> {
                 if (lazyBoxes.itemCount == 0) {
                     EmptyScreen(
-                        search = state.searchString,
-                        onSearchChange = onSearchChange,
-                        onDoneAction = { keyboardController?.hide() },
+//                        search = state.searchString,
+//                        onSearchChange = onSearchChange,
+//                        onDoneAction = { keyboardController?.hide() },
                         onAddDevice = { showModal = true }
                     )
                 } else {
                     LockBoxScreen(
-                        search = state.searchString,
-                        onSearchChange = onSearchChange,
-                        onDoneAction = { keyboardController?.hide() },
+//                        search = state.searchString,
+//                        onSearchChange = onSearchChange,
+//                        onDoneAction = { keyboardController?.hide() },
                         boxes = lazyBoxes,
                         onBoxClick = onNavigateToBox,
                         onAddDevice = { showModal = true }
@@ -92,12 +94,12 @@ fun LockBoxesScreen(
             }
 
             is LoadState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(),
-                    color = LockBoxTheme.colors.green500
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LockBoxCircularProgress()
+                }
             }
 
             else -> {
@@ -109,56 +111,63 @@ fun LockBoxesScreen(
     if (showModal) {
         ConnectModalSheet(
             onDismiss = { showModal = false },
-            toWifiConnection = {}
+            toWifiConnection = { settingsLauncher.launch(Intent(Settings.ACTION_WIFI_SETTINGS)) }
         )
     }
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LockBoxScreen(
-    search: String,
-    onSearchChange: (String) -> Unit,
-    onDoneAction: () -> Unit,
+//    search: String,
+//    onSearchChange: (String) -> Unit,
+//    onDoneAction: () -> Unit,
     boxes: LazyPagingItems<BoxDto>,
     onBoxClick: (String) -> Unit,
     onAddDevice: () -> Unit,
 ) {
-    SearchBar(
-        search = search,
-        onSearchChange = onSearchChange::invoke,
-        placeholderText = stringResource(R.string.device_search),
-        onDoneAction = { onDoneAction() },
-        enabled = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp)
-    )
+//    SearchBar(
+//        search = search,
+//        onSearchChange = onSearchChange::invoke,
+//        placeholderText = stringResource(R.string.device_search),
+//        onDoneAction = { onDoneAction() },
+//        enabled = true,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 12.dp, horizontal = 16.dp)
+//    )
 
-    LazyColumn(
+    LockBoxPullToRefresh(
         modifier = Modifier
             .fillMaxSize(),
-        contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 48.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        isRefreshing = boxes.loadState.refresh is LoadState.Loading,
+        onRefresh = boxes::refresh,
     ) {
-        items(
-            count = boxes.itemCount,
-            key = { index -> boxes[index]?.macAddress ?: index }
-        ) { index ->
-            boxes[index]?.let { box ->
-                LockBox(
-                    box = box,
-                    onClick = { onBoxClick(box.macAddress) },
-                    modifier = Modifier.fillMaxWidth()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 48.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(
+                count = boxes.itemCount,
+                key = { index -> boxes[index]?.macAddress ?: index }
+            ) { index ->
+                boxes[index]?.let { box ->
+                    LockBox(
+                        box = box,
+                        onClick = { onBoxClick(box.macAddress) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+            item {
+                AddBoxRow(
+                    onAddDevice = onAddDevice,
+                    modifier = Modifier.padding(top = 10.dp)
                 )
             }
-        }
-
-        item {
-            AddBoxRow(
-                onAddDevice = onAddDevice,
-                modifier = Modifier.padding(top = 10.dp)
-            )
         }
     }
 }
@@ -178,7 +187,9 @@ private fun LockBox(
             Icon(
                 imageVector = Icons.Default.Lock,
                 contentDescription = null,
-                modifier = Modifier.padding(vertical = 6.dp).size(64.dp),
+                modifier = Modifier
+                    .padding(vertical = 6.dp)
+                    .size(64.dp),
                 tint = LockBoxTheme.colors.grey500
             )
 
@@ -207,8 +218,8 @@ private fun LockBox(
                     contentDescription = null,
                     tint = LockBoxTheme.colors.red500,
                     modifier = Modifier
-                        .size(24.dp)
                         .padding(horizontal = 12.dp)
+                        .size(24.dp)
                 )
             }
 
@@ -234,7 +245,7 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            NetworkImage(modifier = Modifier.size(40.dp), model = model)
+            NetworkImage(modifier = Modifier.size(40.dp), url = model)
 
             Text(
                 text = stringResource(R.string.main),
@@ -260,26 +271,14 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConnectModalSheet(
     onDismiss: () -> Unit,
     toWifiConnection: () -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = LockBoxTheme.colors.grey900,
-        properties = ModalBottomSheetProperties(shouldDismissOnBackPress = true),
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        dragHandle = {},
-        modifier = Modifier
-            .statusBarsPadding()
-            .padding(top = 12.dp)
-            .fillMaxSize()
+    BasicModal(
+        onDismiss = onDismiss,
+        modifier = Modifier.fillMaxSize()
     ) {
         Row(
             modifier = Modifier
@@ -318,7 +317,6 @@ private fun ConnectModalSheet(
                 )
             }
         }
-
         BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
         Column(
@@ -398,21 +396,21 @@ private fun AddBoxRow(onAddDevice: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun EmptyScreen(
-    search: String,
-    onSearchChange: (String) -> Unit,
-    onDoneAction: () -> Unit,
+//    search: String,
+//    onSearchChange: (String) -> Unit,
+//    onDoneAction: () -> Unit,
     onAddDevice: () -> Unit
 ) {
-    SearchBar(
-        search = search,
-        onSearchChange = onSearchChange::invoke,
-        placeholderText = stringResource(R.string.device_search),
-        onDoneAction = { onDoneAction() },
-        enabled = false,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp)
-    )
+//    SearchBar(
+//        search = search,
+//        onSearchChange = onSearchChange::invoke,
+//        placeholderText = stringResource(R.string.device_search),
+//        onDoneAction = { onDoneAction() },
+//        enabled = false,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 12.dp, horizontal = 16.dp)
+//    )
 
     Column(
         modifier = Modifier
@@ -471,7 +469,10 @@ fun PreviewLockBox() {
 fun PreviewEmptyScreen() {
     LockBoxTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            EmptyScreen("govno", {}, {}, {})
+            EmptyScreen(
+//                "govno", {}, {},
+                {}
+            )
         }
     }
 }

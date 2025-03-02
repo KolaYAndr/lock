@@ -49,7 +49,7 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="phone_number_not_set">Номер не указан</string>
     <string name="delete_account_question">Удалить аккаунт?</string>
-    <string name="not_cancellable_action">Это действие нельзя отменить. Все данные, связанные с вашим аккаунтом, будут удалены без возможности восстановления.</string>
+    <string name="not_cancellable_delete_account">Это действие нельзя отменить. Все данные, связанные с вашим аккаунтом, будут удалены без возможности восстановления.</string>
     <string name="delete">Удалить</string>
     <string name="app_version">Версия приложения %s</string>
     <string name="legal_info">ООО “Локбокс: умные устройства для комфортной жизни”</string>
@@ -102,4 +102,52 @@
     <string name="open_wifi_settings">Открыть настройки Wi-Fi</string>
     <string name="search_with_device_properties">Название устройства, адрес и т.д.</string>
     <string name="device_search">Поиск устройсва</string>
+    <string name="open">Открыть</string>
+    <string name="wifi_network">Wi-Fi cеть</string>
+    <string name="signal_level">Уровень сигнала</string>
+    <string name="battery_percent">%1$d%%</string>
+    <string name="access_device">Доступ к устройству</string>
+    <string name="address">Адрес</string>
+    <string name="device_name">Название устройства</string>
+    <string name="about_device">Об устройстве</string>
+    <string name="unbind_device">Отвязать устройство</string>
+    <string name="open_device_question">Открыть устройство?</string>
+    <string name="unbind_device_question">Отвязать устройство?</string>
+    <string name="not_cancellable_unbind_device">Это действие нельзя отменить. Вы можете настроить устройство ещё раз при необходимости.</string>
+    <string name="unbind">Отвязать</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="battery_level">Уровень заряда</string>
+    <string name="signa_low">Низкий</string>
+    <string name="signal_medium">Средний</string>
+    <string name="signal_high">Высокий</string>
+    <string name="signal_zero">Нулевой</string>
+    <string name="manufacturer">Производитель</string>
+    <string name="lockbox">ООО “Локбокс: умные решения для комфортной жизни”</string>
+    <string name="device_type">Тип устройства</string>
+    <string name="lockbox_type">Локбокс</string>
+    <string name="original_naming">Оригинальное название</string>
+    <string name="original_naming_lockbox">LockBox</string>
+    <string name="this_device">Это устройство</string>
+    <string name="location_dot_access_time">%1$s • %2$s</string>
+    <string name="right_now">Сейчас</string>
+    <string name="finish_all_other_sessions">Завершить все другие сеансы</string>
+    <string name="unknown_device">Неизвестное устройство</string>
+    <plurals name="minutes_ago">
+        <item quantity="one">%d минуту назад</item>
+        <item quantity="few">%d минуты назад</item>
+        <item quantity="many">%d минут назад</item>
+        <item quantity="other">%d минут назад</item>
+    </plurals>
+    <plurals name="hours_ago">
+        <item quantity="one">%d час назад</item>
+        <item quantity="few">%d часа назад</item>
+        <item quantity="many">%d часов назад</item>
+        <item quantity="other">%d часа назад</item>
+    </plurals>
+    <plurals name="days_ago">
+        <item quantity="one">%d день назад</item>
+        <item quantity="few">%d дня назад</item>
+        <item quantity="many">%d дней назад</item>
+        <item quantity="other">%d дня назад</item>
+    </plurals>
 </resources>

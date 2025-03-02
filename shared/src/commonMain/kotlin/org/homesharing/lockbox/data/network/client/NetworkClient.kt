@@ -20,6 +20,7 @@ import io.ktor.http.headers
 import io.ktor.http.parameters
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.token.model.TokenInfo
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
@@ -28,7 +29,7 @@ private const val CLIENT_TIMEOUT = 5_000L
 private const val BASE_ENDPOINT = "https://api.lockboxes.ru"
 private const val REALM = "realms/lockbox"
 private const val TOKEN_URL = "protocol/openid-connect/token"
-private const val TOKEN_PORT = "8443"
+private const val TOKEN_PORT = "8443" //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
 
 private const val CLIENT_ID = "client_id"
 private const val PUBLIC_CLIENT = "public-client"
@@ -62,19 +63,16 @@ internal fun createNetworkClient(engine: HttpClientEngine, mLogger: Logger = myL
         }
 
         defaultRequest {
-            url {
-                takeFrom(BASE_ENDPOINT)
-            }
+            url { takeFrom(BASE_ENDPOINT) }
             contentType(ContentType.Application.Json)
         }
-
     }
 }
 
 internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
     defaultRequest {
         headers {
-            bearerAuth(tokenStorage.getAccessToken())
+            bearerAuth(runBlocking { tokenStorage.getAccessToken() })
         }
     }
 
@@ -91,7 +89,7 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
                     url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
                     formParameters = parameters {
                         append(CLIENT_ID, PUBLIC_CLIENT)
-                        append(REFRESH_TOKEN, tokenStorage.getRefreshToken())
+                        append(REFRESH_TOKEN, runBlocking { tokenStorage.getRefreshToken() } )
                         append(GRANT_TYPE, REFRESH_TOKEN)
                     }
                 ) {

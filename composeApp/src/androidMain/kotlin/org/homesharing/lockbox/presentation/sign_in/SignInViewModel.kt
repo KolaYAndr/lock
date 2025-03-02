@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.homesharing.lockbox.data.network.model.InitialTokenLoadResponse
+import org.homesharing.lockbox.data.network.dto.InitialTokenLoadResponseDto
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -43,7 +43,7 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
                         uiState.value.password
                     ).also { response ->
                         when (response) {
-                            is InitialTokenLoadResponse.InitialTokenLoadFailResponse -> {
+                            is InitialTokenLoadResponseDto.InitialTokenLoadFailResponseDto -> {
                                 _uiState.update { state ->
                                     state.copy(
                                         passwordErrorMessage = response.errorDescription,
@@ -52,7 +52,7 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
                                 }
                             }
 
-                            is InitialTokenLoadResponse.InitialTokenLoadSuccessResponse -> {
+                            is InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto -> {
                                 _uiState.update { state -> state.copy(loggedIn = true) }
                             }
                         }

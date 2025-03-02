@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AccountRepository
@@ -19,7 +20,9 @@ class LoginViewModel(private val repository: AccountRepository): ViewModel() {
 
     private fun checkIfLoggedIn() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoggedIn = repository.canLogin()) }
+            repository.loggedIn().collectLatest { hasToken ->
+                _uiState.update { it.copy(isLoggedIn = hasToken) }
+            }
         }
     }
 

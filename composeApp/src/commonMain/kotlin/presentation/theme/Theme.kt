@@ -72,6 +72,8 @@ fun LockBoxTheme(
     val lockBoxShape = LockBoxShape(
         roundedCornerShape8 = roundedCornerShape8,
         roundedCornerShape10 = roundedCornerShape10,
+        roundedCornerShape12 = roundedCornerShape12,
+        roundedCornerShape16 = roundedCornerShape16,
         roundedCornerShape24 = roundedCornerShape24,
         roundedCornerShape999 = roundedCornerShape999,
         circleShape = circleShape,

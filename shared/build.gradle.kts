@@ -36,6 +36,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.core)
+            implementation(libs.datastore)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

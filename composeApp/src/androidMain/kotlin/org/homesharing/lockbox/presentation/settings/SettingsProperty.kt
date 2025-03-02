@@ -8,7 +8,7 @@ import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 internal data class SettingsProperty(
     @DrawableRes val icon: Int,
     @StringRes val title: Int,
-    val route: SettingsRoutes? = null
+    val route: SettingsRoutes
 )
 
 internal val accountProperties = listOf(
@@ -24,14 +24,8 @@ internal val accountProperties = listOf(
     )
 )
 
-internal val aboutProperties = listOf(
-    SettingsProperty(
+internal val aboutProperty = SettingsProperty(
         R.drawable.circle_alert,
         R.string.about_app,
         SettingsRoutes.AboutApp
-    ),
-    SettingsProperty(
-        R.drawable.headset,
-        R.string.help
     )
-)

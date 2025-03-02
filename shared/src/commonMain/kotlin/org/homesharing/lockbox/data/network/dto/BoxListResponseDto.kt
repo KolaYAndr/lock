@@ -1,10 +1,10 @@
-package org.homesharing.lockbox.data.network.model
+package org.homesharing.lockbox.data.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BoxListResponse(
+data class BoxListResponseDto(
     val body: BoxListBody,
     val error: Boolean,
     @SerialName("error_text")

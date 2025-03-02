@@ -13,7 +13,7 @@ import org.homesharing.lockbox.domain.repository.BoxesRepository
 
 class LockBoxesViewModel(
     private val accountRepository: AccountRepository,
-    private val boxesRepository: BoxesRepository,
+    boxesRepository: BoxesRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<LockBoxesUiState> = MutableStateFlow(LockBoxesUiState())
@@ -27,17 +27,17 @@ class LockBoxesViewModel(
     private fun fetchAccountInfo() {
         viewModelScope.launch {
             val info = accountRepository.parseAccountInfo()
-            val imageLink = accountRepository.getAvatarLink(info.sub)
+            val imageLink = accountRepository.getImageLink(info.sub)
             _uiState.update { it.copy(avatarLink = imageLink) }
         }
     }
 
-    fun onSearchChange(newSearchString: String) {
-        _uiState.update { it.copy(searchString = newSearchString) }
-    }
+//    fun onSearchChange(newSearchString: String) {
+//        _uiState.update { it.copy(searchString = newSearchString) }
+//    }
 }
 
 data class LockBoxesUiState(
-    val searchString: String = "",
+//    val searchString: String = "",
     val avatarLink: String = "",
 )
