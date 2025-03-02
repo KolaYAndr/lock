@@ -153,7 +153,7 @@ fun DetailedLockBoxScreen(
                         .padding(vertical = 12.dp)
                 ) {
                     StatusInfo(
-                        statusImage = painterResource(R.drawable.wifi_high),
+                        statusImage = painterResource(R.drawable.wifi_zero),
                         statusCategory = stringResource(R.string.wifi_network),
                         status = "Network Name", // todo переделать всё,
                         alertImage = {},
@@ -161,51 +161,28 @@ fun DetailedLockBoxScreen(
                     )
 
                     StatusInfo(
-                        statusImage = when (uiState.signalStrength) {
-                            in -90..-61 -> painterResource(R.drawable.signal_low)
-                            in -60..-31 -> painterResource(R.drawable.signal_medium)
-                            in -30..0 -> painterResource(R.drawable.signal_high)
-                            else -> painterResource(R.drawable.signal_zero)
-                        },
+                        statusImage = getSignalImage(uiState.signalStrength),
                         statusCategory = stringResource(R.string.signal_level),
-                        status = when (uiState.signalStrength) {
-                            in -90..-61 -> stringResource(R.string.signa_low)
-                            in -60..-31 -> stringResource(R.string.signal_medium)
-                            in -30..0 -> stringResource(R.string.signal_high)
-                            else -> stringResource(R.string.signal_zero)
-                        },
+                        status = getSignalStatus(uiState.signalStrength),
                         alertImage = {
                             Icon(
                                 painter = painterResource(R.drawable.circle_alert),
                                 contentDescription = null,
-                                tint = when (uiState.signalStrength) {
-                                    in -89..-60 -> LockBoxTheme.colors.yellow500
-                                    in -100..-90 -> LockBoxTheme.colors.red600
-                                    else -> Color.Transparent
-                                }
+                                tint = getSignalAlertColor(uiState.signalStrength)
                             )
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     StatusInfo(
-                        statusImage = when (uiState.batteryLevel) {
-                            in 11..40 -> painterResource(R.drawable.battery_low)
-                            in 41..70 -> painterResource(R.drawable.battery_medium)
-                            in 71..100 -> painterResource(R.drawable.battery_full)
-                            else -> painterResource(R.drawable.battery_empty)
-                        },
+                        statusImage = getBatteryImage(uiState.batteryLevel),
                         statusCategory = stringResource(R.string.battery_level),
                         status = stringResource(R.string.battery_percent, uiState.batteryLevel),
                         alertImage = {
                             Icon(
                                 painter = painterResource(R.drawable.circle_alert),
                                 contentDescription = null,
-                                tint = when (uiState.batteryLevel) {
-                                    in 11..40 -> LockBoxTheme.colors.yellow500
-                                    in 0..10 -> LockBoxTheme.colors.red600
-                                    else -> Color.Transparent
-                                }
+                                tint = getBatteryAlertColor(uiState.batteryLevel)
                             )
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -348,6 +325,56 @@ fun DetailedLockBoxScreen(
 }
 
 @Composable
+private fun getBatteryAlertColor(batteryLevel: Int): Color {
+    return when (batteryLevel) {
+        in 11..40 -> LockBoxTheme.colors.yellow500
+        in 0..10 -> LockBoxTheme.colors.red600
+        else -> Color.Transparent
+    }
+}
+
+@Composable
+private fun getBatteryImage(batteryLevel: Int): Painter {
+    return when (batteryLevel) {
+        in 11..40 -> painterResource(R.drawable.battery_low)
+        in 41..70 -> painterResource(R.drawable.battery_medium)
+        in 71..100 -> painterResource(R.drawable.battery_full)
+        else -> painterResource(R.drawable.battery_empty)
+    }
+}
+
+@Composable
+private fun getSignalImage(signalStrength: Int): Painter {
+    return when {
+        (-90..-61).contains(signalStrength) -> painterResource(R.drawable.signal_low)
+        (-60..-41).contains(signalStrength) -> painterResource(R.drawable.signal_medium)
+        (-40..-21).contains(signalStrength) -> painterResource(R.drawable.signal_high)
+        (-20..0).contains(signalStrength) -> painterResource(R.drawable.signal_full)
+        else -> painterResource(R.drawable.signal_zero)
+    }
+}
+
+@Composable
+private fun getSignalStatus(signalStrength: Int): String {
+    return when {
+        (-90..-61).contains(signalStrength) -> stringResource(R.string.signa_low)
+        (-60..-31).contains(signalStrength) -> stringResource(R.string.signal_medium)
+        (-30..0).contains(signalStrength) -> stringResource(R.string.signal_high)
+        else -> stringResource(R.string.signal_zero)
+    }
+}
+
+@Composable
+private fun getSignalAlertColor(signalStrength: Int): Color {
+    return when (signalStrength) {
+        in -89..-60 -> LockBoxTheme.colors.yellow500
+        in -100..-90 -> LockBoxTheme.colors.red600
+        else -> Color.Transparent
+    }
+}
+
+
+@Composable
 private fun UnbindDeviceDialog(
     onDismiss: () -> Unit,
     onUnbind: () -> Unit,
@@ -448,9 +475,11 @@ private fun AboutDeviceModal(
                 modifier = Modifier.padding(top = 2.dp)
             )
 
-            BasicHorizontalDivider(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp))
+            BasicHorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
+            )
 
             Text(
                 text = stringResource(R.string.device_type),
@@ -465,9 +494,11 @@ private fun AboutDeviceModal(
                 modifier = Modifier.padding(top = 2.dp)
             )
 
-            BasicHorizontalDivider(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp))
+            BasicHorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
+            )
 
             Text(
                 text = stringResource(R.string.original_naming),
@@ -482,15 +513,19 @@ private fun AboutDeviceModal(
                 modifier = Modifier.padding(top = 2.dp)
             )
 
-            BasicHorizontalDivider(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp))
+            BasicHorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
+            )
         }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            modifier = Modifier.fillMaxWidth().navigationBarsPadding()
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
         ) {
             Icon(
                 painter = painterResource(R.drawable.headset),
@@ -776,7 +811,7 @@ private fun StatusInfo(
         Icon(
             painter = statusImage,
             contentDescription = null,
-            tint = LockBoxTheme.colors.white,
+            tint = Color.Unspecified,
             modifier = Modifier.size(24.dp)
         )
 
