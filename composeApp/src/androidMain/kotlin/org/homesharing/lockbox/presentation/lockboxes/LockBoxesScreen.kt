@@ -426,7 +426,7 @@ private fun EmptyScreen(
 fun PreviewLockBox() {
     LockBoxTheme {
         LockBox(
-            box = BoxDto("Doma", "1D:2C", "Demo", false, 0.0, 0.0),
+            box = BoxDto("Doma", "1D:2C", "Demo", "" ,false, 0.0, 0.0, ""),
             onClick = {},
             modifier = Modifier.fillMaxWidth()
         )

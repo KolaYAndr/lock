@@ -40,7 +40,6 @@ class AuthRepositoryImpl(
 
     override suspend fun sendConfirmation(email: String) = withContext(Dispatchers.IO) {
         val body = ConfirmEmailRequestDto(mail = email)
-
         api.confirmEmail(body)
     }
 

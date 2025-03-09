@@ -16,12 +16,16 @@ data class BoxDto(
     val alias: String,
     @SerialName("mac_address")
     val macAddress: String,
+    @SerialName("owner_sub")
+    val ownerSub: String,
     val address: String,
     val opened: Boolean,
     @SerialName("battery_level")
     val batteryLevel: Double,
     @SerialName("signal_strength")
-    val signalStrength: Double
+    val signalStrength: Double,
+    @SerialName("timestamp")
+    val timestamp: String
 )
 
 @Serializable

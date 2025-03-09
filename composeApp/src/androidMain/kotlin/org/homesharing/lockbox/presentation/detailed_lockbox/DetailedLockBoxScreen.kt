@@ -248,6 +248,8 @@ fun DetailedLockBoxScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
+                    BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+
                     IconTextArrow(
                         painter = painterResource(R.drawable.headset),
                         text = stringResource(R.string.help),

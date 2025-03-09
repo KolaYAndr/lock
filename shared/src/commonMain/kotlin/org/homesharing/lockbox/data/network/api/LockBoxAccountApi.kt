@@ -4,12 +4,15 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.parameters
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -96,12 +99,10 @@ class LockBoxAccountApi(
             }
         ).bodyAsText()
 
-        val json = Json { ignoreUnknownKeys = true }
-
         return try {
-            json.decodeFromString<InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto>(response)
+            Json.decodeFromString<InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto>(response)
         } catch (e: SerializationException) {
-            json.decodeFromString<InitialTokenLoadResponseDto.InitialTokenLoadFailResponseDto>(response)
+            Json.decodeFromString<InitialTokenLoadResponseDto.InitialTokenLoadFailResponseDto>(response)
         }
     }
 
@@ -122,6 +123,7 @@ class LockBoxAccountApi(
         }.body<PostImageResponseDto>()
 
         unsignedClient.put {
+            header(HttpHeaders.ContentType, ContentType.Image.PNG)
             url(response.body.link)
             setBody(data)
         }

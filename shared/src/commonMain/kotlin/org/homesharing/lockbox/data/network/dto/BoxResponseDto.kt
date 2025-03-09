@@ -15,11 +15,15 @@ data class BoxResponseDto(
 data class BoxBody(
     val address: String,
     val alias: String,
+    @SerialName("owner_sub")
+    val ownerSub: String,
     @SerialName("battery_level")
     val batteryLevel: Double,
     @SerialName("mac_address")
     val macAddress: String,
     val opened: Boolean,
     @SerialName("signal_strength")
-    val signalStrength: Double
+    val signalStrength: Double,
+    @SerialName("timestamp")
+    val timestamp: String
 )
