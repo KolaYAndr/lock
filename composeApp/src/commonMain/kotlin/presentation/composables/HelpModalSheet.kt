@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +25,7 @@ import presentation.theme.LockBoxTheme
 
 @Composable
 fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
-    val emailLauncher =
+    val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     BasicModal(
         modifier = modifier,
@@ -68,32 +67,34 @@ fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
                 style = LockBoxTheme.typography.bodyMedium,
                 color = LockBoxTheme.colors.grey500,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp, bottom = 48.dp)
             )
 
             val email = stringResource(R.string.lockbox_email)
             IconTextArrow(
-                modifier = Modifier.padding(top = 48.dp).fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(R.drawable.mail),
                 text = email,
                 onClick = {
                     val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                         data = Uri.parse("mailto:")
-                        putExtra(Intent.EXTRA_EMAIL, email)
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
                     }
-                    emailLauncher.launch(emailIntent)
+                    launcher.launch(emailIntent)
                 }
             )
 
             BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-            val uriHandler = LocalUriHandler.current
             IconTextArrow(
                 modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(R.drawable.telegram),
                 text = stringResource(R.string.telegram),
                 onClick = {
-                    uriHandler.openUri("https://t.me/@korolev_2512")
+                     val tgIntent = Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(Uri.parse("https://t.me/korolev_2512"), "text/plain")
+                    }
+                    launcher.launch(tgIntent)
                 }
             )
 
@@ -104,7 +105,10 @@ fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
                 painter = painterResource(R.drawable.phone),
                 text = stringResource(R.string.whatsapp),
                 onClick = {
-                    uriHandler.openUri("https://t.me/@korolev_2512")
+                    val tgIntent = Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(Uri.parse("https://t.me/korolev_2512"), "text/plain")
+                    }
+                    launcher.launch(tgIntent)
                 }
             )
         }

@@ -22,12 +22,13 @@ class AccountRepositoryImpl(
 
     override suspend fun parseAccountInfo(): AccountInfoDto =
         withContext(Dispatchers.IO) {
-            val token = api.refreshTokens(tokenStorage.getRefreshToken())
-            with(tokenStorage) {
-                saveAccessToken(token.accessToken)
-                saveRefreshToken(token.refreshToken)
-            }
-            decodeJWT(token.accessToken)
+//            val token = api.refreshTokens(tokenStorage.getRefreshToken())
+//            with(tokenStorage) {
+//                saveAccessToken(token.accessToken)
+//                saveRefreshToken(token.refreshToken)
+//            }
+            val token = tokenStorage.getAccessToken()
+            decodeJWT(token)
         }
 
     private suspend fun decodeJWT(jwt: String): AccountInfoDto = withContext(Dispatchers.Default) {

@@ -139,6 +139,7 @@ fun SignInCard(
                 onDone = {
                     keyboardController?.hide()
                     focusManager.clearFocus()
+                    onSignIn()
                 }
             ),
             keyboardOptions = KeyboardOptions(
