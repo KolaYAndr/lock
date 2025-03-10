@@ -24,7 +24,7 @@ import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountRequestDto
 import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountResponseDto
-import org.homesharing.lockbox.data.network.token.model.TokenInfo
+import org.homesharing.lockbox.data.network.token.model.TokenResponseDto
 import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.domain.api.AccountApi
 
@@ -106,7 +106,7 @@ class LockBoxAccountApi(
         }
     }
 
-    override suspend fun refreshTokens(refreshToken: String): TokenInfo {
+    override suspend fun refreshTokens(refreshToken: String): TokenResponseDto {
         return signedClient.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {

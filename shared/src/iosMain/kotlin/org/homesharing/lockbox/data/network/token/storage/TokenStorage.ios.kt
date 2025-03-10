@@ -32,4 +32,12 @@ actual class TokenStorage {
     actual fun loggedIn(): Flow<Boolean> {
         TODO("Not yet implemented")
     }
+
+    actual suspend fun getLastRefreshTime(): Long {
+        return userDefaults.integerForKey(LAST_REFRESH_TIME_NAME)
+    }
+
+    actual suspend fun saveLastRefreshTime(time: Long) {
+        userDefaults.setInteger(time, forKey = LAST_REFRESH_TIME_NAME)
+    }
 }

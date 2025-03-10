@@ -22,7 +22,8 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.data.network.token.model.TokenInfo
+import org.homesharing.lockbox.data.network.token.model.TokenResponseDto
+import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 
 private const val CLIENT_TIMEOUT = 5_000L
@@ -69,7 +70,7 @@ internal fun createNetworkClient(engine: HttpClientEngine, mLogger: Logger = myL
     }
 }
 
-internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
+internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: RefreshManager) = this.config {
     defaultRequest {
         headers {
             bearerAuth(runBlocking { tokenStorage.getAccessToken() })
@@ -85,23 +86,29 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage) = this.config {
             }
 
             refreshTokens {
-                val tokenInfo: TokenInfo = client.submitForm(
-                    url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
-                    formParameters = parameters {
-                        append(CLIENT_ID, PUBLIC_CLIENT)
-                        append(REFRESH_TOKEN, runBlocking { tokenStorage.getRefreshToken() } )
-                        append(GRANT_TYPE, REFRESH_TOKEN)
+                val lastRefreshAt = tokenStorage.getLastRefreshTime()
+                if (refreshManager.needsRefresh(lastRefreshAt)) {
+                    val tokenInfo: TokenResponseDto = client.submitForm(
+                        url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
+                        formParameters = parameters {
+                            append(CLIENT_ID, PUBLIC_CLIENT)
+                            append(REFRESH_TOKEN, runBlocking { tokenStorage.getRefreshToken() } )
+                            append(GRANT_TYPE, REFRESH_TOKEN)
+                        }
+                    ) {
+                        markAsRefreshTokenRequest()
+                    }.body()
+
+                    tokenStorage.apply {
+                        saveLastRefreshTime(refreshManager.currentTime + tokenInfo.expiresIn)
+                        saveAccessToken(tokenInfo.accessToken)
+                        saveRefreshToken(tokenInfo.refreshToken)
                     }
-                ) {
-                    markAsRefreshTokenRequest()
-                }.body()
 
-                tokenStorage.apply {
-                    saveAccessToken(tokenInfo.accessToken)
-                    saveRefreshToken(tokenInfo.refreshToken)
+                    BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
+                } else {
+                    BearerTokens(tokenStorage.getAccessToken(), tokenStorage.getRefreshToken())
                 }
-
-                BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
             }
         }
     }

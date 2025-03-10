@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model
+package org.homesharing.lockbox.domain.model.session
 
 import org.homesharing.lockbox.data.network.dto.SessionDto
 

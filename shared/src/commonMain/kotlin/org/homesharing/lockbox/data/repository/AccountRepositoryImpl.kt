@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountRequestDto
 import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountResponseDto
 import org.homesharing.lockbox.domain.api.AccountApi
-import org.homesharing.lockbox.domain.model.Session
-import org.homesharing.lockbox.domain.model.toDomain
+import org.homesharing.lockbox.domain.model.session.Session
+import org.homesharing.lockbox.domain.model.session.toDomain
 
 class AccountRepositoryImpl(
     private val api: AccountApi,
@@ -22,13 +22,12 @@ class AccountRepositoryImpl(
 
     override suspend fun parseAccountInfo(): AccountInfoDto =
         withContext(Dispatchers.IO) {
-//            val token = api.refreshTokens(tokenStorage.getRefreshToken())
-//            with(tokenStorage) {
-//                saveAccessToken(token.accessToken)
-//                saveRefreshToken(token.refreshToken)
-//            }
-            val token = tokenStorage.getAccessToken()
-            decodeJWT(token)
+            val token = api.refreshTokens(tokenStorage.getRefreshToken())
+            with(tokenStorage) {
+                saveAccessToken(token.accessToken)
+                saveRefreshToken(token.refreshToken)
+            }
+            decodeJWT(token.accessToken)
         }
 
     private suspend fun decodeJWT(jwt: String): AccountInfoDto = withContext(Dispatchers.Default) {

@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.token.storage
 import android.content.Context
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -55,8 +56,22 @@ actual class TokenStorage(context: Context) {
         preferences.contains(ACCESS_TOKEN_KEY)
     }
 
+    actual suspend fun getLastRefreshTime(): Long {
+        return dataStore.data.map { preferences ->
+            preferences[LAST_REFRESH_KEY] ?: 0
+        }.first()
+    }
+
+
+    actual suspend fun saveLastRefreshTime(time: Long) {
+        dataStore.edit { preferences ->
+            preferences[LAST_REFRESH_KEY] = time
+        }
+    }
+
     private companion object {
         private val REFRESH_TOKEN_KEY = stringPreferencesKey(REFRESH_TOKEN_NAME)
         private val ACCESS_TOKEN_KEY = stringPreferencesKey(ACCESS_TOKEN_NAME)
+        private val LAST_REFRESH_KEY = longPreferencesKey(LAST_REFRESH_TIME_NAME)
     }
 }

@@ -7,6 +7,7 @@ import org.homesharing.lockbox.data.network.client.createNetworkClient
 import org.homesharing.lockbox.data.network.client.installAuth
 import org.homesharing.lockbox.data.network.client.networkEngine
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
+import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
@@ -48,6 +49,6 @@ val networkModule = module {
         named(WITH_AUTH_FEATURE)
     ) {
         createNetworkClient(networkEngine)
-            .installAuth(get<TokenStorage>())
+            .installAuth(get<TokenStorage>(), get<RefreshManager>())
     }
 }

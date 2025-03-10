@@ -6,12 +6,12 @@ import org.homesharing.lockbox.data.network.dto.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountRequestDto
-import org.homesharing.lockbox.data.network.token.model.TokenInfo
+import org.homesharing.lockbox.data.network.token.model.TokenResponseDto
 
 interface AccountApi {
     suspend fun signUp(username: String, password: String, passwordRepeated: String): SignUpResponseDto
     suspend fun loadTokensInitially(username: String, password: String): InitialTokenLoadResponseDto
-    suspend fun refreshTokens(refreshToken: String): TokenInfo
+    suspend fun refreshTokens(refreshToken: String): TokenResponseDto
     suspend fun getImageLinkBySub(sub: String) : String
     suspend fun sendImage(data: ByteArray)
     suspend fun getSessions(): SessionsResponseDto
