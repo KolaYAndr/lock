@@ -35,7 +35,7 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
     fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
-            val info = repository.parseAccountInfo()
+            val info = repository.refreshAccount()
             _uiState.update {
                 it.copy(
                     fullName = info.name ?: ""

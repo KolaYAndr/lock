@@ -5,5 +5,6 @@ actual class RefreshManager {
     actual val currentTime: Long
         get() = System.currentTimeMillis()
 
-    actual fun needsRefresh(needsRefreshIn: Long): Boolean = currentTime + REFRESH_THRESHOLD >= needsRefreshIn
+    actual fun needsRefresh(needsRefreshIn: Long): Boolean =
+        needsRefreshIn - currentTime <= REFRESH_THRESHOLD
 }

@@ -33,11 +33,11 @@ actual class TokenStorage {
         TODO("Not yet implemented")
     }
 
-    actual suspend fun getLastRefreshTime(): Long {
-        return userDefaults.integerForKey(LAST_REFRESH_TIME_NAME)
+    actual suspend fun getNextRefreshTime(): Long {
+        return userDefaults.integerForKey(REFRESH_IN_NAME)
     }
 
-    actual suspend fun saveLastRefreshTime(time: Long) {
-        userDefaults.setInteger(time, forKey = LAST_REFRESH_TIME_NAME)
+    actual suspend fun saveNextRefreshTime(time: Long) {
+        userDefaults.setInteger(time, forKey = REFRESH_IN_NAME)
     }
 }

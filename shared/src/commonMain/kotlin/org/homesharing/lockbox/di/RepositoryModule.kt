@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.di
 
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
+import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.data.repository.AccountRepositoryImpl
 import org.homesharing.lockbox.data.repository.AuthRepositoryImpl
@@ -16,7 +17,8 @@ val repositoryModule = module {
     single<AuthRepository> {
         AuthRepositoryImpl(
             get<AccountApi>(),
-            get<TokenStorage>()
+            get<TokenStorage>(),
+            get<RefreshManager>()
         )
     }
 

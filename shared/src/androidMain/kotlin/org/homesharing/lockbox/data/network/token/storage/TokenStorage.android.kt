@@ -56,22 +56,22 @@ actual class TokenStorage(context: Context) {
         preferences.contains(ACCESS_TOKEN_KEY)
     }
 
-    actual suspend fun getLastRefreshTime(): Long {
+    actual suspend fun getNextRefreshTime(): Long {
         return dataStore.data.map { preferences ->
-            preferences[LAST_REFRESH_KEY] ?: 0
+            preferences[REFRESH_IN_KEY] ?: 0
         }.first()
     }
 
 
-    actual suspend fun saveLastRefreshTime(time: Long) {
+    actual suspend fun saveNextRefreshTime(time: Long) {
         dataStore.edit { preferences ->
-            preferences[LAST_REFRESH_KEY] = time
+            preferences[REFRESH_IN_KEY] = time
         }
     }
 
     private companion object {
         private val REFRESH_TOKEN_KEY = stringPreferencesKey(REFRESH_TOKEN_NAME)
         private val ACCESS_TOKEN_KEY = stringPreferencesKey(ACCESS_TOKEN_NAME)
-        private val LAST_REFRESH_KEY = longPreferencesKey(LAST_REFRESH_TIME_NAME)
+        private val REFRESH_IN_KEY = longPreferencesKey(REFRESH_IN_NAME)
     }
 }

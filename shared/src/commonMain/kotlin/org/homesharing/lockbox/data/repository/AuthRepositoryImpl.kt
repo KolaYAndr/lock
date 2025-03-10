@@ -8,11 +8,13 @@ import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.data.network.dto.InitialTokenLoadResponseDto
+import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class AuthRepositoryImpl(
     private val api: AccountApi,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
+    private val refreshManager: RefreshManager
 ) : AuthRepository {
 
     override suspend fun signUp(
@@ -29,11 +31,12 @@ class AuthRepositoryImpl(
         password: String
     ): InitialTokenLoadResponseDto =
         withContext(Dispatchers.IO) {
-            api.loadTokensInitially(username, password).also {
-                if (it is InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto)
+            api.loadTokensInitially(username, password).also { response ->
+                if (response is InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto)
                     tokenStorage.apply {
-                        saveAccessToken(it.accessToken)
-                        saveRefreshToken(it.refreshToken)
+                        saveAccessToken(response.accessToken)
+                        saveRefreshToken(response.refreshToken)
+                        saveNextRefreshTime(refreshManager.currentTime + response.expiresIn)
                     }
             }
         }

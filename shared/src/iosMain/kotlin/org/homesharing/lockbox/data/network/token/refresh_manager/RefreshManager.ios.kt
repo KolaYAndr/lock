@@ -9,5 +9,5 @@ actual class RefreshManager {
         get() = (NSDate().timeIntervalSince1970 * 1000).toLong()
 
     actual fun needsRefresh(needsRefreshIn: Long): Boolean =
-        currentTime + REFRESH_THRESHOLD >= needsRefreshIn
+        currentTime - needsRefreshIn <= REFRESH_THRESHOLD
 }

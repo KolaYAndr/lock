@@ -7,6 +7,7 @@ import org.homesharing.lockbox.domain.model.session.Session
 
 interface AccountRepository {
     suspend fun parseAccountInfo(): AccountInfoDto
+    suspend fun refreshAccount() : AccountInfoDto
     suspend fun logOut()
     fun loggedIn(): Flow<Boolean>
     suspend fun getImageLink(sub: String): String

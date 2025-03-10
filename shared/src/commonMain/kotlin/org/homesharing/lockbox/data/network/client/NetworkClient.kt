@@ -70,46 +70,49 @@ internal fun createNetworkClient(engine: HttpClientEngine, mLogger: Logger = myL
     }
 }
 
-internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: RefreshManager) = this.config {
-    defaultRequest {
-        headers {
-            bearerAuth(runBlocking { tokenStorage.getAccessToken() })
-        }
-    }
-
-    install(Auth) {
-        bearer {
-            loadTokens {
-                val accessToken = tokenStorage.getAccessToken()
-                val refresh = tokenStorage.getRefreshToken()
-                BearerTokens(accessToken = accessToken, refreshToken = refresh)
+internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: RefreshManager) =
+    this.config {
+        defaultRequest {
+            headers {
+                bearerAuth(runBlocking { tokenStorage.getAccessToken() })
             }
+        }
 
-            refreshTokens {
-                val lastRefreshAt = tokenStorage.getLastRefreshTime()
-                if (refreshManager.needsRefresh(lastRefreshAt)) {
-                    val tokenInfo: TokenResponseDto = client.submitForm(
-                        url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
-                        formParameters = parameters {
-                            append(CLIENT_ID, PUBLIC_CLIENT)
-                            append(REFRESH_TOKEN, runBlocking { tokenStorage.getRefreshToken() } )
-                            append(GRANT_TYPE, REFRESH_TOKEN)
+        install(Auth) {
+            bearer {
+                loadTokens {
+                    val accessToken = tokenStorage.getAccessToken()
+                    val refresh = tokenStorage.getRefreshToken()
+                    BearerTokens(accessToken = accessToken, refreshToken = refresh)
+                }
+
+                refreshTokens {
+                    val nextRefresh = tokenStorage.getNextRefreshTime()
+                    if (refreshManager.needsRefresh(nextRefresh)) {
+                        val tokenInfo: TokenResponseDto = client.submitForm(
+                            url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
+                            formParameters = parameters {
+                                append(CLIENT_ID, PUBLIC_CLIENT)
+                                append(
+                                    REFRESH_TOKEN,
+                                    runBlocking { tokenStorage.getRefreshToken() })
+                                append(GRANT_TYPE, REFRESH_TOKEN)
+                            }
+                        ) {
+                            markAsRefreshTokenRequest()
+                        }.body()
+
+                        tokenStorage.apply {
+                            saveNextRefreshTime(refreshManager.currentTime + (tokenInfo.expiresIn * 1000).toLong())
+                            saveAccessToken(tokenInfo.accessToken)
+                            saveRefreshToken(tokenInfo.refreshToken)
                         }
-                    ) {
-                        markAsRefreshTokenRequest()
-                    }.body()
 
-                    tokenStorage.apply {
-                        saveLastRefreshTime(refreshManager.currentTime + tokenInfo.expiresIn)
-                        saveAccessToken(tokenInfo.accessToken)
-                        saveRefreshToken(tokenInfo.refreshToken)
+                        BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
+                    } else {
+                        BearerTokens(tokenStorage.getAccessToken(), tokenStorage.getRefreshToken())
                     }
-
-                    BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
-                } else {
-                    BearerTokens(tokenStorage.getAccessToken(), tokenStorage.getRefreshToken())
                 }
             }
         }
     }
-}
