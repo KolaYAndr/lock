@@ -28,20 +28,30 @@ class AccountRepositoryImpl(
     private val tokenStorage: TokenStorage
 ) : AccountRepository {
 
-    override suspend fun parseAccountInfo(): AccountInfo =
+    override suspend fun parseAccountInfo(): Response<AccountInfo> =
         withContext(Dispatchers.IO) {
-            val token = tokenStorage.getAccessToken()
-            decodeJWT(token).toDomain()
+            try {
+                val token = tokenStorage.getAccessToken()
+                val accountInfo = decodeJWT(token).toDomain()
+                Response.Success(accountInfo)
+            } catch (e: Exception) {
+                Response.Failure(e.cause?.message.toString())
+            }
         }
 
-    override suspend fun refreshAccount(): AccountInfo = withContext(Dispatchers.IO) {
-        val token = api.refreshTokens(tokenStorage.getRefreshToken())
-        val tokenBody = token as TokenResponseDto.TokenSuccessResponseDto
-        with(tokenStorage) {
-            saveAccessToken(tokenBody.accessToken)
-            saveRefreshToken(tokenBody.refreshToken)
+    override suspend fun refreshAccount(): Response<AccountInfo> = withContext(Dispatchers.IO) {
+        try {
+            val token = api.refreshTokens(tokenStorage.getRefreshToken())
+            val tokenBody = token as TokenResponseDto.TokenSuccessResponseDto
+            with(tokenStorage) {
+                saveAccessToken(tokenBody.accessToken)
+                saveRefreshToken(tokenBody.refreshToken)
+            }
+            val result = decodeJWT(tokenBody.accessToken).toDomain()
+            Response.Success(result)
+        } catch (e: Exception) {
+            Response.Failure(e.cause?.message.toString())
         }
-        decodeJWT(tokenBody.accessToken).toDomain()
     }
 
     private suspend fun decodeJWT(jwt: String): AccountInfoDto = withContext(Dispatchers.Default) {

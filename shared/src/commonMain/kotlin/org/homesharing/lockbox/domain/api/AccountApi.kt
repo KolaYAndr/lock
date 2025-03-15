@@ -17,9 +17,9 @@ interface AccountApi {
         passwordRepeated: String
     ): ApiResponse<SignUpResponseDto>
 
-    suspend fun loadTokensInitially(username: String, password: String): TokenResponseDto.TokenSuccessResponseDto
+    suspend fun loadTokensInitially(username: String, password: String): TokenResponseDto
 
-    suspend fun refreshTokens(refreshToken: String): TokenResponseDto.TokenSuccessResponseDto
+    suspend fun refreshTokens(refreshToken: String): TokenResponseDto
 
     suspend fun getImageLinkBySub(sub: String): String
 

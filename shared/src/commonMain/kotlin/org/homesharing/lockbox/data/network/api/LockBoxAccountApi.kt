@@ -84,7 +84,7 @@ class LockBoxAccountApi(
     override suspend fun loadTokensInitially(
         username: String,
         password: String
-    ): TokenResponseDto.TokenSuccessResponseDto {
+    ): TokenResponseDto {
         return unsignedClient.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {
@@ -95,15 +95,9 @@ class LockBoxAccountApi(
                 append(SCOPE, OFFLINE_ACCESS_SCOPE)
             }
         ).body()
-
-//        return try {
-//            Json.decodeFromString<TokenResponseDto.TokenSuccessResponseDto>(response)
-//        } catch (e: SerializationException) {
-//            Json.decodeFromString<TokenResponseDto.TokenFailureResponseDto>(response)
-//        }
     }
 
-    override suspend fun refreshTokens(refreshToken: String): TokenResponseDto.TokenSuccessResponseDto {
+    override suspend fun refreshTokens(refreshToken: String): TokenResponseDto {
         return signedClient.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {
@@ -112,12 +106,6 @@ class LockBoxAccountApi(
                 append(REFRESH_TOKEN_NAME, refreshToken)
             }
         ).body()
-
-//        return try {
-//            Json.decodeFromString<TokenResponseDto.TokenSuccessResponseDto>(response)
-//        } catch (e: SerializationException) {
-//            Json.decodeFromString<TokenResponseDto.TokenFailureResponseDto>(response)
-//        }
     }
 
     override suspend fun sendImage(data: ByteArray) {

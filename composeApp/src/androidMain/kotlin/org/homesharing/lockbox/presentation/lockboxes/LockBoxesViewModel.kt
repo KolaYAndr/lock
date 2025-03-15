@@ -8,8 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AccountRepository
 import org.homesharing.lockbox.domain.repository.BoxesRepository
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotLoadAccountInfo
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotRefreshAccountInfo
 
 class LockBoxesViewModel(
     private val accountRepository: AccountRepository,
@@ -26,9 +30,29 @@ class LockBoxesViewModel(
 
     private fun fetchAccountInfo() {
         viewModelScope.launch {
-            val info = accountRepository.parseAccountInfo()
-            val imageLink = accountRepository.getImageLink(info.sub)
-            _uiState.update { it.copy(avatarLink = imageLink) }
+            when (val info = accountRepository.parseAccountInfo()) {
+                is Response.Success -> {
+                    val imageLink = accountRepository.getImageLink(info.data.sub)
+                    _uiState.update { it.copy(avatarLink = imageLink) }
+                }
+
+                is Response.Failure -> {
+                    SnackbarController.receiveEvent(couldNotLoadAccountInfo { retry() })
+                }
+            }
+        }
+    }
+
+    private suspend fun retry() {
+        when (val info = accountRepository.refreshAccount()) {
+            is Response.Success -> {
+                val imageLink = accountRepository.getImageLink(info.data.sub)
+                _uiState.update { it.copy(avatarLink = imageLink) }
+            }
+
+            is Response.Failure -> {
+                SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retry() })
+            }
         }
     }
 

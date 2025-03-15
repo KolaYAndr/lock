@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -19,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -119,11 +119,11 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun CollectSnackbarEvents(
-        snackbarHostState: SnackbarHostState
-    ) {
+    private fun CollectSnackbarEvents(snackbarHostState: SnackbarHostState) {
         val scope = rememberCoroutineScope()
         val lifecycleOwner = LocalLifecycleOwner.current
+        val context = LocalContext.current
+
         LaunchedEffect(lifecycleOwner.lifecycle) {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.Main.immediate) {
@@ -132,10 +132,10 @@ class MainActivity : ComponentActivity() {
                             snackbarHostState.currentSnackbarData?.dismiss()
 
                             val result = snackbarHostState.showSnackbar(
-                                message = event.message,
-                                actionLabel = event.action?.name,
+                                message = context.getString(event.message),
+                                actionLabel = event.action?.name?.let { context.getString(it) },
                                 withDismissAction = true,
-                                duration = SnackbarDuration.Long
+                                duration = event.duration
                             )
 
                             if (result == SnackbarResult.ActionPerformed) {

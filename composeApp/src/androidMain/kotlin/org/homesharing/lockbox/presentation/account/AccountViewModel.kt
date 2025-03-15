@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.account
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
@@ -12,10 +13,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AccountRepository
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotRefreshAccountInfo
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
 private const val UPDATE_TIME = 500L
@@ -41,11 +44,7 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
                     val response = repository.updateInfo(name = name, surname = surname)
 
                     if (response is Response.Failure) {
-                        val event = SnackbarEvent(
-                            message = "Couldn't update",
-                            action = SnackbarAction(name = "Retry", effect = { retry() })
-                        )
-                        SnackbarController.receiveEvent(event)
+                        SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retry() })
                     }
                 }
         }
@@ -58,30 +57,33 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         )
 
         if (response is Response.Failure) {
-            val event = SnackbarEvent(
-                message = "Couldn't update",
-                action = SnackbarAction(name = "Retry", effect = {
-                    retry()
-                })
-            )
-            SnackbarController.receiveEvent(event)
+            SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retry() })
         }
     }
 
     private fun fetchInfo() {
         viewModelScope.launch {
-            val info = repository.parseAccountInfo()
+            when (val info = repository.parseAccountInfo()) {
+                is Response.Success -> {
+                    launch {
+                        _uiState.update {
+                            it.copy(
+                                name = info.data.givenName ?: "",
+                                surname = info.data.familyName ?: "",
+                                email = info.data.email,
+                                sub = info.data.sub
+                            )
+                        }
+                    }
+                    launch {
+                        getAvatarLink(info.data.sub)
+                    }
+                }
 
-            _uiState.update {
-                it.copy(
-                    name = info.givenName ?: "",
-                    surname = info.familyName ?: "",
-                    email = info.email,
-                    sub = info.sub
-                )
+                is Response.Failure -> {
+                    SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retry() })
+                }
             }
-            getAvatarLink(info.sub)
-
         }
     }
 
@@ -105,7 +107,12 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
 
     fun sendImage(data: ByteArray) {
         viewModelScope.launch {
-            repository.sendImage(data)
+            try {
+                repository.sendImage(data)
+                SnackbarController.receiveEvent(successfulUpdateUserImageEvent)
+            } catch (e: Exception) {
+                SnackbarController.receiveEvent(couldNotUpdateUserImageEvent)
+            }
         }
     }
 
@@ -113,6 +120,21 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
         viewModelScope.launch {
             repository.deactivateUser()
         }
+    }
+
+    private companion object {
+        fun couldNotUpdateUserInfoEvent(onRetry: suspend () -> Unit) = SnackbarEvent(
+            message = R.string.could_not_update_user_info,
+            action = SnackbarAction(
+                name = R.string.retry,
+                effect = { onRetry() }
+            )
+        )
+
+        val couldNotUpdateUserImageEvent =
+            SnackbarEvent(message = R.string.could_not_update_user_image)
+        val successfulUpdateUserImageEvent =
+            SnackbarEvent(message = R.string.image_updated, duration = SnackbarDuration.Short)
     }
 }
 
