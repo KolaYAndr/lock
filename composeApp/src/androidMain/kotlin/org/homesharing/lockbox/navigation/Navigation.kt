@@ -221,6 +221,7 @@ fun Navigation(
                         activeSessionsUiState = uiState.value,
                         onNavBack = navController::navigateUp,
                         onFinishSessions = activeSessionsViewModel::finishOtherSessions,
+                        onRefresh = activeSessionsViewModel::refresh,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

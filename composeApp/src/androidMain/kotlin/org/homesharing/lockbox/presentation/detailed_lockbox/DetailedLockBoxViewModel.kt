@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.BoxesRepository
 import kotlin.properties.Delegates
 
@@ -32,9 +33,9 @@ class DetailedLockBoxViewModel(
                 newAddress = newAddress
             )
 
-            _uiState.update {
+            if (response is Response.Success) _uiState.update {
                 it.copy(
-                    address = response.body.address,
+                    address = response.data.address,
                 )
             }
         }
@@ -47,9 +48,9 @@ class DetailedLockBoxViewModel(
                 newName = newName
             )
 
-            _uiState.update {
+            if (response is Response.Success) _uiState.update {
                 it.copy(
-                    boxName = response.body.alias,
+                    boxName = response.data.alias,
                 )
             }
         }
@@ -65,12 +66,12 @@ class DetailedLockBoxViewModel(
         viewModelScope.launch {
             macAddress = address
             val response = boxesRepository.getBoxByMac(address)
-            _uiState.update {
+            if (response is Response.Success) _uiState.update {
                 it.copy(
-                    boxName = response.body.alias,
-                    address = response.body.address,
-                    signalStrength = response.body.signalStrength.toInt(),
-                    batteryLevel = response.body.batteryLevel.toInt()
+                    boxName = response.data.alias,
+                    address = response.data.address,
+                    signalStrength = response.data.signalStrength.toInt(),
+                    batteryLevel = response.data.batteryLevel.toInt()
                 )
             }
         }

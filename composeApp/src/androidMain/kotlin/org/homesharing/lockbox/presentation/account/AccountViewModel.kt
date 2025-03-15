@@ -12,7 +12,11 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AccountRepository
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
 private const val UPDATE_TIME = 500L
 
@@ -20,7 +24,6 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
     private val _uiState: MutableStateFlow<AccountUiState> = MutableStateFlow(AccountUiState())
     val uiState: StateFlow<AccountUiState> get() = _uiState.asStateFlow()
 
-    private var initialLoadComplete = false
 
     init {
         fetchInfo()
@@ -35,10 +38,33 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
                 .distinctUntilChanged()
                 .debounce(UPDATE_TIME)
                 .collectLatest { (name, surname) ->
-                    if (initialLoadComplete) {
-                        repository.updateInfo(name = name, surname = surname)
+                    val response = repository.updateInfo(name = name, surname = surname)
+
+                    if (response is Response.Failure) {
+                        val event = SnackbarEvent(
+                            message = "Couldn't update",
+                            action = SnackbarAction(name = "Retry", effect = { retry() })
+                        )
+                        SnackbarController.receiveEvent(event)
                     }
                 }
+        }
+    }
+
+    private suspend fun retry() {
+        val response = repository.updateInfo(
+            name = uiState.value.name,
+            surname = uiState.value.surname
+        )
+
+        if (response is Response.Failure) {
+            val event = SnackbarEvent(
+                message = "Couldn't update",
+                action = SnackbarAction(name = "Retry", effect = {
+                    retry()
+                })
+            )
+            SnackbarController.receiveEvent(event)
         }
     }
 
@@ -56,7 +82,6 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
             }
             getAvatarLink(info.sub)
 
-            initialLoadComplete = true
         }
     }
 

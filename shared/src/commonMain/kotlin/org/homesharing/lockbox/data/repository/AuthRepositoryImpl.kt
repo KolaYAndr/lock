@@ -3,12 +3,14 @@ package org.homesharing.lockbox.data.repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
-import org.homesharing.lockbox.data.network.dto.ConfirmEmailRequestDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
-import org.homesharing.lockbox.data.network.dto.InitialTokenLoadResponseDto
+import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
+import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class AuthRepositoryImpl(
@@ -21,18 +23,27 @@ class AuthRepositoryImpl(
         username: String,
         password: String,
         passwordRepeated: String
-    ): SignUpResponseDto =
-        withContext(Dispatchers.IO) {
-            api.signUp(username, password, passwordRepeated)
+    ): Response<SignUpResponseDto> = withContext(Dispatchers.IO) {
+        try {
+            val apiResponse = api.signUp(username, password, passwordRepeated)
+
+            if (apiResponse.error) {
+                Response.Failure(apiResponse.errorText!!)
+            } else {
+                Response.Success(apiResponse.body!!)
+            }
+        } catch (e: Exception) {
+            Response.Failure(e.message.toString())
         }
+    }
 
     override suspend fun loadTokensInitially(
         username: String,
         password: String
-    ): InitialTokenLoadResponseDto =
+    ): TokenResponseDto =
         withContext(Dispatchers.IO) {
             api.loadTokensInitially(username, password).also { response ->
-                if (response is InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto)
+                if (response is TokenResponseDto.TokenSuccessResponseDto)
                     tokenStorage.apply {
                         saveAccessToken(response.accessToken)
                         saveRefreshToken(response.refreshToken)
@@ -41,10 +52,21 @@ class AuthRepositoryImpl(
             }
         }
 
-    override suspend fun sendConfirmation(email: String) = withContext(Dispatchers.IO) {
-        val body = ConfirmEmailRequestDto(mail = email)
-        api.confirmEmail(body)
-    }
+    override suspend fun sendConfirmation(email: String): Response<ConfirmEmailResponseDto> =
+        withContext(Dispatchers.IO) {
+            val body = ConfirmEmailRequestDto(mail = email)
+            try {
+                val apiResponse = api.confirmEmail(body)
+
+                if (apiResponse.error) {
+                    Response.Failure(apiResponse.errorText!!)
+                } else {
+                    Response.Success(apiResponse.body!!)
+                }
+            } catch (e: Exception) {
+                Response.Failure(e.message.toString())
+            }
+        }
 
     override suspend fun checkIfConfirmed(email: String) = withContext(Dispatchers.IO) {
 

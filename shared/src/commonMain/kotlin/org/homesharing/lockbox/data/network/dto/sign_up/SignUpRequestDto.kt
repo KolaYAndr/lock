@@ -10,5 +10,5 @@ data class SignUpRequestDto(
     @SerialName("password_repeat")
     val repeatPassword: String,
     @SerialName("mail")
-    val email: String
+    val email: String,
 )

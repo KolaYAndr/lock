@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.update
 
 class SecurityViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<SecurityUiState> =
-        MutableStateFlow(SecurityUiState.ChangePassword)
+        MutableStateFlow(SecurityUiState.OptionsScreen)
     val uiState: StateFlow<SecurityUiState> get() = _uiState.asStateFlow()
 
     fun onPasswordChanged() {
@@ -19,13 +19,13 @@ class SecurityViewModel : ViewModel() {
 
     fun backToChangePassword() {
         _uiState.update {
-            SecurityUiState.ChangePassword
+            SecurityUiState.OptionsScreen
         }
     }
 }
 
 sealed class SecurityUiState {
-    data object ChangePassword : SecurityUiState()
+    data object OptionsScreen : SecurityUiState()
     data object PasswordChanged : SecurityUiState()
 }
 

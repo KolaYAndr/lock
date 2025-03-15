@@ -52,13 +52,13 @@ fun SecurityScreen(
     ) {
         TitledTopBar(
             title = when (securityUiState) {
-                is SecurityUiState.ChangePassword ->
+                is SecurityUiState.OptionsScreen ->
                     stringResource(R.string.security)
 
                 SecurityUiState.PasswordChanged -> stringResource(R.string.change_password)
             },
             onNavigate = when (securityUiState) {
-                SecurityUiState.ChangePassword ->
+                SecurityUiState.OptionsScreen ->
                     onNavBack
 
                 SecurityUiState.PasswordChanged ->
@@ -68,8 +68,8 @@ fun SecurityScreen(
         )
 
         when (securityUiState) {
-            is SecurityUiState.ChangePassword -> {
-                ChangePasswordScreen(
+            is SecurityUiState.OptionsScreen -> {
+                OptionsScreen(
                     onShowDialog = { showDialog = true },
                     onToActiveSessions = onToActiveSessions,
                     showDialog = showDialog,
@@ -115,7 +115,7 @@ private fun PasswordChangedScreen(onReady: () -> Unit) {
 }
 
 @Composable
-private fun ChangePasswordScreen(
+private fun OptionsScreen(
     onShowDialog: () -> Unit,
     onToActiveSessions: () -> Unit,
     showDialog: Boolean,
@@ -125,7 +125,7 @@ private fun ChangePasswordScreen(
     SecurityElement(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp)
+            .padding(top = 24.dp)
             .padding(horizontal = 16.dp),
         onClick = onShowDialog,
         title = stringResource(R.string.change_password)
@@ -134,7 +134,7 @@ private fun ChangePasswordScreen(
     SecurityElement(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 24.dp)
+            .padding(top = 12.dp)
             .padding(horizontal = 16.dp),
         title = stringResource(R.string.active_sessions),
         onClick = onToActiveSessions
@@ -212,7 +212,7 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
 @Composable
 fun PreviewSecurityScreenChangePassword() {
     LockBoxTheme {
-        val state = SecurityUiState.ChangePassword
+        val state = SecurityUiState.OptionsScreen
         SecurityScreen(
             securityUiState = state,
             {}, {}, {}, {}, {},

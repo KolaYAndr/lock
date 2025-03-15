@@ -42,7 +42,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.data.network.dto.BoxDto
+import org.homesharing.lockbox.domain.model.box.Box
 import presentation.composables.LockBoxCircularProgress
 import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.NetworkImage
@@ -58,7 +58,7 @@ private const val BATTERY_LEVEL_LOW = 10
 @Composable
 fun LockBoxesScreen(
     state: LockBoxesUiState,
-    boxes: Flow<PagingData<BoxDto>>,
+    boxes: Flow<PagingData<Box>>,
 //    onSearchChange: (String) -> Unit,
     onNavigateToBox: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -123,7 +123,7 @@ private fun LockBoxScreen(
 //    search: String,
 //    onSearchChange: (String) -> Unit,
 //    onDoneAction: () -> Unit,
-    boxes: LazyPagingItems<BoxDto>,
+    boxes: LazyPagingItems<Box>,
     onBoxClick: (String) -> Unit,
     onAddDevice: () -> Unit,
 ) {
@@ -175,7 +175,7 @@ private fun LockBoxScreen(
 
 @Composable
 private fun LockBox(
-    box: BoxDto,
+    box: Box,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -426,7 +426,7 @@ private fun EmptyScreen(
 fun PreviewLockBox() {
     LockBoxTheme {
         LockBox(
-            box = BoxDto("Doma", "1D:2C", "Demo", "" ,false, 0.0, 0.0, ""),
+            box = Box(address = "Doma", macAddress = "1D:2C", alias = "Demo" , opened = false, signalStrength = 0.0, batteryLevel = 0.0),
             onClick = {},
             modifier = Modifier.fillMaxWidth()
         )

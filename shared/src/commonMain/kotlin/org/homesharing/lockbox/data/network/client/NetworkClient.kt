@@ -22,7 +22,7 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.data.network.token.model.TokenResponseDto
+import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 
@@ -89,7 +89,7 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: 
                 refreshTokens {
                     val nextRefresh = tokenStorage.getNextRefreshTime()
                     if (refreshManager.needsRefresh(nextRefresh)) {
-                        val tokenInfo: TokenResponseDto = client.submitForm(
+                        val tokenInfo: TokenResponseDto.TokenSuccessResponseDto = client.submitForm(
                             url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
                             formParameters = parameters {
                                 append(CLIENT_ID, PUBLIC_CLIENT)

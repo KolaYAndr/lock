@@ -35,8 +35,8 @@ fun RoundText(text: String, modifier: Modifier = Modifier) {
     ) {
         if (text.isNotEmpty()) {
             val splits = text.split(" ")
-            val name = splits[0]
-            val surname = splits[1]
+            val name = splits.getOrNull(0) ?: ""
+            val surname = splits.getOrNull(1) ?: ""
             val shortName = getShortenedName(name, surname)
             Text(
                 text = shortName,

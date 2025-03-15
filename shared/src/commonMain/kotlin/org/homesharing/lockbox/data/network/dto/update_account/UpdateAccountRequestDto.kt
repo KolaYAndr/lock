@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.data.network.dto.update_user
+package org.homesharing.lockbox.data.network.dto.update_account
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

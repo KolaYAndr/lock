@@ -1,20 +1,12 @@
-package org.homesharing.lockbox.data.network.dto
+package org.homesharing.lockbox.data.network.dto.sessions
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SessionsResponseDto(
-    val body: SessionsBody,
-    val error: Boolean,
-    @SerialName("error_text")
-    val errorText: String?
-)
-
-@Serializable
-data class SessionsBody(
     val credentials: List<Credential>,
-    val sessions: List<SessionDto>
+    val sessions: List<SessionDto>,
 )
 
 @Serializable
@@ -31,7 +23,7 @@ data class SessionDto(
     val transientUser: Boolean,
     @SerialName("user_id")
     val userId: String,
-    val username: String
+    val username: String,
 )
 
 @Serializable
@@ -40,5 +32,5 @@ data class Credential(
     val createdDate: Long,
     val type: String,
     @SerialName("user_label")
-    val userLabel: String
+    val userLabel: String,
 )

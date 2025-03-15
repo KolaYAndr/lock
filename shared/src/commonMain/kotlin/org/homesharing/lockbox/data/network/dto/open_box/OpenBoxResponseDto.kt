@@ -1,18 +1,10 @@
-package org.homesharing.lockbox.data.network.dto
+package org.homesharing.lockbox.data.network.dto.open_box
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenBoxResponseDto(
-    val body: OpenBoxBody,
-    val error: Boolean,
-    @SerialName("error_text")
-    val errorText: String?
-)
-
-@Serializable
-data class OpenBoxBody(
     val call: String,
     val id: Int,
     @SerialName("issuer_sub")
@@ -20,5 +12,5 @@ data class OpenBoxBody(
     @SerialName("issuer_token")
     val issuerToken: String?,
     @SerialName("mac_address")
-    val macAddress: String
+    val macAddress: String,
 )

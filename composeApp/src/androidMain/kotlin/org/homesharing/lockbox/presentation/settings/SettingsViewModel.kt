@@ -22,7 +22,7 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
             val info = repository.parseAccountInfo()
             _uiState.update {
                 it.copy(
-                    fullName = info.name ?: "",
+                    fullName = info.fullName ?: "",
                     email = info.email,
                     sub = info.sub
                 )
@@ -38,7 +38,7 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
             val info = repository.refreshAccount()
             _uiState.update {
                 it.copy(
-                    fullName = info.name ?: ""
+                    fullName = info.fullName ?: ""
                 )
             }
             _uiState.update { it.copy(isRefreshing = false) }

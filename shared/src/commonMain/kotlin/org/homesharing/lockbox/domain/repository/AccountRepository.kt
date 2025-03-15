@@ -1,22 +1,32 @@
 package org.homesharing.lockbox.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import org.homesharing.lockbox.data.network.dto.AccountInfoDto
-import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountResponseDto
-import org.homesharing.lockbox.domain.model.session.Session
+import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.account_info.AccountInfo
+import org.homesharing.lockbox.domain.model.sessions.Session
+import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
 interface AccountRepository {
-    suspend fun parseAccountInfo(): AccountInfoDto
-    suspend fun refreshAccount() : AccountInfoDto
+
+    suspend fun parseAccountInfo(): AccountInfo
+
+    suspend fun refreshAccount(): AccountInfo
+
     suspend fun logOut()
+
     fun loggedIn(): Flow<Boolean>
+
     suspend fun getImageLink(sub: String): String
+
     suspend fun sendImage(data: ByteArray)
-    suspend fun getSessions(): List<Session>
+
+    suspend fun getSessions(): Response<List<Session>>
+
     suspend fun updateInfo(
         name: String? = null,
         surname: String? = null,
         email: String? = null
-    ): UpdateAccountResponseDto
-    suspend fun deactivateUser(): UpdateAccountResponseDto
+    ): Response<UpdateAccount>
+
+    suspend fun deactivateUser(): Response<UpdateAccount>
 }

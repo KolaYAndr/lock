@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.data.network.dto
+package org.homesharing.lockbox.data.network.dto.account_info
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -31,20 +31,20 @@ data class AccountInfoDto(
     val scope: String,
     val sid: String,
     val sub: String,
-    val typ: String
+    val typ: String,
 )
 
 @Serializable
 data class RealmAccess(
-    val roles: List<String>
+    val roles: List<String>,
 )
 
 @Serializable
 data class Account(
-    val roles: List<String>
+    val roles: List<String>,
 )
 
 @Serializable
 data class ResourceAccess(
-    val account: Account
+    val account: Account,
 )

@@ -10,21 +10,18 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.parameters
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.data.network.dto.ConfirmEmailRequestDto
-import org.homesharing.lockbox.data.network.dto.InitialTokenLoadResponseDto
-import org.homesharing.lockbox.data.network.dto.PostImageResponseDto
-import org.homesharing.lockbox.data.network.dto.SessionsResponseDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
+import org.homesharing.lockbox.data.network.dto.post_image.PostImageResponseDto
+import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
-import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountRequestDto
-import org.homesharing.lockbox.data.network.dto.update_user.UpdateAccountResponseDto
-import org.homesharing.lockbox.data.network.token.model.TokenResponseDto
+import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
+import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
+import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.domain.api.AccountApi
 
@@ -69,7 +66,7 @@ class LockBoxAccountApi(
         username: String,
         password: String,
         passwordRepeated: String
-    ): SignUpResponseDto {
+    ): ApiResponse<SignUpResponseDto> {
         return unsignedClient.post {
             url(SIGN_UP_URL)
             setBody(
@@ -79,7 +76,7 @@ class LockBoxAccountApi(
                     repeatPassword = passwordRepeated,
                 )
             )
-        }.body<SignUpResponseDto>()
+        }.body()
     }
 
     override suspend fun getImageLinkBySub(sub: String): String = "$AVATARS_URL/$sub"
@@ -87,8 +84,8 @@ class LockBoxAccountApi(
     override suspend fun loadTokensInitially(
         username: String,
         password: String
-    ): InitialTokenLoadResponseDto {
-        val response = unsignedClient.submitForm(
+    ): TokenResponseDto.TokenSuccessResponseDto {
+        return unsignedClient.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {
                 append(GRANT_TYPE, PASSWORD)
@@ -97,16 +94,16 @@ class LockBoxAccountApi(
                 append(PASSWORD, password)
                 append(SCOPE, OFFLINE_ACCESS_SCOPE)
             }
-        ).bodyAsText()
+        ).body()
 
-        return try {
-            Json.decodeFromString<InitialTokenLoadResponseDto.InitialTokenLoadSuccessResponseDto>(response)
-        } catch (e: SerializationException) {
-            Json.decodeFromString<InitialTokenLoadResponseDto.InitialTokenLoadFailResponseDto>(response)
-        }
+//        return try {
+//            Json.decodeFromString<TokenResponseDto.TokenSuccessResponseDto>(response)
+//        } catch (e: SerializationException) {
+//            Json.decodeFromString<TokenResponseDto.TokenFailureResponseDto>(response)
+//        }
     }
 
-    override suspend fun refreshTokens(refreshToken: String): TokenResponseDto {
+    override suspend fun refreshTokens(refreshToken: String): TokenResponseDto.TokenSuccessResponseDto {
         return signedClient.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {
@@ -115,34 +112,40 @@ class LockBoxAccountApi(
                 append(REFRESH_TOKEN_NAME, refreshToken)
             }
         ).body()
+
+//        return try {
+//            Json.decodeFromString<TokenResponseDto.TokenSuccessResponseDto>(response)
+//        } catch (e: SerializationException) {
+//            Json.decodeFromString<TokenResponseDto.TokenFailureResponseDto>(response)
+//        }
     }
 
     override suspend fun sendImage(data: ByteArray) {
         val response = signedClient.post {
             url(AVATARS_POST_URL)
-        }.body<PostImageResponseDto>()
+        }.body<ApiResponse<PostImageResponseDto>>()
 
         unsignedClient.put {
             header(HttpHeaders.ContentType, ContentType.Image.PNG)
-            url(response.body.link)
+            url(response.body!!.link)
             setBody(data)
         }
     }
 
-    override suspend fun getSessions(): SessionsResponseDto {
+    override suspend fun getSessions(): ApiResponse<SessionsResponseDto> {
         return signedClient.get {
             url(SESSIONS_URL)
         }.body()
     }
 
-    override suspend fun confirmEmail(body: ConfirmEmailRequestDto) {
-        unsignedClient.post {
+    override suspend fun confirmEmail(body: ConfirmEmailRequestDto): ApiResponse<ConfirmEmailResponseDto> {
+        return unsignedClient.post {
             url(CONFIRM_EMAIL_URL)
             setBody(body)
-        }
+        }.body()
     }
 
-    override suspend fun updateUserInfo(body: UpdateAccountRequestDto): UpdateAccountResponseDto {
+    override suspend fun updateUserInfo(body: UpdateAccountRequestDto): ApiResponse<UpdateAccountResponseDto> {
         return signedClient.patch {
             url(UPDATE_ACCOUNT_URL)
             setBody(body)

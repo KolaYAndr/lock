@@ -2,19 +2,11 @@ package org.homesharing.lockbox.data.network.dto.sign_up
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
+@JvmInline
 @Serializable
-data class SignUpResponseDto(
-    @SerialName("body")
-    val body: User?,
-    @SerialName("error")
-    val error: Boolean,
-    @SerialName("error_text")
-    val errorText: String?
-)
-
-@Serializable
-data class User(val userBody: UserBody)
+value class SignUpResponseDto(val body: UserBody)
 
 @Serializable
 data class UserBody(
@@ -27,5 +19,5 @@ data class UserBody(
     val lastName: String,
     @SerialName("email_verified")
     val emailVerified: Boolean,
-    val enabled: Boolean
+    val enabled: Boolean,
 )

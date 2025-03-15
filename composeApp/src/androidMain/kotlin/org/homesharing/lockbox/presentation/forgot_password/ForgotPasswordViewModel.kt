@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.homesharing.lockbox.presentation.sign_up.SignUpStep
 
 class ForgotPasswordViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<ForgotPasswordUiState> =

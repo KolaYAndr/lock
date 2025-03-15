@@ -1,6 +1,8 @@
 package org.homesharing.lockbox.presentation.sessions
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
+import android.net.ConnectivityManager
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,14 +12,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import org.homesharing.lockbox.R
+import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.TitledTopBar
 import presentation.composables.general.BasicGroup
 import presentation.composables.general.BasicHorizontalDivider
@@ -36,11 +43,13 @@ private const val hourMillis = 60 * minuteMillis
 private const val dayMillis = 24 * hourMillis
 private const val fourteenDaysMillis = 14 * dayMillis
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActiveSessionScreen(
     activeSessionsUiState: ActiveSessionsUiState,
     onNavBack: () -> Unit,
     onFinishSessions: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,68 +63,91 @@ fun ActiveSessionScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
+
+        LockBoxPullToRefresh(
+            onRefresh = onRefresh,
+            isRefreshing = activeSessionsUiState.isRefreshing
         ) {
-            Text(
-                text = stringResource(R.string.this_device),
-                style = LockBoxTheme.typography.subHeadlineLarge,
-                color = LockBoxTheme.colors.grey500,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-
-            BasicGroup(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 6.dp, bottom = 12.dp),
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
             ) {
-                Device(
-                    painter = painterResource(R.drawable.smartphone),
-                    name = "${Build.MANUFACTURER} ${Build.DEVICE}".uppercase(),
-                    location = "Saint P.",
-                    accessTime = stringResource(R.string.right_now),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                Text(
-                    text = stringResource(R.string.finish_all_other_sessions),
-                    style = LockBoxTheme.typography.headlineLarge,
-                    color = LockBoxTheme.colors.red600,
-                    modifier = Modifier
-                        .clickable { onFinishSessions() }
-                        .fillMaxWidth()
-                        .padding(vertical = 14.dp, horizontal = 16.dp)
-                )
-            }
-
-            Text(
-                text = stringResource(R.string.active_sessions),
-                style = LockBoxTheme.typography.subHeadlineLarge,
-                color = LockBoxTheme.colors.grey500,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-            BasicGroup(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 6.dp),
-            ) {
-                activeSessionsUiState.sessions.forEachIndexed { index, session ->
-                    Device(
-                        painter = painterResource(R.drawable.monitor_smartphone),
-                        name = stringResource(R.string.unknown_device),
-                        location = session.ipAddress,
-                        accessTime = lastAccessedString(session.lastAccessed),
-                        modifier = Modifier.fillMaxWidth()
+                item {
+                    Text(
+                        text = stringResource(R.string.this_device),
+                        style = LockBoxTheme.typography.subHeadlineLarge,
+                        color = LockBoxTheme.colors.grey500,
+                        modifier = Modifier.padding(top = 12.dp)
                     )
+                }
 
-                    if (index != activeSessionsUiState.sessions.lastIndex) {
+                item {
+                    val context = LocalContext.current
+                    val connectivityManager =
+                        remember { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
+                    val ip = remember {
+                        connectivityManager.getLinkProperties(connectivityManager.activeNetwork)?.linkAddresses
+                            ?.map { it.address.hostAddress }
+                            ?.firstOrNull { it != null && !it.contains(":") }
+                    }
+                    BasicGroup(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 6.dp, bottom = 12.dp),
+                    ) {
+                        Device(
+                            painter = painterResource(R.drawable.smartphone),
+                            name = "${Build.MANUFACTURER} ${Build.DEVICE}".uppercase(),
+                            location = ip.orEmpty(),
+                            accessTime = stringResource(R.string.right_now),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
                         BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+
+                        Text(
+                            text = stringResource(R.string.finish_all_other_sessions),
+                            style = LockBoxTheme.typography.headlineLarge,
+                            color = LockBoxTheme.colors.red600,
+                            modifier = Modifier
+                                .clickable { onFinishSessions() }
+                                .fillMaxWidth()
+                                .padding(vertical = 14.dp, horizontal = 16.dp)
+                        )
+                    }
+                }
+
+                item {
+                    Text(
+                        text = stringResource(R.string.active_sessions),
+                        style = LockBoxTheme.typography.subHeadlineLarge,
+                        color = LockBoxTheme.colors.grey500,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                }
+
+                item {
+                    BasicGroup(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 6.dp),
+                    ) {
+                        activeSessionsUiState.sessions.forEachIndexed { index, session ->
+                            Device(
+                                painter = painterResource(R.drawable.monitor_smartphone),
+                                name = stringResource(R.string.unknown_device),
+                                location = session.ipAddress,
+                                accessTime = lastAccessedString(session.lastAccessed),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            if (index != activeSessionsUiState.sessions.lastIndex) {
+                                BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                            }
+                        }
                     }
                 }
             }

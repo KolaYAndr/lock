@@ -2,16 +2,22 @@ package org.homesharing.lockbox.domain.repository
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import org.homesharing.lockbox.data.network.dto.BoxDto
-import org.homesharing.lockbox.data.network.dto.BoxResponseDto
-import org.homesharing.lockbox.data.network.dto.OpenBoxResponseDto
-import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
+import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.domain.model.open_box.OpenBox
+import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 
 interface BoxesRepository {
-    fun getBoxesPagingFlow(): Flow<PagingData<BoxDto>>
-    suspend fun getBoxByMac(address: String): BoxResponseDto
-    suspend fun openBoxByMac(address: String): OpenBoxResponseDto
-    suspend fun unbindBox(address: String): UpdateBoxResponseDto
-    suspend fun updateBoxName(macAddress: String, newName: String): UpdateBoxResponseDto
-    suspend fun updateBoxAddress(macAddress: String, newAddress: String): UpdateBoxResponseDto
+
+    fun getBoxesPagingFlow(): Flow<PagingData<Box>>
+
+    suspend fun getBoxByMac(address: String): Response<Box>
+
+    suspend fun openBoxByMac(address: String): Response<OpenBox>
+
+    suspend fun unbindBox(address: String): Response<UpdateBox>
+
+    suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox>
+
+    suspend fun updateBoxAddress(macAddress: String, newAddress: String): Response<UpdateBox>
 }
