@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,7 @@ import presentation.composables.general.BasicHorizontalDivider
 import presentation.composables.TitledTopWithCloseAndBackButtons
 import presentation.composables.general.BasicModal
 import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.domain.model.box.Box
 
 @Composable
 fun DetailedLockBoxScreen(
@@ -338,8 +340,8 @@ fun DetailedLockBoxScreen(
 @Composable
 private fun getBatteryAlertColor(batteryLevel: Int): Color {
     return when (batteryLevel) {
-        in 11..40 -> LockBoxTheme.colors.yellow500
-        in 0..10 -> LockBoxTheme.colors.red600
+        in Box.BATTERY_PERCENT_LOW..< Box.BATTERY_PERCENT_MEDIUM -> LockBoxTheme.colors.yellow500
+        in 0..< Box.BATTERY_PERCENT_LOW -> LockBoxTheme.colors.red600
         else -> Color.Transparent
     }
 }
@@ -347,30 +349,32 @@ private fun getBatteryAlertColor(batteryLevel: Int): Color {
 @Composable
 private fun getBatteryImage(batteryLevel: Int): Painter {
     return when (batteryLevel) {
-        in 11..40 -> painterResource(R.drawable.battery_low)
-        in 41..70 -> painterResource(R.drawable.battery_medium)
-        in 71..100 -> painterResource(R.drawable.battery_full)
+        in Box.BATTERY_PERCENT_LOW..< Box.BATTERY_PERCENT_MEDIUM -> painterResource(R.drawable.battery_low)
+        in Box.BATTERY_PERCENT_MEDIUM ..< Box.BATTERY_PERCENT_HIGH -> painterResource(R.drawable.battery_medium)
+        in Box.BATTERY_PERCENT_HIGH..100 -> painterResource(R.drawable.battery_full)
         else -> painterResource(R.drawable.battery_empty)
     }
 }
 
 @Composable
 private fun getSignalImage(signalStrength: Int): Painter {
-    return when {
-        (-90..-61).contains(signalStrength) -> painterResource(R.drawable.signal_low)
-        (-60..-41).contains(signalStrength) -> painterResource(R.drawable.signal_medium)
-        (-40..-21).contains(signalStrength) -> painterResource(R.drawable.signal_high)
-        (-20..0).contains(signalStrength) -> painterResource(R.drawable.signal_full)
+    return when(signalStrength) {
+        in Box.SIGNAL_STRENGTH_LEVEL_LOW..< Box.SIGNAL_STRENGTH_LEVEL_MEDIUM -> painterResource(R.drawable.signal_low)
+        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..< Box.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(R.drawable.signal_medium)
+        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..< Box.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(R.drawable.signal_high)
+        in Box.SIGNAL_STRENGTH_LEVEL_FULL..< 0 -> painterResource(R.drawable.signal_full)
         else -> painterResource(R.drawable.signal_zero)
     }
 }
 
 @Composable
+@ReadOnlyComposable
 private fun getSignalStatus(signalStrength: Int): String {
-    return when {
-        (-90..-61).contains(signalStrength) -> stringResource(R.string.signa_low)
-        (-60..-31).contains(signalStrength) -> stringResource(R.string.signal_medium)
-        (-30..0).contains(signalStrength) -> stringResource(R.string.signal_high)
+    return when(signalStrength) {
+        in Box.SIGNAL_STRENGTH_LEVEL_LOW..< Box.SIGNAL_STRENGTH_LEVEL_MEDIUM -> stringResource(R.string.signa_low)
+        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..< Box.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(R.string.signal_medium)
+        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..< Box.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(R.string.signal_high)
+        in Box.SIGNAL_STRENGTH_LEVEL_FULL..< 0 -> stringResource(R.string.signal_full)
         else -> stringResource(R.string.signal_zero)
     }
 }

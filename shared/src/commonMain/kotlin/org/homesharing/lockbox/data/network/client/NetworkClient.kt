@@ -111,7 +111,7 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: 
                             }
 
                             BearerTokens(tokenInfo.accessToken!!, tokenInfo.refreshToken!!)
-                        } else BearerTokens("", null)
+                        } else BearerTokens(oldTokens?.accessToken ?: "", oldTokens?.refreshToken)
                     } else {
                         BearerTokens(tokenStorage.getAccessToken(), tokenStorage.getRefreshToken())
                     }

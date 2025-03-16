@@ -147,6 +147,9 @@
     <string name="could_not_update_box_name">Не удалось обновить имя бокса</string>
     <string name="could_not_update_box_address">Не удалось обновить адрес</string>
     <string name="could_not_unbind_box">Не удалось отвязать бокс</string>
+    <string name="box_opened_successfully">Бокс открыт успешно</string>
+    <string name="could_not_open_box">Не удалось открыть бокс</string>
+    <string name="signal_full">Максимальный</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

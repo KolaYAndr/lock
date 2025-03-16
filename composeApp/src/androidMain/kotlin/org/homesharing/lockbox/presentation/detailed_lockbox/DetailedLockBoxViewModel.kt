@@ -26,7 +26,15 @@ class DetailedLockBoxViewModel(
 
     fun openBox() {
         viewModelScope.launch {
-            boxesRepository.openBoxByMac(macAddress)
+            when (boxesRepository.openBoxByMac(macAddress)) {
+                is Response.Failure -> {
+                    SnackbarController.receiveEvent(couldNotOpenBox { openBox() })
+                }
+
+                is Response.Success -> {
+                    SnackbarController.receiveEvent(boxOpenedSuccessfully)
+                }
+            }
         }
     }
 
@@ -78,12 +86,18 @@ class DetailedLockBoxViewModel(
 
     fun unbindDevice(macAddress: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            when(boxesRepository.unbindBox(macAddress)) {
+            when (boxesRepository.unbindBox(macAddress)) {
                 is Response.Success -> {
                     onSuccess()
                 }
+
                 is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotUnbindBox { unbindDevice(macAddress, onSuccess) })
+                    SnackbarController.receiveEvent(couldNotUnbindBox {
+                        unbindDevice(
+                            macAddress,
+                            onSuccess
+                        )
+                    })
                 }
             }
         }
@@ -143,6 +157,19 @@ class DetailedLockBoxViewModel(
                 name = R.string.retry,
                 effect = { onRetry() }
             )
+        )
+
+        fun couldNotOpenBox(onRetry: () -> Unit) = SnackbarEvent(
+            message = R.string.could_not_open_box,
+            action = SnackbarAction(
+                name = R.string.retry,
+                effect = { onRetry() }
+            )
+        )
+
+        val boxOpenedSuccessfully = SnackbarEvent(
+            message = R.string.box_opened_successfully,
+            action = null
         )
     }
 }

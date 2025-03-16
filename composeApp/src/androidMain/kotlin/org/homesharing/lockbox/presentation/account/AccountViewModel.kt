@@ -36,8 +36,7 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
     @OptIn(FlowPreview::class)
     private fun sendUpdates() {
         viewModelScope.launch {
-            uiState
-                .map { it.name to it.surname }
+            uiState.map { it.name to it.surname }
                 .distinctUntilChanged()
                 .debounce(UPDATE_TIME)
                 .collectLatest { (name, surname) ->

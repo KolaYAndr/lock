@@ -53,8 +53,6 @@ import presentation.composables.general.BasicModal
 import presentation.theme.LockBoxTheme
 import presentation.theme.White
 
-private const val BATTERY_LEVEL_LOW = 10
-
 @Composable
 fun LockBoxesScreen(
     state: LockBoxesUiState,
@@ -213,7 +211,7 @@ private fun LockBox(
                 )
             }
 
-            if (box.batteryLevel < BATTERY_LEVEL_LOW) {
+            if (box.batteryLevel < Box.BATTERY_PERCENT_LOW) {
                 Icon(
                     painter = painterResource(R.drawable.circle_alert),
                     contentDescription = null,
