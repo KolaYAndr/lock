@@ -43,7 +43,7 @@ class ActiveSessionsViewModel(private val accountRepository: AccountRepository) 
                 }
 
                 else -> {
-                    SnackbarController.receiveEvent(couldNotLoadActiveSessions { refresh() })
+                    SnackbarController.receiveEvent(couldNotLoadActiveSessions { refreshSessions() })
                 }
             }
 
@@ -51,7 +51,7 @@ class ActiveSessionsViewModel(private val accountRepository: AccountRepository) 
         }
     }
 
-    fun refresh() {
+    fun refreshSessions() {
         _uiState.update { it.copy(isRefreshing = true) }
         getSessions()
     }

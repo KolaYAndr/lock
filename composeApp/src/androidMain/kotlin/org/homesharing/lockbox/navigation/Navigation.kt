@@ -113,7 +113,6 @@ fun Navigation(
                 LockBoxesScreen(
                     state = uiState.value,
                     boxes = lockBoxesViewModel.boxes,
-//                    onSearchChange = lockBoxesViewModel::onSearchChange,
                     onNavigateToBox = { macAddress ->
                         navController.navigate(
                             MainRoutes.DetailedBox(macAddress = macAddress)
@@ -181,7 +180,7 @@ fun Navigation(
                         settingsViewModel.logOut()
                         navController.navigateToDestinationPoppingBackStack(MainRoutes.Login)
                     },
-                    onRefresh = settingsViewModel::refresh,
+                    onRefresh = settingsViewModel::refreshAccountInfo,
                     onNavigate = { route -> navController.navigate(route) },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -226,7 +225,7 @@ fun Navigation(
                         activeSessionsUiState = uiState.value,
                         onNavBack = navController::navigateUp,
                         onFinishSessions = activeSessionsViewModel::finishOtherSessions,
-                        onRefresh = activeSessionsViewModel::refresh,
+                        onRefresh = activeSessionsViewModel::refreshSessions,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

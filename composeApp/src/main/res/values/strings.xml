@@ -150,6 +150,7 @@
     <string name="box_opened_successfully">Бокс открыт успешно</string>
     <string name="could_not_open_box">Не удалось открыть бокс</string>
     <string name="signal_full">Максимальный</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

@@ -48,7 +48,7 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
         }
     }
 
-    fun refresh() {
+    fun refreshAccountInfo() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
             when (val info = repository.refreshAccount()) {
@@ -64,7 +64,7 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
                 }
 
                 is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotRefreshAccountInfo { refresh() })
+                    SnackbarController.receiveEvent(couldNotRefreshAccountInfo { refreshAccountInfo() })
                 }
             }
             _uiState.update { it.copy(isRefreshing = false) }

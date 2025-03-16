@@ -43,20 +43,20 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
                     val response = repository.updateInfo(name = name, surname = surname)
 
                     if (response is Response.Failure) {
-                        SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retry() })
+                        SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retryUpdatingInfo() })
                     }
                 }
         }
     }
 
-    private suspend fun retry() {
+    private suspend fun retryUpdatingInfo() {
         val response = repository.updateInfo(
             name = uiState.value.name,
             surname = uiState.value.surname
         )
 
         if (response is Response.Failure) {
-            SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retry() })
+            SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retryUpdatingInfo() })
         }
     }
 
@@ -80,7 +80,7 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
                 }
 
                 is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retry() })
+                    SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retryUpdatingInfo() })
                 }
             }
         }

@@ -51,17 +51,14 @@ import presentation.composables.general.BasicButton
 import presentation.composables.general.BasicHorizontalDivider
 import presentation.composables.general.BasicModal
 import presentation.theme.LockBoxTheme
-import presentation.theme.White
 
 @Composable
 fun LockBoxesScreen(
     state: LockBoxesUiState,
     boxes: Flow<PagingData<Box>>,
-//    onSearchChange: (String) -> Unit,
     onNavigateToBox: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-//    val keyboardController = LocalSoftwareKeyboardController.current
     var showModal by remember { mutableStateOf(false) }
     val settingsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
@@ -71,38 +68,22 @@ fun LockBoxesScreen(
     ) {
         TopRow(model = state.avatarLink, onAddDevice = { showModal = true })
         val lazyBoxes = boxes.collectAsLazyPagingItems()
+
         when (val loadState = lazyBoxes.loadState.refresh) {
             is LoadState.NotLoading -> {
-                if (lazyBoxes.itemCount == 0) {
-                    EmptyScreen(
-//                        search = state.searchString,
-//                        onSearchChange = onSearchChange,
-//                        onDoneAction = { keyboardController?.hide() },
-                        onAddDevice = { showModal = true }
-                    )
-                } else {
-                    LockBoxScreen(
-//                        search = state.searchString,
-//                        onSearchChange = onSearchChange,
-//                        onDoneAction = { keyboardController?.hide() },
-                        boxes = lazyBoxes,
-                        onBoxClick = onNavigateToBox,
-                        onAddDevice = { showModal = true }
-                    )
-                }
+                LockBoxScreen(
+                    boxes = lazyBoxes,
+                    onBoxClick = onNavigateToBox,
+                    onAddDevice = { showModal = true }
+                )
             }
 
             is LoadState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LockBoxCircularProgress()
-                }
+                LoadingScreen()
             }
 
-            else -> {
-                Text(text = loadState.toString(), color = White)
+            is LoadState.Error -> {
+                ErrorScreen(boxes = lazyBoxes, message = loadState.error.localizedMessage)
             }
         }
     }
@@ -115,57 +96,85 @@ fun LockBoxesScreen(
     }
 }
 
+@Composable
+private fun LoadingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        LockBoxCircularProgress()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ErrorScreen(
+    boxes: LazyPagingItems<Box>,
+    message: String?
+) {
+    LockBoxPullToRefresh(
+        modifier = Modifier.fillMaxSize(),
+        isRefreshing = boxes.loadState.refresh is LoadState.Loading,
+        onRefresh = boxes::refresh
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
+            item {
+                Text(
+                    text = message ?: stringResource(R.string.unknown_error),
+                    color = LockBoxTheme.colors.grey100,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LockBoxScreen(
-//    search: String,
-//    onSearchChange: (String) -> Unit,
-//    onDoneAction: () -> Unit,
     boxes: LazyPagingItems<Box>,
     onBoxClick: (String) -> Unit,
     onAddDevice: () -> Unit,
 ) {
-//    SearchBar(
-//        search = search,
-//        onSearchChange = onSearchChange::invoke,
-//        placeholderText = stringResource(R.string.device_search),
-//        onDoneAction = { onDoneAction() },
-//        enabled = true,
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 12.dp, horizontal = 16.dp)
-//    )
-
     LockBoxPullToRefresh(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         isRefreshing = boxes.loadState.refresh is LoadState.Loading,
         onRefresh = boxes::refresh,
     ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(
-                count = boxes.itemCount,
-                key = { index -> boxes[index]?.macAddress ?: index }
-            ) { index ->
-                boxes[index]?.let { box ->
-                    LockBox(
-                        box = box,
-                        onClick = { onBoxClick(box.macAddress) },
-                        modifier = Modifier.fillMaxWidth()
+            if (boxes.itemCount == 0) {
+                item {
+                    EmptyScreen(onAddDevice)
+                }
+            } else {
+                items(
+                    count = boxes.itemCount,
+                    key = { index -> boxes[index]?.macAddress ?: index }
+                ) { index ->
+                    boxes[index]?.let { box ->
+                        LockBox(
+                            box = box,
+                            onClick = { onBoxClick(box.macAddress) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+                item {
+                    AddBoxRow(
+                        onAddDevice = onAddDevice,
+                        modifier = Modifier.padding(top = 10.dp)
                     )
                 }
-            }
-
-            item {
-                AddBoxRow(
-                    onAddDevice = onAddDevice,
-                    modifier = Modifier.padding(top = 10.dp)
-                )
             }
         }
     }
@@ -211,7 +220,7 @@ private fun LockBox(
                 )
             }
 
-            if (box.batteryLevel < Box.BATTERY_PERCENT_LOW) {
+            if (box.batteryLevel <= Box.BATTERY_PERCENT_LOW) {
                 Icon(
                     painter = painterResource(R.drawable.circle_alert),
                     contentDescription = null,
@@ -364,22 +373,8 @@ private fun AddBoxRow(onAddDevice: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun EmptyScreen(
-//    search: String,
-//    onSearchChange: (String) -> Unit,
-//    onDoneAction: () -> Unit,
     onAddDevice: () -> Unit
 ) {
-//    SearchBar(
-//        search = search,
-//        onSearchChange = onSearchChange::invoke,
-//        placeholderText = stringResource(R.string.device_search),
-//        onDoneAction = { onDoneAction() },
-//        enabled = false,
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 12.dp, horizontal = 16.dp)
-//    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -424,7 +419,14 @@ private fun EmptyScreen(
 fun PreviewLockBox() {
     LockBoxTheme {
         LockBox(
-            box = Box(address = "Doma", macAddress = "1D:2C", alias = "Demo" , opened = false, signalStrength = 0.0, batteryLevel = 0.0),
+            box = Box(
+                address = "Doma",
+                macAddress = "1D:2C",
+                alias = "Demo",
+                opened = false,
+                signalStrength = 0.0,
+                batteryLevel = 0.0
+            ),
             onClick = {},
             modifier = Modifier.fillMaxWidth()
         )
@@ -437,10 +439,7 @@ fun PreviewLockBox() {
 fun PreviewEmptyScreen() {
     LockBoxTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            EmptyScreen(
-//                "govno", {}, {},
-                {}
-            )
+            EmptyScreen {}
         }
     }
 }

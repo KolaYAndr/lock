@@ -37,13 +37,13 @@ class LockBoxesViewModel(
                 }
 
                 is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotLoadAccountInfo { retry() })
+                    SnackbarController.receiveEvent(couldNotLoadAccountInfo { retryLoadingAccountInfo() })
                 }
             }
         }
     }
 
-    private suspend fun retry() {
+    private suspend fun retryLoadingAccountInfo() {
         when (val info = accountRepository.refreshAccount()) {
             is Response.Success -> {
                 val imageLink = accountRepository.getImageLink(info.data.sub)
@@ -51,17 +51,12 @@ class LockBoxesViewModel(
             }
 
             is Response.Failure -> {
-                SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retry() })
+                SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retryLoadingAccountInfo() })
             }
         }
     }
-
-//    fun onSearchChange(newSearchString: String) {
-//        _uiState.update { it.copy(searchString = newSearchString) }
-//    }
 }
 
 data class LockBoxesUiState(
-//    val searchString: String = "",
     val avatarLink: String = "",
 )
