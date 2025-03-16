@@ -151,6 +151,8 @@
     <string name="could_not_open_box">Не удалось открыть бокс</string>
     <string name="signal_full">Максимальный</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="finish_all_other_sessions_question">Завершить остальные сессии?</string>
+    <string name="finish">Завершить</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

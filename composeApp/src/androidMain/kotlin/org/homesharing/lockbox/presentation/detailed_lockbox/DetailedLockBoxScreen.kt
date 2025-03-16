@@ -322,7 +322,7 @@ fun DetailedLockBoxScreen(
     }
 
     if (showAboutDeviceModal) {
-        AboutDeviceModal(
+        AboutDeviceModalSheet(
             onDismiss = { showAboutDeviceModal = false },
             boxName = uiState.boxName,
             modifier = Modifier.fillMaxSize()
@@ -453,7 +453,7 @@ private fun UnbindDeviceDialog(
 }
 
 @Composable
-private fun AboutDeviceModal(
+private fun AboutDeviceModalSheet(
     onDismiss: () -> Unit,
     boxName: String,
     modifier: Modifier = Modifier

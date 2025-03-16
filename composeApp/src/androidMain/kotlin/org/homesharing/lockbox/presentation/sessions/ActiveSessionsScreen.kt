@@ -8,17 +8,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -33,6 +38,8 @@ import androidx.core.os.LocaleListCompat
 import org.homesharing.lockbox.R
 import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.TitledTopBar
+import presentation.composables.general.BasicButton
+import presentation.composables.general.BasicDialog
 import presentation.composables.general.BasicGroup
 import presentation.composables.general.BasicHorizontalDivider
 import presentation.theme.LockBoxTheme
@@ -52,6 +59,7 @@ fun ActiveSessionScreen(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showCloseSessionsDialog by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.Top,
@@ -113,7 +121,7 @@ fun ActiveSessionScreen(
                             style = LockBoxTheme.typography.headlineLarge,
                             color = LockBoxTheme.colors.red600,
                             modifier = Modifier
-                                .clickable { onFinishSessions() }
+                                .clickable { showCloseSessionsDialog = true }
                                 .fillMaxWidth()
                                 .padding(vertical = 14.dp, horizontal = 16.dp)
                         )
@@ -151,6 +159,66 @@ fun ActiveSessionScreen(
                     }
                 }
             }
+        }
+
+        if (showCloseSessionsDialog) {
+            CloseSessionsDialog(
+                onDismiss = { showCloseSessionsDialog = false },
+                onFinishSessions = onFinishSessions
+            )
+        }
+    }
+}
+
+@Composable
+fun CloseSessionsDialog(onDismiss: () -> Unit, onFinishSessions: () -> Unit, modifier: Modifier = Modifier) {
+    BasicDialog(
+        onDismiss = onDismiss,
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = stringResource(R.string.finish_all_other_sessions_question),
+                style = LockBoxTheme.typography.titleMedium,
+                color = LockBoxTheme.colors.grey100
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+        ) {
+            BasicButton(
+                onClick = onDismiss,
+                text = stringResource(R.string.cancel),
+                paddingValues = PaddingValues(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LockBoxTheme.colors.grey900,
+                    contentColor = LockBoxTheme.colors.grey100
+                )
+            )
+
+            BasicButton(
+                onClick = {
+                    onFinishSessions()
+                    onDismiss()
+                },
+                text = stringResource(R.string.finish),
+                paddingValues = PaddingValues(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LockBoxTheme.colors.red600,
+                    contentColor = LockBoxTheme.colors.grey100
+                )
+            )
         }
     }
 }

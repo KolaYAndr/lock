@@ -29,4 +29,5 @@ interface AccountRepository {
     ): Response<UpdateAccount>
 
     suspend fun deactivateUser(): Response<UpdateAccount>
+
 }
