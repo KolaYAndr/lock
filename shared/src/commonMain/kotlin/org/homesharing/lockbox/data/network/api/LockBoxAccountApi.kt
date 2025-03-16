@@ -33,6 +33,7 @@ private const val AVATARS = "avatars"
 private const val SIGN_UP = "signup"
 private const val SESSIONS = "sessions"
 private const val UPLOAD = "upload"
+private const val MAIL = "mail"
 private const val SEND = "send"
 private const val ME = "me"
 
@@ -53,7 +54,7 @@ private const val TOKEN_URL =
 private const val SIGN_UP_URL = "$BASE:8445/$ACCOUNTS/$SIGN_UP"
 private const val SESSIONS_URL = "$BASE:8445/$ACCOUNTS/$SESSIONS"
 private const val AVATARS_POST_URL = "$BASE:8445/$AVATARS/$UPLOAD"
-private const val CONFIRM_EMAIL_URL = "$BASE:8445/$ACCOUNTS/$SEND"
+private const val CONFIRM_EMAIL_URL = "$BASE:8445/$ACCOUNTS/$MAIL/$SEND"
 private const val UPDATE_ACCOUNT_URL = "$BASE:8445/$ACCOUNTS/$ME"
 private const val AVATARS_URL = "$BASE:9000/$AVATARS"
 

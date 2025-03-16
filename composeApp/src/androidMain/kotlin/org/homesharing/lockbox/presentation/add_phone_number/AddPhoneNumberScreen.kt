@@ -55,7 +55,7 @@ fun AddPhoneNumberScreen(
     ) {
         TitledTopBar(
             title = stringResource(R.string.change_phone_number),
-            onNavigate = onNavBack::invoke,
+            onNavigate = onNavBack,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -272,7 +272,7 @@ fun NewNumberInputStep(
 
         PhoneNumberInput(
             number = number,
-            onValueChange = onNumberChange::invoke,
+            onValueChange = onNumberChange,
             onClearText = { onNumberChange("") },
             isError = numberError == null,
             errorText = numberError ?: "",

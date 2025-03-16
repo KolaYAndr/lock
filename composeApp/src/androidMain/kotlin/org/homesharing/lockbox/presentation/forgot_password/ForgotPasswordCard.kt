@@ -3,7 +3,10 @@ package org.homesharing.lockbox.presentation.forgot_password
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import org.homesharing.lockbox.downloadPrivacyPolicy
+import org.homesharing.lockbox.downloadUserAgreement
 import org.homesharing.lockbox.presentation.sign_up.EmailConfirmationStep
 import presentation.composables.CardTopRow
 import presentation.composables.general.BasicCard
@@ -42,15 +45,18 @@ fun ForgotPasswordCard(
             modifier = Modifier.fillMaxWidth()
         )
 
+        val context = LocalContext.current
         when (forgotPasswordUiState.step) {
             ForgotPasswordStep.EmailConfirmation -> {
                 EmailConfirmationStep(
                     email = forgotPasswordUiState.email,
-                    onConfirmEmail = onConfirmEmail::invoke,
-                    onChangeClick = { onToStep(ForgotPasswordStep.EmailConfirmation) }
+                    onConfirmEmail = onConfirmEmail,
+                    onChangeEmailClick = { onToStep(ForgotPasswordStep.EmailInput) },
+                    onCheckConfirmation = { }
                 )
-               onToStep(ForgotPasswordStep.PasswordInput)
+                onToStep(ForgotPasswordStep.PasswordInput)
             }
+
             ForgotPasswordStep.EmailInput -> {
                 EmailInputStep(
                     onConfirmEmail = {
@@ -59,22 +65,26 @@ fun ForgotPasswordCard(
                     },
                     email = forgotPasswordUiState.email,
                     emailError = forgotPasswordUiState.emailError,
-                    onEmailChange = onEmailChange::invoke
+                    onEmailChange = onEmailChange,
+                    onDownloadPdf = {
+                        downloadUserAgreement(context)
+                        downloadPrivacyPolicy(context)
+                    }
                 )
             }
 
             ForgotPasswordStep.PasswordInput -> {
                 PasswordInputStep(
                     password = forgotPasswordUiState.password,
-                    onPasswordChange = onPasswordChange::invoke,
+                    onPasswordChange = onPasswordChange,
                     isPasswordSeen = forgotPasswordUiState.isPasswordSeen,
-                    onPasswordRepeatedSeenChange = onPasswordSeenChange::invoke,
+                    onPasswordRepeatedSeenChange = onPasswordSeenChange,
                     passwordRepeated = forgotPasswordUiState.passwordRepeated,
-                    onPasswordRepeatedChange = onPasswordRepeatedChange::invoke,
+                    onPasswordRepeatedChange = onPasswordRepeatedChange,
                     isPasswordRepeatedSeen = forgotPasswordUiState.isPasswordRepeatedSeen,
-                    onPasswordSeenChanged = onPasswordRepeatedSeenChange::invoke,
+                    onPasswordSeenChanged = onPasswordRepeatedSeenChange,
                     passwordRepeatedError = forgotPasswordUiState.passwordRepeatedError,
-                    onSetPassword = onSetPassword::invoke
+                    toNextStep = onSetPassword
                 )
             }
         }

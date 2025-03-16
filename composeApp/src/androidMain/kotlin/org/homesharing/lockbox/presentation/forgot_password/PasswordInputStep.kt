@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -34,13 +35,17 @@ fun PasswordInputStep(
     isPasswordRepeatedSeen: Boolean,
     onPasswordRepeatedSeenChange: () -> Unit,
     passwordRepeatedError: String?,
-    onSetPassword: () -> Unit,
+    toNextStep: () -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val passwordRepeatedFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val passwordInteractionSource = remember { MutableInteractionSource() }
     val passwordRepeatedInteractionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(Unit) { passwordFocusRequester.requestFocus() }
+
     Text(
         text = stringResource(R.string.create_new_password),
         style = LockBoxTheme.typography.titleMedium,
@@ -62,14 +67,16 @@ fun PasswordInputStep(
         interactionSource = passwordInteractionSource,
         isError = false,
         errorText = "",
-        keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
+        keyboardActions = KeyboardActions(onNext = { passwordRepeatedFocusRequester.requestFocus() }),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next
         ),
         isSeen = isPasswordSeen,
         onSeenChange = { onPasswordSeenChanged() },
-        modifier = Modifier.padding(top = 6.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier
+            .focusRequester(passwordFocusRequester)
+            .padding(top = 6.dp, start = 16.dp, end = 16.dp)
     )
 
     Text(
@@ -92,6 +99,7 @@ fun PasswordInputStep(
             onDone = {
                 keyboardController?.hide()
                 focusManager.clearFocus()
+                toNextStep()
             }
         ),
         keyboardOptions = KeyboardOptions(
@@ -100,12 +108,12 @@ fun PasswordInputStep(
             imeAction = ImeAction.Done
         ),
         modifier = Modifier
-            .focusRequester(focusRequester)
+            .focusRequester(passwordRepeatedFocusRequester)
             .padding(top = 6.dp, start = 16.dp, end = 16.dp)
     )
 
     BasicButton(
-        onClick = { onSetPassword() },
+        onClick = { toNextStep() },
         text = stringResource(R.string.set_password),
         paddingValues = PaddingValues(14.dp),
         modifier = Modifier

@@ -219,7 +219,7 @@ private fun DeleteAccountDialog(onHideDialog: () -> Unit, onDelete: () -> Unit) 
                 .clickable { onHideDialog() })
 
         BasicButton(
-            onClick = onDelete::invoke,
+            onClick = onDelete,
             text = stringResource(R.string.delete),
             paddingValues = PaddingValues(10.dp),
             colors = ButtonDefaults.buttonColors(

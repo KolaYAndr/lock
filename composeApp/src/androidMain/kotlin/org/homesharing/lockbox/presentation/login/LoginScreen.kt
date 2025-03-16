@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -94,9 +93,7 @@ fun LoginScreen(
                 paddingValues = PaddingValues(10.dp),
                 modifier = Modifier
                     .padding(top = 16.dp)
-                    .minimumInteractiveComponentSize()
             )
-
         }
 
         if (showModal) {
@@ -132,14 +129,12 @@ fun LoginScreen(
                         val signInViewModel = koinViewModel<SignInViewModel>()
                         val signInState = signInViewModel.uiState.collectAsStateWithLifecycle()
 
-                        if (signInState.value.loggedIn) {
-                            onLoggedIn()
-                        } else SignInCard(
+                        SignInCard(
                             signInUiState = signInState.value,
                             onDismiss = { showModal = false },
-                            onEmailChange = signInViewModel::editEmail,
-                            onPasswordChange = signInViewModel::editPassword,
-                            onPasswordSeenChange = signInViewModel::showPasswordToggle,
+                            onEmailChange = signInViewModel::onChangeEmail,
+                            onPasswordChange = signInViewModel::onChangePassword,
+                            onPasswordSeenChange = signInViewModel::switchPasswordToggle,
                             passwordError = signInState.value.passwordErrorMessage != null,
                             passwordErrorText = signInState.value.passwordErrorMessage ?: "",
                             emailError = signInState.value.emailErrorMessage != null,
@@ -158,16 +153,13 @@ fun LoginScreen(
                             onSignIn = { onToTypeAuth(LoginType.SignIn) },
                             onDismiss = { showModal = false },
                             onEmailChange = signUpViewModel::onChangeEmail,
-                            onConfirmEmail = signUpViewModel::confirmEmail,
+                            onConfirmEmail = signUpViewModel::sendEmailConfirmation,
                             onToStep = signUpViewModel::toStep,
                             onPasswordChange = signUpViewModel::onChangePassword,
                             onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
                             onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,
                             onPasswordRepeatedSeenChange = signUpViewModel::onPasswordRepeatedSeenChange,
-                            onSetPassword = {
-                                signUpViewModel.setPassword()
-                                onToTypeAuth(LoginType.SignIn)
-                            }
+                            onCheckConfirmation = signUpViewModel::checkIfConfirmed
                         )
                     }
                 }

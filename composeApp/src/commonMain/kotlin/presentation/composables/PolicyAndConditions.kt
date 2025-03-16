@@ -1,6 +1,7 @@
 package presentation.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,7 @@ const val POLICY_TAG = "policy"
 const val CONDITION_TAG = "condition"
 
 @Composable
-fun PolicyAndConditions(modifier: Modifier = Modifier) {
+fun PolicyAndConditions(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val annotatedString = buildAnnotatedString {
         append(stringResource(R.string.by_pressing_you_agree))
 
@@ -46,7 +47,7 @@ fun PolicyAndConditions(modifier: Modifier = Modifier) {
         style = LockBoxTheme.typography.footnote,
         color = LockBoxTheme.colors.grey700,
         textAlign = TextAlign.Center,
-        modifier = modifier
+        modifier = modifier.clickable { onClick() }
     )
 }
 
@@ -58,9 +59,10 @@ fun PreviewPolicy() {
             modifier = Modifier.background(LockBoxTheme.colors.grey900)
         ) {
             PolicyAndConditions(
+                {},
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp)
+                    .padding(4.dp),
             )
         }
     }

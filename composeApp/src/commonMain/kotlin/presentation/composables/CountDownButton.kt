@@ -18,7 +18,7 @@ import presentation.composables.general.BasicButton
 import presentation.theme.LockBoxTheme
 import java.util.concurrent.TimeUnit
 
-private const val countDownInterval = 1_000L
+private val countDownInterval = TimeUnit.SECONDS.toMillis(1)
 private val standardTime = TimeUnit.SECONDS.toMillis(3)
 //private val standardTime = TimeUnit.MINUTES.toMillis(1)
 

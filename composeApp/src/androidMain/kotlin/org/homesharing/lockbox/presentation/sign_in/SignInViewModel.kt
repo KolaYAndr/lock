@@ -15,21 +15,21 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
     val uiState: StateFlow<SignInUiState> get() = _uiState.asStateFlow()
     private val emailPattern = Patterns.EMAIL_ADDRESS
 
-    fun editEmail(newEmail: String) {
+    fun onChangeEmail(newEmail: String) {
         _uiState.update {
             it.copy(email = newEmail, emailErrorMessage = null)
         }
     }
 
-    fun editPassword(newPassword: String) {
+    fun onChangePassword(newPassword: String) {
         _uiState.update {
             it.copy(password = newPassword, passwordErrorMessage = null)
         }
     }
 
-    fun showPasswordToggle(newValue: Boolean) {
+    fun switchPasswordToggle() {
         _uiState.update {
-            it.copy(isPasswordSeen = newValue)
+            it.copy(isPasswordSeen = !it.isPasswordSeen)
         }
     }
 
@@ -48,14 +48,10 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
                         _uiState.update { state ->
                             state.copy(
                                 passwordErrorMessage = response.errorDescription,
-                                emailErrorMessage = response.errorDescription
                             )
                         }
 
-                    } else {
-                        _uiState.update { state -> state.copy(loggedIn = true) }
                     }
-
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(emailErrorMessage = e.message) }
@@ -70,5 +66,4 @@ data class SignInUiState(
     val isPasswordSeen: Boolean = false,
     val passwordErrorMessage: String? = null,
     val emailErrorMessage: String? = null,
-    val loggedIn: Boolean = false,
 )

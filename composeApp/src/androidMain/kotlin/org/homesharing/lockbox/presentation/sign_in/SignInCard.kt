@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -29,6 +30,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.downloadPrivacyPolicy
+import org.homesharing.lockbox.downloadUserAgreement
 import org.homesharing.lockbox.presentation.login.LoginType
 import presentation.composables.CloseRoundButton
 import presentation.composables.EmailInput
@@ -49,7 +52,7 @@ fun SignInCard(
     emailError: Boolean,
     passwordErrorText: String,
     emailErrorText: String,
-    onPasswordSeenChange: (Boolean) -> Unit,
+    onPasswordSeenChange: () -> Unit,
     onToTypeAuth: (LoginType) -> Unit,
     onSignIn: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,7 +71,7 @@ fun SignInCard(
 
         Box(modifier = Modifier.fillMaxWidth()) {
             CloseRoundButton(
-                onClick = onDismiss::invoke,
+                onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(top = 12.dp, end = 16.dp)
@@ -134,7 +137,7 @@ fun SignInCard(
             isError = passwordError,
             errorText = passwordErrorText,
             isSeen = signInUiState.isPasswordSeen,
-            onSeenChange = { onPasswordSeenChange(!signInUiState.isPasswordSeen) },
+            onSeenChange = onPasswordSeenChange,
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
@@ -173,12 +176,13 @@ fun SignInCard(
                 .padding(top = 20.dp, start = 16.dp, end = 16.dp)
         )
 
+        val context = LocalContext.current
         PolicyAndConditions(
-            modifier = Modifier
-                .padding(top = 2.dp, start = 16.dp, end = 16.dp)
-                .clickable {
-
-                }
+            onClick = {
+                downloadUserAgreement(context)
+                downloadPrivacyPolicy(context)
+            },
+            modifier = Modifier.padding(top = 2.dp, start = 16.dp, end = 16.dp)
         )
 
         Row(

@@ -11,9 +11,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,17 +29,28 @@ import presentation.composables.EmailInput
 import presentation.composables.PolicyAndConditions
 import presentation.composables.general.BasicButton
 import presentation.theme.LockBoxTheme
-import java.lang.Error
 
 @Composable
 fun EmailInputStep(
     email: String,
     emailError: String?,
     onEmailChange: (String) -> Unit,
-    onConfirmEmail: () -> Unit,
+    toNextStep: () -> Unit,
     onSignIn: () -> Unit,
+    onDownload: () -> Unit,
 ) {
     val emailInteractionSource = remember { MutableInteractionSource() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    val onToNextStep = {
+        keyboardController?.hide()
+        focusManager.clearFocus()
+        toNextStep()
+    }
+
+    LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
 
     Text(
         text = stringResource(R.string.type_in_email),
@@ -68,19 +84,22 @@ fun EmailInputStep(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done
         ),
-        keyboardActions = KeyboardActions(onDone = {}),
+        keyboardActions = KeyboardActions(onDone = { onToNextStep() }
+        ),
         isError = emailError != null,
         errorText = emailError ?: "",
-        modifier = Modifier.padding(
-            top = 6.dp,
-            start = 16.dp,
-            end = 16.dp,
-            bottom = 12.dp
-        )
+        modifier = Modifier
+            .focusRequester(emailFocusRequester)
+            .padding(
+                top = 6.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 12.dp
+            )
     )
 
     BasicButton(
-        onClick = { onConfirmEmail() },
+        onClick = onToNextStep,
         text = stringResource(R.string.confirm_email),
         paddingValues = PaddingValues(14.dp),
         modifier = Modifier
@@ -89,11 +108,8 @@ fun EmailInputStep(
     )
 
     PolicyAndConditions(
-        modifier = Modifier
-            .padding(top = 2.dp, start = 16.dp, end = 16.dp)
-            .clickable {
-
-            }
+        onClick = { onDownload() },
+        modifier = Modifier.padding(top = 2.dp, start = 16.dp, end = 16.dp)
     )
 
     Row(

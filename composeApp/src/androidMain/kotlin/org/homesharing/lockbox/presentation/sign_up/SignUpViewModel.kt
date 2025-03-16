@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -22,33 +21,16 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
         }
     }
 
-    fun checkIfConfirmed() {
-        viewModelScope.launch {
-
-        }
+    suspend fun checkIfConfirmed() {
+        authRepository.loadTokensInitially(
+            uiState.value.email,
+            uiState.value.password
+        )
     }
 
-    fun confirmEmail() {
+    fun sendEmailConfirmation() {
         viewModelScope.launch {
             authRepository.sendConfirmation(uiState.value.email)
-        }
-    }
-
-    fun setPassword() {
-        viewModelScope.launch {
-            if (uiState.value.password == uiState.value.passwordRepeated) {
-                val response = authRepository.signUp(
-                    username = uiState.value.email,
-                    password = uiState.value.password,
-                    passwordRepeated = uiState.value.passwordRepeated
-                )
-
-                if (response is Response.Failure) {
-                    _uiState.update { it.copy(passwordRepeatedError = response.message) }
-                }
-            } else {
-                _uiState.update { it.copy(passwordRepeatedError = "Passwords don't match") }
-            }
         }
     }
 
@@ -76,15 +58,25 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
         }
     }
 
-    fun toStep(step: SignUpStep) {
-        when (step) {
-            SignUpStep.EmailConfirmation -> {
+    fun toStep(nextStep: SignUpStep) {
+        when (nextStep) {
+            SignUpStep.PasswordInput -> {
                 if (emailMatcher.matcher(uiState.value.email).matches()) {
-                    _uiState.update { it.copy(signUpStep = step) }
+                    _uiState.update { it.copy(signUpStep = nextStep) }
                 } else _uiState.update { it.copy(emailError = "Doesn't match email pattern") }
             }
 
-            else -> _uiState.update { it.copy(signUpStep = step) }
+            SignUpStep.EmailConfirmation -> {
+                if (uiState.value.password != uiState.value.passwordRepeated) {
+                    _uiState.update { it.copy(passwordRepeated = "Passwords don't match") }
+                } else {
+                    _uiState.update { it.copy(signUpStep = nextStep) }
+                }
+            }
+
+            else -> {
+                _uiState.update { it.copy(signUpStep = nextStep) }
+            }
         }
     }
 }

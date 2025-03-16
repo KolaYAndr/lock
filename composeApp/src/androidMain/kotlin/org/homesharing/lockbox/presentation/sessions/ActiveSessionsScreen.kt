@@ -241,19 +241,16 @@ private fun lastAccessedString(lastAccessed: Long): String {
         }
 
         diff < hourMillis -> {
-            // Если прошло менее часа, считаем минуты
             val minutes = (diff / minuteMillis).toInt().coerceAtLeast(1)
             pluralStringResource(R.plurals.minutes_ago, minutes, minutes)
         }
 
         diff < dayMillis -> {
-            // Если прошло менее суток, считаем часы
             val hours = (diff / hourMillis).toInt().coerceAtLeast(1)
             pluralStringResource(R.plurals.hours_ago, hours, hours)
         }
 
         else -> {
-            // Иначе – считаем дни
             val days = (diff / dayMillis).toInt().coerceAtLeast(1)
             pluralStringResource(R.plurals.days_ago, days, days)
         }
