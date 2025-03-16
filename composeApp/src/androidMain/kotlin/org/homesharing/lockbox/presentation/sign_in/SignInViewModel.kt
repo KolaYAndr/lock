@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -37,28 +36,27 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
     fun signIn() {
         viewModelScope.launch {
             try {
-                if (emailPattern.matcher(uiState.value.email).matches()) {
-                    authRepository.loadTokensInitially(
+                if (!emailPattern.matcher(uiState.value.email).matches()) {
+                    _uiState.update { it.copy(emailErrorMessage = "Doesn't match email pattern") }
+                } else {
+                    val response = authRepository.loadTokensInitially(
                         uiState.value.email,
                         uiState.value.password
-                    ).also { response ->
-                        when (response) {
-                            is TokenResponseDto.TokenFailureResponseDto -> {
-                                _uiState.update { state ->
-                                    state.copy(
-                                        passwordErrorMessage = response.errorDescription,
-                                        emailErrorMessage = response.errorDescription
-                                    )
-                                }
-                            }
+                    )
 
-                            is TokenResponseDto.TokenSuccessResponseDto -> {
-                                _uiState.update { state -> state.copy(loggedIn = true) }
-                            }
+                    if (!response.error.isNullOrEmpty()) {
+                        _uiState.update { state ->
+                            state.copy(
+                                passwordErrorMessage = response.errorDescription,
+                                emailErrorMessage = response.errorDescription
+                            )
                         }
-                    }
-                } else _uiState.update { it.copy(emailErrorMessage = "Doesn't match email pattern") }
 
+                    } else {
+                        _uiState.update { state -> state.copy(loggedIn = true) }
+                    }
+
+                }
             } catch (e: Exception) {
                 _uiState.update { it.copy(emailErrorMessage = e.message) }
             }

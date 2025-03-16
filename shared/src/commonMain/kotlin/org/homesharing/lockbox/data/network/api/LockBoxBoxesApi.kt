@@ -50,9 +50,11 @@ class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
     }
 
     override suspend fun updateBoxByMac(
-        address: String,
-        request: UpdateBoxRequestDto
+        macAddress: String,
+        alias: String?,
+        address: String?
     ): ApiResponse<UpdateBoxResponseDto> {
+        val request = UpdateBoxRequestDto(alias, address)
         return client.patch {
             url("$BOXES/$address")
             setBody(request)

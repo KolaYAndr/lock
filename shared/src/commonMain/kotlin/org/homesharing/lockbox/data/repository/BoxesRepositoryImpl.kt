@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
-import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequestDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
 import org.homesharing.lockbox.domain.api.BoxesApi
@@ -68,9 +67,8 @@ class BoxesRepositoryImpl(
 
     override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> =
         withContext(Dispatchers.IO) {
-            val request = UpdateBoxRequestDto(alias = newName)
             parseLockBoxApiResponse(
-                apiCall = { api.updateBoxByMac(address = macAddress, request = request) },
+                apiCall = { api.updateBoxByMac(macAddress = macAddress, alias = newName) },
                 mapper = UpdateBoxResponseDto::toDomain
             )
         }
@@ -80,9 +78,8 @@ class BoxesRepositoryImpl(
         newAddress: String
     ): Response<UpdateBox> =
         withContext(Dispatchers.IO) {
-            val request = UpdateBoxRequestDto(address = newAddress)
             parseLockBoxApiResponse(
-                apiCall = { api.updateBoxByMac(address = macAddress, request = request) },
+                apiCall = { api.updateBoxByMac(macAddress = macAddress, address = newAddress) },
                 mapper = UpdateBoxResponseDto::toDomain
             )
         }

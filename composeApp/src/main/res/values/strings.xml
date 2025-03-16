@@ -143,6 +143,10 @@
     <string name="could_not_update_user_image">Не удалось обновить фотографию</string>
     <string name="image_updated">Фотография обновлена</string>
     <string name="could_not_load_active_sessions">Не удалось загрузить сессии</string>
+    <string name="could_not_load_box_info">Не удалось загрузить информацию о боксе</string>
+    <string name="could_not_update_box_name">Не удалось обновить имя бокса</string>
+    <string name="could_not_update_box_address">Не удалось обновить адрес</string>
+    <string name="could_not_unbind_box">Не удалось отвязать бокс</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

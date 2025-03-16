@@ -1,13 +1,11 @@
 package org.homesharing.lockbox.domain.api
 
 import org.homesharing.lockbox.data.network.api.ApiResponse
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
 import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
+import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 
 interface AccountApi {
 
@@ -27,7 +25,12 @@ interface AccountApi {
 
     suspend fun getSessions(): ApiResponse<SessionsResponseDto>
 
-    suspend fun confirmEmail(body: ConfirmEmailRequestDto): ApiResponse<ConfirmEmailResponseDto>
+    suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailResponseDto>
 
-    suspend fun updateUserInfo(body: UpdateAccountRequestDto): ApiResponse<UpdateAccountResponseDto>
+    suspend fun updateUserInfo(
+        email: String? = null,
+        enabled: Boolean? = null,
+        firstName: String? = null,
+        lastName: String? = null
+    ): ApiResponse<UpdateAccountResponseDto>
 }

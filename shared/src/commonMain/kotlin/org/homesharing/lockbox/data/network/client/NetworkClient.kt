@@ -30,7 +30,8 @@ private const val CLIENT_TIMEOUT = 5_000L
 private const val BASE_ENDPOINT = "https://api.lockboxes.ru"
 private const val REALM = "realms/lockbox"
 private const val TOKEN_URL = "protocol/openid-connect/token"
-private const val TOKEN_PORT = "8443" //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
+private const val TOKEN_PORT =
+    "8443" //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
 
 private const val CLIENT_ID = "client_id"
 private const val PUBLIC_CLIENT = "public-client"
@@ -89,7 +90,7 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: 
                 refreshTokens {
                     val nextRefresh = tokenStorage.getNextRefreshTime()
                     if (refreshManager.needsRefresh(nextRefresh)) {
-                        val tokenInfo: TokenResponseDto.TokenSuccessResponseDto = client.submitForm(
+                        val tokenInfo: TokenResponseDto = client.submitForm(
                             url = "$BASE_ENDPOINT:$TOKEN_PORT/$REALM/$TOKEN_URL",
                             formParameters = parameters {
                                 append(CLIENT_ID, PUBLIC_CLIENT)
@@ -102,13 +103,15 @@ internal fun HttpClient.installAuth(tokenStorage: TokenStorage, refreshManager: 
                             markAsRefreshTokenRequest()
                         }.body()
 
-                        tokenStorage.apply {
-                            saveNextRefreshTime(refreshManager.currentTime + (tokenInfo.expiresIn * 1000).toLong())
-                            saveAccessToken(tokenInfo.accessToken)
-                            saveRefreshToken(tokenInfo.refreshToken)
-                        }
+                        if (tokenInfo.error.isNullOrEmpty()) {
+                            tokenStorage.apply {
+                                saveNextRefreshTime(refreshManager.currentTime + (tokenInfo.expiresIn!! * 1000).toLong())
+                                saveAccessToken(tokenInfo.accessToken!!)
+                                saveRefreshToken(tokenInfo.refreshToken!!)
+                            }
 
-                        BearerTokens(tokenInfo.accessToken, tokenInfo.refreshToken)
+                            BearerTokens(tokenInfo.accessToken!!, tokenInfo.refreshToken!!)
+                        } else BearerTokens("", null)
                     } else {
                         BearerTokens(tokenStorage.getAccessToken(), tokenStorage.getRefreshToken())
                     }

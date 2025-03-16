@@ -67,15 +67,14 @@ class LockBoxAccountApi(
         password: String,
         passwordRepeated: String
     ): ApiResponse<SignUpResponseDto> {
+        val request = SignUpRequestDto(
+            email = username,
+            password = password,
+            repeatPassword = passwordRepeated,
+        )
         return unsignedClient.post {
             url(SIGN_UP_URL)
-            setBody(
-                SignUpRequestDto(
-                    email = username,
-                    password = password,
-                    repeatPassword = passwordRepeated,
-                )
-            )
+            setBody(request)
         }.body()
     }
 
@@ -126,17 +125,24 @@ class LockBoxAccountApi(
         }.body()
     }
 
-    override suspend fun confirmEmail(body: ConfirmEmailRequestDto): ApiResponse<ConfirmEmailResponseDto> {
+    override suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailResponseDto> {
+        val request = ConfirmEmailRequestDto(email)
         return unsignedClient.post {
             url(CONFIRM_EMAIL_URL)
-            setBody(body)
+            setBody(request)
         }.body()
     }
 
-    override suspend fun updateUserInfo(body: UpdateAccountRequestDto): ApiResponse<UpdateAccountResponseDto> {
+    override suspend fun updateUserInfo(
+        email: String?,
+        enabled: Boolean?,
+        firstName: String?,
+        lastName: String?
+    ): ApiResponse<UpdateAccountResponseDto> {
+        val request = UpdateAccountRequestDto(email, enabled, firstName, lastName)
         return signedClient.patch {
             url(UPDATE_ACCOUNT_URL)
-            setBody(body)
+            setBody(request)
         }.body()
     }
 }

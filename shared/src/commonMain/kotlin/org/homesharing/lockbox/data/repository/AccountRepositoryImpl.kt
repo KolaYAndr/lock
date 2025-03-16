@@ -8,8 +8,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
-import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
@@ -41,18 +39,27 @@ class AccountRepositoryImpl(
 
     override suspend fun refreshAccount(): Response<AccountInfo> = withContext(Dispatchers.IO) {
         try {
-            val token = api.refreshTokens(tokenStorage.getRefreshToken())
-            val tokenBody = token as TokenResponseDto.TokenSuccessResponseDto
-            with(tokenStorage) {
-                saveAccessToken(tokenBody.accessToken)
-                saveRefreshToken(tokenBody.refreshToken)
+            val tokenResponse = api.refreshTokens(tokenStorage.getRefreshToken())
+
+            if (!tokenResponse.error.isNullOrEmpty()) {
+                return@withContext Response.Failure("Token refresh failed: ${tokenResponse.errorDescription}")
             }
-            val result = decodeJWT(tokenBody.accessToken).toDomain()
-            Response.Success(result)
+
+            val accessToken = tokenResponse.accessToken!!
+            val refreshToken = tokenResponse.refreshToken!!
+
+            with(tokenStorage) {
+                saveAccessToken(accessToken)
+                saveRefreshToken(refreshToken)
+            }
+
+            val accountInfo = decodeJWT(accessToken).toDomain()
+            Response.Success(accountInfo)
         } catch (e: Exception) {
             Response.Failure(e.cause?.message.toString())
         }
     }
+
 
     private suspend fun decodeJWT(jwt: String): AccountInfoDto = withContext(Dispatchers.Default) {
         val parts = jwt.split(".")
@@ -87,18 +94,16 @@ class AccountRepositoryImpl(
         surname: String?,
         email: String?
     ): Response<UpdateAccount> = withContext(Dispatchers.IO) {
-        val request = UpdateAccountRequestDto(email = email, firstName = name, lastName = surname)
         parseLockBoxApiResponse(
-            apiCall = { api.updateUserInfo(request) },
+            apiCall = { api.updateUserInfo(email = email, firstName = name, lastName = surname) },
             mapper = UpdateAccountResponseDto::toDomain
         )
     }
 
     override suspend fun deactivateUser(): Response<UpdateAccount> =
         withContext(Dispatchers.IO) {
-            val deactivateRequest = UpdateAccountRequestDto(enabled = false)
             parseLockBoxApiResponse(
-                apiCall = { api.updateUserInfo(deactivateRequest) },
+                apiCall = { api.updateUserInfo(enabled = false) },
                 mapper = UpdateAccountResponseDto::toDomain
             )
         }

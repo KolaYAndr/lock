@@ -138,9 +138,14 @@ fun Navigation(
 
                 DetailedLockBoxScreen(
                     uiState = state.value,
-                    onNavBack = { navController.navigateUp() },
+                    onNavBack = navController::navigateUp,
                     onOpenBox = detailedLockBoxViewModel::openBox,
-                    onUnbindDevice = { detailedLockBoxViewModel.unbindDevice(macAddress) },
+                    onUnbindDevice = {
+                        detailedLockBoxViewModel.unbindDevice(
+                            macAddress = macAddress,
+                            onSuccess = navController::navigateUp
+                        )
+                    },
                     onSaveAddress = detailedLockBoxViewModel::saveAddress,
                     onSaveName = detailedLockBoxViewModel::saveName,
                     modifier = Modifier.fillMaxSize()
@@ -187,7 +192,7 @@ fun Navigation(
                 exitTransition = exitAnimation,
             ) {
                 AboutScreen(
-                    onNavBack = { navController.navigateUp() },
+                    onNavBack = navController::navigateUp,
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -204,11 +209,11 @@ fun Navigation(
 
                     SecurityScreen(
                         securityUiState = securityUiState.value,
-                        onNavBack = { navController.navigateUp() },
+                        onNavBack = navController::navigateUp,
                         onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
-                        onPasswordSet = { securityViewModel.onPasswordChanged() },
+                        onPasswordSet = securityViewModel::onPasswordChanged,
                         onReady = { navController.navigate(SettingsRoutes.Account) },
-                        onBackToChangePassword = { securityViewModel.backToChangePassword() },
+                        onBackToChangePassword = securityViewModel::backToChangePassword,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -239,7 +244,7 @@ fun Navigation(
 
                     AccountScreen(
                         accountUiState = accountUiState.value,
-                        onNavigateBack = { navController.navigateUp() },
+                        onNavigateBack = navController::navigateUp,
                         onDelete = {
                             accountViewModel.deleteAccount()
                             navController.navigateToDestinationPoppingBackStack(AccountRoutes.Warning)
@@ -271,7 +276,7 @@ fun Navigation(
 
                         ChangeEmailScreen(
                             uiState = changeEmailUiState.value,
-                            onNavBack = { navController.navigateUp() },
+                            onNavBack = navController::navigateUp,
                             onToStep = changeEmailViewModel::toStep,
                             onEmailChange = changeEmailViewModel::onEmailChange,
                             changeEmail = changeEmailViewModel::changeEmail,
@@ -298,7 +303,7 @@ fun Navigation(
 
                     AddPhoneNumberScreen(
                         uiState = addPhoneUiState.value,
-                        onNavBack = { navController.navigateUp() },
+                        onNavBack = navController::navigateUp,
                         onToStep = addPhoneNumberViewModel::toStep,
                         onNumberChange = addPhoneNumberViewModel::onNumberChange,
                         onSendCode = addPhoneNumberViewModel::sendConfirmationCode,

@@ -3,7 +3,6 @@ package org.homesharing.lockbox.data.repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
@@ -40,23 +39,24 @@ class AuthRepositoryImpl(
     override suspend fun loadTokensInitially(
         username: String,
         password: String
-    ): TokenResponseDto =
-        withContext(Dispatchers.IO) {
-            api.loadTokensInitially(username, password).also { response ->
-                if (response is TokenResponseDto.TokenSuccessResponseDto)
-                    tokenStorage.apply {
-                        saveAccessToken(response.accessToken)
-                        saveRefreshToken(response.refreshToken)
-                        saveNextRefreshTime(refreshManager.currentTime + response.expiresIn)
-                    }
+    ): TokenResponseDto = withContext(Dispatchers.IO) {
+        val response = api.loadTokensInitially(username, password)
+
+        if (response.error.isNullOrEmpty()) {
+            tokenStorage.apply {
+                saveAccessToken(response.accessToken!!)
+                saveRefreshToken(response.refreshToken!!)
+                saveNextRefreshTime(refreshManager.currentTime + response.expiresIn!!)
             }
         }
+        response
+    }
+
 
     override suspend fun sendConfirmation(email: String): Response<ConfirmEmailResponseDto> =
         withContext(Dispatchers.IO) {
-            val body = ConfirmEmailRequestDto(mail = email)
             try {
-                val apiResponse = api.confirmEmail(body)
+                val apiResponse = api.confirmEmail(email)
 
                 if (apiResponse.error) {
                     Response.Failure(apiResponse.errorText!!)

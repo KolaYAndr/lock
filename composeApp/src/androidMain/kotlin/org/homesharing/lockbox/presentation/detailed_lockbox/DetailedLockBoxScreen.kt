@@ -297,10 +297,7 @@ fun DetailedLockBoxScreen(
     if (showUnbindDeviceDialog) {
         UnbindDeviceDialog(
             onDismiss = { showUnbindDeviceDialog = false },
-            onUnbind = {
-                onUnbindDevice()
-                onNavBack()
-            },
+            onUnbind = onUnbindDevice,
         )
     }
 
@@ -309,7 +306,7 @@ fun DetailedLockBoxScreen(
             initialValue = uiState.address,
             titleText = stringResource(R.string.address),
             onDismiss = { showChangeAddressBottomSheet = false },
-            onSaveChanges = { newAddress -> onSaveAddress(newAddress) },
+            onSaveChanges = onSaveAddress,
         )
     }
 
@@ -318,7 +315,7 @@ fun DetailedLockBoxScreen(
             initialValue = uiState.boxName,
             titleText = stringResource(R.string.device_name),
             onDismiss = { showChangeNameBottomSheet = false },
-            onSaveChanges = { newName -> onSaveName(newName) },
+            onSaveChanges = onSaveName,
         )
     }
 

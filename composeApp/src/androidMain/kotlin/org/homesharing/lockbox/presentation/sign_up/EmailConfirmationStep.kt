@@ -3,18 +3,24 @@ package org.homesharing.lockbox.presentation.sign_up
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import presentation.composables.CountDownButton
+import presentation.composables.HelpModalSheet
 import presentation.composables.HelpTextWithIcon
 import presentation.theme.LockBoxTheme
 
@@ -24,6 +30,7 @@ fun EmailConfirmationStep(
     onConfirmEmail: () -> Unit,
     onChangeClick: () -> Unit,
 ) {
+    var showHelpModal by remember { mutableStateOf(false) }
     Text(
         text = stringResource(R.string.check_your_email),
         style = LockBoxTheme.typography.titleMedium,
@@ -69,10 +76,17 @@ fun EmailConfirmationStep(
     )
 
     HelpTextWithIcon(
-        onClick = { /*TODO*/ },
+        onClick = { showHelpModal = true },
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .height(32.dp)
     )
+
+    if (showHelpModal) {
+        HelpModalSheet(
+            onDismiss = { showHelpModal = false},
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }
