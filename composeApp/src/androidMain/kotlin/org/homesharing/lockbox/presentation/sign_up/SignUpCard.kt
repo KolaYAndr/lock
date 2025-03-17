@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.sign_up
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,13 +10,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.downloadPrivacyPolicy
 import org.homesharing.lockbox.downloadUserAgreement
+import org.homesharing.lockbox.presentation.animation.backwardAnimation
+import org.homesharing.lockbox.presentation.animation.forwardAnimation
 import presentation.composables.CardTopRow
 import presentation.composables.general.BasicCard
 
 private const val TOTAL_STEPS = 3
-private const val STEP_ONE = 1
-private const val STEP_TWO = 2
-private const val STEP_THREE = 3
 
 @Composable
 fun SignUpCard(
@@ -33,66 +33,70 @@ fun SignUpCard(
     onCreate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    BasicCard(
-        modifier = modifier
-    ) {
-        CardTopRow(
-            onBackPressed = {
-                when (signUpUiState.signUpStep) {
-                    SignUpStep.EmailInput -> onSignIn()
-                    SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailInput)
-                    SignUpStep.EmailConfirmation -> onToStep(SignUpStep.PasswordInput)
-                }
-            },
-            onDismiss = { onDismiss() },
-            titleText = stringResource(R.string.register),
-            stepNumber = when (signUpUiState.signUpStep) {
-                SignUpStep.EmailInput -> STEP_ONE
-                SignUpStep.PasswordInput -> STEP_TWO
-                SignUpStep.EmailConfirmation -> STEP_THREE
-            },
-            totalSteps = TOTAL_STEPS,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        val context = LocalContext.current
-        when (signUpUiState.signUpStep) {
-            SignUpStep.EmailInput -> {
-                EmailInputStep(
-                    onSignIn = onSignIn,
-                    toNextStep = { onToStep(SignUpStep.PasswordInput) },
-                    email = signUpUiState.email,
-                    emailError = signUpUiState.emailError,
-                    onEmailChange = onEmailChange,
-                    onDownload = {
-                        downloadUserAgreement(context)
-                        downloadPrivacyPolicy(context)
+    AnimatedContent(
+        targetState = signUpUiState.signUpStep,
+        transitionSpec = {
+            if (targetState.index > initialState.index) {
+                forwardAnimation
+            } else {
+                backwardAnimation
+            }
+        }
+    ) { targetStep ->
+        BasicCard(modifier = modifier) {
+            val context = LocalContext.current
+            CardTopRow(
+                onBackPressed = {
+                    when (targetStep) {
+                        SignUpStep.EmailInput -> onSignIn()
+                        SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailInput)
+                        SignUpStep.EmailConfirmation -> onToStep(SignUpStep.PasswordInput)
                     }
-                )
-            }
+                },
+                onDismiss = { onDismiss() },
+                titleText = stringResource(R.string.register),
+                stepNumber = targetStep.index,
+                totalSteps = TOTAL_STEPS,
+                modifier = Modifier.fillMaxWidth()
+            )
+            when (targetStep) {
+                SignUpStep.EmailInput -> {
+                    EmailInputStep(
+                        onSignIn = onSignIn,
+                        toNextStep = { onToStep(SignUpStep.PasswordInput) },
+                        email = signUpUiState.email,
+                        emailError = signUpUiState.emailError,
+                        onEmailChange = onEmailChange,
+                        onDownload = {
+                            downloadUserAgreement(context)
+                            downloadPrivacyPolicy(context)
+                        }
+                    )
+                }
 
-            SignUpStep.PasswordInput -> {
-                PasswordInputStep(
-                    password = signUpUiState.password,
-                    onPasswordChange = onPasswordChange,
-                    isPasswordSeen = signUpUiState.isPasswordSeen,
-                    onPasswordRepeatedSeenChange = onPasswordRepeatedSeenChange,
-                    passwordRepeated = signUpUiState.passwordRepeated,
-                    passwordRepeatedError = signUpUiState.passwordRepeatedError,
-                    onPasswordRepeatedChange = onPasswordRepeatedChange,
-                    isPasswordRepeatedSeen = signUpUiState.isPasswordRepeatedSeen,
-                    onPasswordSeenChanged = onPasswordSeenChange,
-                    onCreate = onCreate,
-                )
-            }
+                SignUpStep.PasswordInput -> {
+                    PasswordInputStep(
+                        password = signUpUiState.password,
+                        onPasswordChange = onPasswordChange,
+                        isPasswordSeen = signUpUiState.isPasswordSeen,
+                        onPasswordRepeatedSeenChange = onPasswordRepeatedSeenChange,
+                        passwordRepeated = signUpUiState.passwordRepeated,
+                        passwordRepeatedError = signUpUiState.passwordRepeatedError,
+                        onPasswordRepeatedChange = onPasswordRepeatedChange,
+                        isPasswordRepeatedSeen = signUpUiState.isPasswordRepeatedSeen,
+                        onPasswordSeenChanged = onPasswordSeenChange,
+                        onCreate = onCreate,
+                    )
+                }
 
-            SignUpStep.EmailConfirmation -> {
-                EmailConfirmationStep(
-                    email = signUpUiState.email,
-                    onConfirmEmail = onConfirmEmail,
-                    onChangeEmailClick = { onToStep(SignUpStep.EmailInput) },
-                    onCheckConfirmation = onCheckConfirmation
-                )
+                SignUpStep.EmailConfirmation -> {
+                    EmailConfirmationStep(
+                        email = signUpUiState.email,
+                        onConfirmEmail = onConfirmEmail,
+                        onChangeEmailClick = { onToStep(SignUpStep.EmailInput) },
+                        onCheckConfirmation = onCheckConfirmation
+                    )
+                }
             }
         }
     }

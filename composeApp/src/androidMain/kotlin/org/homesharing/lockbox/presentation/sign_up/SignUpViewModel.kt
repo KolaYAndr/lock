@@ -111,8 +111,12 @@ data class SignUpUiState(
     val signUpStep: SignUpStep = SignUpStep.EmailInput,
 )
 
-sealed class SignUpStep {
-    data object EmailInput : SignUpStep()
-    data object EmailConfirmation : SignUpStep()
-    data object PasswordInput : SignUpStep()
+
+private const val STEP_ONE = 1
+private const val STEP_TWO = 2
+private const val STEP_THREE = 3
+sealed class SignUpStep(val index: Int) {
+    data object EmailInput : SignUpStep(STEP_ONE)
+    data object PasswordInput : SignUpStep(STEP_TWO)
+    data object EmailConfirmation : SignUpStep(STEP_THREE)
 }

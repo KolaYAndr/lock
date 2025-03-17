@@ -33,10 +33,13 @@ class LoginViewModel(private val repository: AccountRepository): ViewModel() {
     }
 }
 
-sealed class LoginType {
-    data object SignUp : LoginType()
-    data object SignIn : LoginType()
-    data object ForgotPassword : LoginType()
+
+private const val STEP_ONE = 1
+private const val STEP_TWO = 2
+sealed class LoginType(val hierarchyIndex: Int) {
+    data object SignIn : LoginType(STEP_ONE)
+    data object SignUp : LoginType(STEP_TWO)
+    data object ForgotPassword : LoginType(STEP_TWO)
 }
 
 data class LoginUiState(
