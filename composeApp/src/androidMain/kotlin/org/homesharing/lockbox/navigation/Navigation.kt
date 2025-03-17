@@ -60,7 +60,9 @@ fun Navigation(
         exitTransition = { ExitTransition.None },
         enterTransition = { EnterTransition.None }
     ) {
-        navigation<Routes.Main>(startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes) {
+        navigation<Routes.Main>(
+            startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes,
+        ) {
             composable<MainRoutes.Login> {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state = loginViewModel.uiState.collectAsStateWithLifecycle()
@@ -93,8 +95,10 @@ fun Navigation(
             }
 
             composable<MainRoutes.DetailedBox>(
+                exitTransition = null,
                 enterTransition = enterAnimation,
-                exitTransition = exitAnimation,
+                popExitTransition = exitAnimation,
+                popEnterTransition = null
             ) { backStackEntry: NavBackStackEntry ->
                 val args = backStackEntry.toRoute<MainRoutes.DetailedBox>()
                 val macAddress = args.macAddress
@@ -157,8 +161,10 @@ fun Navigation(
             }
 
             composable<SettingsRoutes.AboutApp>(
+                popExitTransition = exitAnimation,
                 enterTransition = enterAnimation,
-                exitTransition = exitAnimation,
+                exitTransition = null,
+                popEnterTransition = null
             ) {
                 AboutScreen(
                     onNavBack = navController::navigateUp,
@@ -167,12 +173,13 @@ fun Navigation(
             }
 
             navigation<SettingsRoutes.Security>(
-                startDestination = SecurityRoutes.Security
+                startDestination = SecurityRoutes.Security,
+                exitTransition = null,
+                enterTransition = enterAnimation,
+                popExitTransition = exitAnimation,
+                popEnterTransition = null
             ) {
-                composable<SecurityRoutes.Security>(
-                    enterTransition = enterAnimation,
-                    exitTransition = exitAnimation,
-                ) {
+                composable<SecurityRoutes.Security> {
                     val securityViewModel = koinViewModel<SecurityViewModel>()
                     val securityUiState = securityViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -203,11 +210,12 @@ fun Navigation(
 
             navigation<SettingsRoutes.Account>(
                 startDestination = AccountRoutes.Account,
+                exitTransition = null,
+                enterTransition = enterAnimation,
+                popExitTransition = exitAnimation,
+                popEnterTransition = null
             ) {
-                composable<AccountRoutes.Account>(
-                    enterTransition = enterAnimation,
-                    exitTransition = exitAnimation,
-                ) {
+                composable<AccountRoutes.Account> {
                     val accountViewModel = koinViewModel<AccountViewModel>()
                     val accountUiState = accountViewModel.uiState.collectAsStateWithLifecycle()
 

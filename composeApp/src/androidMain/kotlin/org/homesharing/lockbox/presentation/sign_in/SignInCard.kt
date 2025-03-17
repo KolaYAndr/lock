@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -199,7 +200,7 @@ fun SignInCard(
                 style = LockBoxTheme.typography.subHeadlineLarge,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
-                    .padding(vertical = 14.dp)
+                    .minimumInteractiveComponentSize()
                     .clickable { onToTypeAuth(LoginType.SignUp) }
             )
         }

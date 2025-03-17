@@ -8,7 +8,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 
-private const val BACKWARD_ANIMATION_DURATION = 300
+private const val BACKWARD_ANIMATION_DURATION = 250
 private const val FORWARD_ANIMATION_DURATION = 200
 
 val forwardAnimation: ContentTransform =

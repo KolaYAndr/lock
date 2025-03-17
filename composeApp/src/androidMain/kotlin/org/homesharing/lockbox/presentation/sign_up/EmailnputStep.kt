@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,23 +47,20 @@ fun EmailInputStep(
         text = stringResource(R.string.type_in_email),
         style = LockBoxTheme.typography.titleMedium,
         color = LockBoxTheme.colors.white,
-        modifier = Modifier
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
     Text(
         text = stringResource(R.string.promise_to_text_only_important_info),
         style = LockBoxTheme.typography.bodyMedium,
         color = LockBoxTheme.colors.grey500,
-        modifier = Modifier
-            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
+        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)
     )
 
     Text(
         text = stringResource(R.string.email),
         style = LockBoxTheme.typography.subHeadlineLarge,
         color = LockBoxTheme.colors.grey100,
-        modifier = Modifier
-            .padding(top = 12.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp)
     )
     EmailInput(
         email = email,
@@ -74,8 +72,7 @@ fun EmailInputStep(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done
         ),
-        keyboardActions = KeyboardActions(onDone = { toNextStep() }
-        ),
+        keyboardActions = KeyboardActions(onDone = { toNextStep() }),
         isError = emailError != null,
         errorText = emailError ?: "",
         modifier = Modifier
@@ -122,7 +119,7 @@ fun EmailInputStep(
             style = LockBoxTheme.typography.subHeadlineLarge,
             textDecoration = TextDecoration.Underline,
             modifier = Modifier
-                .padding(vertical = 14.dp)
+                .minimumInteractiveComponentSize()
                 .clickable { onSignIn() }
         )
     }

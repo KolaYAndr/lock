@@ -47,9 +47,7 @@ fun SettingsScreen(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950),
-    ) {
+    Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
         var showExitDialog by remember { mutableStateOf(false) }
         var showHelpModal by remember { mutableStateOf(false) }
         Text(
@@ -199,13 +197,14 @@ private fun ExitDialog(onDismiss: () -> Unit, onLogOut: () -> Unit) {
                 .padding(top = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
         ) {
-            Text(
+            BasicButton(
+                onClick = onDismiss,
                 text = stringResource(R.string.cancel),
-                style = LockBoxTheme.typography.headlineMedium,
-                color = LockBoxTheme.colors.grey100,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clickable { onDismiss() }
+                paddingValues = PaddingValues(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LockBoxTheme.colors.grey900,
+                    contentColor = LockBoxTheme.colors.grey100
+                )
             )
 
             BasicButton(

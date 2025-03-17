@@ -48,16 +48,14 @@ fun PasswordInputStep(
         text = stringResource(R.string.create_password),
         style = LockBoxTheme.typography.titleMedium,
         color = LockBoxTheme.colors.white,
-        modifier = Modifier
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
 
     Text(
         text = stringResource(R.string.password),
         style = LockBoxTheme.typography.subHeadlineLarge,
         color = LockBoxTheme.colors.grey100,
-        modifier = Modifier
-            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
     )
     PasswordInput(
         password = password,
@@ -83,8 +81,7 @@ fun PasswordInputStep(
         text = stringResource(R.string.password_confirmation),
         style = LockBoxTheme.typography.subHeadlineLarge,
         color = LockBoxTheme.colors.grey100,
-        modifier = Modifier
-            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
     )
     PasswordInput(
         password = passwordRepeated,
