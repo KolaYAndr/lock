@@ -159,7 +159,8 @@ fun LoginScreen(
                             onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
                             onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,
                             onPasswordRepeatedSeenChange = signUpViewModel::onPasswordRepeatedSeenChange,
-                            onCheckConfirmation = signUpViewModel::checkIfConfirmed
+                            onCheckConfirmation = signUpViewModel::checkIfConfirmed,
+                            onCreate = signUpViewModel::signUp
                         )
                     }
                 }

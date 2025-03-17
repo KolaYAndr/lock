@@ -35,7 +35,7 @@ fun PasswordInputStep(
     onPasswordRepeatedChange: (String) -> Unit,
     isPasswordRepeatedSeen: Boolean,
     onPasswordRepeatedSeenChange: () -> Unit,
-    toNextStep: () -> Unit,
+    onCreate: () -> Unit
 ) {
     val passwordFocusRequester = remember { FocusRequester() }
     val passwordRepeatedFocusRequester = remember { FocusRequester() }
@@ -47,7 +47,7 @@ fun PasswordInputStep(
     val onToNextStep = {
         keyboardController?.hide()
         focusManager.clearFocus()
-        toNextStep()
+        onCreate()
     }
 
     LaunchedEffect(Unit) {

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -26,6 +27,24 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
             uiState.value.email,
             uiState.value.password
         )
+    }
+
+    fun signUp() {
+        viewModelScope.launch {
+            when (
+                val response = authRepository.signUp(
+                    uiState.value.email,
+                    uiState.value.password,
+                    uiState.value.passwordRepeated
+                )
+            ) {
+                is Response.Failure -> {
+                    _uiState.update { it.copy(passwordRepeatedError = response.message) }
+                }
+
+                is Response.Success -> { toStep(SignUpStep.EmailConfirmation) }
+            }
+        }
     }
 
     fun sendEmailConfirmation() {

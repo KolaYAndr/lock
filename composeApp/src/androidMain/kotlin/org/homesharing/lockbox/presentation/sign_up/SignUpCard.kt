@@ -30,6 +30,7 @@ fun SignUpCard(
     onConfirmEmail: () -> Unit,
     onToStep: (SignUpStep) -> Unit,
     onCheckConfirmation: suspend () -> Unit,
+    onCreate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BasicCard(
@@ -81,7 +82,7 @@ fun SignUpCard(
                     onPasswordRepeatedChange = onPasswordRepeatedChange,
                     isPasswordRepeatedSeen = signUpUiState.isPasswordRepeatedSeen,
                     onPasswordSeenChanged = onPasswordSeenChange,
-                    toNextStep = { onToStep(SignUpStep.EmailConfirmation) }
+                    onCreate = onCreate,
                 )
             }
 
@@ -101,19 +102,19 @@ fun SignUpCard(
 @Composable
 fun PreviewSingUpEmailInput() {
     val state = SignUpUiState()
-    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }
 
 @Preview
 @Composable
 fun PreviewSingUpEmailConfirmation() {
     val state = SignUpUiState(signUpStep = SignUpStep.EmailConfirmation)
-    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }
 
 @Preview
 @Composable
 fun PreviewSingUpPasswordInput() {
     val state = SignUpUiState(signUpStep = SignUpStep.PasswordInput)
-    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+    SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }
