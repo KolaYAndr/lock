@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.login
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.animation.backwardAnimation
+import org.homesharing.lockbox.presentation.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordCard
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordViewModel
 import org.homesharing.lockbox.presentation.sign_in.SignInCard
@@ -100,68 +103,79 @@ fun LoginScreen(
             BasicBottomSheet(
                 onDismissRequest = { showModal = false },
             ) {
-                when (state.loginType) {
-                    LoginType.ForgotPassword -> {
-                        val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
-                        val forgotPasswordState =
-                            forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
-
-                        ForgotPasswordCard(
-                            forgotPasswordUiState = forgotPasswordState.value,
-                            title = stringResource(R.string.password_recovery),
-                            onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
-                            onDismiss = { showModal = false },
-                            onEmailChange = forgotPasswordViewModel::onChangeEmail,
-                            onConfirmEmail = forgotPasswordViewModel::confirmEmail,
-                            onToStep = forgotPasswordViewModel::toStep,
-                            onPasswordChange = forgotPasswordViewModel::onChangePassword,
-                            onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
-                            onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
-                            onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
-                            onSetPassword = {
-                                forgotPasswordViewModel.setPassword()
-                                onToTypeAuth(LoginType.SignIn)
-                            }
-                        )
+                AnimatedContent(
+                    targetState = state.loginType,
+                    transitionSpec = {
+                        if (targetState.hierarchyIndex > initialState.hierarchyIndex) {
+                            forwardAnimation
+                        } else {
+                            backwardAnimation
+                        }
                     }
+                ) { targetState ->
+                    when (targetState) {
+                        LoginType.ForgotPassword -> {
+                            val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
+                            val forgotPasswordState =
+                                forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
 
-                    LoginType.SignIn -> {
-                        val signInViewModel = koinViewModel<SignInViewModel>()
-                        val signInState = signInViewModel.uiState.collectAsStateWithLifecycle()
+                            ForgotPasswordCard(
+                                forgotPasswordUiState = forgotPasswordState.value,
+                                title = stringResource(R.string.password_recovery),
+                                onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
+                                onDismiss = { showModal = false },
+                                onEmailChange = forgotPasswordViewModel::onChangeEmail,
+                                onConfirmEmail = forgotPasswordViewModel::confirmEmail,
+                                onToStep = forgotPasswordViewModel::toStep,
+                                onPasswordChange = forgotPasswordViewModel::onChangePassword,
+                                onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
+                                onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
+                                onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
+                                onSetPassword = {
+                                    forgotPasswordViewModel.setPassword()
+                                    onToTypeAuth(LoginType.SignIn)
+                                }
+                            )
+                        }
 
-                        SignInCard(
-                            signInUiState = signInState.value,
-                            onDismiss = { showModal = false },
-                            onEmailChange = signInViewModel::onChangeEmail,
-                            onPasswordChange = signInViewModel::onChangePassword,
-                            onPasswordSeenChange = signInViewModel::switchPasswordToggle,
-                            passwordError = signInState.value.passwordErrorMessage != null,
-                            passwordErrorText = signInState.value.passwordErrorMessage ?: "",
-                            emailError = signInState.value.emailErrorMessage != null,
-                            emailErrorText = signInState.value.emailErrorMessage ?: "",
-                            onToTypeAuth = onToTypeAuth,
-                            onSignIn = signInViewModel::signIn
-                        )
-                    }
+                        LoginType.SignIn -> {
+                            val signInViewModel = koinViewModel<SignInViewModel>()
+                            val signInState = signInViewModel.uiState.collectAsStateWithLifecycle()
 
-                    LoginType.SignUp -> {
-                        val signUpViewModel = koinViewModel<SignUpViewModel>()
-                        val signUpState = signUpViewModel.uiState.collectAsStateWithLifecycle()
+                            SignInCard(
+                                signInUiState = signInState.value,
+                                onDismiss = { showModal = false },
+                                onEmailChange = signInViewModel::onChangeEmail,
+                                onPasswordChange = signInViewModel::onChangePassword,
+                                onPasswordSeenChange = signInViewModel::switchPasswordToggle,
+                                passwordError = signInState.value.passwordErrorMessage != null,
+                                passwordErrorText = signInState.value.passwordErrorMessage ?: "",
+                                emailError = signInState.value.emailErrorMessage != null,
+                                emailErrorText = signInState.value.emailErrorMessage ?: "",
+                                onToTypeAuth = onToTypeAuth,
+                                onSignIn = signInViewModel::signIn
+                            )
+                        }
 
-                        SignUpCard(
-                            signUpUiState = signUpState.value,
-                            onSignIn = { onToTypeAuth(LoginType.SignIn) },
-                            onDismiss = { showModal = false },
-                            onEmailChange = signUpViewModel::onChangeEmail,
-                            onConfirmEmail = signUpViewModel::sendEmailConfirmation,
-                            onToStep = signUpViewModel::toStep,
-                            onPasswordChange = signUpViewModel::onChangePassword,
-                            onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
-                            onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,
-                            onPasswordRepeatedSeenChange = signUpViewModel::onPasswordRepeatedSeenChange,
-                            onCheckConfirmation = signUpViewModel::checkIfConfirmed,
-                            onCreate = signUpViewModel::signUp
-                        )
+                        LoginType.SignUp -> {
+                            val signUpViewModel = koinViewModel<SignUpViewModel>()
+                            val signUpState = signUpViewModel.uiState.collectAsStateWithLifecycle()
+
+                            SignUpCard(
+                                signUpUiState = signUpState.value,
+                                onSignIn = { onToTypeAuth(LoginType.SignIn) },
+                                onDismiss = { showModal = false },
+                                onEmailChange = signUpViewModel::onChangeEmail,
+                                onConfirmEmail = signUpViewModel::sendEmailConfirmation,
+                                onToStep = signUpViewModel::toStep,
+                                onPasswordChange = signUpViewModel::onChangePassword,
+                                onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
+                                onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,
+                                onPasswordRepeatedSeenChange = signUpViewModel::onPasswordRepeatedSeenChange,
+                                onCheckConfirmation = signUpViewModel::checkIfConfirmed,
+                                onCreate = signUpViewModel::signUp
+                            )
+                        }
                     }
                 }
             }

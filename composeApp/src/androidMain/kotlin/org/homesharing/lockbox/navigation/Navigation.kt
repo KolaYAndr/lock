@@ -1,12 +1,7 @@
 package org.homesharing.lockbox.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +25,8 @@ import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.account.AccountViewModel
 import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScreen
 import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
+import org.homesharing.lockbox.presentation.animation.enterAnimation
+import org.homesharing.lockbox.presentation.animation.exitAnimation
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
@@ -49,33 +46,6 @@ import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
 import presentation.composables.LockBoxesTopRow
 import presentation.composables.SettingsTopRowText
-
-private const val EXIT_ANIMATION_DURATION = 300
-private const val ENTER_ANIMATION_DURATION = 200
-private val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
-    {
-        fadeOut(
-            animationSpec = tween(
-                EXIT_ANIMATION_DURATION, easing = LinearEasing
-            )
-        ) + slideOutOfContainer(
-            animationSpec = tween(EXIT_ANIMATION_DURATION, easing = LinearEasing),
-            towards = AnimatedContentTransitionScope.SlideDirection.Start,
-            targetOffset = { -it / 4 }
-        )
-    }
-private val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
-    {
-        fadeIn(
-            animationSpec = tween(
-                ENTER_ANIMATION_DURATION, easing = LinearEasing
-            )
-        ) + slideIntoContainer(
-            animationSpec = tween(ENTER_ANIMATION_DURATION, easing = LinearEasing),
-            towards = AnimatedContentTransitionScope.SlideDirection.Start,
-            initialOffset = { it }
-        )
-    }
 
 @Composable
 fun Navigation(

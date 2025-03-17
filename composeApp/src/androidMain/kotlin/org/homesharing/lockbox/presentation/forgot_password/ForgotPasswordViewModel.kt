@@ -75,8 +75,11 @@ data class ForgotPasswordUiState(
     val step: ForgotPasswordStep = ForgotPasswordStep.EmailInput,
 )
 
-sealed class ForgotPasswordStep {
-    data object EmailInput : ForgotPasswordStep()
-    data object EmailConfirmation : ForgotPasswordStep()
-    data object PasswordInput : ForgotPasswordStep()
+private const val STEP_ONE = 1
+private const val STEP_TWO = 2
+private const val STEP_THREE = 3
+sealed class ForgotPasswordStep(val index: Int) {
+    data object EmailInput : ForgotPasswordStep(STEP_ONE)
+    data object EmailConfirmation : ForgotPasswordStep(STEP_TWO)
+    data object PasswordInput : ForgotPasswordStep(STEP_THREE)
 }
