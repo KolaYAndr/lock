@@ -63,9 +63,7 @@ fun LockBoxesScreen(
     val settingsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
-    Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950),
-    ) {
+    Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
         TopRow(model = state.avatarLink, onAddDevice = { showModal = true })
         val lazyBoxes = boxes.collectAsLazyPagingItems()
 
@@ -122,7 +120,7 @@ private fun ErrorScreen(
             contentPadding = PaddingValues(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-        ){
+        ) {
             item {
                 Text(
                     text = message ?: stringResource(R.string.unknown_error),
@@ -153,7 +151,7 @@ private fun LockBoxScreen(
         ) {
             if (boxes.itemCount == 0) {
                 item {
-                    EmptyScreen(onAddDevice)
+                    EmptyScreen(onAddDevice = onAddDevice, modifier = Modifier.fillParentMaxSize())
                 }
             } else {
                 items(
@@ -187,8 +185,7 @@ private fun LockBox(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .clickable { onClick(box.macAddress) }) {
+        modifier = modifier.clickable { onClick(box.macAddress) }) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -373,12 +370,11 @@ private fun AddBoxRow(onAddDevice: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun EmptyScreen(
-    onAddDevice: () -> Unit
+    onAddDevice: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 32.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -439,7 +435,7 @@ fun PreviewLockBox() {
 fun PreviewEmptyScreen() {
     LockBoxTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            EmptyScreen {}
+            EmptyScreen({})
         }
     }
 }

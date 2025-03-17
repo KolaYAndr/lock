@@ -13,8 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,16 +37,8 @@ fun PasswordInputStep(
 ) {
     val passwordFocusRequester = remember { FocusRequester() }
     val passwordRepeatedFocusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
     val passwordInteractionSource = remember { MutableInteractionSource() }
     val passwordRepeatedInteractionSource = remember { MutableInteractionSource() }
-
-    val onToNextStep = {
-        keyboardController?.hide()
-        focusManager.clearFocus()
-        onCreate()
-    }
 
     LaunchedEffect(Unit) {
         passwordFocusRequester.requestFocus()
@@ -105,7 +95,7 @@ fun PasswordInputStep(
         errorText = passwordRepeatedError ?: "",
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { onPasswordRepeatedSeenChange() },
-        keyboardActions = KeyboardActions(onDone = { onToNextStep() }),
+        keyboardActions = KeyboardActions(onDone = { onCreate() }),
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
@@ -117,7 +107,7 @@ fun PasswordInputStep(
     )
 
     BasicButton(
-        onClick = onToNextStep,
+        onClick = onCreate,
         text = stringResource(R.string.set_password),
         paddingValues = PaddingValues(14.dp),
         modifier = Modifier

@@ -8,8 +8,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,6 +32,9 @@ fun EmailInputStep(
     onDownloadPdf: () -> Unit,
 ) {
     val emailInteractionSource = remember { MutableInteractionSource() }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     Text(
         text = stringResource(R.string.type_in_email),
@@ -65,12 +71,14 @@ fun EmailInputStep(
         keyboardActions = KeyboardActions(onDone = {}),
         isError = emailError != null,
         errorText = emailError ?: "",
-        modifier = Modifier.padding(
-            top = 6.dp,
-            start = 16.dp,
-            end = 16.dp,
-            bottom = 12.dp
-        )
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .padding(
+                top = 6.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 12.dp
+            )
     )
 
     BasicButton(

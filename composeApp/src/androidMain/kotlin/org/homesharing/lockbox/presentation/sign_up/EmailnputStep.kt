@@ -17,8 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,14 +39,6 @@ fun EmailInputStep(
 ) {
     val emailInteractionSource = remember { MutableInteractionSource() }
     val emailFocusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
-    val onToNextStep = {
-        keyboardController?.hide()
-        focusManager.clearFocus()
-        toNextStep()
-    }
 
     LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
 
@@ -84,7 +74,7 @@ fun EmailInputStep(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done
         ),
-        keyboardActions = KeyboardActions(onDone = { onToNextStep() }
+        keyboardActions = KeyboardActions(onDone = { toNextStep() }
         ),
         isError = emailError != null,
         errorText = emailError ?: "",
@@ -99,7 +89,7 @@ fun EmailInputStep(
     )
 
     BasicButton(
-        onClick = onToNextStep,
+        onClick = toNextStep,
         text = stringResource(R.string.confirm_email),
         paddingValues = PaddingValues(14.dp),
         modifier = Modifier

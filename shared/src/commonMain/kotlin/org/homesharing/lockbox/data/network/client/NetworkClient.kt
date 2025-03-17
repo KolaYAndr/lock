@@ -49,7 +49,7 @@ internal fun createNetworkClient(engine: HttpClientEngine, mLogger: Logger = myL
         }
 
         install(Logging) {
-            level = LogLevel.BODY
+            level = LogLevel.ALL
             logger = mLogger
         }
 
