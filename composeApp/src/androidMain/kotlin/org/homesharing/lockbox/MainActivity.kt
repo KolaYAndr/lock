@@ -99,8 +99,7 @@ class MainActivity : ComponentActivity() {
                         snackbarHost = {
                             SnackbarHost(
                                 hostState = snackbarHostState
-                            )
-                            { data ->
+                            ) { data ->
                                 LockBoxSnackbar(
                                     snackbarData = data
                                 )

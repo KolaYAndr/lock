@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -29,7 +30,7 @@ fun PasswordInputStep(
     isPasswordSeen: Boolean,
     onPasswordSeenChanged: () -> Unit,
     passwordRepeated: String,
-    passwordRepeatedError: String?,
+    passwordRepeatedError: PasswordRepeatedError,
     onPasswordRepeatedChange: (String) -> Unit,
     isPasswordRepeatedSeen: Boolean,
     onPasswordRepeatedSeenChange: () -> Unit,
@@ -88,8 +89,8 @@ fun PasswordInputStep(
         onValueChange = { onPasswordRepeatedChange(it) },
         onClearText = { onPasswordRepeatedChange("") },
         interactionSource = passwordRepeatedInteractionSource,
-        isError = passwordRepeatedError != null,
-        errorText = passwordRepeatedError ?: "",
+        isError = passwordRepeatedError != PasswordRepeatedError.None,
+        errorText = parsePasswordRepeatedErrorText(passwordRepeatedError),
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { onPasswordRepeatedSeenChange() },
         keyboardActions = KeyboardActions(onDone = { onCreate() }),
@@ -113,3 +114,9 @@ fun PasswordInputStep(
             .padding(top = 24.dp, bottom = 12.dp)
     )
 }
+
+@Composable
+@ReadOnlyComposable
+private fun parsePasswordRepeatedErrorText(passwordRepeatedError: PasswordRepeatedError) =
+    passwordRepeatedError.messageId?.let { stringResource(it) } ?: ""
+

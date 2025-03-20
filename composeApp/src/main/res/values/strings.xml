@@ -153,6 +153,9 @@
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="finish_all_other_sessions_question">Завершить остальные сессии?</string>
     <string name="finish">Завершить</string>
+    <string name="password_dont_match">Пароли не совпадают</string>
+    <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
+    <string name="email_doesnt_match_pattern">Введите действительную почту</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

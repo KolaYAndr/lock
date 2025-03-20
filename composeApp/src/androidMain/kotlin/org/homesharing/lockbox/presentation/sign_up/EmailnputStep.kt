@@ -32,7 +32,7 @@ import presentation.theme.LockBoxTheme
 @Composable
 fun EmailInputStep(
     email: String,
-    emailError: String?,
+    emailError: EmailDoesntMatchPattern?,
     onEmailChange: (String) -> Unit,
     toNextStep: () -> Unit,
     onSignIn: () -> Unit,
@@ -74,7 +74,7 @@ fun EmailInputStep(
         ),
         keyboardActions = KeyboardActions(onDone = { toNextStep() }),
         isError = emailError != null,
-        errorText = emailError ?: "",
+        errorText = stringResource(R.string.email_doesnt_match_pattern),
         modifier = Modifier
             .focusRequester(emailFocusRequester)
             .padding(
