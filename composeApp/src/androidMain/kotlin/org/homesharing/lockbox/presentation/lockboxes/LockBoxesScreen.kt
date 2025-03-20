@@ -81,7 +81,16 @@ fun LockBoxesScreen(
             }
 
             is LoadState.Error -> {
-                ErrorScreen(boxes = lazyBoxes, message = loadState.error.localizedMessage)
+                var isRefreshing by remember { mutableStateOf(false) }
+                ErrorScreen(
+                    message = loadState.error.localizedMessage,
+                    isRefreshing = isRefreshing,
+                    onRefresh = {
+                        isRefreshing = true
+                        lazyBoxes.refresh()
+                        isRefreshing = false
+                    }
+                )
             }
         }
     }
@@ -107,13 +116,14 @@ private fun LoadingScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ErrorScreen(
-    boxes: LazyPagingItems<Box>,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     message: String?
 ) {
     LockBoxPullToRefresh(
         modifier = Modifier.fillMaxSize(),
-        isRefreshing = boxes.loadState.refresh is LoadState.Loading,
-        onRefresh = boxes::refresh
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
