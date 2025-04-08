@@ -51,7 +51,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition { keepSplash }
 
-//        window.statusBarColor = ContextCompat.getColor(this, R.color.Grey950)
         val systemBarStyle = SystemBarStyle.dark(ContextCompat.getColor(this, R.color.Grey950))
 
         enableEdgeToEdge(
@@ -70,8 +69,6 @@ class MainActivity : ComponentActivity() {
                 mainActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
 
             val snackbarHostState = remember { SnackbarHostState() }
-
-
             CollectSnackbarEvents(snackbarHostState)
 
             val navController = rememberNavController()

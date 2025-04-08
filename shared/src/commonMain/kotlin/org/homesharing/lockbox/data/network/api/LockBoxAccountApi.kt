@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -13,6 +14,8 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.parameters
+import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequestDto
+import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.dto.post_image.PostImageResponseDto
@@ -79,7 +82,7 @@ class LockBoxAccountApi(
         }.body()
     }
 
-    override suspend fun getImageLinkBySub(sub: String): String = "$AVATARS_URL/$sub"
+    override suspend fun getImageLink(sub: String): String = "$AVATARS_URL/$sub"
 
     override suspend fun loadTokensInitially(
         username: String,
@@ -143,6 +146,14 @@ class LockBoxAccountApi(
         val request = UpdateAccountRequestDto(email, enabled, firstName, lastName)
         return signedClient.patch {
             url(UPDATE_ACCOUNT_URL)
+            setBody(request)
+        }.body()
+    }
+
+    override suspend fun closeOtherSessions(id: String): ApiResponse<CloseSessionsResponseDto> {
+        val request = CloseSessionsRequestDto(id)
+        return signedClient.delete {
+            url(SESSIONS_URL)
             setBody(request)
         }.body()
     }

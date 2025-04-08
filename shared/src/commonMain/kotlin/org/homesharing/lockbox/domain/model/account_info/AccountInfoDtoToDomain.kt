@@ -8,5 +8,5 @@ fun AccountInfoDto.toDomain(): AccountInfo = AccountInfo(
     givenName = givenName,
     familyName = familyName,
     sub = sub,
-    sessionId = jti
+    sessionId = sid
 )

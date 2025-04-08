@@ -31,13 +31,13 @@ class ActiveSessionsViewModel(private val accountRepository: AccountRepository) 
             val sessionsDeferred = async { accountRepository.getSessions() }
             val currentSessionIdDeferred = async { accountRepository.parseAccountInfo() }
 
-            val s = sessionsDeferred.await()
+            val sessions = sessionsDeferred.await()
             val id = currentSessionIdDeferred.await()
 
             when {
-                s is Response.Success && id is Response.Success -> {
+                sessions is Response.Success && id is Response.Success -> {
                     _uiState.update {
-                        it.copy(sessions = s.data.filter { session -> session.sessionId != id.data.sessionId }
+                        it.copy(sessions = sessions.data.filter { session -> session.sessionId != id.data.sessionId }
                             .sortedBy { session -> session.lastAccessed }.reversed())
                     }
                 }
@@ -57,12 +57,26 @@ class ActiveSessionsViewModel(private val accountRepository: AccountRepository) 
     }
 
     fun finishOtherSessions() {
-        //TODO
+        viewModelScope.launch {
+            val accountInfo = accountRepository.parseAccountInfo()
+
+            if (accountInfo is Response.Success) {
+                accountRepository.closeOtherSessions(accountInfo.data.sessionId)
+            } else SnackbarController.receiveEvent(couldNotCloseOtherSessions { finishOtherSessions() })
+        }
     }
 
     private companion object {
         fun couldNotLoadActiveSessions(onRetry: () -> Unit) = SnackbarEvent(
             message = R.string.could_not_load_active_sessions,
+            action = SnackbarAction(
+                name = R.string.retry,
+                effect = { onRetry() }
+            )
+        )
+
+        fun couldNotCloseOtherSessions(onRetry: () -> Unit) = SnackbarEvent(
+            message = R.string.could_not_close_other_sessions,
             action = SnackbarAction(
                 name = R.string.retry,
                 effect = { onRetry() }

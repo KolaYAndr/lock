@@ -42,7 +42,7 @@ class AccountRepositoryImpl(
             val tokenResponse = api.refreshTokens(tokenStorage.getRefreshToken())
 
             if (!tokenResponse.error.isNullOrEmpty()) {
-                return@withContext Response.Failure("Token refresh failed: ${tokenResponse.errorDescription}")
+                return@withContext Response.Failure(tokenResponse.errorDescription!!)
             }
 
             val accessToken = tokenResponse.accessToken!!
@@ -75,7 +75,7 @@ class AccountRepositoryImpl(
     override fun loggedIn(): Flow<Boolean> = tokenStorage.loggedIn()
 
     override suspend fun getImageLink(sub: String): String = withContext(Dispatchers.IO) {
-        api.getImageLinkBySub(sub)
+        api.getImageLink(sub)
     }
 
     override suspend fun sendImage(data: ByteArray) = withContext(Dispatchers.IO) {
@@ -106,5 +106,14 @@ class AccountRepositoryImpl(
                 apiCall = { api.updateUserInfo(enabled = false) },
                 mapper = UpdateAccountResponseDto::toDomain
             )
+        }
+
+    override suspend fun closeOtherSessions(currentSessionId: String): Response<String> =
+        withContext(Dispatchers.IO) {
+            try {
+                Response.Success(api.closeOtherSessions(currentSessionId).body!!.message)
+            } catch (e: Exception) {
+                Response.Failure(e.message.toString())
+            }
         }
 }

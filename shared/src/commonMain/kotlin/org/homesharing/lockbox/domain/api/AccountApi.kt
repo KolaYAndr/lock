@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.domain.api
 
 import org.homesharing.lockbox.data.network.api.ApiResponse
+import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
@@ -19,7 +20,7 @@ interface AccountApi {
 
     suspend fun refreshTokens(refreshToken: String): TokenResponseDto
 
-    suspend fun getImageLinkBySub(sub: String): String
+    suspend fun getImageLink(sub: String): String
 
     suspend fun sendImage(data: ByteArray)
 
@@ -33,4 +34,6 @@ interface AccountApi {
         firstName: String? = null,
         lastName: String? = null
     ): ApiResponse<UpdateAccountResponseDto>
+
+    suspend fun closeOtherSessions(id: String): ApiResponse<CloseSessionsResponseDto>
 }

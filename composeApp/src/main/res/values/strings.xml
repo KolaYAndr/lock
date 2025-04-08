@@ -156,6 +156,7 @@
     <string name="password_dont_match">Пароли не совпадают</string>
     <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
     <string name="email_doesnt_match_pattern">Введите действительную почту</string>
+    <string name="could_not_close_other_sessions">Не удалось завершить другие сессии</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>
