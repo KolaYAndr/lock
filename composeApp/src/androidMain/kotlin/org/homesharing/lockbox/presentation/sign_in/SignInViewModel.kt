@@ -3,12 +3,14 @@ package org.homesharing.lockbox.presentation.sign_in
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AuthRepository
+import java.net.UnknownHostException
 
 class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SignInUiState> = MutableStateFlow(SignInUiState())
@@ -17,13 +19,13 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
     fun onChangeEmail(newEmail: String) {
         _uiState.update {
-            it.copy(email = newEmail, emailErrorMessage = null)
+            it.copy(email = newEmail, emailError = null)
         }
     }
 
     fun onChangePassword(newPassword: String) {
         _uiState.update {
-            it.copy(password = newPassword, passwordErrorMessage = null)
+            it.copy(password = newPassword, passwordError = SignInPasswordError.None)
         }
     }
 
@@ -33,28 +35,39 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
         }
     }
 
+    private fun parsePasswordError(message: String): SignInPasswordError = when (message) {
+        INVALID_USER_CREDENTIALS -> SignInPasswordError.InvalidUserCredentials
+        else -> SignInPasswordError.Unexpected
+    }
+
     fun signIn() {
         viewModelScope.launch {
-            try {
-                if (!emailPattern.matcher(uiState.value.email).matches()) {
-                    _uiState.update { it.copy(emailErrorMessage = "Doesn't match email pattern") }
-                } else {
-                    val response = authRepository.loadTokensInitially(
-                        uiState.value.email,
-                        uiState.value.password
-                    )
+            _uiState.update { it.copy(emailError = null, passwordError = SignInPasswordError.None) }
+            if (!emailPattern.matcher(uiState.value.email).matches()) {
+                _uiState.update { it.copy(emailError = DoesntMatchEmailPattern) }
+            } else try {
+                val response = authRepository.loadTokensInitially(
+                    uiState.value.email,
+                    uiState.value.password
+                )
 
-                    if (!response.error.isNullOrEmpty()) {
-                        _uiState.update { state ->
-                            state.copy(
-                                passwordErrorMessage = response.errorDescription,
-                            )
-                        }
-
+                response.error?.let {
+                    _uiState.update {
+                        it.copy(
+                            passwordError = parsePasswordError(response.errorDescription!!)
+                        )
                     }
                 }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(emailErrorMessage = e.message) }
+
+            }
+            catch (e: UnknownHostException) {
+                _uiState.update { it.copy(passwordError = SignInPasswordError.UnknownHost) }
+            }
+            catch (e: HttpRequestTimeoutException) {
+                _uiState.update { it.copy(passwordError = SignInPasswordError.Timeout) }
+            }
+            catch (e: Exception) {
+                _uiState.update { it.copy(passwordError = SignInPasswordError.Unexpected) }
             }
         }
     }
@@ -62,8 +75,20 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
 data class SignInUiState(
     val email: String = "",
+    val emailError: DoesntMatchEmailPattern? = null,
     val password: String = "",
     val isPasswordSeen: Boolean = false,
-    val passwordErrorMessage: String? = null,
-    val emailErrorMessage: String? = null,
+    val passwordError: SignInPasswordError = SignInPasswordError.None,
 )
+
+data object DoesntMatchEmailPattern
+
+private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
+
+sealed interface SignInPasswordError {
+    data object None : SignInPasswordError
+    data object InvalidUserCredentials : SignInPasswordError
+    data object Unexpected : SignInPasswordError
+    data object UnknownHost : SignInPasswordError
+    data object Timeout : SignInPasswordError
+}

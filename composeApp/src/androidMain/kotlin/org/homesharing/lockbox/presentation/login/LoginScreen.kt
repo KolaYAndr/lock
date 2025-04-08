@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import org.homesharing.lockbox.presentation.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordCard
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordViewModel
 import org.homesharing.lockbox.presentation.sign_in.SignInCard
+import org.homesharing.lockbox.presentation.sign_in.SignInPasswordError
 import org.homesharing.lockbox.presentation.sign_in.SignInViewModel
 import org.homesharing.lockbox.presentation.sign_up.SignUpCard
 import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
@@ -48,7 +50,9 @@ fun LoginScreen(
     topRowContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.isLoggedIn) { onLoggedIn() }
+    if (state.isLoggedIn) {
+        onLoggedIn()
+    }
 
     var showModal by remember { mutableStateOf(false) }
     Column(
@@ -148,10 +152,12 @@ fun LoginScreen(
                                 onEmailChange = signInViewModel::onChangeEmail,
                                 onPasswordChange = signInViewModel::onChangePassword,
                                 onPasswordSeenChange = signInViewModel::switchPasswordToggle,
-                                passwordError = signInState.value.passwordErrorMessage != null,
-                                passwordErrorText = signInState.value.passwordErrorMessage ?: "",
-                                emailError = signInState.value.emailErrorMessage != null,
-                                emailErrorText = signInState.value.emailErrorMessage ?: "",
+                                passwordError = signInState.value.passwordError != SignInPasswordError.None,
+                                passwordErrorText = getErrorText(signInState.value.passwordError),
+                                emailError = signInState.value.emailError != null,
+                                emailErrorText = if (signInState.value.emailError == null) "" else stringResource(
+                                    R.string.email_doesnt_match_pattern
+                                ),
                                 onToTypeAuth = onToTypeAuth,
                                 onSignIn = signInViewModel::signIn
                             )
@@ -182,6 +188,17 @@ fun LoginScreen(
         }
     }
 }
+
+@Composable
+@ReadOnlyComposable
+private fun getErrorText(passwordError: SignInPasswordError) =
+    when (passwordError) {
+        SignInPasswordError.None -> ""
+        SignInPasswordError.InvalidUserCredentials -> stringResource(R.string.invalid_credentials)
+        SignInPasswordError.Unexpected -> stringResource(R.string.unknown_error)
+        SignInPasswordError.Timeout -> stringResource(R.string.timeout)
+        SignInPasswordError.UnknownHost -> stringResource(R.string.check_internet_connection)
+    }
 
 @Preview
 @Composable

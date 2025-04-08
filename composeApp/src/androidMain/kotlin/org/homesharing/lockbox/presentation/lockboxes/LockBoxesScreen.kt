@@ -211,7 +211,8 @@ private fun LockBox(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(vertical = 10.dp, horizontal = 12.dp)
+                    .padding(vertical = 10.dp, horizontal = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
                     text = box.alias,
