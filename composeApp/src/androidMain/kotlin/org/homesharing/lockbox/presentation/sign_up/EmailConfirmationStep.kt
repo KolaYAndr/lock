@@ -3,40 +3,59 @@ package org.homesharing.lockbox.presentation.sign_up
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import org.homesharing.lockbox.R
 import presentation.composables.CountDownButton
+import presentation.composables.HelpModalSheet
 import presentation.composables.HelpTextWithIcon
 import presentation.theme.LockBoxTheme
+
+private const val CHECK_CONFIRMATION_DELAY = 15000L
 
 @Composable
 fun EmailConfirmationStep(
     email: String,
     onConfirmEmail: () -> Unit,
-    onChangeClick: () -> Unit,
+    onChangeEmailClick: () -> Unit,
+    onCheckConfirmation: suspend () -> Unit,
 ) {
+    LaunchedEffect(Unit) {
+        onConfirmEmail()
+        while (isActive) {
+            delay(CHECK_CONFIRMATION_DELAY)
+            onCheckConfirmation()
+        }
+    }
+
+    var showHelpModal by remember { mutableStateOf(false) }
     Text(
         text = stringResource(R.string.check_your_email),
         style = LockBoxTheme.typography.titleMedium,
         color = LockBoxTheme.colors.white,
-        modifier = Modifier
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
     Text(
         text = stringResource(R.string.link_sent_to_email),
         style = LockBoxTheme.typography.bodyMedium,
         color = LockBoxTheme.colors.grey500,
-        modifier = Modifier
-            .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
     )
 
     Row(
@@ -57,22 +76,29 @@ fun EmailConfirmationStep(
             text = stringResource(R.string.change_short),
             modifier = Modifier
                 .minimumInteractiveComponentSize()
-                .clickable { onChangeClick() }
+                .clickable { onChangeEmailClick() }
         )
     }
 
     CountDownButton(
-        onClick = onConfirmEmail::invoke,
+        onClick = onConfirmEmail,
         modifier = Modifier
             .padding(top = 24.dp, start = 16.dp, end = 16.dp)
             .fillMaxWidth()
     )
 
     HelpTextWithIcon(
-        onClick = { /*TODO*/ },
+        onClick = { showHelpModal = true },
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .height(32.dp)
     )
+
+    if (showHelpModal) {
+        HelpModalSheet(
+            onDismiss = { showHelpModal = false },
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }

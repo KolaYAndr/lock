@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.presentation.forgot_password
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,12 +8,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import presentation.composables.EmailInput
@@ -25,10 +26,15 @@ import presentation.theme.LockBoxTheme
 @Composable
 fun EmailInputStep(
     email: String,
+    emailError: String?,
     onEmailChange: (String) -> Unit,
     onConfirmEmail: () -> Unit,
+    onDownloadPdf: () -> Unit,
 ) {
     val emailInteractionSource = remember { MutableInteractionSource() }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     Text(
         text = stringResource(R.string.type_in_email),
@@ -63,14 +69,16 @@ fun EmailInputStep(
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(onDone = {}),
-        isError = false,
-        errorText = "",
-        modifier = Modifier.padding(
-            top = 6.dp,
-            start = 16.dp,
-            end = 16.dp,
-            bottom = 12.dp
-        )
+        isError = emailError != null,
+        errorText = emailError ?: "",
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .padding(
+                top = 6.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 12.dp
+            )
     )
 
     BasicButton(
@@ -83,10 +91,7 @@ fun EmailInputStep(
     )
 
     PolicyAndConditions(
-        modifier = Modifier
-            .padding(top = 2.dp, start = 16.dp, end = 16.dp)
-            .clickable {
-
-            }
+        onClick = { onDownloadPdf() },
+        modifier = Modifier.padding(top = 2.dp, start = 16.dp, end = 16.dp)
     )
 }

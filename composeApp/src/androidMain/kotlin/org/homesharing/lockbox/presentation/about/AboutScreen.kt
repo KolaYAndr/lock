@@ -13,13 +13,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.downloadPrivacyPolicy
+import org.homesharing.lockbox.downloadUserAgreement
 import presentation.composables.TitledTopBar
 import presentation.composables.general.BasicGroup
 import presentation.composables.general.BasicHorizontalDivider
@@ -34,7 +36,7 @@ fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
     ) {
         TitledTopBar(
             title = stringResource(R.string.about_app),
-            onNavigate = onNavBack::invoke,
+            onNavigate = onNavBack,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -77,14 +79,14 @@ fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
             )
         }
 
-        val uriHandler = LocalUriHandler.current
+        val context = LocalContext.current
         BasicGroup(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Agreement(
-                onClick = { uriHandler.openUri("https://t.me/@korolev_2512") },
+                onClick = { downloadUserAgreement(context) },
                 text = stringResource(R.string.user_agreement),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -92,7 +94,7 @@ fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
             BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
             Agreement(
-                onClick = { uriHandler.openUri("https://t.me/@korolev_2512") },
+                onClick = { downloadPrivacyPolicy(context) },
                 text = stringResource(R.string.privacy_policy),
                 modifier = Modifier.fillMaxWidth()
             )

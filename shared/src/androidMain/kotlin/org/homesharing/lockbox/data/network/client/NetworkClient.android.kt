@@ -1,8 +1,16 @@
 package org.homesharing.lockbox.data.network.client
 
+import android.util.Log
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.engine.okhttp.OkHttpEngine
+import io.ktor.client.plugins.logging.Logger
 
 actual val networkEngine: HttpClientEngine
     get() = OkHttp.create()
+
+actual val myLogger: Logger
+    get() = object : Logger {
+        override fun log(message: String) {
+            Log.d("logger", message)
+        }
+    }

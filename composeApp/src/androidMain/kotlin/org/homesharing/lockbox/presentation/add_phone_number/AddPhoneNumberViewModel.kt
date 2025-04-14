@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.add_phone_number
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,6 +11,7 @@ class AddPhoneNumberViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<AddPhoneNumberUiState> =
         MutableStateFlow(AddPhoneNumberUiState())
     val uiState: StateFlow<AddPhoneNumberUiState> get() = _uiState.asStateFlow()
+    private val phonePattern = Patterns.PHONE
 
     fun onNumberChange(newNumber: String) {
         _uiState.update {
@@ -33,13 +35,16 @@ class AddPhoneNumberViewModel : ViewModel() {
 
     }
 
-    fun sendConfirmationCode() {
-
+    fun  sendConfirmationCode() {
+        if (phonePattern.matcher(uiState.value.phoneNumber).matches()) {
+            toStep(AddPhoneNumberStep.ConfirmPhoneNumber)
+        } else _uiState.update { it.copy(numberError = "Doesn't match phone number pattern") }
     }
 }
 
 data class AddPhoneNumberUiState(
     val phoneNumber: String = "",
+    val numberError: String? = "",
     val step: AddPhoneNumberStep = AddPhoneNumberStep.WantToChange,
     val confirmationCode: String = ""
 )

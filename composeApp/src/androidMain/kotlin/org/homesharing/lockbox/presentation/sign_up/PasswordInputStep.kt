@@ -8,12 +8,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,29 +30,33 @@ fun PasswordInputStep(
     isPasswordSeen: Boolean,
     onPasswordSeenChanged: () -> Unit,
     passwordRepeated: String,
+    passwordRepeatedError: PasswordRepeatedError,
     onPasswordRepeatedChange: (String) -> Unit,
     isPasswordRepeatedSeen: Boolean,
     onPasswordRepeatedSeenChange: () -> Unit,
-    onSetPassword: () -> Unit,
+    onCreate: () -> Unit
 ) {
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val passwordFocusRequester = remember { FocusRequester() }
+    val passwordRepeatedFocusRequester = remember { FocusRequester() }
     val passwordInteractionSource = remember { MutableInteractionSource() }
     val passwordRepeatedInteractionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(Unit) {
+        passwordFocusRequester.requestFocus()
+    }
+
     Text(
         text = stringResource(R.string.create_password),
         style = LockBoxTheme.typography.titleMedium,
         color = LockBoxTheme.colors.white,
-        modifier = Modifier
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
+
     Text(
         text = stringResource(R.string.password),
         style = LockBoxTheme.typography.subHeadlineLarge,
         color = LockBoxTheme.colors.grey100,
-        modifier = Modifier
-            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
     )
     PasswordInput(
         password = password,
@@ -61,7 +65,7 @@ fun PasswordInputStep(
         interactionSource = passwordInteractionSource,
         isError = false,
         errorText = "",
-        keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
+        keyboardActions = KeyboardActions(onNext = { passwordRepeatedFocusRequester.requestFocus() }),
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
@@ -69,43 +73,39 @@ fun PasswordInputStep(
         ),
         isSeen = isPasswordSeen,
         onSeenChange = { onPasswordSeenChanged() },
-        modifier = Modifier.padding(top = 6.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier
+            .focusRequester(passwordFocusRequester)
+            .padding(top = 6.dp, start = 16.dp, end = 16.dp)
     )
 
     Text(
         text = stringResource(R.string.password_confirmation),
         style = LockBoxTheme.typography.subHeadlineLarge,
         color = LockBoxTheme.colors.grey100,
-        modifier = Modifier
-            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
     )
     PasswordInput(
         password = passwordRepeated,
         onValueChange = { onPasswordRepeatedChange(it) },
         onClearText = { onPasswordRepeatedChange("") },
         interactionSource = passwordRepeatedInteractionSource,
-        isError = false,
-        errorText = "",
+        isError = passwordRepeatedError != PasswordRepeatedError.None,
+        errorText = parsePasswordRepeatedErrorText(passwordRepeatedError),
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { onPasswordRepeatedSeenChange() },
-        keyboardActions = KeyboardActions(
-            onDone = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-            }
-        ),
+        keyboardActions = KeyboardActions(onDone = { onCreate() }),
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
         modifier = Modifier
-            .focusRequester(focusRequester)
+            .focusRequester(passwordRepeatedFocusRequester)
             .padding(top = 6.dp, start = 16.dp, end = 16.dp)
     )
 
     BasicButton(
-        onClick = { onSetPassword() },
+        onClick = onCreate,
         text = stringResource(R.string.set_password),
         paddingValues = PaddingValues(14.dp),
         modifier = Modifier
@@ -114,3 +114,9 @@ fun PasswordInputStep(
             .padding(top = 24.dp, bottom = 12.dp)
     )
 }
+
+@Composable
+@ReadOnlyComposable
+private fun parsePasswordRepeatedErrorText(passwordRepeatedError: PasswordRepeatedError) =
+    passwordRepeatedError.messageId?.let { stringResource(it) } ?: ""
+

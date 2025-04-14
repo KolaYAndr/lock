@@ -1,0 +1,74 @@
+package org.homesharing.lockbox.data.repository
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
+import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
+import org.homesharing.lockbox.data.network.token.storage.TokenStorage
+import org.homesharing.lockbox.domain.api.AccountApi
+import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
+import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
+import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.repository.AuthRepository
+
+class AuthRepositoryImpl(
+    private val api: AccountApi,
+    private val tokenStorage: TokenStorage,
+    private val refreshManager: RefreshManager
+) : AuthRepository {
+
+    override suspend fun signUp(
+        username: String,
+        password: String,
+        passwordRepeated: String
+    ): Response<SignUpResponseDto> = withContext(Dispatchers.IO) {
+        try {
+            val apiResponse = api.signUp(username, password, passwordRepeated)
+
+            if (apiResponse.error) {
+                Response.Failure(apiResponse.errorText!!)
+            } else {
+                Response.Success(apiResponse.body!!)
+            }
+        } catch (e: Exception) {
+            Response.Failure(e.message.toString())
+        }
+    }
+
+    override suspend fun loadTokensInitially(
+        username: String,
+        password: String
+    ): TokenResponseDto = withContext(Dispatchers.IO) {
+        val response = api.loadTokensInitially(username, password)
+
+        if (response.error.isNullOrEmpty()) {
+            tokenStorage.apply {
+                saveAccessToken(response.accessToken!!)
+                saveRefreshToken(response.refreshToken!!)
+                saveNextRefreshTime(refreshManager.currentTime + response.expiresIn!!)
+            }
+        }
+        response
+    }
+
+
+    override suspend fun sendConfirmation(email: String): Response<ConfirmEmailResponseDto> =
+        withContext(Dispatchers.IO) {
+            try {
+                val apiResponse = api.confirmEmail(email)
+
+                if (apiResponse.error) {
+                    Response.Failure(apiResponse.errorText!!)
+                } else {
+                    Response.Success(apiResponse.body!!)
+                }
+            } catch (e: Exception) {
+                Response.Failure(e.message.toString())
+            }
+        }
+
+    override suspend fun checkIfConfirmed(email: String) = withContext(Dispatchers.IO) {
+
+    }
+}

@@ -12,12 +12,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -28,6 +30,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.downloadPrivacyPolicy
+import org.homesharing.lockbox.downloadUserAgreement
+import org.homesharing.lockbox.presentation.login.LoginType
 import presentation.composables.CloseRoundButton
 import presentation.composables.EmailInput
 import presentation.composables.PasswordInput
@@ -35,7 +40,6 @@ import presentation.composables.PolicyAndConditions
 import presentation.composables.general.BasicButton
 import presentation.composables.general.BasicCard
 import presentation.theme.LockBoxTheme
-
 
 @Composable
 fun SignInCard(
@@ -47,9 +51,9 @@ fun SignInCard(
     emailError: Boolean,
     passwordErrorText: String,
     emailErrorText: String,
-    onPasswordSeenChange: (Boolean) -> Unit,
-    onForgotPassword: () -> Unit,
-    onSignUp: () -> Unit,
+    onPasswordSeenChange: () -> Unit,
+    onToTypeAuth: (LoginType) -> Unit,
+    onSignIn: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BasicCard(
@@ -57,13 +61,14 @@ fun SignInCard(
     ) {
         val emailInteractionSource = remember { MutableInteractionSource() }
         val passwordInteractionSource = remember { MutableInteractionSource() }
-        val focusRequester = remember { FocusRequester() }
+        val passwordFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
 
+
         Box(modifier = Modifier.fillMaxWidth()) {
             CloseRoundButton(
-                onClick = onDismiss::invoke,
+                onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(top = 12.dp, end = 16.dp)
@@ -78,7 +83,6 @@ fun SignInCard(
                     .padding(top = 12.dp)
             )
         }
-
 
         Text(
             text = stringResource(R.string.log_in_your_profile),
@@ -102,7 +106,7 @@ fun SignInCard(
             interactionSource = emailInteractionSource,
             isError = emailError,
             errorText = emailErrorText,
-            keyboardActions = KeyboardActions(onNext = { focusRequester.requestFocus() }),
+            keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
                 autoCorrectEnabled = false,
                 keyboardType = KeyboardType.Email,
@@ -128,11 +132,12 @@ fun SignInCard(
             isError = passwordError,
             errorText = passwordErrorText,
             isSeen = signInUiState.isPasswordSeen,
-            onSeenChange = { onPasswordSeenChange(!signInUiState.isPasswordSeen) },
+            onSeenChange = onPasswordSeenChange,
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
                     focusManager.clearFocus()
+                    onSignIn()
                 }
             ),
             keyboardOptions = KeyboardOptions(
@@ -142,7 +147,7 @@ fun SignInCard(
                 showKeyboardOnFocus = true
             ),
             modifier = Modifier
-                .focusRequester(focusRequester)
+                .focusRequester(passwordFocusRequester)
                 .padding(top = 6.dp, start = 16.dp, end = 16.dp)
         )
 
@@ -153,12 +158,12 @@ fun SignInCard(
             modifier = Modifier
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
-                .clickable { onForgotPassword() },
+                .clickable { onToTypeAuth(LoginType.ForgotPassword) },
             textDecoration = TextDecoration.Underline
         )
 
         BasicButton(
-            onClick = {},
+            onClick = { onSignIn() },
             text = stringResource(R.string.sing_in),
             paddingValues = PaddingValues(14.dp),
             modifier = Modifier
@@ -166,12 +171,13 @@ fun SignInCard(
                 .padding(top = 20.dp, start = 16.dp, end = 16.dp)
         )
 
+        val context = LocalContext.current
         PolicyAndConditions(
-            modifier = Modifier
-                .padding(top = 2.dp, start = 16.dp, end = 16.dp)
-                .clickable {
-
-                }
+            onClick = {
+                downloadUserAgreement(context)
+                downloadPrivacyPolicy(context)
+            },
+            modifier = Modifier.padding(top = 2.dp, start = 16.dp, end = 16.dp)
         )
 
         Row(
@@ -194,8 +200,8 @@ fun SignInCard(
                 style = LockBoxTheme.typography.subHeadlineLarge,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
-                    .padding(vertical = 14.dp)
-                    .clickable { onSignUp() }
+                    .minimumInteractiveComponentSize()
+                    .clickable { onToTypeAuth(LoginType.SignUp) }
             )
         }
     }

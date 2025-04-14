@@ -4,8 +4,11 @@ import kotlinx.serialization.Serializable
 
 sealed class MainRoutes {
     @Serializable
-    data object Main
+    data object Boxes: MainRoutes()
 
     @Serializable
-    data object Login
+    data class DetailedBox(val macAddress: String): MainRoutes()
+
+    @Serializable
+    data object Login : MainRoutes()
 }

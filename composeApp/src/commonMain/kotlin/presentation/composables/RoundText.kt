@@ -5,13 +5,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.homesharing.lockbox.R
 import presentation.theme.LockBoxTheme
 
 @Composable
@@ -30,12 +33,27 @@ fun RoundText(text: String, modifier: Modifier = Modifier) {
             .size(64.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = text,
-            color = LockBoxTheme.colors.grey500,
-            textAlign = TextAlign.Center
-        )
+        if (text.isNotEmpty()) {
+            val splits = text.split(" ")
+            val name = splits.getOrNull(0) ?: ""
+            val surname = splits.getOrNull(1) ?: ""
+            val shortName = getShortenedName(name, surname)
+            Text(
+                text = shortName,
+                color = LockBoxTheme.colors.grey500,
+                textAlign = TextAlign.Center
+            )
+        } else Icon(painter = painterResource(R.drawable.user), contentDescription = null)
     }
+}
+
+private fun getShortenedName(name: String, surname: String): String {
+    val sb = StringBuilder()
+
+    if (name.isNotEmpty()) sb.append(name.first().uppercaseChar())
+    if (surname.isNotEmpty()) sb.append(surname.first().uppercaseChar())
+
+    return sb.toString()
 }
 
 @Preview

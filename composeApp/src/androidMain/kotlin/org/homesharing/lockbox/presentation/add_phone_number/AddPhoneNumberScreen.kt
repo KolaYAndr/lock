@@ -55,31 +55,37 @@ fun AddPhoneNumberScreen(
     ) {
         TitledTopBar(
             title = stringResource(R.string.change_phone_number),
-            onNavigate = onNavBack::invoke,
+            onNavigate = onNavBack,
             modifier = Modifier.fillMaxWidth()
         )
 
         when (uiState.step) {
             AddPhoneNumberStep.ConfirmPhoneNumber -> {
                 ConfirmNumberStep(
-                    uiState.confirmationCode,
-                    onConfirmationCodeChanged,
-                    onConfirm,
-                    onToStep,
-                    onSendCode
+                    value = uiState.confirmationCode,
+                    onCodeChange = onConfirmationCodeChanged,
+                    onConfirm = onConfirm,
+                    onToStep = onToStep,
+                    onSendAgain = onSendCode
                 )
             }
 
             AddPhoneNumberStep.NewNumberInput -> {
-                NewNumberInputStep(uiState.phoneNumber, onNumberChange, onToStep, onSendCode)
+                NewNumberInputStep(
+                    number = uiState.phoneNumber,
+                    numberError = uiState.numberError,
+                    onNumberChange = onNumberChange,
+                    onToStep = onToStep,
+                    changePhoneNumber = onSendCode
+                )
             }
 
             AddPhoneNumberStep.PhoneNumberChangedSuccessfully -> {
-                PhoneNumberChangedSuccessfullyStep(onDone)
+                PhoneNumberChangedSuccessfullyStep(onDone = onDone)
             }
 
             AddPhoneNumberStep.WantToChange -> {
-                WantToChangeStep(onNavBack, onToStep)
+                WantToChangeStep(onNavBack = onNavBack, onToStep = onToStep)
             }
         }
     }
@@ -214,6 +220,7 @@ fun PhoneNumberChangedSuccessfullyStep(onDone: () -> Unit) {
 @Composable
 fun NewNumberInputStep(
     number: String,
+    numberError: String?,
     onNumberChange: (String) -> Unit,
     onToStep: (AddPhoneNumberStep) -> Unit,
     changePhoneNumber: () -> Unit
@@ -265,10 +272,10 @@ fun NewNumberInputStep(
 
         PhoneNumberInput(
             number = number,
-            onValueChange = onNumberChange::invoke,
+            onValueChange = onNumberChange,
             onClearText = { onNumberChange("") },
-            isError = false,
-            errorText = "",
+            isError = numberError == null,
+            errorText = numberError ?: "",
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -294,7 +301,6 @@ fun NewNumberInputStep(
             paddingValues = PaddingValues(14.dp),
             onClick = {
                 changePhoneNumber()
-                onToStep(AddPhoneNumberStep.ConfirmPhoneNumber)
             },
             modifier = Modifier
                 .padding(top = 24.dp)

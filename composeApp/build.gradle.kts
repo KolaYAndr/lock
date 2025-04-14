@@ -71,8 +71,10 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.navigation)
     debugImplementation(compose.uiTooling)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
+    implementation(libs.paging.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.serialization.json)
-    implementation(libs.kotlin.reflect)
+    implementation(libs.datastore)
 }
-

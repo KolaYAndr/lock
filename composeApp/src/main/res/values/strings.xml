@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="email_placeholder">ivan.ivanov@email.ru</string>
-    <string name="password_placeholder">••••••••</string>
-    <string name="close">Close</string>
+    <string name="email_placeholder" translatable="false">ivan.ivanov@email.ru</string>
+    <string name="password_placeholder" translatable="false">••••••••</string>
     <string name="sing_in">Войти</string>
     <string name="log_in_your_profile">Войдите в профиль</string>
-    <string name="start_using_today">Начни использовать наши локбоксы уже сегодня!</string>
+    <string name="start_using_today">Начните использовать наши локбоксы уже сегодня!</string>
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
-    <string name="by_pressing_you_agree">Нажимая на кнопку вы соглашаетесь с&#160;</string>
+    <string name="by_pressing_you_agree">Нажимая на кнопку Вы соглашаетесь с&#160;</string>
     <string name="with_service_conditions">условиями сервиса</string>
     <string name="and">"&#160;и&#160;"</string>
     <string name="with_privacy_policy">политикой конфиденциальности</string>
@@ -20,18 +19,18 @@
     <string name="step_of">Шаг %1$d из %2$d</string>
     <string name="promise_to_text_only_important_info">Будем писать только по важным вопросам</string>
     <string name="Register">Регистрация</string>
-    <string name="confirm_email">Подтвердите почту</string>
+    <string name="confirm_email">Подтвердить почту</string>
     <string name="have_an_account">Есть аккаунт?</string>
     <string name="log_in">Войдите</string>
     <string name="check_your_email">Проверьте почту</string>
-    <string name="link_sent_to_email">Мы отправили вам ссылку для подтверждения по указанному адресу:</string>
+    <string name="link_sent_to_email">Мы отправили Вам ссылку для подтверждения по указанному адресу:</string>
     <string name="change_short">(Изм.)</string>
     <string name="before_sending_one_more_time">Отправить ещё раз (%1$d:%2$d)</string>
     <string name="send_one_more_time">Отправить ещё раз</string>
     <string name="help">Помощь</string>
     <string name="create_password">Придумайте пароль</string>
     <string name="password_confirmation">Подтверждение пароля</string>
-    <string name="set_password">Установите пароль</string>
+    <string name="set_password">Установить пароль</string>
     <string name="we_will_send_recovery_link">Мы отправим на нее ссылку для восстановления пароля</string>
     <string name="create_new_password">Придумайте новый пароль</string>
     <string name="main">Главная</string>
@@ -49,7 +48,7 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="phone_number_not_set">Номер не указан</string>
     <string name="delete_account_question">Удалить аккаунт?</string>
-    <string name="not_cancellable_action">Это действие нельзя отменить. Все данные, связанные с вашим аккаунтом, будут удалены без возможности восстановления.</string>
+    <string name="not_cancellable_delete_account">Это действие нельзя отменить. Все данные, связанные с Вашим аккаунтом, будут удалены без возможности восстановления</string>
     <string name="delete">Удалить</string>
     <string name="app_version">Версия приложения %s</string>
     <string name="legal_info">ООО “Локбокс: умные устройства для комфортной жизни”</string>
@@ -58,7 +57,7 @@
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="ready">Готово</string>
     <string name="your_account_will_be_deleted">Ваш аккаунт будет удалён</string>
-    <string name="deletion_in_couple_of_days">Аккаунт будет полностью удалён в течение нескольких дней. Вы сможете создать новый аккаунт в любой момент.</string>
+    <string name="deletion_in_couple_of_days">Аккаунт будет полностью удалён в течение нескольких дней. Вы сможете создать новый аккаунт в любой момент</string>
     <string name="change_password">Изменить пароль</string>
     <string name="password_changed">Пароль изменён</string>
     <string name="change_email">Изменить электронную почту</string>
@@ -66,26 +65,117 @@
     <string name="new_email_will_be_used_for">Новый адрес электронной почты будет использоваться для входа в аккаунт и важных уведомелний</string>
     <string name="back">Назад</string>
     <string name="input_new_email">Введите новую электронную почту</string>
-    <string name="indicate_email_for_use">Укажите адрес, который вы будете использовать для входа и получения уведомлений.</string>
+    <string name="indicate_email_for_use">Укажите адрес, который Вы будете использовать для входа и получения уведомлений</string>
     <string name="new_email">Новая электронная почта</string>
     <string name="change_mail">Изменить почту</string>
     <string name="confirm_new_email">Подтвердите новый адрес</string>
-    <string name="we_sent_message_to_indicated_email">Мы отправили письмо на указанный адрес. Перейдите по ссылке в письме, чтобы завершить изменение.</string>
+    <string name="we_sent_message_to_indicated_email">Мы отправили письмо на указанный адрес. Перейдите по ссылке в письме, чтобы завершить изменение</string>
     <string name="open_mail">Открыть почту</string>
     <string name="send_again">Отправить снова</string>
     <string name="email_successfully_changed">Почта успешно изменена</string>
-    <string name="now_you_can_use_new_email">Теперь вы можете использовать новый адрес для входа и получения уведомлений.</string>
+    <string name="now_you_can_use_new_email">Теперь вы можете использовать новый адрес для входа и получения уведомлений</string>
     <string name="change_phone_number">Изменить номер телефона</string>
     <string name="want_to_change_phone_number_question">Хотите изменить телефон?</string>
     <string name="new_phone_number_will_be_used_for">Новый телефон будет использоваться для восстановления доступа и получения уведомлений</string>
     <string name="phone_number_placeholder">+7 (ххх) ххх-хх-хх</string>
     <string name="add_new_phone_number_suggestion">Добавьте номер телефона</string>
-    <string name="indicate_phone_number_for_use">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений.</string>
+    <string name="indicate_phone_number_for_use">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений</string>
     <string name="add_phone_number">Добавить номер телефона</string>
     <string name="phone_number_successfully_changed">Телефон успешно добавлен</string>
-    <string name="now_you_can_use_new_phone_number">Теперь вы можете использовать новый телефон для восстановления доступа и получения уведомлений.</string>
+    <string name="now_you_can_use_new_phone_number">Теперь Вы можете использовать новый телефон для восстановления доступа и получения уведомлений</string>
     <string name="pin_hint">_</string>
     <string name="confirm_phone_number">Подтвердите номер телефона</string>
-    <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер.</string>
+    <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер</string>
     <string name="confirm">Подтвердить</string>
+    <string name="active_sessions">Активные сессии</string>
+    <string name="input_name">Введите имя</string>
+    <string name="input_surname">Введите фамилию</string>
+    <string name="email_not_set">Почта не указана</string>
+    <string name="add_full">Добавить</string>
+    <string name="manage_devices">Управляйте устройствами</string>
+    <string name="here_will_be_devices_you_add">Здесь будут отображаться устройства, которые Вы добавите</string>
+    <string name="add_device">Добавить устройство</string>
+    <string name="device_connection">Подключение устройства</string>
+    <string name="connect_to_lockbox_network">Подключитесь к сети:  LockBox-Network</string>
+    <string name="go_to_wifi_settings_to_connect">Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети LockBox-Network</string>
+    <string name="open_wifi_settings">Открыть настройки Wi-Fi</string>
+    <string name="search_with_device_properties">Название устройства, адрес и т.д.</string>
+    <string name="device_search">Поиск устройсва</string>
+    <string name="open">Открыть</string>
+    <string name="wifi_network">Wi-Fi cеть</string>
+    <string name="signal_level">Уровень сигнала</string>
+    <string name="battery_percent">%d%%</string>
+    <string name="access_device">Доступ к устройству</string>
+    <string name="address">Адрес</string>
+    <string name="device_name">Название устройства</string>
+    <string name="about_device">Об устройстве</string>
+    <string name="unbind_device">Отвязать устройство</string>
+    <string name="open_device_question">Открыть устройство?</string>
+    <string name="unbind_device_question">Отвязать устройство?</string>
+    <string name="not_cancellable_unbind_device">Это действие нельзя отменить. Вы можете настроить устройство ещё раз при необходимости</string>
+    <string name="unbind">Отвязать</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="battery_level">Уровень заряда</string>
+    <string name="signa_low">Низкий</string>
+    <string name="signal_medium">Средний</string>
+    <string name="signal_high">Высокий</string>
+    <string name="signal_zero">Нулевой</string>
+    <string name="manufacturer">Производитель</string>
+    <string name="lockbox">ООО “Локбокс: умные решения для комфортной жизни”</string>
+    <string name="device_type">Тип устройства</string>
+    <string name="lockbox_type">Локбокс</string>
+    <string name="original_naming">Оригинальное название</string>
+    <string name="original_naming_lockbox">LockBox</string>
+    <string name="this_device">Это устройство</string>
+    <string name="location_dot_access_time" translatable="false">%1$s • %2$s</string>
+    <string name="right_now">Сейчас</string>
+    <string name="finish_all_other_sessions">Завершить все другие сеансы</string>
+    <string name="unknown_device">Неизвестное устройство</string>
+    <string name="contact_us">Связаться с нами</string>
+    <string name="we_will_try_to_solve_your_issue">Мы постараемся решить Ваш вопрос. Выберите удобный способ связи ниже</string>
+    <string name="lockbox_email" translatable="false">help@lockbox.ru</string>
+    <string name="telegram" translatable="false">Telegram</string>
+    <string name="whatsapp" translatable="false">WhatsApp</string>
+    <string name="could_not_update_user_info">Не удалолсь обновить данные</string>
+    <string name="retry">Повторить</string>
+    <string name="could_not_load_user_info">Не удалось загрузить информацию об аккаунте</string>
+    <string name="could_not_refresh_user_info">Не удалось обновить данные пользователя</string>
+    <string name="could_not_update_user_image">Не удалось обновить фотографию</string>
+    <string name="image_updated">Фотография обновлена</string>
+    <string name="could_not_load_active_sessions">Не удалось загрузить сессии</string>
+    <string name="could_not_load_box_info">Не удалось загрузить информацию о боксе</string>
+    <string name="could_not_update_box_name">Не удалось обновить имя бокса</string>
+    <string name="could_not_update_box_address">Не удалось обновить адрес</string>
+    <string name="could_not_unbind_box">Не удалось отвязать бокс</string>
+    <string name="box_opened_successfully">Бокс открыт успешно</string>
+    <string name="could_not_open_box">Не удалось открыть бокс</string>
+    <string name="signal_full">Максимальный</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="finish_all_other_sessions_question">Завершить остальные сессии?</string>
+    <string name="finish">Завершить</string>
+    <string name="password_dont_match">Пароли не совпадают</string>
+    <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
+    <string name="email_doesnt_match_pattern">Введите действительную почту</string>
+    <string name="could_not_close_other_sessions">Не удалось завершить другие сессии</string>
+    <string name="invalid_credentials">Данные введены неправильно</string>
+    <string name="timeout">Истекло время выполнения запроса. Проверьте соединение с интернетом</string>
+    <string name="check_internet_connection">Проверьте соединение с интернетом</string>
+    <plurals name="minutes_ago">
+        <item quantity="one">%d минуту назад</item>
+        <item quantity="few">%d минуты назад</item>
+        <item quantity="many">%d минут назад</item>
+        <item quantity="other">%d минут назад</item>
+    </plurals>
+    <plurals name="hours_ago">
+        <item quantity="one">%d час назад</item>
+        <item quantity="few">%d часа назад</item>
+        <item quantity="many">%d часов назад</item>
+        <item quantity="other">%d часа назад</item>
+    </plurals>
+    <plurals name="days_ago">
+        <item quantity="one">%d день назад</item>
+        <item quantity="few">%d дня назад</item>
+        <item quantity="many">%d дней назад</item>
+        <item quantity="other">%d дня назад</item>
+    </plurals>
 </resources>

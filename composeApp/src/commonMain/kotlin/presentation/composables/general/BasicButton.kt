@@ -21,8 +21,11 @@ fun BasicButton(
     paddingValues: PaddingValues = PaddingValues(8.dp),
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = LockBoxTheme.colors.green500,
-        contentColor = LockBoxTheme.colors.grey900
+        contentColor = LockBoxTheme.colors.grey900,
+        disabledContentColor = LockBoxTheme.colors.grey700,
+        disabledContainerColor = LockBoxTheme.colors.grey800
     ),
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     Button(
@@ -30,6 +33,7 @@ fun BasicButton(
         shape = LockBoxTheme.shape.roundedCornerShape8,
         colors = colors,
         contentPadding = paddingValues,
+        enabled = enabled,
         modifier = modifier
     ) {
         Text(
