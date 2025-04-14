@@ -46,7 +46,7 @@ fun BasicButton(
 
 @Composable
 @Preview
-fun PreviewButton() {
+private fun PreviewButton() {
     LockBoxTheme {
         BasicButton(
             onClick = { },

@@ -5,10 +5,10 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.logging.Logger
 
-actual val networkEngine: HttpClientEngine
+internal actual val networkEngine: HttpClientEngine
     get() = OkHttp.create()
 
-actual val myLogger: Logger
+internal actual val myLogger: Logger
     get() = object : Logger {
         override fun log(message: String) {
             Log.d("logger", message)

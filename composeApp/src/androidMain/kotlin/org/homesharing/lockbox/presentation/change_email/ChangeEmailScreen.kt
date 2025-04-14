@@ -66,7 +66,7 @@ fun ChangeEmailScreen(
             ChangeEmailStep.NewEmailInput -> {
                 NewEmailInputStep(
                     email = uiState.newEmail,
-                    emailError = uiState.emailError,
+                    emailError = uiState.emailError != null,
                     onEmailChange = onEmailChange,
                     changeEmail = changeEmail,
                     onToStep = onToStep
@@ -147,7 +147,7 @@ private fun ConfirmNewEmailStep(
 @Composable
 private fun NewEmailInputStep(
     email: String,
-    emailError: String?,
+    emailError: Boolean,
     onEmailChange: (String) -> Unit,
     changeEmail: () -> Unit,
     onToStep: (ChangeEmailStep) -> Unit
@@ -201,8 +201,8 @@ private fun NewEmailInputStep(
             email = email,
             onValueChange = onEmailChange::invoke,
             onClearText = { onEmailChange("") },
-            isError = emailError != null,
-            errorText = emailError ?: "",
+            isError = emailError,
+            errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else "",
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -308,7 +308,7 @@ private fun WantToChangeStep(
 
 @Preview
 @Composable
-fun PreviewWantToChange() {
+private fun PreviewWantToChange() {
     LockBoxTheme {
         val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.WantToChange)
         ChangeEmailScreen(
@@ -321,7 +321,7 @@ fun PreviewWantToChange() {
 
 @Preview
 @Composable
-fun PreviewNewEmailInput() {
+private fun PreviewNewEmailInput() {
     LockBoxTheme {
         val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.NewEmailInput)
         ChangeEmailScreen(
@@ -334,7 +334,7 @@ fun PreviewNewEmailInput() {
 
 @Preview
 @Composable
-fun PreviewConfirmNewEmail() {
+private fun PreviewConfirmNewEmail() {
     LockBoxTheme {
         val uiState = ChangeEmailUiState(changeEmailStep = ChangeEmailStep.ConfirmNewEmail)
         ChangeEmailScreen(

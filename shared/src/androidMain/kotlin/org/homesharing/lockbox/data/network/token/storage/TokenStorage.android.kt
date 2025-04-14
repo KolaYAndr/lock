@@ -19,7 +19,7 @@ private fun sharedPreferencesMigration(context: Context) =
     listOf(SharedPreferencesMigration(context, TOKEN_STORAGE_NAME))
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class TokenStorage(context: Context) {
+internal actual class TokenStorage(context: Context) {
     private val dataStore = context.dataStore
 
     actual suspend fun getAccessToken(): String {

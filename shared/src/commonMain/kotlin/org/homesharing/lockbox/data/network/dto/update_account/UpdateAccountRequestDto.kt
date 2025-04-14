@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateAccountRequestDto(
+internal data class UpdateAccountRequestDto(
     val email: String? = null,
     val enabled: Boolean? = null,
     @SerialName("first_name")

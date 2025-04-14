@@ -44,7 +44,7 @@ import presentation.theme.LockBoxTheme
 
 private const val SPLASH_SCREEN_TIME = 1000L
 
-class MainActivity : ComponentActivity() {
+class LockBoxActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         var keepSplash = true
@@ -64,9 +64,9 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val mainActivityViewModel = koinViewModel<MainActivityViewModel>()
+            val lockboxActivityViewModel = koinViewModel<LockBoxActivityViewModel>()
             val isLoggedIn =
-                mainActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
+                lockboxActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
 
             val snackbarHostState = remember { SnackbarHostState() }
             CollectSnackbarEvents(snackbarHostState)

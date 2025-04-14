@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.change_email
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import presentation.composables.general.BasicButton
 import presentation.theme.LockBoxTheme
 
-
-//TODO добавить лаунч эффект при открытии отправлять на бэк подтверждение
 @Composable
 fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifier = Modifier) {
+    BackHandler(enabled = false) {}
     Column(
         modifier = modifier
             .background(LockBoxTheme.colors.grey950)
@@ -60,5 +61,13 @@ fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifier = Modi
             onClick = { onDone() },
             paddingValues = PaddingValues(10.dp)
         )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewChangeSuccess() {
+    LockBoxTheme {
+        EmailChangedSuccessfullyScreen({}, Modifier.fillMaxSize())
     }
 }

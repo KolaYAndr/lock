@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AccountInfoDto(
+internal data class AccountInfoDto(
     val acr: String,
     @SerialName("allowed-origins")
     val allowedOrigins: List<String>,
@@ -35,16 +35,16 @@ data class AccountInfoDto(
 )
 
 @Serializable
-data class RealmAccess(
+internal data class RealmAccess(
     val roles: List<String>,
 )
 
 @Serializable
-data class Account(
+internal data class Account(
     val roles: List<String>,
 )
 
 @Serializable
-data class ResourceAccess(
+internal data class ResourceAccess(
     val account: Account,
 )

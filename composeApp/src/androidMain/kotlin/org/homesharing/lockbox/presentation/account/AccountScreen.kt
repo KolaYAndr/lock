@@ -154,15 +154,15 @@ fun AccountScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onNavigate(AccountRoutes.ChangeEmail) })
 
-            BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-            ContactInfo(title = stringResource(R.string.phone_number),
-                subtitle = accountUiState.phoneNumber.ifEmpty {
-                    stringResource(R.string.phone_number_not_set)
-                },
-                isValueSet = accountUiState.phoneNumber.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onNavigate(AccountRoutes.ChangePhoneNumber) })
+//            BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+//            TODO: вернуть, когда будет телефон
+//            ContactInfo(title = stringResource(R.string.phone_number),
+//                subtitle = accountUiState.phoneNumber.ifEmpty {
+//                    stringResource(R.string.phone_number_not_set)
+//                },
+//                isValueSet = accountUiState.phoneNumber.isNotEmpty(),
+//                modifier = Modifier.fillMaxWidth(),
+//                onClick = { onNavigate(AccountRoutes.ChangePhoneNumber) })
         }
 
         BasicButton(
@@ -281,7 +281,7 @@ private fun ContactInfo(
 
 @Preview
 @Composable
-fun PreviewSettings() {
+private fun PreviewAccount() {
     LockBoxTheme {
         val accountUiState = AccountUiState()
         AccountScreen(

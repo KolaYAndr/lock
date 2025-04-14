@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CloseSessionsRequestDto(
+internal data class CloseSessionsRequestDto(
     @SerialName("session_id")
     val sessionId: String
 )

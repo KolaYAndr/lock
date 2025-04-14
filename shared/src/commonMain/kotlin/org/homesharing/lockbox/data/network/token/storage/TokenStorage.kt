@@ -8,7 +8,7 @@ internal const val REFRESH_IN_NAME = "refresh_in"
 internal const val TOKEN_STORAGE_NAME = "token_storage"
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-expect class TokenStorage {
+internal expect class TokenStorage {
     suspend fun getAccessToken(): String
     suspend fun getRefreshToken(): String
 
