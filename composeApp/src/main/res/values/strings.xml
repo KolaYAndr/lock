@@ -4,11 +4,11 @@
     <string name="password_placeholder" translatable="false">••••••••</string>
     <string name="sing_in">Войти</string>
     <string name="log_in_your_profile">Войдите в профиль</string>
-    <string name="start_using_today">Начни использовать наши локбоксы уже сегодня!</string>
+    <string name="start_using_today">Начните использовать наши локбоксы уже сегодня!</string>
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
-    <string name="by_pressing_you_agree">Нажимая на кнопку вы соглашаетесь с&#160;</string>
+    <string name="by_pressing_you_agree">Нажимая на кнопку Вы соглашаетесь с&#160;</string>
     <string name="with_service_conditions">условиями сервиса</string>
     <string name="and">"&#160;и&#160;"</string>
     <string name="with_privacy_policy">политикой конфиденциальности</string>
@@ -23,7 +23,7 @@
     <string name="have_an_account">Есть аккаунт?</string>
     <string name="log_in">Войдите</string>
     <string name="check_your_email">Проверьте почту</string>
-    <string name="link_sent_to_email">Мы отправили вам ссылку для подтверждения по указанному адресу:</string>
+    <string name="link_sent_to_email">Мы отправили Вам ссылку для подтверждения по указанному адресу:</string>
     <string name="change_short">(Изм.)</string>
     <string name="before_sending_one_more_time">Отправить ещё раз (%1$d:%2$d)</string>
     <string name="send_one_more_time">Отправить ещё раз</string>
@@ -48,7 +48,7 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="phone_number_not_set">Номер не указан</string>
     <string name="delete_account_question">Удалить аккаунт?</string>
-    <string name="not_cancellable_delete_account">Это действие нельзя отменить. Все данные, связанные с вашим аккаунтом, будут удалены без возможности восстановления</string>
+    <string name="not_cancellable_delete_account">Это действие нельзя отменить. Все данные, связанные с Вашим аккаунтом, будут удалены без возможности восстановления</string>
     <string name="delete">Удалить</string>
     <string name="app_version">Версия приложения %s</string>
     <string name="legal_info">ООО “Локбокс: умные устройства для комфортной жизни”</string>
@@ -65,7 +65,7 @@
     <string name="new_email_will_be_used_for">Новый адрес электронной почты будет использоваться для входа в аккаунт и важных уведомелний</string>
     <string name="back">Назад</string>
     <string name="input_new_email">Введите новую электронную почту</string>
-    <string name="indicate_email_for_use">Укажите адрес, который вы будете использовать для входа и получения уведомлений</string>
+    <string name="indicate_email_for_use">Укажите адрес, который Вы будете использовать для входа и получения уведомлений</string>
     <string name="new_email">Новая электронная почта</string>
     <string name="change_mail">Изменить почту</string>
     <string name="confirm_new_email">Подтвердите новый адрес</string>
@@ -82,7 +82,7 @@
     <string name="indicate_phone_number_for_use">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений</string>
     <string name="add_phone_number">Добавить номер телефона</string>
     <string name="phone_number_successfully_changed">Телефон успешно добавлен</string>
-    <string name="now_you_can_use_new_phone_number">Теперь вы можете использовать новый телефон для восстановления доступа и получения уведомлений</string>
+    <string name="now_you_can_use_new_phone_number">Теперь Вы можете использовать новый телефон для восстановления доступа и получения уведомлений</string>
     <string name="pin_hint">_</string>
     <string name="confirm_phone_number">Подтвердите номер телефона</string>
     <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер</string>
@@ -104,7 +104,7 @@
     <string name="open">Открыть</string>
     <string name="wifi_network">Wi-Fi cеть</string>
     <string name="signal_level">Уровень сигнала</string>
-    <string name="battery_percent">%1$d%%</string>
+    <string name="battery_percent">%d%%</string>
     <string name="access_device">Доступ к устройству</string>
     <string name="address">Адрес</string>
     <string name="device_name">Название устройства</string>
@@ -132,7 +132,7 @@
     <string name="finish_all_other_sessions">Завершить все другие сеансы</string>
     <string name="unknown_device">Неизвестное устройство</string>
     <string name="contact_us">Связаться с нами</string>
-    <string name="we_will_try_to_solve_your_issue">Мы постараемся решить ваш вопрос. Выберите удобный способ связи ниже</string>
+    <string name="we_will_try_to_solve_your_issue">Мы постараемся решить Ваш вопрос. Выберите удобный способ связи ниже</string>
     <string name="lockbox_email" translatable="false">help@lockbox.ru</string>
     <string name="telegram" translatable="false">Telegram</string>
     <string name="whatsapp" translatable="false">WhatsApp</string>
