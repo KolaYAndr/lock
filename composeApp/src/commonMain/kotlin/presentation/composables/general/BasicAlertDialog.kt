@@ -51,7 +51,7 @@ fun BasicDialog(
 
 @Preview
 @Composable
-fun PreviewDialog() {
+private fun PreviewDialog() {
     LockBoxTheme {
         BasicDialog(
             onDismiss = {},

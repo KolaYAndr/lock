@@ -46,7 +46,7 @@ fun BasicBottomSheet(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PreviewBottomSheet() {
+private fun PreviewBottomSheet() {
     LockBoxTheme {
         Scaffold(modifier = Modifier.fillMaxSize().background(LockBoxTheme.colors.grey900)) { paddingValues ->
             BasicBottomSheet(

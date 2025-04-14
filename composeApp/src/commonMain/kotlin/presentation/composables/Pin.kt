@@ -106,7 +106,7 @@ fun OtpChar(text: String, isFocused: Boolean, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewPin() {
+private fun PreviewPin() {
     LockBoxTheme {
         val text by remember { mutableStateOf("") }
         Pin(

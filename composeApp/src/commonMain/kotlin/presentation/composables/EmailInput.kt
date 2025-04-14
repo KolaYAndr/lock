@@ -62,7 +62,7 @@ fun EmailInput(
 
 @Composable
 @Preview
-fun PreviewEmail() {
+private fun PreviewEmail() {
     LockBoxTheme {
         var value by remember { mutableStateOf("ivan@ivanov@mail.ru") }
         val interactionSource = remember { MutableInteractionSource() }

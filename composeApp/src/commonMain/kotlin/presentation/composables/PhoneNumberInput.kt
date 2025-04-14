@@ -62,7 +62,7 @@ fun PhoneNumberInput(
 
 @Composable
 @Preview
-fun PreviewNumber() {
+private fun PreviewNumber() {
     LockBoxTheme {
         var value by remember { mutableStateOf("7904") }
         val interactionSource = remember { MutableInteractionSource() }

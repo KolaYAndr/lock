@@ -25,13 +25,17 @@ val repositoryModule = module {
     single<AccountRepository> {
         AccountRepositoryImpl(
             get<AccountApi>(),
-            get<TokenStorage>()
+            get<TokenStorage>(),
+            get<RefreshManager>()
         )
     }
 
     single<BoxesRepository> {
         BoxesRepositoryImpl(
             get<BoxesApi>(),
+            get<AccountApi>(),
+            get<RefreshManager>(),
+            get<TokenStorage>(),
             get<() -> BoxesPagingSource>()
         )
     }

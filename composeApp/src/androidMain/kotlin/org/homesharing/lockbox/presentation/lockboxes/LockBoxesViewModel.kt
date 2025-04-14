@@ -20,8 +20,9 @@ class LockBoxesViewModel(
     boxesRepository: BoxesRepository,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<LockBoxesUiState> = MutableStateFlow(LockBoxesUiState())
-    val uiState: StateFlow<LockBoxesUiState> get() = _uiState.asStateFlow()
+    private val _avatarLink: MutableStateFlow<String> = MutableStateFlow("")
+    val avatarLink: StateFlow<String> get() = _avatarLink.asStateFlow()
+
     val boxes = boxesRepository.getBoxesPagingFlow().cachedIn(viewModelScope)
 
     init {
@@ -33,7 +34,7 @@ class LockBoxesViewModel(
             when (val info = accountRepository.parseAccountInfo()) {
                 is Response.Success -> {
                     val imageLink = accountRepository.getImageLink(info.data.sub)
-                    _uiState.update { it.copy(avatarLink = imageLink) }
+                    _avatarLink.update { imageLink }
                 }
 
                 is Response.Failure -> {
@@ -47,7 +48,7 @@ class LockBoxesViewModel(
         when (val info = accountRepository.refreshAccount()) {
             is Response.Success -> {
                 val imageLink = accountRepository.getImageLink(info.data.sub)
-                _uiState.update { it.copy(avatarLink = imageLink) }
+                _avatarLink.update { imageLink }
             }
 
             is Response.Failure -> {
@@ -56,7 +57,3 @@ class LockBoxesViewModel(
         }
     }
 }
-
-data class LockBoxesUiState(
-    val avatarLink: String = "",
-)

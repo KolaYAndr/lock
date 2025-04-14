@@ -104,21 +104,21 @@ fun SignUpCard(
 
 @Preview
 @Composable
-fun PreviewSingUpEmailInput() {
+private fun PreviewSingUpEmailInput() {
     val state = SignUpUiState()
     SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }
 
 @Preview
 @Composable
-fun PreviewSingUpEmailConfirmation() {
+private fun PreviewSingUpEmailConfirmation() {
     val state = SignUpUiState(signUpStep = SignUpStep.EmailConfirmation)
     SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }
 
 @Preview
 @Composable
-fun PreviewSingUpPasswordInput() {
+private fun PreviewSingUpPasswordInput() {
     val state = SignUpUiState(signUpStep = SignUpStep.PasswordInput)
     SignUpCard(state, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
 }

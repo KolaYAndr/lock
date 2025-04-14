@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OpenBoxResponseDto(
+internal data class OpenBoxResponseDto(
     val call: String,
     val id: Int,
     @SerialName("issuer_sub")

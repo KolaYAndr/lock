@@ -62,6 +62,7 @@ class ActiveSessionsViewModel(private val accountRepository: AccountRepository) 
 
             if (accountInfo is Response.Success) {
                 accountRepository.closeOtherSessions(accountInfo.data.sessionId)
+                getSessions()
             } else SnackbarController.receiveEvent(couldNotCloseOtherSessions { finishOtherSessions() })
         }
     }

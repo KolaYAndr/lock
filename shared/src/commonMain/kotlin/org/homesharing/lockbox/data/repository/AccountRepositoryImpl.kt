@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
+import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.response.Response
@@ -21,9 +22,10 @@ import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 import org.homesharing.lockbox.domain.model.update_account.toDomain
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
-class AccountRepositoryImpl(
+internal class AccountRepositoryImpl(
     private val api: AccountApi,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
+    private val refreshManager: RefreshManager
 ) : AccountRepository {
 
     override suspend fun parseAccountInfo(): Response<AccountInfo> =
@@ -39,7 +41,11 @@ class AccountRepositoryImpl(
 
     override suspend fun refreshAccount(): Response<AccountInfo> = withContext(Dispatchers.IO) {
         try {
-            val tokenResponse = api.refreshTokens(tokenStorage.getRefreshToken())
+            val tokenResponse =
+                api.refreshTokens(
+                    accesstoken = tokenStorage.getAccessToken(),
+                    refreshToken = tokenStorage.getRefreshToken()
+                )
 
             if (!tokenResponse.error.isNullOrEmpty()) {
                 return@withContext Response.Failure(tokenResponse.errorDescription!!)
@@ -79,12 +85,21 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun sendImage(data: ByteArray) = withContext(Dispatchers.IO) {
-        api.sendImage(data)
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            refreshToken()
+        }
+        api.sendImage(
+            accessToken = tokenStorage.getAccessToken(),
+            data = data
+        )
     }
 
     override suspend fun getSessions(): Response<List<Session>> = withContext(Dispatchers.IO) {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            refreshToken()
+        }
         parseLockBoxApiResponse(
-            apiCall = { api.getSessions() },
+            apiCall = { api.getSessions(accesstoken = tokenStorage.getAccessToken()) },
             mapper = SessionsResponseDto::toDomain
         )
     }
@@ -94,26 +109,74 @@ class AccountRepositoryImpl(
         surname: String?,
         email: String?
     ): Response<UpdateAccount> = withContext(Dispatchers.IO) {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            refreshToken()
+        }
         parseLockBoxApiResponse(
-            apiCall = { api.updateUserInfo(email = email, firstName = name, lastName = surname) },
+            apiCall = {
+                api.updateUserInfo(
+                    accessToken = tokenStorage.getAccessToken(),
+                    email = email,
+                    firstName = name,
+                    lastName = surname
+                )
+            },
             mapper = UpdateAccountResponseDto::toDomain
         )
     }
 
     override suspend fun deactivateUser(): Response<UpdateAccount> =
         withContext(Dispatchers.IO) {
+            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+                refreshToken()
+            }
             parseLockBoxApiResponse(
-                apiCall = { api.updateUserInfo(enabled = false) },
+                apiCall = {
+                    api.updateUserInfo(
+                        accessToken = tokenStorage.getAccessToken(),
+                        enabled = false
+                    )
+                },
                 mapper = UpdateAccountResponseDto::toDomain
             )
         }
 
     override suspend fun closeOtherSessions(currentSessionId: String): Response<String> =
         withContext(Dispatchers.IO) {
+            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+                refreshToken()
+            }
             try {
-                Response.Success(api.closeOtherSessions(currentSessionId).body!!.message)
+                Response.Success(
+                    api.closeOtherSessions(
+                        accessToken = tokenStorage.getAccessToken(),
+                        id = currentSessionId
+                    ).body!!.message
+                )
             } catch (e: Exception) {
                 Response.Failure(e.message.toString())
             }
         }
+
+    private suspend fun refreshToken() {
+        try {
+            val tokenResponse =
+                api.refreshTokens(
+                    accesstoken = tokenStorage.getAccessToken(),
+                    refreshToken = tokenStorage.getRefreshToken()
+                )
+
+            if (tokenResponse.error.isNullOrEmpty()) {
+                val accessToken = tokenResponse.accessToken!!
+                val refreshToken = tokenResponse.refreshToken!!
+                val expiresIn = tokenResponse.expiresIn!!
+
+                with(tokenStorage) {
+                    saveAccessToken(accessToken)
+                    saveRefreshToken(refreshToken)
+                    saveNextRefreshTime(expiresIn + refreshManager.currentTime)
+                }
+            }
+        } catch (_: Exception) { }
+    }
 }

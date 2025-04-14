@@ -48,7 +48,7 @@ fun BasicCard(
 
 @Preview
 @Composable
-fun PreviewCard() {
+private fun PreviewCard() {
     LockBoxTheme {
         BasicCard {
             var email by remember { mutableStateOf("") }

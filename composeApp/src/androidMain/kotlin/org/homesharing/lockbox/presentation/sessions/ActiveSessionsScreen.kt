@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,10 +33,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.domain.model.sessions.Session
 import presentation.composables.LockBoxPullToRefresh
 import presentation.composables.TitledTopBar
 import presentation.composables.general.BasicButton
@@ -294,5 +297,14 @@ private fun Device(
                 color = LockBoxTheme.colors.grey500
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewActiveSessions() {
+    LockBoxTheme {
+        val state = ActiveSessionsUiState(listOf(Session("", System.currentTimeMillis(), "")))
+        ActiveSessionScreen(state, {}, {}, {}, Modifier.fillMaxSize())
     }
 }
