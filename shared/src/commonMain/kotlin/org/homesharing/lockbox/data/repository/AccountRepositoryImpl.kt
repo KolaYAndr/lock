@@ -158,25 +158,23 @@ internal class AccountRepositoryImpl(
             }
         }
 
-    private suspend fun refreshToken() {
-        try {
-            val tokenResponse =
-                api.refreshTokens(
-                    accesstoken = tokenStorage.getAccessToken(),
-                    refreshToken = tokenStorage.getRefreshToken()
-                )
+    private suspend fun refreshToken() = try {
+        val tokenResponse =
+            api.refreshTokens(
+                accesstoken = tokenStorage.getAccessToken(),
+                refreshToken = tokenStorage.getRefreshToken()
+            )
 
-            if (tokenResponse.error.isNullOrEmpty()) {
-                val accessToken = tokenResponse.accessToken!!
-                val refreshToken = tokenResponse.refreshToken!!
-                val expiresIn = tokenResponse.expiresIn!!
+        if (tokenResponse.error.isNullOrEmpty()) {
+            val accessToken = tokenResponse.accessToken!!
+            val refreshToken = tokenResponse.refreshToken!!
+            val expiresIn = tokenResponse.expiresIn!!
 
-                with(tokenStorage) {
-                    saveAccessToken(accessToken)
-                    saveRefreshToken(refreshToken)
-                    saveNextRefreshTime(expiresIn + refreshManager.currentTime)
-                }
+            with(tokenStorage) {
+                saveAccessToken(accessToken)
+                saveRefreshToken(refreshToken)
+                saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
-        } catch (_: Exception) { }
-    }
+        } else {  }
+    } catch (_: Exception) { }
 }
