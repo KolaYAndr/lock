@@ -225,7 +225,7 @@ private fun ExitDialog(onDismiss: () -> Unit, onLogOut: () -> Unit) {
 
 @Preview
 @Composable
-fun PreviewSettings() {
+private fun PreviewSettings() {
     LockBoxTheme {
         val settingsUiState = SettingsUiState()
         SettingsScreen(settingsUiState, {}, {}, {}, Modifier.fillMaxSize())

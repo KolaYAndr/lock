@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SessionsResponseDto(
+internal data class SessionsResponseDto(
     val credentials: List<Credential>,
     val sessions: List<SessionDto>,
 )
 
 @Serializable
-data class SessionDto(
+internal data class SessionDto(
     val id: String,
     @SerialName("ip_address")
     val ipAddress: String,
@@ -27,7 +27,7 @@ data class SessionDto(
 )
 
 @Serializable
-data class Credential(
+internal data class Credential(
     @SerialName("created_date")
     val createdDate: Long,
     val type: String,

@@ -14,6 +14,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.parameters
+import org.homesharing.lockbox.data.network.client.bearerToken
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequestDto
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
@@ -50,10 +51,8 @@ private const val SCOPE = "scope"
 private const val REFRESH_TOKEN = "refresh_token"
 
 private const val BASE = "https://api.lockboxes.ru"
-
 //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
-private const val TOKEN_URL =
-    "$BASE:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
+private const val TOKEN_URL = "$BASE:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 private const val SIGN_UP_URL = "$BASE:8445/$ACCOUNTS/$SIGN_UP"
 private const val SESSIONS_URL = "$BASE:8445/$ACCOUNTS/$SESSIONS"
 private const val AVATARS_POST_URL = "$BASE:8445/$AVATARS/$UPLOAD"
@@ -61,9 +60,8 @@ private const val CONFIRM_EMAIL_URL = "$BASE:8445/$ACCOUNTS/$MAIL/$SEND"
 private const val UPDATE_ACCOUNT_URL = "$BASE:8445/$ACCOUNTS/$ME"
 private const val AVATARS_URL = "$BASE:9000/$AVATARS"
 
-class LockBoxAccountApi(
-    private val unsignedClient: HttpClient,
-    private val signedClient: HttpClient
+internal class LockBoxAccountApi(
+    private val client: HttpClient,
 ) : AccountApi {
 
     override suspend fun signUp(
@@ -76,7 +74,7 @@ class LockBoxAccountApi(
             password = password,
             repeatPassword = passwordRepeated,
         )
-        return unsignedClient.post {
+        return client.post {
             url(SIGN_UP_URL)
             setBody(request)
         }.body()
@@ -88,7 +86,7 @@ class LockBoxAccountApi(
         username: String,
         password: String
     ): TokenResponseDto {
-        return unsignedClient.submitForm(
+        return client.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {
                 append(GRANT_TYPE, PASSWORD)
@@ -100,59 +98,73 @@ class LockBoxAccountApi(
         ).body()
     }
 
-    override suspend fun refreshTokens(refreshToken: String): TokenResponseDto {
-        return signedClient.submitForm(
+    override suspend fun refreshTokens(
+        accesstoken: String,
+        refreshToken: String
+    ): TokenResponseDto {
+        return client.submitForm(
             url = TOKEN_URL,
             formParameters = parameters {
                 append(GRANT_TYPE, REFRESH_TOKEN)
                 append(CLIENT_ID, PUBLIC_CLIENT)
                 append(REFRESH_TOKEN_NAME, refreshToken)
+            },
+            block = {
+                header(HttpHeaders.Authorization, bearerToken(accesstoken))
             }
         ).body()
     }
 
-    override suspend fun sendImage(data: ByteArray) {
-        val response = signedClient.post {
+    override suspend fun sendImage(accessToken: String, data: ByteArray) {
+        val response = client.post {
             url(AVATARS_POST_URL)
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
         }.body<ApiResponse<PostImageResponseDto>>()
 
-        unsignedClient.put {
+        client.put {
             header(HttpHeaders.ContentType, ContentType.Image.PNG)
             url(response.body!!.link)
             setBody(data)
         }
     }
 
-    override suspend fun getSessions(): ApiResponse<SessionsResponseDto> {
-        return signedClient.get {
+    override suspend fun getSessions(accesstoken: String): ApiResponse<SessionsResponseDto> {
+        return client.get {
+            header(HttpHeaders.Authorization, bearerToken(accesstoken))
             url(SESSIONS_URL)
         }.body()
     }
 
     override suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailResponseDto> {
         val request = ConfirmEmailRequestDto(email)
-        return unsignedClient.post {
+        return client.post {
             url(CONFIRM_EMAIL_URL)
             setBody(request)
         }.body()
     }
 
     override suspend fun updateUserInfo(
+        accessToken: String,
         email: String?,
         enabled: Boolean?,
         firstName: String?,
         lastName: String?
     ): ApiResponse<UpdateAccountResponseDto> {
         val request = UpdateAccountRequestDto(email, enabled, firstName, lastName)
-        return signedClient.patch {
+        return client.patch {
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(UPDATE_ACCOUNT_URL)
             setBody(request)
         }.body()
     }
 
-    override suspend fun closeOtherSessions(id: String): ApiResponse<CloseSessionsResponseDto> {
+    override suspend fun closeOtherSessions(
+        accessToken: String,
+        id: String
+    ): ApiResponse<CloseSessionsResponseDto> {
         val request = CloseSessionsRequestDto(id)
-        return signedClient.delete {
+        return client.delete {
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(SESSIONS_URL)
             setBody(request)
         }.body()

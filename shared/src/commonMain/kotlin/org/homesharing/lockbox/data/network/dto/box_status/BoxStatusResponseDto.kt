@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BoxStatusResponseDto(
+internal data class BoxStatusResponseDto(
     @SerialName("battery_level")
     val batteryLevel: Double,
     @SerialName("mac_address")

@@ -58,7 +58,7 @@ private fun getShortenedName(name: String, surname: String): String {
 
 @Preview
 @Composable
-fun PreviewRoundText() {
+private fun PreviewRoundText() {
     LockBoxTheme {
         RoundText(text = "YA3", modifier = Modifier.padding(16.dp))
     }

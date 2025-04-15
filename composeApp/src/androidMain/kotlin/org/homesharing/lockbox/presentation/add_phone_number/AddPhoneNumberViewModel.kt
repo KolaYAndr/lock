@@ -31,10 +31,6 @@ class AddPhoneNumberViewModel : ViewModel() {
         }
     }
 
-    fun confirmCode() {
-
-    }
-
     fun  sendConfirmationCode() {
         if (phonePattern.matcher(uiState.value.phoneNumber).matches()) {
             toStep(AddPhoneNumberStep.ConfirmPhoneNumber)

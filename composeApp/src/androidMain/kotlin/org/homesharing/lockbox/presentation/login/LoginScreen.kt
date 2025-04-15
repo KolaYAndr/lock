@@ -202,7 +202,7 @@ private fun getErrorText(passwordError: SignInPasswordError) =
 
 @Preview
 @Composable
-fun PreviewLoginScreen() {
+private fun PreviewLoginScreen() {
     LockBoxTheme {
         val uiState = LoginUiState()
         LoginScreen(

@@ -27,17 +27,18 @@ class ChangeEmailViewModel : ViewModel() {
 
     fun changeEmail() {
         if (emailPattern.matcher(uiState.value.newEmail).matches()) {
-            //TODO
             toStep(ChangeEmailStep.ConfirmNewEmail)
-        } else _uiState.update { it.copy(emailError = "Doesn't match email pattern") }
+        } else _uiState.update { it.copy(emailError = DoestMatchEmailPattern) }
     }
 }
 
 data class ChangeEmailUiState(
     val newEmail: String = "",
-    val emailError: String? = null,
+    val emailError: DoestMatchEmailPattern? = null,
     val changeEmailStep: ChangeEmailStep = ChangeEmailStep.WantToChange
 )
+
+data object DoestMatchEmailPattern
 
 sealed class ChangeEmailStep {
     data object WantToChange : ChangeEmailStep()

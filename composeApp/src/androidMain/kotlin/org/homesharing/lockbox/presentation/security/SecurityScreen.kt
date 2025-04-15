@@ -210,7 +210,7 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
 
 @Preview
 @Composable
-fun PreviewSecurityScreenChangePassword() {
+private fun PreviewSecurityScreenChangePassword() {
     LockBoxTheme {
         val state = SecurityUiState.OptionsScreen
         SecurityScreen(
@@ -223,7 +223,7 @@ fun PreviewSecurityScreenChangePassword() {
 
 @Preview
 @Composable
-fun PreviewSecurityScreenPasswordChanged() {
+private fun PreviewSecurityScreenPasswordChanged() {
     LockBoxTheme {
         val state = SecurityUiState.PasswordChanged
         SecurityScreen(

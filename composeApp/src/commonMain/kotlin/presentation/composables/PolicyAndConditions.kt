@@ -53,7 +53,7 @@ fun PolicyAndConditions(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewPolicy() {
+private fun PreviewPolicy() {
     LockBoxTheme {
         Box(
             modifier = Modifier.background(LockBoxTheme.colors.grey900)

@@ -12,7 +12,7 @@ import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
-class AuthRepositoryImpl(
+internal class AuthRepositoryImpl(
     private val api: AccountApi,
     private val tokenStorage: TokenStorage,
     private val refreshManager: RefreshManager
@@ -43,7 +43,7 @@ class AuthRepositoryImpl(
         val response = api.loadTokensInitially(username, password)
 
         if (response.error.isNullOrEmpty()) {
-            tokenStorage.apply {
+            with(tokenStorage) {
                 saveAccessToken(response.accessToken!!)
                 saveRefreshToken(response.refreshToken!!)
                 saveNextRefreshTime(refreshManager.currentTime + response.expiresIn!!)
@@ -67,8 +67,4 @@ class AuthRepositoryImpl(
                 Response.Failure(e.message.toString())
             }
         }
-
-    override suspend fun checkIfConfirmed(email: String) = withContext(Dispatchers.IO) {
-
-    }
 }

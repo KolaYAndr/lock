@@ -5,6 +5,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -65,13 +66,13 @@ fun Navigation(
         ) {
             composable<MainRoutes.Login> {
                 val loginViewModel = koinViewModel<LoginViewModel>()
-                val state = loginViewModel.uiState.collectAsStateWithLifecycle()
+                val state by loginViewModel.uiState.collectAsStateWithLifecycle()
 
                 LoginScreen(
-                    state = state.value,
+                    state = state,
                     onToTypeAuth = loginViewModel::toTypeAuth,
                     onLoggedIn = {
-                        navController.navigateToDestinationPoppingBackStack(MainRoutes.Boxes)
+                        navController.navigateToDestinationWithNoBackstack(MainRoutes.Boxes)
                     },
                     topRowContent = { LockBoxesTopRow() },
                     modifier = Modifier.fillMaxSize()
@@ -80,10 +81,10 @@ fun Navigation(
 
             composable<MainRoutes.Boxes> {
                 val lockBoxesViewModel = koinViewModel<LockBoxesViewModel>()
-                val uiState = lockBoxesViewModel.uiState.collectAsStateWithLifecycle()
+                val link by lockBoxesViewModel.avatarLink.collectAsStateWithLifecycle()
 
                 LockBoxesScreen(
-                    state = uiState.value,
+                    avatarLink = link,
                     boxes = lockBoxesViewModel.boxes,
                     onNavigateToBox = { macAddress ->
                         navController.navigate(
@@ -107,10 +108,10 @@ fun Navigation(
                 LaunchedEffect(macAddress) {
                     detailedLockBoxViewModel.findBoxByMac(macAddress)
                 }
-                val state = detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
+                val state by detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
 
                 DetailedLockBoxScreen(
-                    uiState = state.value,
+                    uiState = state,
                     onNavBack = navController::navigateUp,
                     onOpenBox = detailedLockBoxViewModel::openBox,
                     onUnbindDevice = {
@@ -131,13 +132,13 @@ fun Navigation(
         ) {
             composable<SettingsRoutes.Login> {
                 val loginViewModel = koinViewModel<LoginViewModel>()
-                val state = loginViewModel.uiState.collectAsStateWithLifecycle()
+                val state by loginViewModel.uiState.collectAsStateWithLifecycle()
 
                 LoginScreen(
-                    state = state.value,
+                    state = state,
                     onToTypeAuth = loginViewModel::toTypeAuth,
                     onLoggedIn = {
-                        navController.navigateToDestinationPoppingBackStack(SettingsRoutes.Settings)
+                        navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
                     },
                     topRowContent = { SettingsTopRowText() },
                     modifier = Modifier.fillMaxSize()
@@ -146,13 +147,13 @@ fun Navigation(
 
             composable<SettingsRoutes.Settings> {
                 val settingsViewModel = koinViewModel<SettingsViewModel>()
-                val settingsState = settingsViewModel.uiState.collectAsStateWithLifecycle()
+                val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
                 SettingsScreen(
-                    settingsUiState = settingsState.value,
+                    settingsUiState = settingsState,
                     onLogOut = {
                         settingsViewModel.logOut()
-                        navController.navigateToDestinationPoppingBackStack(MainRoutes.Login)
+                        navController.navigateToDestinationWithNoBackstack(MainRoutes.Login)
                     },
                     onRefresh = settingsViewModel::refreshAccountInfo,
                     onNavigate = { route -> navController.navigate(route) },
@@ -181,10 +182,10 @@ fun Navigation(
             ) {
                 composable<SecurityRoutes.Security> {
                     val securityViewModel = koinViewModel<SecurityViewModel>()
-                    val securityUiState = securityViewModel.uiState.collectAsStateWithLifecycle()
+                    val securityUiState by securityViewModel.uiState.collectAsStateWithLifecycle()
 
                     SecurityScreen(
-                        securityUiState = securityUiState.value,
+                        securityUiState = securityUiState,
                         onNavBack = navController::navigateUp,
                         onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
                         onPasswordSet = securityViewModel::onPasswordChanged,
@@ -196,10 +197,10 @@ fun Navigation(
 
                 composable<SecurityRoutes.ActiveSessions> {
                     val activeSessionsViewModel = koinViewModel<ActiveSessionsViewModel>()
-                    val uiState = activeSessionsViewModel.uiState.collectAsStateWithLifecycle()
+                    val uiState by activeSessionsViewModel.uiState.collectAsStateWithLifecycle()
 
                     ActiveSessionScreen(
-                        activeSessionsUiState = uiState.value,
+                        activeSessionsUiState = uiState,
                         onNavBack = navController::navigateUp,
                         onFinishSessions = activeSessionsViewModel::finishOtherSessions,
                         onRefresh = activeSessionsViewModel::refreshSessions,
@@ -217,14 +218,14 @@ fun Navigation(
             ) {
                 composable<AccountRoutes.Account> {
                     val accountViewModel = koinViewModel<AccountViewModel>()
-                    val accountUiState = accountViewModel.uiState.collectAsStateWithLifecycle()
+                    val accountUiState by accountViewModel.uiState.collectAsStateWithLifecycle()
 
                     AccountScreen(
-                        accountUiState = accountUiState.value,
+                        accountUiState = accountUiState,
                         onNavigateBack = navController::navigateUp,
                         onDelete = {
                             accountViewModel.deleteAccount()
-                            navController.navigateToDestinationPoppingBackStack(AccountRoutes.Warning)
+                            navController.navigateToDestinationWithNoBackstack(AccountRoutes.Warning)
                         },
                         onNavigate = { route -> navController.navigate(route) },
                         onChangeName = accountViewModel::onNameChange,
@@ -236,9 +237,7 @@ fun Navigation(
 
                 composable<AccountRoutes.Warning> {
                     WarningScreen(
-                        onNavigate = {
-                            navController.navigateToDestinationPoppingBackStack(MainRoutes.Login)
-                        },
+                        onNavigate = { navController.navigateToDestinationWithNoBackstack(MainRoutes.Login) },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -248,11 +247,10 @@ fun Navigation(
                 ) {
                     composable<ChangeEmailRoutes.Main> {
                         val changeEmailViewModel = koinViewModel<ChangeEmailViewModel>()
-                        val changeEmailUiState =
-                            changeEmailViewModel.uiState.collectAsStateWithLifecycle()
+                        val changeEmailUiState by changeEmailViewModel.uiState.collectAsStateWithLifecycle()
 
                         ChangeEmailScreen(
-                            uiState = changeEmailUiState.value,
+                            uiState = changeEmailUiState,
                             onNavBack = navController::navigateUp,
                             onToStep = changeEmailViewModel::toStep,
                             onEmailChange = changeEmailViewModel::onEmailChange,
@@ -263,30 +261,32 @@ fun Navigation(
 
                     composable<ChangeEmailRoutes.Successfully>(
                         deepLinks = listOf(
-                            navDeepLink<ChangeEmailRoutes.Successfully>(basePath = "https://api.lockboxes.ru/successfully") //TODO изменить при согласовании диплинка
+                            navDeepLink<ChangeEmailRoutes.Successfully>(basePath = "https://lockboxes.ru/redirect/email-change")
                         )
                     ) {
                         EmailChangedSuccessfullyScreen(
                             modifier = Modifier.fillMaxSize(),
-                            onDone = { navController.navigate(SettingsRoutes.Account) }
+                            onDone = {
+                                navController.navigateToDestinationWithNoBackstack(Routes.Settings)
+                            }
                         )
                     }
                 }
 
                 composable<AccountRoutes.ChangePhoneNumber> {
                     val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
-                    val addPhoneUiState =
-                        addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
+                    val addPhoneUiState by
+                    addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
 
                     AddPhoneNumberScreen(
-                        uiState = addPhoneUiState.value,
+                        uiState = addPhoneUiState,
                         onNavBack = navController::navigateUp,
                         onToStep = addPhoneNumberViewModel::toStep,
                         onNumberChange = addPhoneNumberViewModel::onNumberChange,
                         onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
                         onDone = { navController.navigate(SettingsRoutes.Account) },
                         onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
-                        onConfirm = addPhoneNumberViewModel::confirmCode,
+                        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -295,10 +295,10 @@ fun Navigation(
     }
 }
 
-private fun <T : Any> NavHostController.navigateToDestinationPoppingBackStack(destination: T) {
-    this.popBackStack()
+private fun <T : Any> NavHostController.navigateToDestinationWithNoBackstack(destination: T) {
     this.navigate(destination) {
-        launchSingleTop = true
-        restoreState = false
+        popUpTo(destination) {
+            inclusive = false
+        }
     }
 }

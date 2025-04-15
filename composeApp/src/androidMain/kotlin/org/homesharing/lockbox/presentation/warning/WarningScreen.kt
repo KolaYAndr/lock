@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.warning
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import presentation.theme.LockBoxTheme
 
 @Composable
 fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
+    BackHandler(enabled = false) {  }
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950).padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
@@ -67,7 +69,7 @@ fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewWarning() {
+private fun PreviewWarning() {
     LockBoxTheme {
         WarningScreen({}, Modifier.fillMaxSize())
     }

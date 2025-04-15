@@ -128,7 +128,7 @@ private fun Agreement(onClick: () -> Unit, text: String, modifier: Modifier = Mo
 
 @Preview
 @Composable
-fun PreviewAboutApp() {
+private fun PreviewAboutApp() {
     LockBoxTheme {
         AboutScreen({})
     }

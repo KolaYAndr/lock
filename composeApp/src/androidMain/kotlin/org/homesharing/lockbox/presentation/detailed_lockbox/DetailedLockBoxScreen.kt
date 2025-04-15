@@ -799,7 +799,7 @@ private fun StatusInfo(
 
 @Preview
 @Composable
-fun PreviewDetailScreen() {
+private fun PreviewDetailScreen() {
     LockBoxTheme {
         val state = DetailedLockBoxUiState()
         DetailedLockBoxScreen(
