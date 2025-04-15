@@ -5,4 +5,4 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-value class CloseSessionsResponseDto(val message: String)
+internal value class CloseSessionsResponseDto(val message: String)

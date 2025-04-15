@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BoxResponseDto(
+internal data class BoxResponseDto(
     val address: String,
     val alias: String,
     @SerialName("owner_sub")

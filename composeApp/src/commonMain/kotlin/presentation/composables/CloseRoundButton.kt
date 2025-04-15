@@ -36,7 +36,7 @@ fun CloseRoundButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun PreviewCloseButton() {
+private fun PreviewCloseButton() {
     LockBoxTheme {
         CloseRoundButton(onClick = {})
     }

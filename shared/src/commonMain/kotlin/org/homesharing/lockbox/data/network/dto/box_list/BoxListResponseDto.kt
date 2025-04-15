@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 
 @Serializable
-data class BoxListResponseDto(
+internal data class BoxListResponseDto(
     val boxes: List<BoxResponseDto>,
     @SerialName("total_boxes")
     val totalBoxes: Int,

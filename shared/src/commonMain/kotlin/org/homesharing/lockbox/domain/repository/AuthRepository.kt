@@ -6,6 +6,7 @@ import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.domain.api.response.Response
 
 interface AuthRepository {
+
     suspend fun signUp(
         username: String,
         password: String,
@@ -15,6 +16,4 @@ interface AuthRepository {
     suspend fun loadTokensInitially(username: String, password: String): TokenResponseDto
 
     suspend fun sendConfirmation(email: String): Response<ConfirmEmailResponseDto>
-
-    suspend fun checkIfConfirmed(email: String)
 }

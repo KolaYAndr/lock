@@ -2,7 +2,7 @@ package org.homesharing.lockbox.domain.api.response
 
 import org.homesharing.lockbox.data.network.api.ApiResponse
 
-suspend fun <Dto, D> parseLockBoxApiResponse(
+internal suspend fun <Dto, D> parseLockBoxApiResponse(
     apiCall: suspend () -> ApiResponse<Dto>,
     mapper: (Dto) -> D
 ): Response<D> =
@@ -18,7 +18,7 @@ suspend fun <Dto, D> parseLockBoxApiResponse(
         Response.Failure(e.cause?.message.toString())
     }
 
-suspend fun <Dto> parseLockBoxApiResponse(
+internal suspend fun <Dto> parseLockBoxApiResponse(
     apiCall: suspend () -> ApiResponse<Dto>
 ): Response<Dto> = try {
         Response.Success(apiCall().body!!)

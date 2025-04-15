@@ -209,7 +209,7 @@ fun SignInCard(
 
 @Preview
 @Composable
-fun PreviewSignIn() {
+private fun PreviewSignIn() {
     LockBoxTheme {
         val state = SignInUiState()
         SignInCard(

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeSharing.SplashScreen">
         <activity
-            android:name=".MainActivity"
+            android:name=".LockBoxActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
             android:exported="true"
             android:launchMode="standard"
@@ -24,13 +24,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="lockboxes.ru"
+                    android:pathPrefix="/redirect/email-change"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
 
         <service
             android:name="com.google.android.gms.metadata.ModuleDependencies"
-            tools:ignore="MissingClass"
             android:enabled="false"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
             </intent-filter>

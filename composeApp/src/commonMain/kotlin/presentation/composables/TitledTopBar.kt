@@ -54,7 +54,7 @@ fun TitledTopBar(
 
 @Preview
 @Composable
-fun PreviewTopBar() {
+private fun PreviewTopBar() {
     LockBoxTheme {
         TitledTopBar(
             title = stringResource(R.string.account),

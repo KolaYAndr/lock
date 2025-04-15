@@ -37,10 +37,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import presentation.composables.LockBoxCircularProgress
@@ -54,7 +56,7 @@ import presentation.theme.LockBoxTheme
 
 @Composable
 fun LockBoxesScreen(
-    state: LockBoxesUiState,
+    avatarLink: String,
     boxes: Flow<PagingData<Box>>,
     onNavigateToBox: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -64,10 +66,10 @@ fun LockBoxesScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
-        TopRow(model = state.avatarLink, onAddDevice = { showModal = true })
+        TopRow(model = avatarLink, onAddDevice = { showModal = true })
         val lazyBoxes = boxes.collectAsLazyPagingItems()
 
-        when (val loadState = lazyBoxes.loadState.refresh) {
+        when (lazyBoxes.loadState.refresh) {
             is LoadState.NotLoading -> {
                 LockBoxScreen(
                     boxes = lazyBoxes,
@@ -83,7 +85,7 @@ fun LockBoxesScreen(
             is LoadState.Error -> {
                 var isRefreshing by remember { mutableStateOf(false) }
                 ErrorScreen(
-                    message = loadState.error.localizedMessage,
+                    message = stringResource(R.string.something_went_wrong_try_refreshing),
                     isRefreshing = isRefreshing,
                     onRefresh = {
                         isRefreshing = true
@@ -129,13 +131,21 @@ private fun ErrorScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically)
         ) {
             item {
                 Text(
                     text = message ?: stringResource(R.string.unknown_error),
                     color = LockBoxTheme.colors.grey100,
+                    style = LockBoxTheme.typography.titleSmall,
                     textAlign = TextAlign.Center
+                )
+            }
+
+            item {
+                BasicButton(
+                    onClick = onRefresh,
+                    text = stringResource(R.string.refresh),
                 )
             }
         }
@@ -423,7 +433,7 @@ private fun EmptyScreen(
 
 @Preview
 @Composable
-fun PreviewLockBox() {
+private fun PreviewLockBox() {
     LockBoxTheme {
         LockBox(
             box = Box(
@@ -443,10 +453,70 @@ fun PreviewLockBox() {
 
 @Preview
 @Composable
-fun PreviewEmptyScreen() {
+private fun PreviewLockBoxesScreen() {
     LockBoxTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            EmptyScreen({})
-        }
+        val pagingData = flowOf(
+            PagingData.from(
+                listOf(
+                    Box(
+                        address = "Doma",
+                        macAddress = "1D:3C",
+                        alias = "Demo",
+                        opened = false,
+                        signalStrength = 0.0,
+                        batteryLevel = 0.0
+                    ),
+                    Box(
+                        address = "Doma",
+                        macAddress = "1D:2C",
+                        alias = "Demo",
+                        opened = false,
+                        signalStrength = 0.0,
+                        batteryLevel = 0.0
+                    ), Box(
+                        address = "Doma",
+                        macAddress = "1D:1C",
+                        alias = "Demo",
+                        opened = false,
+                        signalStrength = 0.0,
+                        batteryLevel = 0.0
+                    )
+                ),
+                LoadStates(
+                    LoadState.NotLoading(false),
+                    LoadState.NotLoading(false),
+                    LoadState.NotLoading(false)
+                )
+            )
+        )
+        LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewLoading() {
+    LockBoxTheme {
+        val pagingData = flowOf(
+            PagingData.empty<Box>()
+        )
+        LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewEmptyScreen() {
+    LockBoxTheme {
+        val pagingData = flowOf(
+            PagingData.empty<Box>(
+                LoadStates(
+                    LoadState.NotLoading(false),
+                    LoadState.NotLoading(false),
+                    LoadState.NotLoading(false)
+                )
+            )
+        )
+        LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
     }
 }

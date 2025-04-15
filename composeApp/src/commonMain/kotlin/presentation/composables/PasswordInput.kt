@@ -77,7 +77,7 @@ fun PasswordInput(
 
 @Composable
 @Preview
-fun PreviewPasswordInput() {
+private fun PreviewPasswordInput() {
     LockBoxTheme {
         var value by remember { mutableStateOf("password") }
         var isSeen by remember { mutableStateOf(false) }

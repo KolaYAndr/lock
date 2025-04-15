@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateBoxResponseDto(
+internal data class UpdateBoxResponseDto(
     val address: String,
     val alias: String,
     @SerialName("mac_address")

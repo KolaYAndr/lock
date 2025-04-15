@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiResponse<T>(
+internal data class ApiResponse<T>(
     val body: T? = null,
     val error: Boolean,
     @SerialName("error_text")

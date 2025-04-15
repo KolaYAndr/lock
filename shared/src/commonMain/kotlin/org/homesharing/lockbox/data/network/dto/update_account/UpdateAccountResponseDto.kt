@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateAccountResponseDto(
+internal data class UpdateAccountResponseDto(
     val email: String,
     @SerialName("email_verified")
     val emailVerified: Boolean,

@@ -20,7 +20,7 @@ fun BasicHorizontalDivider(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewDivider() {
+private fun PreviewDivider() {
     LockBoxTheme {
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth().padding(16.dp)

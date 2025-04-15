@@ -4,7 +4,7 @@ import platform.Foundation.NSDate
 import platform.Foundation.timeIntervalSince1970
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class RefreshManager {
+internal actual class RefreshManager {
     actual val currentTime: Long
         get() = (NSDate().timeIntervalSince1970 * 1000).toLong()
 

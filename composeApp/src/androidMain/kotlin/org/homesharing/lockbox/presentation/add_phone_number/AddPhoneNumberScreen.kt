@@ -378,7 +378,7 @@ private fun WantToChangeStep(onNavBack: () -> Unit, onToStep: (AddPhoneNumberSte
 
 @Preview
 @Composable
-fun PreviewConfirmNumberStep() {
+private fun PreviewConfirmNumberStep() {
     LockBoxTheme {
         val uiState =
             AddPhoneNumberUiState(step = AddPhoneNumberStep.ConfirmPhoneNumber)
@@ -389,7 +389,7 @@ fun PreviewConfirmNumberStep() {
 
 @Preview
 @Composable
-fun PreviewSuccessfullyChangedStep() {
+private fun PreviewSuccessfullyChangedStep() {
     LockBoxTheme {
         val uiState =
             AddPhoneNumberUiState(step = AddPhoneNumberStep.PhoneNumberChangedSuccessfully)
@@ -400,7 +400,7 @@ fun PreviewSuccessfullyChangedStep() {
 
 @Preview
 @Composable
-fun PreviewWantToChangeStep() {
+private fun PreviewWantToChangeStep() {
     LockBoxTheme {
         val uiState = AddPhoneNumberUiState()
         AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
@@ -409,7 +409,7 @@ fun PreviewWantToChangeStep() {
 
 @Preview
 @Composable
-fun PreviewInputStep() {
+private fun PreviewInputStep() {
     LockBoxTheme {
         val uiState = AddPhoneNumberUiState(step = AddPhoneNumberStep.NewNumberInput)
         AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
