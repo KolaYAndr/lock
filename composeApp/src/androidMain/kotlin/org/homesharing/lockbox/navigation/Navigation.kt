@@ -70,7 +70,7 @@ fun Navigation(
             composable<MainRoutes.Login>(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
-                popEnterTransition = globalEnterAnimation,
+                popEnterTransition = null,
                 popExitTransition = null
             ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
@@ -90,7 +90,7 @@ fun Navigation(
             composable<MainRoutes.Boxes>(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
-                popEnterTransition = globalEnterAnimation,
+                popEnterTransition = null,
                 popExitTransition = null
             ) {
                 val lockBoxesViewModel = koinViewModel<LockBoxesViewModel>()
