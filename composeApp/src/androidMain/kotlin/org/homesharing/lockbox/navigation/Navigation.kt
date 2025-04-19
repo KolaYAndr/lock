@@ -28,6 +28,7 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScree
 import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.animation.enterAnimation
 import org.homesharing.lockbox.presentation.animation.exitAnimation
+import org.homesharing.lockbox.presentation.animation.globalEnterAnimation
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
@@ -48,6 +49,8 @@ import org.koin.androidx.compose.koinViewModel
 import presentation.composables.LockBoxesTopRow
 import presentation.composables.SettingsTopRowText
 
+private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
+
 @Composable
 fun Navigation(
     navController: NavHostController,
@@ -64,7 +67,12 @@ fun Navigation(
         navigation<Routes.Main>(
             startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes,
         ) {
-            composable<MainRoutes.Login> {
+            composable<MainRoutes.Login>(
+                enterTransition = globalEnterAnimation,
+                exitTransition = null,
+                popEnterTransition = globalEnterAnimation,
+                popExitTransition = null
+            ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state by loginViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -79,7 +87,12 @@ fun Navigation(
                 )
             }
 
-            composable<MainRoutes.Boxes> {
+            composable<MainRoutes.Boxes>(
+                enterTransition = globalEnterAnimation,
+                exitTransition = null,
+                popEnterTransition = globalEnterAnimation,
+                popExitTransition = null
+            ) {
                 val lockBoxesViewModel = koinViewModel<LockBoxesViewModel>()
                 val link by lockBoxesViewModel.avatarLink.collectAsStateWithLifecycle()
 
@@ -130,7 +143,12 @@ fun Navigation(
         navigation<Routes.Settings>(
             startDestination = if (startFromLogin) SettingsRoutes.Login else SettingsRoutes.Settings,
         ) {
-            composable<SettingsRoutes.Login> {
+            composable<SettingsRoutes.Login>(
+                enterTransition = globalEnterAnimation,
+                exitTransition = null,
+                popEnterTransition = null,
+                popExitTransition = null
+            ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state by loginViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -145,7 +163,12 @@ fun Navigation(
                 )
             }
 
-            composable<SettingsRoutes.Settings> {
+            composable<SettingsRoutes.Settings>(
+                enterTransition = globalEnterAnimation,
+                exitTransition = null,
+                popEnterTransition = null,
+                popExitTransition = null
+            ) {
                 val settingsViewModel = koinViewModel<SettingsViewModel>()
                 val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -261,7 +284,7 @@ fun Navigation(
 
                     composable<ChangeEmailRoutes.Successfully>(
                         deepLinks = listOf(
-                            navDeepLink<ChangeEmailRoutes.Successfully>(basePath = "https://lockboxes.ru/redirect/email-change")
+                            navDeepLink<ChangeEmailRoutes.Successfully>(basePath = EMAIL_CHANGE_DEEPLINK)
                         )
                     ) {
                         EmailChangedSuccessfullyScreen(

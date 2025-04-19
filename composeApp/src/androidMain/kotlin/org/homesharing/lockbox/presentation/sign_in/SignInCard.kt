@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -64,16 +66,10 @@ fun SignInCard(
         val passwordFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
-
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
         Box(modifier = Modifier.fillMaxWidth()) {
-            CloseRoundButton(
-                onClick = onDismiss,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 12.dp, end = 16.dp)
-            )
-
             Icon(
                 painter = painterResource(R.drawable.logo_horizontal),
                 contentDescription = null,
@@ -81,6 +77,13 @@ fun SignInCard(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 12.dp)
+            )
+
+            CloseRoundButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 12.dp, end = 16.dp)
             )
         }
 
@@ -113,7 +116,9 @@ fun SignInCard(
                 imeAction = ImeAction.Next,
                 showKeyboardOnFocus = true
             ),
-            modifier = Modifier.padding(top = 6.dp, start = 16.dp, end = 16.dp)
+            modifier = Modifier
+                .padding(top = 6.dp, start = 16.dp, end = 16.dp)
+                .focusRequester(focusRequester)
         )
 
         Text(
@@ -151,6 +156,7 @@ fun SignInCard(
                 .padding(top = 6.dp, start = 16.dp, end = 16.dp)
         )
 
+        val uriHandler = LocalUriHandler.current
         Text(
             text = stringResource(R.string.forgot_password),
             style = LockBoxTheme.typography.subHeadlineMedium,
@@ -158,7 +164,8 @@ fun SignInCard(
             modifier = Modifier
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
-                .clickable { onToTypeAuth(LoginType.ForgotPassword) },
+                .clickable { uriHandler.openUri("https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client") },
+//                .clickable { onToTypeAuth(LoginType.ForgotPassword) },
             textDecoration = TextDecoration.Underline
         )
 

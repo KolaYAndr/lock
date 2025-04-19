@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +64,7 @@ class LockBoxActivity : ComponentActivity() {
 
         setContent {
             val lockboxActivityViewModel = koinViewModel<LockBoxActivityViewModel>()
-            val isLoggedIn =
+            val isLoggedIn by
                 lockboxActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
 
             val snackbarHostState = remember { SnackbarHostState() }
@@ -85,11 +84,9 @@ class LockBoxActivity : ComponentActivity() {
                                 navBackStackEntry = navBackStackEntry
                             ) { route ->
                                 navController.navigate(route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
+                                    popUpTo(route)
                                     launchSingleTop = true
-                                    restoreState = true
+                                    restoreState = false
                                 }
                             }
                         },
@@ -105,7 +102,7 @@ class LockBoxActivity : ComponentActivity() {
                     ) { paddingValues ->
                         Navigation(
                             navController = navController,
-                            startFromLogin = !isLoggedIn.value,
+                            startFromLogin = !isLoggedIn,
                             modifier = Modifier.padding(paddingValues)
                         )
                     }

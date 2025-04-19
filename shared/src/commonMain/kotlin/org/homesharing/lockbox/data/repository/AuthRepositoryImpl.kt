@@ -46,7 +46,7 @@ internal class AuthRepositoryImpl(
             with(tokenStorage) {
                 saveAccessToken(response.accessToken!!)
                 saveRefreshToken(response.refreshToken!!)
-                saveNextRefreshTime(refreshManager.currentTime + response.expiresIn!!)
+                saveNextRefreshTime(response.expiresIn!! + refreshManager.currentTime)
             }
         }
         response

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -122,12 +123,14 @@ private fun OptionsScreen(
     onHideDialog: () -> Unit,
     onPasswordSet: () -> Unit
 ) {
+    val uriHandler = LocalUriHandler.current
     SecurityElement(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 24.dp)
             .padding(horizontal = 16.dp),
-        onClick = onShowDialog,
+//        onClick = onShowDialog,
+        onClick = { uriHandler.openUri("https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client") },
         title = stringResource(R.string.change_password)
     )
 
@@ -181,10 +184,10 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
                 width = 0.5.dp,
                 color = LockBoxTheme.colors.grey800,
                 shape = LockBoxTheme.shape.roundedCornerShape8
-            )
-            .clickable {
+            ).clickable {
                 onClick()
-            },
+            }
+            .padding(vertical = 14.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -192,17 +195,11 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
             text = title,
             style = LockBoxTheme.typography.headlineLarge,
             color = LockBoxTheme.colors.white,
-            modifier = Modifier
-                .padding(vertical = 14.dp)
-                .padding(start = 16.dp)
         )
 
         Icon(
             painter = painterResource(R.drawable.arrow_right),
             tint = LockBoxTheme.colors.grey500,
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .padding(end = 16.dp),
             contentDescription = null
         )
     }
