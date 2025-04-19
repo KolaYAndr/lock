@@ -10,19 +10,17 @@ import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val networkModule = module {
-    single<AccountApi> {
-        LockBoxAccountApi(
-            get<HttpClient>()
-        )
+    singleOf(::LockBoxAccountApi){
+        bind<AccountApi>()
     }
 
-    single<BoxesApi> {
-        LockBoxBoxesApi(
-            get<HttpClient>()
-        )
+    singleOf(::LockBoxBoxesApi) {
+        bind<BoxesApi>()
     }
 
     factory<() -> BoxesPagingSource> {
