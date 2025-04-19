@@ -12,8 +12,8 @@ import org.homesharing.lockbox.downloadPrivacyPolicy
 import org.homesharing.lockbox.downloadUserAgreement
 import org.homesharing.lockbox.presentation.animation.backwardAnimation
 import org.homesharing.lockbox.presentation.animation.forwardAnimation
-import presentation.composables.CardTopRow
-import presentation.composables.general.BasicCard
+import org.homesharing.lockbox.presentation.general.composables.CardTopRow
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
 
 private const val TOTAL_STEPS = 3
 

@@ -30,10 +30,10 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordCard
 import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordViewModel
 import org.koin.androidx.compose.koinViewModel
-import presentation.composables.TitledTopBar
-import presentation.composables.general.BasicBottomSheet
-import presentation.composables.general.BasicButton
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun SecurityScreen(
@@ -149,10 +149,10 @@ private fun OptionsScreen(
         ) {
             val forgotPasswordViewModel =
                 koinViewModel<ForgotPasswordViewModel>()
-            val forgotPasswordState =
+            val forgotPasswordState by
                 forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
             ForgotPasswordCard(
-                forgotPasswordUiState = forgotPasswordState.value,
+                forgotPasswordUiState = forgotPasswordState,
                 title = stringResource(R.string.change_password),
                 onLastBackPress = onHideDialog::invoke,
                 onDismiss = onHideDialog::invoke,

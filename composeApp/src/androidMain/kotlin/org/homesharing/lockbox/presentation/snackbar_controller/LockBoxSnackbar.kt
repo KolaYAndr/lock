@@ -4,7 +4,7 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun LockBoxSnackbar(snackbarData: SnackbarData, modifier: Modifier = Modifier) {

@@ -35,13 +35,13 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.downloadPrivacyPolicy
 import org.homesharing.lockbox.downloadUserAgreement
 import org.homesharing.lockbox.presentation.login.LoginType
-import presentation.composables.CloseRoundButton
-import presentation.composables.EmailInput
-import presentation.composables.PasswordInput
-import presentation.composables.PolicyAndConditions
-import presentation.composables.general.BasicButton
-import presentation.composables.general.BasicCard
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.CloseRoundButton
+import org.homesharing.lockbox.presentation.general.composables.EmailInput
+import org.homesharing.lockbox.presentation.general.composables.PasswordInput
+import org.homesharing.lockbox.presentation.general.composables.PolicyAndConditions
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun SignInCard(

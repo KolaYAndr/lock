@@ -46,8 +46,8 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
-import presentation.composables.LockBoxesTopRow
-import presentation.composables.SettingsTopRowText
+import org.homesharing.lockbox.presentation.general.composables.LockBoxesTopRow
+import org.homesharing.lockbox.presentation.general.composables.SettingsTopRowText
 
 private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
 

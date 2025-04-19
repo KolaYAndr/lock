@@ -20,7 +20,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import org.homesharing.lockbox.navigation.routes.Routes
 import org.homesharing.lockbox.navigation.routes.TopLevelRoute
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun BottomNavigation(

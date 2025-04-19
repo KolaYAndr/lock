@@ -39,13 +39,13 @@ import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.sessions.Session
-import presentation.composables.LockBoxPullToRefresh
-import presentation.composables.TitledTopBar
-import presentation.composables.general.BasicButton
-import presentation.composables.general.BasicDialog
-import presentation.composables.general.BasicGroup
-import presentation.composables.general.BasicHorizontalDivider
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import java.util.Date
 
 private const val minuteMillis = 60 * 1000L

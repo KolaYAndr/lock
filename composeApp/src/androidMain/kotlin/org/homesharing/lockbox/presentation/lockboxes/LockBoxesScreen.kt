@@ -45,14 +45,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
-import presentation.composables.LockBoxCircularProgress
-import presentation.composables.LockBoxPullToRefresh
-import presentation.composables.NetworkImage
-import presentation.composables.TitledTopWithCloseAndBackButtons
-import presentation.composables.general.BasicButton
-import presentation.composables.general.BasicHorizontalDivider
-import presentation.composables.general.BasicModal
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
+import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.general.composables.NetworkImage
+import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun LockBoxesScreen(

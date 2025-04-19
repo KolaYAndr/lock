@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import org.homesharing.lockbox.R
-import presentation.composables.CountDownButton
-import presentation.composables.HelpModalSheet
-import presentation.composables.HelpTextWithIcon
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.CountDownButton
+import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
+import org.homesharing.lockbox.presentation.general.composables.HelpTextWithIcon
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 private const val CHECK_CONFIRMATION_DELAY = 15000L
 

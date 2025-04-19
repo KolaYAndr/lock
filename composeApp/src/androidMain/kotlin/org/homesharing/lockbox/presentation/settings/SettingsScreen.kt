@@ -27,16 +27,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.SettingsRoutes
-import presentation.composables.HelpModalSheet
-import presentation.composables.IconTextArrow
-import presentation.composables.NetworkImage
-import presentation.composables.LockBoxPullToRefresh
-import presentation.composables.RoundText
-import presentation.composables.general.BasicButton
-import presentation.composables.general.BasicDialog
-import presentation.composables.general.BasicGroup
-import presentation.composables.general.BasicHorizontalDivider
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
+import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
+import org.homesharing.lockbox.presentation.general.composables.NetworkImage
+import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.general.composables.RoundText
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

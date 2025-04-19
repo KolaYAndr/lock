@@ -39,7 +39,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 private const val SPLASH_SCREEN_TIME = 1000L
 

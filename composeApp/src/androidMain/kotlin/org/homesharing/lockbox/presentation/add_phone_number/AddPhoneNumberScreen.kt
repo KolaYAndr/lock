@@ -32,11 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import presentation.composables.PhoneNumberInput
-import presentation.composables.Pin
-import presentation.composables.TitledTopBar
-import presentation.composables.general.BasicButton
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.PhoneNumberInput
+import org.homesharing.lockbox.presentation.general.composables.Pin
+import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun AddPhoneNumberScreen(

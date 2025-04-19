@@ -38,9 +38,9 @@ import org.homesharing.lockbox.presentation.sign_in.SignInViewModel
 import org.homesharing.lockbox.presentation.sign_up.SignUpCard
 import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
 import org.koin.androidx.compose.koinViewModel
-import presentation.composables.general.BasicBottomSheet
-import presentation.composables.general.BasicButton
-import presentation.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun LoginScreen(
@@ -144,18 +144,18 @@ fun LoginScreen(
 
                         LoginType.SignIn -> {
                             val signInViewModel = koinViewModel<SignInViewModel>()
-                            val signInState = signInViewModel.uiState.collectAsStateWithLifecycle()
+                            val signInState by signInViewModel.uiState.collectAsStateWithLifecycle()
 
                             SignInCard(
-                                signInUiState = signInState.value,
+                                signInUiState = signInState,
                                 onDismiss = { showModal = false },
                                 onEmailChange = signInViewModel::onChangeEmail,
                                 onPasswordChange = signInViewModel::onChangePassword,
                                 onPasswordSeenChange = signInViewModel::switchPasswordToggle,
-                                passwordError = signInState.value.passwordError != SignInPasswordError.None,
-                                passwordErrorText = getErrorText(signInState.value.passwordError),
-                                emailError = signInState.value.emailError != null,
-                                emailErrorText = if (signInState.value.emailError == null) "" else stringResource(
+                                passwordError = signInState.passwordError != SignInPasswordError.None,
+                                passwordErrorText = getErrorText(signInState.passwordError),
+                                emailError = signInState.emailError != null,
+                                emailErrorText = if (signInState.emailError == null) "" else stringResource(
                                     R.string.email_doesnt_match_pattern
                                 ),
                                 onToTypeAuth = onToTypeAuth,
@@ -165,10 +165,9 @@ fun LoginScreen(
 
                         LoginType.SignUp -> {
                             val signUpViewModel = koinViewModel<SignUpViewModel>()
-                            val signUpState = signUpViewModel.uiState.collectAsStateWithLifecycle()
-
+                            val signUpState by signUpViewModel.uiState.collectAsStateWithLifecycle()
                             SignUpCard(
-                                signUpUiState = signUpState.value,
+                                signUpUiState = signUpState,
                                 onSignIn = { onToTypeAuth(LoginType.SignIn) },
                                 onDismiss = { showModal = false },
                                 onEmailChange = signUpViewModel::onChangeEmail,
