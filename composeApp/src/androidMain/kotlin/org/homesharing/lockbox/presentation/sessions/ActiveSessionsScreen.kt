@@ -77,11 +77,11 @@ fun ActiveSessionScreen(
 
         LockBoxPullToRefresh(
             onRefresh = onRefresh,
-            isRefreshing = activeSessionsUiState.isRefreshing
+            isRefreshing = activeSessionsUiState.isRefreshing,
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(vertical = 12.dp, horizontal = 16.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start

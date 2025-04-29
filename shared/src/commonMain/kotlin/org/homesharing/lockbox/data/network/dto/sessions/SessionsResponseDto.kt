@@ -24,6 +24,7 @@ internal data class SessionDto(
     @SerialName("user_id")
     val userId: String,
     val username: String,
+    val clients: Map<String, String>
 )
 
 @Serializable
@@ -32,5 +33,5 @@ internal data class Credential(
     val createdDate: Long,
     val type: String,
     @SerialName("user_label")
-    val userLabel: String,
+    val userLabel: String?,
 )

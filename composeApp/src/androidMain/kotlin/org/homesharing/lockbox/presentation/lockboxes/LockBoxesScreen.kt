@@ -123,7 +123,6 @@ private fun ErrorScreen(
     message: String?
 ) {
     LockBoxPullToRefresh(
-        modifier = Modifier.fillMaxSize(),
         isRefreshing = isRefreshing,
         onRefresh = onRefresh
     ) {

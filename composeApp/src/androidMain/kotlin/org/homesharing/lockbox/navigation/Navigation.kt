@@ -29,6 +29,7 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewM
 import org.homesharing.lockbox.presentation.animation.enterAnimation
 import org.homesharing.lockbox.presentation.animation.exitAnimation
 import org.homesharing.lockbox.presentation.animation.globalEnterAnimation
+import org.homesharing.lockbox.presentation.animation.globalExitAnimation
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
@@ -71,7 +72,7 @@ fun Navigation(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
                 popEnterTransition = null,
-                popExitTransition = null
+                popExitTransition = globalExitAnimation
             ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state by loginViewModel.uiState.collectAsStateWithLifecycle()
@@ -91,7 +92,7 @@ fun Navigation(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
                 popEnterTransition = null,
-                popExitTransition = null
+                popExitTransition = globalExitAnimation
             ) {
                 val lockBoxesViewModel = koinViewModel<LockBoxesViewModel>()
                 val link by lockBoxesViewModel.avatarLink.collectAsStateWithLifecycle()
@@ -147,7 +148,7 @@ fun Navigation(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
                 popEnterTransition = null,
-                popExitTransition = null
+                popExitTransition = globalExitAnimation
             ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
                 val state by loginViewModel.uiState.collectAsStateWithLifecycle()
@@ -167,7 +168,7 @@ fun Navigation(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
                 popEnterTransition = null,
-                popExitTransition = null
+                popExitTransition = globalExitAnimation
             ) {
                 val settingsViewModel = koinViewModel<SettingsViewModel>()
                 val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
