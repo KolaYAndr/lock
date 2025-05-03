@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
@@ -44,8 +45,15 @@ internal class BoxesRepositoryImpl(
 
 
     override suspend fun getBoxByMac(address: String): Response<Box> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-            refreshToken()
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
 
         return parseLockBoxApiResponse(
             apiCall = {
@@ -59,8 +67,15 @@ internal class BoxesRepositoryImpl(
     }
 
     override suspend fun openBoxByMac(address: String): Response<OpenBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-            refreshToken()
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
 
         return parseLockBoxApiResponse(
             apiCall = {
@@ -74,8 +89,15 @@ internal class BoxesRepositoryImpl(
     }
 
     override suspend fun unbindBox(address: String): Response<UpdateBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-            refreshToken()
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
 
         return parseLockBoxApiResponse(
             apiCall = {
@@ -89,8 +111,15 @@ internal class BoxesRepositoryImpl(
     }
 
     override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-            refreshToken()
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
 
         return parseLockBoxApiResponse(
             apiCall = {
@@ -108,40 +137,45 @@ internal class BoxesRepositoryImpl(
         macAddress: String,
         newAddress: String
     ): Response<UpdateBox> {
-            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
                 refreshToken()
-
-            return parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.updateBoxByMac(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = macAddress,
-                        address = newAddress
-                    )
-                },
-                mapper = UpdateBoxResponseDto::toDomain
-            )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
 
-    private suspend fun refreshToken() {
-        try {
-            val tokenResponse =
-                accountApi.refreshTokens(
-                    accesstoken = tokenStorage.getAccessToken(),
-                    refreshToken = tokenStorage.getRefreshToken()
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.updateBoxByMac(
+                    accessToken = tokenStorage.getAccessToken(),
+                    macAddress = macAddress,
+                    address = newAddress
                 )
+            },
+            mapper = UpdateBoxResponseDto::toDomain
+        )
+    }
 
-            if (tokenResponse.error.isNullOrEmpty()) {
-                val accessToken = tokenResponse.accessToken!!
-                val refreshToken = tokenResponse.refreshToken!!
-                val expiresIn = tokenResponse.expiresIn!!
+    private suspend fun refreshToken() {
+        val tokenResponse =
+            accountApi.refreshTokens(
+                accesstoken = tokenStorage.getAccessToken(),
+                refreshToken = tokenStorage.getRefreshToken()
+            )
 
-                with(tokenStorage) {
-                    saveAccessToken(accessToken)
-                    saveRefreshToken(refreshToken)
-                    saveNextRefreshTime(expiresIn + refreshManager.currentTime)
-                }
+        if (tokenResponse.error.isNullOrEmpty()) {
+            val accessToken = tokenResponse.accessToken!!
+            val refreshToken = tokenResponse.refreshToken!!
+            val expiresIn = tokenResponse.expiresIn!!
+
+            with(tokenStorage) {
+                saveAccessToken(accessToken)
+                saveRefreshToken(refreshToken)
+                saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
-        } catch (_: Exception) { }
+        }
     }
 }

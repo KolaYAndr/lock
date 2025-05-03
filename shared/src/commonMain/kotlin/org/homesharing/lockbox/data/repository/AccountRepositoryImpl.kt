@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.repository
 
 import io.ktor.util.decodeBase64String
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -32,6 +33,8 @@ internal class AccountRepositoryImpl(
             val token = tokenStorage.getAccessToken()
             val accountInfo = decodeJWT(token).toDomain()
             Response.Success(accountInfo)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Response.Failure(e.cause?.message.toString())
         }
@@ -59,6 +62,8 @@ internal class AccountRepositoryImpl(
 
             val accountInfo = decodeJWT(accessToken).toDomain()
             Response.Success(accountInfo)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Response.Failure(e.cause?.message.toString())
         }
@@ -82,7 +87,7 @@ internal class AccountRepositoryImpl(
 
     override suspend fun sendImage(data: ByteArray) {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            refreshToken() //try-catch должен обрабатываться во вью модели
         }
         api.sendImage(
             accessToken = tokenStorage.getAccessToken(),
@@ -92,7 +97,13 @@ internal class AccountRepositoryImpl(
 
     override suspend fun getSessions(): Response<List<Session>> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
         return parseLockBoxApiResponse(
             apiCall = { api.getSessions(accesstoken = tokenStorage.getAccessToken()) },
@@ -106,7 +117,13 @@ internal class AccountRepositoryImpl(
         email: String?
     ): Response<UpdateAccount> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
         return parseLockBoxApiResponse(
             apiCall = {
@@ -138,7 +155,13 @@ internal class AccountRepositoryImpl(
 
     override suspend fun closeOtherSessions(currentSessionId: String): Response<String> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
         return try {
             Response.Success(
@@ -147,30 +170,30 @@ internal class AccountRepositoryImpl(
                     id = currentSessionId
                 ).body!!.message
             )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            Response.Failure(e.message.toString())
+            Response.Failure(e.message.orEmpty())
         }
     }
 
     private suspend fun refreshToken() {
-        try {
-            val tokenResponse =
-                api.refreshTokens(
-                    accesstoken = tokenStorage.getAccessToken(),
-                    refreshToken = tokenStorage.getRefreshToken()
-                )
+        val tokenResponse =
+            api.refreshTokens(
+                accesstoken = tokenStorage.getAccessToken(),
+                refreshToken = tokenStorage.getRefreshToken()
+            )
 
-            if (tokenResponse.error.isNullOrEmpty()) {
-                val accessToken = tokenResponse.accessToken!!
-                val refreshToken = tokenResponse.refreshToken!!
-                val expiresIn = tokenResponse.expiresIn!!
+        if (tokenResponse.error.isNullOrEmpty()) {
+            val accessToken = tokenResponse.accessToken!!
+            val refreshToken = tokenResponse.refreshToken!!
+            val expiresIn = tokenResponse.expiresIn!!
 
-                with(tokenStorage) {
-                    saveAccessToken(accessToken)
-                    saveRefreshToken(refreshToken)
-                    saveNextRefreshTime(expiresIn + refreshManager.currentTime)
-                }
+            with(tokenStorage) {
+                saveAccessToken(accessToken)
+                saveRefreshToken(refreshToken)
+                saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
-        } catch (_: Exception) { }
+        }
     }
 }

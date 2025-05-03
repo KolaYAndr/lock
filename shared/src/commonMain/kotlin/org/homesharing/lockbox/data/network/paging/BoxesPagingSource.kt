@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlinx.coroutines.CancellationException
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
@@ -28,8 +29,15 @@ internal class BoxesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Box> {
         val page = params.key ?: STARTING_PAGE
         val size = params.loadSize
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-            refreshToken()
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return LoadResult.Error(Throwable(e.message))
+            }
+        }
 
         try {
             val apiResponse = boxesApi.getBoxes(
@@ -48,30 +56,30 @@ internal class BoxesPagingSource(
                     nextKey = if (endOfPagination) null else page + 1
                 )
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             return LoadResult.Error(e)
         }
     }
 
     private suspend fun refreshToken() {
-        try {
-            val tokenResponse =
-                accountApi.refreshTokens(
-                    accesstoken = tokenStorage.getAccessToken(),
-                    refreshToken = tokenStorage.getRefreshToken()
-                )
+        val tokenResponse =
+            accountApi.refreshTokens(
+                accesstoken = tokenStorage.getAccessToken(),
+                refreshToken = tokenStorage.getRefreshToken()
+            )
 
-            if (tokenResponse.error.isNullOrEmpty()) {
-                val accessToken = tokenResponse.accessToken!!
-                val refreshToken = tokenResponse.refreshToken!!
-                val expiresIn = tokenResponse.expiresIn!!
+        if (tokenResponse.error.isNullOrEmpty()) {
+            val accessToken = tokenResponse.accessToken!!
+            val refreshToken = tokenResponse.refreshToken!!
+            val expiresIn = tokenResponse.expiresIn!!
 
-                with(tokenStorage) {
-                    saveAccessToken(accessToken)
-                    saveRefreshToken(refreshToken)
-                    saveNextRefreshTime(expiresIn + refreshManager.currentTime)
-                }
+            with(tokenStorage) {
+                saveAccessToken(accessToken)
+                saveRefreshToken(refreshToken)
+                saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
-        } catch (_: Exception) { }
+        }
     }
 }

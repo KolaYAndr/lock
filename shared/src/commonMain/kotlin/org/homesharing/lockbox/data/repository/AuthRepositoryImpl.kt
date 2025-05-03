@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.data.repository
 
+import kotlinx.coroutines.CancellationException
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
@@ -28,6 +29,8 @@ internal class AuthRepositoryImpl(
             } else {
                 Response.Success(apiResponse.body!!)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Response.Failure(e.message.toString())
         }
@@ -59,6 +62,8 @@ internal class AuthRepositoryImpl(
             } else {
                 Response.Success(apiResponse.body!!)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Response.Failure(e.message.toString())
         }

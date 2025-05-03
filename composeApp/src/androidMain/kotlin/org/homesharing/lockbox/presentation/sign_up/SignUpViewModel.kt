@@ -28,10 +28,12 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     }
 
     suspend fun checkIfConfirmed() {
-        authRepository.loadTokensInitially(
-            uiState.value.email,
-            uiState.value.password
-        )
+        try {
+            authRepository.loadTokensInitially(
+                uiState.value.email,
+                uiState.value.password
+            )
+        } catch (e: Exception) {}
     }
 
     fun signUp() {
