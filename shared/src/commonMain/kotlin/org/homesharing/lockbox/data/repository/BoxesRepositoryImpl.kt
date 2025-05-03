@@ -3,11 +3,7 @@ package org.homesharing.lockbox.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
@@ -44,83 +40,78 @@ internal class BoxesRepositoryImpl(
                 initialLoadSize = PAGE_SIZE
             ),
             pagingSourceFactory = { pagingSourceFactory() },
-        ).flow.flowOn(Dispatchers.IO)
+        ).flow
 
 
-    override suspend fun getBoxByMac(address: String): Response<Box> =
-        withContext(Dispatchers.IO) {
-            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-                refreshToken()
+    override suspend fun getBoxByMac(address: String): Response<Box> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
+            refreshToken()
 
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.getBoxByMac(
-                        accessToken = tokenStorage.getAccessToken(),
-                        address = address
-                    )
-                },
-                mapper = BoxResponseDto::toDomain
-            )
-        }
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.getBoxByMac(
+                    accessToken = tokenStorage.getAccessToken(),
+                    address = address
+                )
+            },
+            mapper = BoxResponseDto::toDomain
+        )
+    }
 
-    override suspend fun openBoxByMac(address: String): Response<OpenBox> =
-        withContext(Dispatchers.IO) {
-            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-                refreshToken()
+    override suspend fun openBoxByMac(address: String): Response<OpenBox> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
+            refreshToken()
 
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.openBox(
-                        accessToken = tokenStorage.getAccessToken(),
-                        mac = address
-                    )
-                },
-                mapper = OpenBoxResponseDto::toDomain
-            )
-        }
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.openBox(
+                    accessToken = tokenStorage.getAccessToken(),
+                    mac = address
+                )
+            },
+            mapper = OpenBoxResponseDto::toDomain
+        )
+    }
 
-    override suspend fun unbindBox(address: String): Response<UpdateBox> =
-        withContext(Dispatchers.IO) {
-            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-                refreshToken()
+    override suspend fun unbindBox(address: String): Response<UpdateBox> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
+            refreshToken()
 
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.deleteBox(
-                        accessToken = tokenStorage.getAccessToken(),
-                        mac = address
-                    )
-                },
-                mapper = UpdateBoxResponseDto::toDomain
-            )
-        }
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.deleteBox(
+                    accessToken = tokenStorage.getAccessToken(),
+                    mac = address
+                )
+            },
+            mapper = UpdateBoxResponseDto::toDomain
+        )
+    }
 
-    override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> =
-        withContext(Dispatchers.IO) {
-            if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
-                refreshToken()
+    override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
+            refreshToken()
 
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.updateBoxByMac(
-                        macAddress = macAddress,
-                        alias = newName,
-                        accessToken = tokenStorage.getAccessToken(),
-                    )
-                },
-                mapper = UpdateBoxResponseDto::toDomain
-            )
-        }
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.updateBoxByMac(
+                    macAddress = macAddress,
+                    alias = newName,
+                    accessToken = tokenStorage.getAccessToken(),
+                )
+            },
+            mapper = UpdateBoxResponseDto::toDomain
+        )
+    }
 
     override suspend fun updateBoxAddress(
         macAddress: String,
         newAddress: String
-    ): Response<UpdateBox> =
-        withContext(Dispatchers.IO) {
+    ): Response<UpdateBox> {
             if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime()))
                 refreshToken()
 
-            parseLockBoxApiResponse(
+            return parseLockBoxApiResponse(
                 apiCall = {
                     boxesApi.updateBoxByMac(
                         accessToken = tokenStorage.getAccessToken(),
