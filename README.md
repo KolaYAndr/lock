@@ -88,8 +88,18 @@
 
 ### iOS (Mac Only)
 1. Открываем iOS Проект:
+   В директории mobile через терминал
    ```bash
    open iosApp/iosApp.xcworkspace
    ```
-
-2. Запускаем iOS прилу. Выбираем симулятор и нажимаем Run в Xcode
+    Или через интерфейс XCode
+2. Нужно настроить сборку shared модуля
+   Для этого пользуемся интерфейсом XCode
+   Слева - Show the Project navigator, в нём джажды кликаем по iosApp. Откроется окно, в нём нужно добавить скрипт для запуска. Тыкаем "+" в нём New Run Script Phase и вставляем такую команду
+```bash
+cd "$SRCROOT/.."
+./gradlew :shared:embedAndSignAppleFrameworkForXcode --warning-mode all
+```
+Этот скрипт должен находиться выше Compile Kotlin Framework
+   
+4. Запускаем iOS прилу. Выбираем симулятор и нажимаем Run в Xcode
