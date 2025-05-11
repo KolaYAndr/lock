@@ -1,95 +1,71 @@
-# Настройка для работы с KMP
+# Руководство по настройке KMP-проекта
 
-В этом гайде я постараюсь простыми словами рассказать, как и что запускать
+Простой пошаговый гайд для запуска проекта на Kotlin Multiplatform.
 
-## Project Structure
-Поскольку проект на KMP, то и структура у него будет соответствующая
+---
 
-- **shared**: Это модуль, в котором лежит переиспользуемый код на обе платформы
-- **composeApp**: Это android-модуль проекта, его мы запускаем в android studio при работе с эмулятором
-- **iosApp**: Такой же платформенный модуль, но для iOS
-
-## Есть пререквизиты
-Если хотите запустить iOS версию, потребуется macOS. Для android версии подойдёт любая ОС
-
-
-### Android требования
-- [Android Studio](https://developer.android.com/studio)
-Нужно будет скачать студию и создать эмулятор (любой из предложенных, я выбираю medium phone и версию android 35)
-
-### iOS требования (Mac Only)
-- [Android Studio](https://developer.android.com/studio)
-- [Xcode](https://developer.apple.com/xcode/)
-- [JDL](https://www.oracle.com/java/technologies/downloads/?er=221886)
-- Kotlin Mutliplatform plugin. (В студии шестерня -> настройки -> Plugins)
-- [Brew](https://brew.sh/)
-
-После этого в терминале нужно будет установить kdoctor. Эта утилита покажет, каких элементов не хватет, если такие будут. Пишем: 
-```bash
-    brew install kdoctor
-```
-Потом вызываем его в том же терминале
-```bash
-    kdoctor
+## 🗂 Структура проекта
+```text
+- shared          # Общий кроссплатформенный код
+- composeApp      # Android-приложение
+- iosApp          # iOS-приложение (требуется macOS)
 ```
 
-## Подготовка проекта
-Скачиваем его через гит или можно через склонировать командой 
-```bash
-    git clone https://github.com/LockBox-for-business/mobile.git
-```
+---
 
-## Запускаем проект
+## ⚙️ Требования
 
 ### Android
-1. Нужно будет подождать пока сконфигурируется студия (это может быть реально долгий процесс, но обычно минут 5-10 хватает)
+1. [Android Studio](https://developer.android.com/studio)
+2. Эмулятор (создаётся в Android Studio)
 
-2. Вверху нажимаем зелёный треугольничек, снова ждём. По окончании откроется эмулятор, с ним монжо взаимодействовать
+### iOS
+1. [Xcode 14+](https://developer.apple.com/xcode/)
+2. [JDK 17+](https://www.oracle.com/java/technologies/downloads/)
+3. [Homebrew](https://brew.sh/)
+4. Плагин Kotlin Multiplatform в Android Studio:  
+   `Settings → Plugins → Kotlin Multiplatform Mobile`
 
-### iOS (Mac Only)
-1. Открываем iOS Проект:
-   ```bash
-   open iosApp/iosApp.xcworkspace
-   ```
-
-2. Запускаем iOS прилу. Выбираем симулятор и нажимаем Run в Xcode
-### Android требования
-- [Android Studio](https://developer.android.com/studio)
-Нужно будет скачать студию и создать эмулятор (любой из предложенных, я выбираю medium phone и версию android 35)
-
-### iOS требования (Mac Only)
-- [Android Studio](https://developer.android.com/studio)
-- [Xcode](https://developer.apple.com/xcode/)
-- [JDK](https://www.oracle.com/java/technologies/downloads/?er=221886)
-- Kotlin Mutliplatform plugin. (В студии шестерня -> настройки -> Plugins)
-- [Brew](https://brew.sh/)
-
-После этого в терминале нужно будет установить kdoctor. Эта утилита покажет, каких элементов не хватет, если такие будут. Пишем: 
+#### Проверка окружения для iOS
 ```bash
-    brew install kdoctor
-```
-Потом вызываем его в том же терминале
-```bash
-    kdoctor
+brew install kdoctor && kdoctor
 ```
 
-## Подготовка проекта
-Скачиваем его через гит или можно через склонировать командой 
+---
+
+## 🛠 Подготовка
 ```bash
-    git clone https://github.com/LockBox-for-business/mobile.git
+git clone https://github.com/LockBox-for-business/mobile.git
+cd mobile
 ```
 
-## Запускаем проект
+---
+
+## ▶️ Запуск
 
 ### Android
-1. Нужно будет подождать пока сконфигурируется студия (это может быть реально долгий процесс, но обычно минут 5-10 хватает)
+1. Откройте `composeApp` в Android Studio
+2. Дождитесь завершения синхронизации Gradle (5-10 мин)
+3. Запустите эмулятор → нажмите ▶️ в панели инструментов
 
-2. Вверху нажимаем зелёный треугольничек, снова ждём. По окончании откроется эмулятор, с ним можно взаимодействовать
+### iOS (только macOS)
+1. Откройте проект в Xcode:
+```bash
+open iosApp/iosApp.xcworkspace
+```
 
-### iOS (Mac Only)
-1. Открываем iOS Проект:
-   ```bash
-   open iosApp/iosApp.xcworkspace
-   ```
+2. Добавьте скрипт сборки:
+   - В Xcode: `Project Navigator → iosApp → Build Phases`
+   - **New Run Script Phase** (перед "Compile Kotlin Framework"):
+```bash
+cd "$SRCROOT/.."
+./gradlew :shared:embedAndSignAppleFrameworkForXcode --warning-mode all
+```
 
-2. Запускаем iOS прилу. Выбираем симулятор и нажимаем Run в Xcode
+3. Выберите симулятор → нажмите ▶️
+
+---
+
+## 🔧 Примечания
+- Для iOS обязательно выполните `kdoctor` для проверки зависимостей
+- Первый запуск может занять до 15 минут из-за загрузки зависимостей
