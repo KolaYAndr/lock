@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
@@ -80,7 +81,8 @@ fun SettingsScreen(
                             text = settingsUiState.fullName,
                             style = LockBoxTheme.typography.titleMedium,
                             color = LockBoxTheme.colors.grey50,
-                            modifier = Modifier.padding(top = 12.dp)
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp)
                         )
                 }
 
