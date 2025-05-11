@@ -32,5 +32,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Lockbox-apk
+          name: Lockbox-debug.apk
           path: composeApp/build/outputs/apk/debug/Lockbox-debug.apk
