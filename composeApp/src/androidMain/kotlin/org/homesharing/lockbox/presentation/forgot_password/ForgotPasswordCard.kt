@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.homesharing.lockbox.downloadPrivacyPolicy
-import org.homesharing.lockbox.downloadUserAgreement
+import org.homesharing.lockbox.downloadlServiceConditions
 import org.homesharing.lockbox.presentation.animation.backwardAnimation
 import org.homesharing.lockbox.presentation.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.sign_up.EmailConfirmationStep
@@ -77,8 +77,10 @@ fun ForgotPasswordCard(
                         email = forgotPasswordUiState.email,
                         emailError = forgotPasswordUiState.emailError,
                         onEmailChange = onEmailChange,
-                        onDownloadPdf = {
-                            downloadUserAgreement(context)
+                        onDownloadConditions = {
+                            downloadlServiceConditions(context)
+                        },
+                        onDownloadPolicy = {
                             downloadPrivacyPolicy(context)
                         }
                     )

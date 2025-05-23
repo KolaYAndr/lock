@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.downloadPrivacyPolicy
-import org.homesharing.lockbox.downloadUserAgreement
+import org.homesharing.lockbox.downloadlServiceConditions
 import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
@@ -86,7 +86,7 @@ fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Agreement(
-                onClick = { downloadUserAgreement(context) },
+                onClick = { downloadlServiceConditions(context) },
                 text = stringResource(R.string.user_agreement),
                 modifier = Modifier.fillMaxWidth()
             )

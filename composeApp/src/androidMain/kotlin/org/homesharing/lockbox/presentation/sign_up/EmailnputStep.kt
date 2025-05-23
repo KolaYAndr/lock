@@ -36,7 +36,8 @@ fun EmailInputStep(
     onEmailChange: (String) -> Unit,
     toNextStep: () -> Unit,
     onSignIn: () -> Unit,
-    onDownload: () -> Unit,
+    onDownloadConditions: () -> Unit,
+    onDownloadPolicy: () -> Unit,
 ) {
     val emailInteractionSource = remember { MutableInteractionSource() }
     val emailFocusRequester = remember { FocusRequester() }
@@ -95,7 +96,8 @@ fun EmailInputStep(
     )
 
     PolicyAndConditions(
-        onClick = { onDownload() },
+        onConditionsClick = { onDownloadConditions() },
+        onPolicyClick = { onDownloadPolicy() },
         modifier = Modifier.padding(top = 2.dp, start = 16.dp, end = 16.dp)
     )
 

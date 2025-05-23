@@ -2,17 +2,16 @@ package org.homesharing.lockbox
 
 import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
 import androidx.core.net.toUri
 
 private const val USER_AGREEMENT_URL = "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf"
 private const val PRIVACY_POLICY_URL = "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf"
 
-fun downloadUserAgreement(context: Context) {
+fun downloadlServiceConditions(context: Context) {
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     val destinationUri = context.externalCacheDir ?: return
 
-    val request = DownloadManager.Request(Uri.parse(USER_AGREEMENT_URL)).apply {
+    val request = DownloadManager.Request(USER_AGREEMENT_URL.toUri()).apply {
         setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         setAllowedOverRoaming(false)
         setTitle(context.getString(R.string.user_agreement))
@@ -27,7 +26,7 @@ fun downloadPrivacyPolicy(context: Context) {
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     val destinationUri = context.externalCacheDir ?: return
 
-    val request = DownloadManager.Request(Uri.parse(PRIVACY_POLICY_URL)).apply {
+    val request = DownloadManager.Request(PRIVACY_POLICY_URL.toUri()).apply {
         setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         setAllowedOverRoaming(false)
         setTitle(context.getString(R.string.privacy_policy))

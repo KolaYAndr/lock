@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.downloadPrivacyPolicy
-import org.homesharing.lockbox.downloadUserAgreement
+import org.homesharing.lockbox.downloadlServiceConditions
 import org.homesharing.lockbox.presentation.animation.backwardAnimation
 import org.homesharing.lockbox.presentation.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.general.composables.CardTopRow
@@ -67,8 +67,10 @@ fun SignUpCard(
                         email = signUpUiState.email,
                         emailError = signUpUiState.emailError,
                         onEmailChange = onEmailChange,
-                        onDownload = {
-                            downloadUserAgreement(context)
+                        onDownloadConditions = {
+                            downloadlServiceConditions(context)
+                        },
+                        onDownloadPolicy = {
                             downloadPrivacyPolicy(context)
                         }
                     )
