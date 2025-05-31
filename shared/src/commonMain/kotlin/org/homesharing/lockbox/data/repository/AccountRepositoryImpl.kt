@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
+import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
@@ -16,6 +17,10 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.model.account_info.toDomain
+import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
+import org.homesharing.lockbox.domain.model.close_sessions.toDomain
+import org.homesharing.lockbox.domain.model.reset_password.ResetPassword
+import org.homesharing.lockbox.domain.model.reset_password.toDomain
 import org.homesharing.lockbox.domain.model.sessions.Session
 import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -44,7 +49,7 @@ internal class AccountRepositoryImpl(
         return try {
             val tokenResponse =
                 api.refreshTokens(
-                    accesstoken = tokenStorage.getAccessToken(),
+                    accessToken = tokenStorage.getAccessToken(),
                     refreshToken = tokenStorage.getRefreshToken()
                 )
 
@@ -87,7 +92,7 @@ internal class AccountRepositoryImpl(
 
     override suspend fun sendImage(data: ByteArray) {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken() //try-catch должен обрабатываться во вью модели
+            refreshToken()
         }
         api.sendImage(
             accessToken = tokenStorage.getAccessToken(),
@@ -106,7 +111,7 @@ internal class AccountRepositoryImpl(
             }
         }
         return parseLockBoxApiResponse(
-            apiCall = { api.getSessions(accesstoken = tokenStorage.getAccessToken()) },
+            apiCall = { api.getSessions(accessToken = tokenStorage.getAccessToken()) },
             mapper = SessionsResponseDto::toDomain
         )
     }
@@ -153,7 +158,7 @@ internal class AccountRepositoryImpl(
         )
     }
 
-    override suspend fun closeOtherSessions(currentSessionId: String): Response<String> {
+    override suspend fun closeOtherSessions(currentSessionId: String): Response<CloseSessions> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
             try {
                 refreshToken()
@@ -168,7 +173,7 @@ internal class AccountRepositoryImpl(
                 api.closeOtherSessions(
                     accessToken = tokenStorage.getAccessToken(),
                     id = currentSessionId
-                ).body!!.message
+                ).body!!.toDomain()
             )
         } catch (e: CancellationException) {
             throw e
@@ -177,10 +182,24 @@ internal class AccountRepositoryImpl(
         }
     }
 
+    override suspend fun sendLinkToChangeEmail(): Response<ResetPassword> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            refreshToken()
+        }
+        return parseLockBoxApiResponse(
+            apiCall = {
+                api.sendLinkToChangePassword(
+                    accessToken = tokenStorage.getAccessToken()
+                )
+            },
+            mapper = ResetPasswordDto::toDomain
+        )
+    }
+
     private suspend fun refreshToken() {
         val tokenResponse =
             api.refreshTokens(
-                accesstoken = tokenStorage.getAccessToken(),
+                accessToken = tokenStorage.getAccessToken(),
                 refreshToken = tokenStorage.getRefreshToken()
             )
 

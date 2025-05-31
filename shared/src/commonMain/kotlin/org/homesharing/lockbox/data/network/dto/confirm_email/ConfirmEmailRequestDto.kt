@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class ConfirmEmailRequestDto(
-    val mail: String,
+    val mail: String
 )

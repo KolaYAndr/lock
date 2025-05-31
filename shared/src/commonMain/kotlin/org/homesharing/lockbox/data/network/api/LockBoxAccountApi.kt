@@ -20,6 +20,7 @@ import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResp
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.dto.post_image.PostImageResponseDto
+import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
@@ -36,6 +37,7 @@ private const val ACCOUNTS = "accounts"
 private const val AVATARS = "avatars"
 private const val SIGN_UP = "signup"
 private const val SESSIONS = "sessions"
+private const val RESET_PASSWORD = "reset-password"
 private const val UPLOAD = "upload"
 private const val MAIL = "mail"
 private const val SEND = "send"
@@ -55,6 +57,7 @@ private const val BASE = "https://api.lockboxes.ru"
 private const val TOKEN_URL = "$BASE:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 private const val SIGN_UP_URL = "$BASE:8445/$ACCOUNTS/$SIGN_UP"
 private const val SESSIONS_URL = "$BASE:8445/$ACCOUNTS/$SESSIONS"
+private const val RESET_PASSWORD_URL = "$BASE:8445/$ACCOUNTS/$RESET_PASSWORD"
 private const val AVATARS_POST_URL = "$BASE:8445/$AVATARS/$UPLOAD"
 private const val CONFIRM_EMAIL_URL = "$BASE:8445/$ACCOUNTS/$MAIL/$SEND"
 private const val UPDATE_ACCOUNT_URL = "$BASE:8445/$ACCOUNTS/$ME"
@@ -99,7 +102,7 @@ internal class LockBoxAccountApi(
     }
 
     override suspend fun refreshTokens(
-        accesstoken: String,
+        accessToken: String,
         refreshToken: String
     ): TokenResponseDto {
         return client.submitForm(
@@ -110,7 +113,7 @@ internal class LockBoxAccountApi(
                 append(REFRESH_TOKEN_NAME, refreshToken)
             },
             block = {
-                header(HttpHeaders.Authorization, bearerToken(accesstoken))
+                header(HttpHeaders.Authorization, bearerToken(accessToken))
             }
         ).body()
     }
@@ -128,9 +131,9 @@ internal class LockBoxAccountApi(
         }
     }
 
-    override suspend fun getSessions(accesstoken: String): ApiResponse<SessionsResponseDto> {
+    override suspend fun getSessions(accessToken: String): ApiResponse<SessionsResponseDto> {
         return client.get {
-            header(HttpHeaders.Authorization, bearerToken(accesstoken))
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(SESSIONS_URL)
         }.body()
     }
@@ -169,4 +172,10 @@ internal class LockBoxAccountApi(
             setBody(request)
         }.body()
     }
+
+    override suspend fun sendLinkToChangePassword(accessToken: String): ApiResponse<ResetPasswordDto> =
+        client.post {
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
+            url(RESET_PASSWORD_URL)
+        }.body()
 }

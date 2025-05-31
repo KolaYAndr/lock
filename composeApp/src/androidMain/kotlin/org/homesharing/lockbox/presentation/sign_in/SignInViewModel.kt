@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AuthRepository
+import org.homesharing.lockbox.presentation.login.EmailError
 import java.net.UnknownHostException
 
 class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -44,7 +45,7 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
         viewModelScope.launch {
             _uiState.update { it.copy(emailError = null, passwordError = SignInPasswordError.None) }
             if (!emailPattern.matcher(uiState.value.email).matches()) {
-                _uiState.update { it.copy(emailError = DoesntMatchEmailPattern) }
+                _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
             } else try {
                 val response = authRepository.loadTokensInitially(
                     uiState.value.email,
@@ -75,13 +76,11 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
 data class SignInUiState(
     val email: String = "",
-    val emailError: DoesntMatchEmailPattern? = null,
+    val emailError: EmailError? = null,
     val password: String = "",
     val isPasswordSeen: Boolean = false,
     val passwordError: SignInPasswordError = SignInPasswordError.None,
 )
-
-data object DoesntMatchEmailPattern
 
 private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
 

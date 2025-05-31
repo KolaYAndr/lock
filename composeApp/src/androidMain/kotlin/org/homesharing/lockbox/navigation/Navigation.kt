@@ -206,15 +206,16 @@ fun Navigation(
             ) {
                 composable<SecurityRoutes.Security> {
                     val securityViewModel = koinViewModel<SecurityViewModel>()
-                    val securityUiState by securityViewModel.uiState.collectAsStateWithLifecycle()
+//                    val securityUiState by securityViewModel.uiState.collectAsStateWithLifecycle()
 
                     SecurityScreen(
-                        securityUiState = securityUiState,
+//                        securityUiState = securityUiState,
                         onNavBack = navController::navigateUp,
                         onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
-                        onPasswordSet = securityViewModel::onPasswordChanged,
-                        onReady = { navController.navigate(SettingsRoutes.Account) },
-                        onBackToChangePassword = securityViewModel::backToChangePassword,
+//                        onPasswordSet = securityViewModel::onPasswordChanged,
+//                        onReady = { navController.navigate(SettingsRoutes.Account) },
+//                        onBackToChangePassword = securityViewModel::backToChangePassword,
+                        onChangePassword = securityViewModel::sendLinkToChangePassword,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

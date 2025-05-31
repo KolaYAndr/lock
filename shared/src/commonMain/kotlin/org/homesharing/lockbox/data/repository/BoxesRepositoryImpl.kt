@@ -162,7 +162,7 @@ internal class BoxesRepositoryImpl(
     private suspend fun refreshToken() {
         val tokenResponse =
             accountApi.refreshTokens(
-                accesstoken = tokenStorage.getAccessToken(),
+                accessToken = tokenStorage.getAccessToken(),
                 refreshToken = tokenStorage.getRefreshToken()
             )
 

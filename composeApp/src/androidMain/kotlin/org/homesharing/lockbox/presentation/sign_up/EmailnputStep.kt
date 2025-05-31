@@ -28,11 +28,12 @@ import org.homesharing.lockbox.presentation.general.composables.EmailInput
 import org.homesharing.lockbox.presentation.general.composables.PolicyAndConditions
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.login.EmailError
 
 @Composable
 fun EmailInputStep(
     email: String,
-    emailError: EmailDoesntMatchPattern?,
+    emailError: EmailError?,
     onEmailChange: (String) -> Unit,
     toNextStep: () -> Unit,
     onSignIn: () -> Unit,

@@ -30,17 +30,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.animation.backwardAnimation
 import org.homesharing.lockbox.presentation.animation.forwardAnimation
-import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordCard
-import org.homesharing.lockbox.presentation.forgot_password.ForgotPasswordViewModel
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.sign_in.SignInCard
 import org.homesharing.lockbox.presentation.sign_in.SignInPasswordError
 import org.homesharing.lockbox.presentation.sign_in.SignInViewModel
 import org.homesharing.lockbox.presentation.sign_up.SignUpCard
 import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 fun LoginScreen(
@@ -118,29 +116,29 @@ fun LoginScreen(
                     }
                 ) { targetState ->
                     when (targetState) {
-                        LoginType.ForgotPassword -> {
-                            val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
-                            val forgotPasswordState =
-                                forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
-
-                            ForgotPasswordCard(
-                                forgotPasswordUiState = forgotPasswordState.value,
-                                title = stringResource(R.string.password_recovery),
-                                onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
-                                onDismiss = { showModal = false },
-                                onEmailChange = forgotPasswordViewModel::onChangeEmail,
-                                onConfirmEmail = forgotPasswordViewModel::confirmEmail,
-                                onToStep = forgotPasswordViewModel::toStep,
-                                onPasswordChange = forgotPasswordViewModel::onChangePassword,
-                                onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
-                                onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
-                                onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
-                                onSetPassword = {
-                                    forgotPasswordViewModel.setPassword()
-                                    onToTypeAuth(LoginType.SignIn)
-                                }
-                            )
-                        }
+//                        LoginType.ForgotPassword -> {
+//                            val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
+//                            val forgotPasswordState =
+//                                forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
+//
+//                            ForgotPasswordCard(
+//                                forgotPasswordUiState = forgotPasswordState.value,
+//                                title = stringResource(R.string.password_recovery),
+//                                onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
+//                                onDismiss = { showModal = false },
+//                                onEmailChange = forgotPasswordViewModel::onChangeEmail,
+//                                onConfirmEmail = forgotPasswordViewModel::confirmEmail,
+//                                onToStep = forgotPasswordViewModel::toStep,
+//                                onPasswordChange = forgotPasswordViewModel::onChangePassword,
+//                                onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
+//                                onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
+//                                onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
+//                                onSetPassword = {
+//                                    forgotPasswordViewModel.setPassword()
+//                                    onToTypeAuth(LoginType.SignIn)
+//                                }
+//                            )
+//                        }
 
                         LoginType.SignIn -> {
                             val signInViewModel = koinViewModel<SignInViewModel>()

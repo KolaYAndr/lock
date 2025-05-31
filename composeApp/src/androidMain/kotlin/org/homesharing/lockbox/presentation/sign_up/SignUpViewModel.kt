@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AuthRepository
+import org.homesharing.lockbox.presentation.login.EmailError
 
 private const val USER_EXISTS_STRING = "{\"errorMessage\":\"User exists with same email\"}"
 private const val PASSWORDS_DONT_MATCH_STRING = "web.exchange.bind.exception"
@@ -107,7 +108,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
             SignUpStep.PasswordInput -> {
                 if (emailMatcher.matcher(uiState.value.email).matches()) {
                     _uiState.update { it.copy(signUpStep = nextStep) }
-                } else _uiState.update { it.copy(emailError = EmailDoesntMatchPattern) }
+                } else _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
             }
 
             else -> {
@@ -119,7 +120,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
 data class SignUpUiState(
     val email: String = "",
-    val emailError: EmailDoesntMatchPattern? = null,
+    val emailError: EmailError? = null,
     val password: String = "",
     val passwordRepeated: String = "",
     val passwordRepeatedError: PasswordRepeatedError = PasswordRepeatedError.None,
@@ -145,5 +146,3 @@ sealed class PasswordRepeatedError(@StringRes val messageId: Int?) {
     data object UserExists : PasswordRepeatedError(R.string.user_already_exists)
     data object Unexpected : PasswordRepeatedError(R.string.unknown_error)
 }
-
-data object EmailDoesntMatchPattern

@@ -3,6 +3,7 @@ package org.homesharing.lockbox.domain.api
 import org.homesharing.lockbox.data.network.api.ApiResponse
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
+import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
@@ -22,7 +23,7 @@ internal interface AccountApi {
     ): TokenResponseDto
 
     suspend fun refreshTokens(
-        accesstoken: String,
+        accessToken: String,
         refreshToken: String
     ): TokenResponseDto
 
@@ -33,7 +34,7 @@ internal interface AccountApi {
         data: ByteArray
     )
 
-    suspend fun getSessions(accesstoken: String): ApiResponse<SessionsResponseDto>
+    suspend fun getSessions(accessToken: String): ApiResponse<SessionsResponseDto>
 
     suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailResponseDto>
 
@@ -49,4 +50,8 @@ internal interface AccountApi {
         accessToken: String,
         id: String
     ): ApiResponse<CloseSessionsResponseDto>
+
+    suspend fun sendLinkToChangePassword(
+        accessToken: String,
+    ): ApiResponse<ResetPasswordDto>
 }

@@ -18,10 +18,10 @@ internal suspend fun <Dto, D> parseLockBoxApiResponse(
         Response.Failure(e.cause?.message.toString())
     }
 
-internal suspend fun <Dto> parseLockBoxApiResponse(
-    apiCall: suspend () -> ApiResponse<Dto>
-): Response<Dto> = try {
-        Response.Success(apiCall().body!!)
-    } catch (e: Exception) {
-        Response.Failure(e.cause?.message.toString())
-    }
+//internal suspend fun <Dto> parseLockBoxApiResponse(
+//    apiCall: suspend () -> ApiResponse<Dto>
+//): Response<Dto> = try {
+//        Response.Success(apiCall().body!!)
+//    } catch (e: Exception) {
+//        Response.Failure(e.cause?.message.toString())
+//    }
