@@ -54,7 +54,7 @@ private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-c
 fun Navigation(
     navController: NavHostController,
     startFromLogin: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
@@ -204,15 +204,10 @@ fun Navigation(
             ) {
                 composable<SecurityRoutes.Security> {
                     val securityViewModel = koinViewModel<SecurityViewModel>()
-//                    val securityUiState by securityViewModel.uiState.collectAsStateWithLifecycle()
 
                     SecurityScreen(
-//                        securityUiState = securityUiState,
                         onNavBack = navController::navigateUp,
                         onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
-//                        onPasswordSet = securityViewModel::onPasswordChanged,
-//                        onReady = { navController.navigate(SettingsRoutes.Account) },
-//                        onBackToChangePassword = securityViewModel::backToChangePassword,
                         onChangePassword = securityViewModel::sendLinkToChangePassword,
                         modifier = Modifier.fillMaxSize()
                     )

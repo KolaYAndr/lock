@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.repository.BoxesRepository
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
@@ -16,7 +18,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 import kotlin.properties.Delegates
 
 class DetailedLockBoxViewModel(
-    private val boxesRepository: BoxesRepository
+    private val boxesRepository: BoxesRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<DetailedLockBoxUiState> =
         MutableStateFlow(DetailedLockBoxUiState())
@@ -70,11 +72,7 @@ class DetailedLockBoxViewModel(
                 )
             ) {
                 is Response.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            boxName = response.data.alias,
-                        )
-                    }
+                    _uiState.update { it.copy(boxName = response.data.alias) }
                 }
 
                 is Response.Failure -> {
@@ -92,12 +90,14 @@ class DetailedLockBoxViewModel(
                 }
 
                 is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotUnbindBox {
-                        unbindDevice(
-                            macAddress,
-                            onSuccess
-                        )
-                    })
+                    SnackbarController.receiveEvent(
+                        couldNotUnbindBox {
+                            unbindDevice(
+                                macAddress,
+                                onSuccess
+                            )
+                        }
+                    )
                 }
             }
         }
@@ -123,15 +123,39 @@ class DetailedLockBoxViewModel(
                     SnackbarController.receiveEvent(couldNotLoadBoxInfo { findBoxByMac(macAddress) })
                 }
             }
+
+            loadGuestList()
+        }
+    }
+
+    private fun loadGuestList() {
+        viewModelScope.launch {
+            when (val response = boxesRepository.getListOfAccesses(macAddress)) {
+                is Response.Failure -> {
+                    SnackbarController.receiveEvent(couldNotLoadGuestList { loadGuestList() })
+                }
+
+                is Response.Success -> _uiState.update {
+                    it.copy(accessList = response.data.accessList)
+                }
+            }
         }
     }
 
     private companion object {
+        fun couldNotLoadGuestList(onRetry: () -> Unit) = SnackbarEvent(
+            message = R.string.could_not_load_guest_list,
+            action = SnackbarAction(
+                name = R.string.retry,
+                effect = onRetry
+            )
+        )
+
         fun couldNotLoadBoxInfo(onRetry: () -> Unit) = SnackbarEvent(
             message = R.string.could_not_load_box_info,
             action = SnackbarAction(
                 name = R.string.retry,
-                effect = { onRetry() }
+                effect = onRetry
             )
         )
 
@@ -139,7 +163,7 @@ class DetailedLockBoxViewModel(
             message = R.string.could_not_update_box_address,
             action = SnackbarAction(
                 name = R.string.retry,
-                effect = { onRetry() }
+                effect = onRetry
             )
         )
 
@@ -147,7 +171,7 @@ class DetailedLockBoxViewModel(
             message = R.string.could_not_update_box_name,
             action = SnackbarAction(
                 name = R.string.retry,
-                effect = { onRetry() }
+                effect = onRetry
             )
         )
 
@@ -155,7 +179,7 @@ class DetailedLockBoxViewModel(
             message = R.string.could_not_unbind_box,
             action = SnackbarAction(
                 name = R.string.retry,
-                effect = { onRetry() }
+                effect = onRetry
             )
         )
 
@@ -163,7 +187,7 @@ class DetailedLockBoxViewModel(
             message = R.string.could_not_open_box,
             action = SnackbarAction(
                 name = R.string.retry,
-                effect = { onRetry() }
+                effect = onRetry
             )
         )
 
@@ -174,9 +198,11 @@ class DetailedLockBoxViewModel(
     }
 }
 
+@Immutable
 data class DetailedLockBoxUiState(
     val boxName: String = "",
     val address: String = "",
     val signalStrength: Int = 0,
-    val batteryLevel: Int = 0
+    val batteryLevel: Int = 0,
+    val accessList: List<Access> = emptyList(),
 )

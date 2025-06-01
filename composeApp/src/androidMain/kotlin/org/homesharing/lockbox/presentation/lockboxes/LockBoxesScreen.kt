@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
+import org.homesharing.lockbox.presentation.general.composables.AddRow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
@@ -187,8 +188,9 @@ private fun LockBoxScreen(
                 }
 
                 item {
-                    AddBoxRow(
-                        onAddDevice = onAddDevice,
+                    AddRow(
+                        onAdd = onAddDevice,
+                        text = stringResource(R.string.add_device),
                         modifier = Modifier.padding(top = 10.dp)
                     )
                 }
@@ -361,30 +363,6 @@ private fun ConnectModalSheet(
                 )
             )
         }
-    }
-}
-
-@Composable
-private fun AddBoxRow(onAddDevice: () -> Unit, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.clickable { onAddDevice() },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.plus),
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = LockBoxTheme.colors.green500
-        )
-
-        Text(
-            text = stringResource(R.string.add_device),
-            style = LockBoxTheme.typography.headlineLarge,
-            color = LockBoxTheme.colors.green500,
-            modifier = Modifier.padding(horizontal = 8.dp),
-            maxLines = 1
-        )
     }
 }
 

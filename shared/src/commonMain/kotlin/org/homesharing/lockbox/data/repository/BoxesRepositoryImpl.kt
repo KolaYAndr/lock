@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import org.homesharing.lockbox.data.network.dto.accessed.AccessedResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
@@ -15,6 +16,8 @@ import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.model.access.Accesses
+import org.homesharing.lockbox.domain.model.access.toDomain
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
@@ -156,6 +159,22 @@ internal class BoxesRepositoryImpl(
                 )
             },
             mapper = UpdateBoxResponseDto::toDomain
+        )
+    }
+
+    override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            refreshToken()
+        }
+
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.getAccessedList(
+                    accessToken = tokenStorage.getAccessToken(),
+                    mac = macAddress
+                )
+            },
+            mapper = AccessedResponseDto::toDomain
         )
     }
 

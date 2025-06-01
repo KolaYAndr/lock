@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.security
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -13,27 +14,12 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 class SecurityViewModel(
     private val accountRepository: AccountRepository,
 ) : ViewModel() {
-//    private val _uiState: MutableStateFlow<SecurityUiState> =
-//        MutableStateFlow(SecurityUiState.OptionsScreen)
-//    val uiState: StateFlow<SecurityUiState> get() = _uiState.asStateFlow()
-//
-//    fun onPasswordChanged() {
-//        _uiState.update {
-//            SecurityUiState.PasswordChanged
-//        }
-//    }
-//
-//    fun backToChangePassword() {
-//        _uiState.update {
-//            SecurityUiState.OptionsScreen
-//        }
-//    }
 
     fun sendLinkToChangePassword() {
         viewModelScope.launch {
             when (accountRepository.sendLinkToChangeEmail()) {
                 is Response.Failure -> SnackbarController.receiveEvent(
-                    couldntSendLinkToEmail { sendLinkToChangePassword() }
+                    couldNotSendLinkToEmail { sendLinkToChangePassword() }
                 )
 
                 is Response.Success -> SnackbarController.receiveEvent(
@@ -44,8 +30,8 @@ class SecurityViewModel(
     }
 
     private companion object {
-        fun couldntSendLinkToEmail(onRetry: () -> Unit) = SnackbarEvent(
-            message = R.string.couldnt_send_link_to_change_password,
+        fun couldNotSendLinkToEmail(onRetry: () -> Unit) = SnackbarEvent(
+            message = R.string.could_not_send_link_to_change_password,
             action = SnackbarAction(
                 name = R.string.retry,
                 effect = { onRetry() }
@@ -53,13 +39,9 @@ class SecurityViewModel(
         )
 
         val linkSentToResetPassword = SnackbarEvent(
-            message = R.string.link_sent_to_change_password
+            message = R.string.link_sent_to_change_password,
+            duration = SnackbarDuration.Short
         )
     }
 }
-//
-//sealed class SecurityUiState {
-//    data object OptionsScreen : SecurityUiState()
-//    data object PasswordChanged : SecurityUiState()
-//}
 
