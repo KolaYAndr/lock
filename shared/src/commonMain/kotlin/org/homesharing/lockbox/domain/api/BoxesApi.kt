@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.domain.api
 
 import org.homesharing.lockbox.data.network.api.ApiResponse
+import org.homesharing.lockbox.data.network.dto.accessed.AccessedResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
@@ -41,4 +42,9 @@ internal interface BoxesApi {
         accessToken: String,
         mac: String
     ): ApiResponse<UpdateBoxResponseDto>
+
+    suspend fun getAccessedList(
+        accessToken: String,
+        mac: String
+    ): ApiResponse<AccessedResponseDto>
 }

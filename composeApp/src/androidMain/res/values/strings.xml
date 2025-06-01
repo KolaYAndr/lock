@@ -162,8 +162,11 @@
     <string name="check_internet_connection">Проверьте соединение с интернетом</string>
     <string name="something_went_wrong_try_refreshing">Что-то пошло не так, попробуйте перезагрузить</string>
     <string name="refresh">Перезагрузить</string>
-    <string name="couldnt_send_link_to_change_password">Не удалось отправить ссылку для сброса пароля на почту</string>
+    <string name="could_not_send_link_to_change_password">Не удалось отправить ссылку для сброса пароля на почту</string>
     <string name="link_sent_to_change_password">Отправили ссылку для сброса пароля на почту</string>
+    <string name="could_not_load_guest_list">Не удалось загрузить список гостей</string>
+    <string name="add_user">Добавить пользователя</string>
+    <string name="guest">Гость</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

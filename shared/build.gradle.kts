@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.paging)
+            implementation(libs.dateTime)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)

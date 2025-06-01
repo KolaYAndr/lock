@@ -36,19 +36,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.toJavaLocalDateTime
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.domain.model.access.Access
+import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.presentation.general.composables.AddRow
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPropertyInput
+import org.homesharing.lockbox.presentation.general.composables.RoundText
+import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
-import org.homesharing.lockbox.domain.model.box.Box
+import java.time.format.DateTimeFormatter
+
+private const val SIGNAL_STRENGTH_COLOR_HIGHER_BOUND = -60
+private const val SIGNAL_STRENGTH_COLOR_MIDDLE_BOUND = -90
+private const val SIGNAL_STRENGTH_COLOR_LOWER_BOUND = -100
 
 @Composable
 fun DetailedLockBoxScreen(
@@ -58,11 +67,11 @@ fun DetailedLockBoxScreen(
     onUnbindDevice: () -> Unit,
     onSaveAddress: (String) -> Unit,
     onSaveName: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showOpenDeviceDialog by remember { mutableStateOf(false) }
     var showUnbindDeviceDialog by remember { mutableStateOf(false) }
-//    var showAccessModal by remember { mutableStateOf(false) }
+    var showAccessModal by remember { mutableStateOf(false) }
     var showAboutDeviceModal by remember { mutableStateOf(false) }
     var showChangeNameBottomSheet by remember { mutableStateOf(false) }
     var showChangeAddressBottomSheet by remember { mutableStateOf(false) }
@@ -163,7 +172,6 @@ fun DetailedLockBoxScreen(
                         statusImage = painterResource(R.drawable.wifi_zero),
                         statusCategory = stringResource(R.string.wifi_network),
                         status = "Network Name", // todo переделать всё,
-                        alertImage = {},
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -197,22 +205,22 @@ fun DetailedLockBoxScreen(
                 }
             }
 
-//            item {
-//                BasicGroup(
-//                    shape = LockBoxTheme.shape.roundedCornerShape12,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(vertical = 12.dp)
-//                ) {
-//                    ActionableProperty(
-//                        title = stringResource(R.string.access_device),
-//                        onClick = { showAccessModal = true },
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(vertical = 4.dp)
-//                    )
-//                }
-//            }
+            item {
+                BasicGroup(
+                    shape = LockBoxTheme.shape.roundedCornerShape12,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
+                ) {
+                    ActionableProperty(
+                        title = stringResource(R.string.access_device),
+                        onClick = { showAccessModal = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    )
+                }
+            }
 
             item {
                 BasicGroup(
@@ -335,65 +343,76 @@ fun DetailedLockBoxScreen(
             modifier = Modifier.fillMaxSize()
         )
     }
+
+    if (showAccessModal) {
+        AccessModalSheet(
+            onDismiss = { showAccessModal = false },
+            accessList = uiState.accessList,
+            onAddGuest = {},
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }
 
 @Composable
-private fun getBatteryAlertColor(batteryLevel: Int): Color {
-    return when (batteryLevel) {
-        in Box.BATTERY_PERCENT_LOW..< Box.BATTERY_PERCENT_MEDIUM -> LockBoxTheme.colors.yellow500
-        in 0..< Box.BATTERY_PERCENT_LOW -> LockBoxTheme.colors.red600
+private fun getBatteryAlertColor(batteryLevel: Int): Color =
+    when (batteryLevel) {
+        in Box.BATTERY_PERCENT_ZERO..<Box.BATTERY_PERCENT_LOW -> LockBoxTheme.colors.red600
+        in Box.BATTERY_PERCENT_LOW..<Box.BATTERY_PERCENT_MEDIUM -> LockBoxTheme.colors.yellow500
         else -> Color.Transparent
     }
-}
 
 @Composable
-private fun getBatteryImage(batteryLevel: Int): Painter {
-    return when (batteryLevel) {
-        in Box.BATTERY_PERCENT_LOW..< Box.BATTERY_PERCENT_MEDIUM -> painterResource(R.drawable.battery_low)
-        in Box.BATTERY_PERCENT_MEDIUM ..< Box.BATTERY_PERCENT_HIGH -> painterResource(R.drawable.battery_medium)
-        in Box.BATTERY_PERCENT_HIGH..100 -> painterResource(R.drawable.battery_full)
+private fun getBatteryImage(batteryLevel: Int): Painter =
+    when (batteryLevel) {
+        in Box.BATTERY_PERCENT_LOW..<Box.BATTERY_PERCENT_MEDIUM -> painterResource(R.drawable.battery_low)
+        in Box.BATTERY_PERCENT_MEDIUM..<Box.BATTERY_PERCENT_HIGH -> painterResource(R.drawable.battery_medium)
+        in Box.BATTERY_PERCENT_HIGH..Box.BATTERY_PERCENT_FULL -> painterResource(R.drawable.battery_full)
         else -> painterResource(R.drawable.battery_empty)
     }
-}
 
 @Composable
-private fun getSignalImage(signalStrength: Int): Painter {
-    return when(signalStrength) {
-        in Box.SIGNAL_STRENGTH_LEVEL_LOW..< Box.SIGNAL_STRENGTH_LEVEL_MEDIUM -> painterResource(R.drawable.signal_low)
-        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..< Box.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(R.drawable.signal_medium)
-        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..< Box.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(R.drawable.signal_high)
-        in Box.SIGNAL_STRENGTH_LEVEL_FULL..< 0 -> painterResource(R.drawable.signal_full)
+private fun getSignalImage(signalStrength: Int): Painter =
+    when (signalStrength) {
+        in Box.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<Box.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
+            painterResource(R.drawable.signal_low)
+
+        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..<Box.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(R.drawable.signal_medium)
+        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..<Box.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(R.drawable.signal_high)
+        in Box.SIGNAL_STRENGTH_LEVEL_FULL..Box.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
+            painterResource(R.drawable.signal_full)
+
         else -> painterResource(R.drawable.signal_zero)
     }
-}
 
 @Composable
 @ReadOnlyComposable
-private fun getSignalStatus(signalStrength: Int): String {
-    return when(signalStrength) {
-        in Box.SIGNAL_STRENGTH_LEVEL_LOW..< Box.SIGNAL_STRENGTH_LEVEL_MEDIUM -> stringResource(R.string.signa_low)
-        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..< Box.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(R.string.signal_medium)
-        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..< Box.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(R.string.signal_high)
-        in Box.SIGNAL_STRENGTH_LEVEL_FULL..< 0 -> stringResource(R.string.signal_full)
+private fun getSignalStatus(signalStrength: Int): String =
+    when (signalStrength) {
+        in Box.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<Box.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
+            stringResource(R.string.signa_low)
+
+        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..<Box.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(R.string.signal_medium)
+        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..<Box.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(R.string.signal_high)
+        in Box.SIGNAL_STRENGTH_LEVEL_FULL..Box.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
+            stringResource(R.string.signal_full)
+
         else -> stringResource(R.string.signal_zero)
     }
-}
 
 @Composable
-private fun getSignalAlertColor(signalStrength: Int): Color {
-    return when (signalStrength) {
-        in -89..-60 -> LockBoxTheme.colors.yellow500
-        in -100..-90 -> LockBoxTheme.colors.red600
+private fun getSignalAlertColor(signalStrength: Int): Color =
+    when (signalStrength) {
+        in SIGNAL_STRENGTH_COLOR_LOWER_BOUND..SIGNAL_STRENGTH_COLOR_MIDDLE_BOUND -> LockBoxTheme.colors.red600
+        in SIGNAL_STRENGTH_COLOR_MIDDLE_BOUND..SIGNAL_STRENGTH_COLOR_HIGHER_BOUND -> LockBoxTheme.colors.yellow500
         else -> Color.Transparent
     }
-}
-
 
 @Composable
 private fun UnbindDeviceDialog(
     onDismiss: () -> Unit,
     onUnbind: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BasicDialog(
         onDismiss = onDismiss,
@@ -453,10 +472,100 @@ private fun UnbindDeviceDialog(
 }
 
 @Composable
+private fun AccessModalSheet(
+    onDismiss: () -> Unit,
+    accessList: List<Access>,
+    onAddGuest: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
+    BasicModal(
+        onDismiss = onDismiss,
+        modifier = modifier
+    ) {
+        TitledTopWithCloseAndBackButtons(
+            title = stringResource(R.string.access_device),
+            subtitle = stringResource(R.string.add_user),
+            onDismiss = onDismiss,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        LazyColumn(
+            contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp),
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            items(
+                count = accessList.size,
+                key = { index -> accessList[index].macAddress }
+            ) { index ->
+                Access(
+                    access = accessList[index],
+                    formatter = formatter,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                BasicHorizontalDivider()
+            }
+
+            item {
+                AddRow(
+                    onAdd = onAddGuest,
+                    text = stringResource(R.string.add_user),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun Access(access: Access, formatter: DateTimeFormatter, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RoundText(
+            text = access.name ?: stringResource(R.string.guest),
+            modifier = Modifier.size(40.dp)
+        )
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
+        ) {
+            Text(
+                text = access.name ?: stringResource(R.string.guest),
+                color = LockBoxTheme.colors.white,
+                style = LockBoxTheme.typography.headlineLarge
+            )
+
+            val endDateText = formatter.format(access.endTime.toJavaLocalDateTime().toLocalDate())
+            Text(
+                text = endDateText,
+                color = LockBoxTheme.colors.grey500,
+                style = LockBoxTheme.typography.footnote
+            )
+
+        }
+
+        Icon(
+            painter = painterResource(R.drawable.arrow_right),
+            tint = LockBoxTheme.colors.grey500,
+            contentDescription = null,
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
+@Composable
 private fun AboutDeviceModalSheet(
     onDismiss: () -> Unit,
     boxName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BasicModal(
         onDismiss = onDismiss,
@@ -563,7 +672,7 @@ private fun ChangePropertyBottomSheet(
     initialValue: String,
     onDismiss: () -> Unit,
     onSaveChanges: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var currentValue by remember { mutableStateOf(initialValue) }
     BasicBottomSheet(
@@ -593,8 +702,7 @@ private fun ChangePropertyBottomSheet(
                         onDismiss()
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             )
 
             BasicButton(
@@ -617,7 +725,7 @@ private fun ChangePropertyBottomSheet(
 private fun BottomSheetTitle(
     onDismiss: () -> Unit,
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
@@ -665,7 +773,7 @@ private fun BottomSheetTitle(
 private fun OpenDeviceDialog(
     onDismiss: () -> Unit,
     onOpenBox: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BasicDialog(
         onDismiss = onDismiss,
@@ -710,9 +818,9 @@ private fun OpenDeviceDialog(
 @Composable
 private fun ActionableProperty(
     title: String,
-    text: String = "",
+    text: String? = null,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = Modifier
@@ -733,7 +841,7 @@ private fun ActionableProperty(
                 color = LockBoxTheme.colors.white
             )
 
-            if (text.isNotEmpty()) {
+            if (!text.isNullOrEmpty()) {
                 Text(
                     text = text,
                     style = LockBoxTheme.typography.footnote,
@@ -755,8 +863,8 @@ private fun StatusInfo(
     statusImage: Painter,
     statusCategory: String,
     status: String,
-    alertImage: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    alertImage: (@Composable () -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.padding(vertical = 10.dp, horizontal = 16.dp),
@@ -791,7 +899,7 @@ private fun StatusInfo(
                     color = LockBoxTheme.colors.white
                 )
 
-                alertImage()
+                alertImage?.invoke()
             }
         }
     }
