@@ -101,7 +101,6 @@ fun AccountScreen(
             )
         }
 
-
         BasicGroup(
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,7 +262,7 @@ private fun ContactInfo(
 
         Text(
             text = if (isValueSet) stringResource(R.string.change_full)
-            else stringResource(R.string.add_full),
+                    else stringResource(R.string.add_full),
             style = LockBoxTheme.typography.headlineLarge,
             color = LockBoxTheme.colors.grey500,
             modifier = Modifier.padding(horizontal = 12.dp)

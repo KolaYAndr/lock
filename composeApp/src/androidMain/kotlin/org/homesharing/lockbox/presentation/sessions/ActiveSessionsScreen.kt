@@ -74,7 +74,6 @@ fun ActiveSessionScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-
         LockBoxPullToRefresh(
             onRefresh = onRefresh,
             isRefreshing = activeSessionsUiState.isRefreshing,
@@ -174,7 +173,7 @@ fun ActiveSessionScreen(
 }
 
 @Composable
-fun CloseSessionsDialog(onDismiss: () -> Unit, onFinishSessions: () -> Unit, modifier: Modifier = Modifier) {
+private fun CloseSessionsDialog(onDismiss: () -> Unit, onFinishSessions: () -> Unit, modifier: Modifier = Modifier) {
     BasicDialog(
         onDismiss = onDismiss,
         modifier = modifier

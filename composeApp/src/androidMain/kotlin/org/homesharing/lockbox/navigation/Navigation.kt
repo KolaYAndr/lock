@@ -24,8 +24,6 @@ import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.account.AccountViewModel
-import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScreen
-import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.animation.enterAnimation
 import org.homesharing.lockbox.presentation.animation.exitAnimation
 import org.homesharing.lockbox.presentation.animation.globalEnterAnimation
@@ -35,6 +33,8 @@ import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
 import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxScreen
 import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxViewModel
+import org.homesharing.lockbox.presentation.general.composables.LockBoxesTopRow
+import org.homesharing.lockbox.presentation.general.composables.SettingsTopRowText
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
@@ -47,8 +47,6 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
-import org.homesharing.lockbox.presentation.general.composables.LockBoxesTopRow
-import org.homesharing.lockbox.presentation.general.composables.SettingsTopRowText
 
 private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
 
@@ -298,23 +296,23 @@ fun Navigation(
                     }
                 }
 
-                composable<AccountRoutes.ChangePhoneNumber> {
-                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
-                    val addPhoneUiState by
-                    addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
-
-                    AddPhoneNumberScreen(
-                        uiState = addPhoneUiState,
-                        onNavBack = navController::navigateUp,
-                        onToStep = addPhoneNumberViewModel::toStep,
-                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
-                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
-                        onDone = { navController.navigate(SettingsRoutes.Account) },
-                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
-                        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+//                composable<AccountRoutes.ChangePhoneNumber> {
+//                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
+//                    val addPhoneUiState by
+//                    addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
+//
+//                    AddPhoneNumberScreen(
+//                        uiState = addPhoneUiState,
+//                        onNavBack = navController::navigateUp,
+//                        onToStep = addPhoneNumberViewModel::toStep,
+//                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
+//                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
+//                        onDone = { navController.navigate(SettingsRoutes.Account) },
+//                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
+//                        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
+//                        modifier = Modifier.fillMaxSize()
+//                    )
+//                }
             }
         }
     }

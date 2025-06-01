@@ -116,30 +116,6 @@ fun LoginScreen(
                     }
                 ) { targetState ->
                     when (targetState) {
-//                        LoginType.ForgotPassword -> {
-//                            val forgotPasswordViewModel = koinViewModel<ForgotPasswordViewModel>()
-//                            val forgotPasswordState =
-//                                forgotPasswordViewModel.uiState.collectAsStateWithLifecycle()
-//
-//                            ForgotPasswordCard(
-//                                forgotPasswordUiState = forgotPasswordState.value,
-//                                title = stringResource(R.string.password_recovery),
-//                                onLastBackPress = { onToTypeAuth(LoginType.SignIn) },
-//                                onDismiss = { showModal = false },
-//                                onEmailChange = forgotPasswordViewModel::onChangeEmail,
-//                                onConfirmEmail = forgotPasswordViewModel::confirmEmail,
-//                                onToStep = forgotPasswordViewModel::toStep,
-//                                onPasswordChange = forgotPasswordViewModel::onChangePassword,
-//                                onPasswordRepeatedChange = forgotPasswordViewModel::onChangePasswordRepeat,
-//                                onPasswordSeenChange = forgotPasswordViewModel::onPasswordSeenChange,
-//                                onPasswordRepeatedSeenChange = forgotPasswordViewModel::onPasswordRepeatedSeenChange,
-//                                onSetPassword = {
-//                                    forgotPasswordViewModel.setPassword()
-//                                    onToTypeAuth(LoginType.SignIn)
-//                                }
-//                            )
-//                        }
-
                         LoginType.SignIn -> {
                             val signInViewModel = koinViewModel<SignInViewModel>()
                             val signInState by signInViewModel.uiState.collectAsStateWithLifecycle()

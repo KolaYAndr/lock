@@ -39,7 +39,6 @@ private const val STEP_TWO = 2
 sealed class LoginType(val hierarchyIndex: Int) {
     data object SignIn : LoginType(STEP_ONE)
     data object SignUp : LoginType(STEP_TWO)
-//    data object ForgotPassword : LoginType(STEP_TWO)
 }
 
 data class LoginUiState(

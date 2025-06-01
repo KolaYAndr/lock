@@ -165,7 +165,6 @@ fun SignInCard(
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
                 .clickable { uriHandler.openUri("https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client") },
-//                .clickable { onToTypeAuth(LoginType.ForgotPassword) },
             textDecoration = TextDecoration.Underline
         )
 
