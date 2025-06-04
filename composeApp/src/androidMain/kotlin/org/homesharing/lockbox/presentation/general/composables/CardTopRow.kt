@@ -25,7 +25,7 @@ internal fun CardTopRow(
     onDismiss: () -> Unit,
     titleText: String,
     stepNumber: Int,
-    totalSteps: Int,
+    totalSteps: Int?,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -58,9 +58,9 @@ internal fun CardTopRow(
                 style = LockBoxTheme.typography.titleSmall,
                 color = LockBoxTheme.colors.grey100
             )
-            if (totalSteps != 0) {
+            totalSteps?.let { steps ->
                 Text(
-                    text = stringResource(R.string.step_of, stepNumber, totalSteps),
+                    text = stringResource(R.string.step_of, stepNumber, steps),
                     style = LockBoxTheme.typography.subHeadlineMedium,
                     color = LockBoxTheme.colors.grey500
                 )

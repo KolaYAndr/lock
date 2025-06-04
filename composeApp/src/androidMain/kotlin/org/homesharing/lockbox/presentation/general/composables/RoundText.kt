@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
+private const val SHORT_LENGTH_BOUND = 3
+
 @Composable
 internal fun RoundText(text: String, modifier: Modifier = Modifier) {
     Box(
@@ -34,12 +36,15 @@ internal fun RoundText(text: String, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         if (text.isNotEmpty()) {
-            val splits = text.split(" ")
-            val name = splits.getOrNull(0) ?: ""
-            val surname = splits.getOrNull(1) ?: ""
-            val shortName = getShortenedName(name, surname)
+            val shownName = if (text.length <= SHORT_LENGTH_BOUND) text
+            else {
+                val splits = text.split(" ")
+                val name = splits.getOrNull(0) ?: ""
+                val surname = splits.getOrNull(1) ?: ""
+                getShortenedName(name, surname)
+            }
             Text(
-                text = shortName,
+                text = shownName,
                 color = LockBoxTheme.colors.grey500,
                 textAlign = TextAlign.Center
             )

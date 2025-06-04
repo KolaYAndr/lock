@@ -58,7 +58,7 @@ internal fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier
             onClick = onNavigate::invoke,
             text = stringResource(R.string.ready),
             paddingValues = PaddingValues(10.dp),
-            colors = ButtonDefaults.buttonColors(
+            style = ButtonDefaults.buttonColors(
                 containerColor = LockBoxTheme.colors.grey800,
                 contentColor = LockBoxTheme.colors.grey100
             ),

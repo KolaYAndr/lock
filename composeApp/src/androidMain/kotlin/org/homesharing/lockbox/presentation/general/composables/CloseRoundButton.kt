@@ -15,10 +15,9 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 internal fun CloseRoundButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Button(
-        modifier = modifier
-            .size(24.dp),
-        onClick = onClick::invoke,
+    Button (
+        modifier = modifier.size(24.dp),
+        onClick = onClick,
         shape = LockBoxTheme.shape.circleShape,
         colors = ButtonDefaults.buttonColors(
             containerColor = LockBoxTheme.colors.grey800

@@ -42,12 +42,12 @@ internal fun SignUpCard(
                 backwardAnimation
             }
         }
-    ) { targetStep ->
+    ) { step ->
         BasicCard(modifier = modifier) {
             val context = LocalContext.current
             CardTopRow(
                 onBackPressed = {
-                    when (targetStep) {
+                    when (step) {
                         SignUpStep.EmailInput -> onSignIn()
                         SignUpStep.PasswordInput -> onToStep(SignUpStep.EmailInput)
                         SignUpStep.EmailConfirmation -> onToStep(SignUpStep.PasswordInput)
@@ -55,11 +55,11 @@ internal fun SignUpCard(
                 },
                 onDismiss = { onDismiss() },
                 titleText = stringResource(R.string.register),
-                stepNumber = targetStep.index,
+                stepNumber = step.index,
                 totalSteps = TOTAL_STEPS,
                 modifier = Modifier.fillMaxWidth()
             )
-            when (targetStep) {
+            when (step) {
                 SignUpStep.EmailInput -> {
                     EmailInputStep(
                         onSignIn = onSignIn,

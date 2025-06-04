@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -48,7 +47,9 @@ import org.homesharing.lockbox.presentation.general.composables.LockBoxPropertyI
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
@@ -353,7 +354,8 @@ internal fun DetailedLockBoxScreen(
         AccessModalSheet(
             onDismiss = { showAccessModal = false },
             accessList = accessModalSheetState.accesses,
-            onAddGuest = accessModalSheetViewModel::addGuest,
+            step = accessModalSheetState.step,
+            changeStep = accessModalSheetViewModel::toStep,
             isLoading = accessModalSheetState.loading,
             modifier = Modifier.fillMaxSize()
         )
@@ -424,56 +426,16 @@ private fun UnbindDeviceDialog(
         onDismiss = onDismiss,
         modifier = modifier
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = stringResource(R.string.unbind_device_question),
-                style = LockBoxTheme.typography.titleMedium,
-                color = LockBoxTheme.colors.grey100
-            )
-
-            Text(
-                text = stringResource(R.string.not_cancellable_unbind_device),
-                style = LockBoxTheme.typography.bodyMedium,
-                color = LockBoxTheme.colors.grey500
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-        ) {
-            BasicButton(
-                onClick = onDismiss,
-                text = stringResource(R.string.cancel),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.grey900,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-
-            BasicButton(
-                onClick = {
-                    onUnbind()
-                    onDismiss()
-                },
-                text = stringResource(R.string.unbind),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.red600,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-        }
+        BasicDialogContent(
+            title = stringResource(R.string.unbind_device_question),
+            subtitle = stringResource(R.string.not_cancellable_unbind_device),
+            onDismiss = onDismiss,
+            onDangerButtonAction =  {
+                onUnbind()
+                onDismiss()
+            },
+            dangerButtonText = stringResource(R.string.unbind)
+        )
     }
 }
 
@@ -695,39 +657,16 @@ private fun OpenDeviceDialog(
         onDismiss = onDismiss,
         modifier = modifier
     ) {
-        Text(
-            text = stringResource(R.string.open_device_question),
-            style = LockBoxTheme.typography.titleMedium,
-            color = LockBoxTheme.colors.grey100,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+        BasicDialogContent(
+            title = stringResource(R.string.open_device_question),
+            onDismiss = onDismiss,
+            onDangerButtonAction = {
+                onOpenBox()
+                onDismiss()
+            },
+            dangerButtonText = stringResource(R.string.open),
+            dangerButtonStyle = BasicButtonStyle.outerGreen()
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-        ) {
-            BasicButton(
-                onClick = onDismiss,
-                text = stringResource(R.string.cancel),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.grey900,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-
-            BasicButton(
-                onClick = {
-                    onOpenBox()
-                    onDismiss()
-                },
-                text = stringResource(R.string.open),
-                paddingValues = PaddingValues(10.dp)
-            )
-        }
     }
 }
 

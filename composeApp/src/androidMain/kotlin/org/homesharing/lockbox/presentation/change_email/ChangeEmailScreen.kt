@@ -38,6 +38,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.composables.EmailInput
 import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
@@ -226,9 +227,7 @@ private fun NewEmailInputStep(
         BasicButton(
             text = stringResource(R.string.change_mail),
             paddingValues = PaddingValues(14.dp),
-            onClick = {
-                changeEmail()
-            },
+            onClick = changeEmail,
             modifier = Modifier
                 .padding(top = 24.dp)
                 .fillMaxWidth()
@@ -240,10 +239,7 @@ private fun NewEmailInputStep(
             onClick = {
                 onToStep(ChangeEmailStep.WantToChange)
             },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LockBoxTheme.colors.grey950,
-                contentColor = LockBoxTheme.colors.grey100
-            ),
+            style = BasicButtonStyle.darkerGrey(),
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth()

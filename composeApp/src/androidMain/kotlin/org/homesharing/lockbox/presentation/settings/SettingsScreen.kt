@@ -4,13 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,11 +28,11 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
-import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.RoundText
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
@@ -183,45 +181,20 @@ internal fun SettingsScreen(
 }
 
 @Composable
-private fun ExitDialog(onDismiss: () -> Unit, onLogOut: () -> Unit) {
+private fun ExitDialog(onDismiss: () -> Unit, onLogOut: () -> Unit, modifier: Modifier = Modifier) {
     BasicDialog(
-        onDismiss = { onDismiss() }
+        onDismiss = onDismiss,
+        modifier = modifier
     ) {
-        Text(
-            text = stringResource(R.string.log_out_question),
-            style = LockBoxTheme.typography.titleMedium,
-            color = LockBoxTheme.colors.grey100
+        BasicDialogContent(
+            title = stringResource(R.string.log_out_question),
+            onDismiss = onDismiss,
+            onDangerButtonAction = {
+                onLogOut()
+                onDismiss()
+            },
+            dangerButtonText = stringResource(R.string.log_out)
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-        ) {
-            BasicButton(
-                onClick = onDismiss,
-                text = stringResource(R.string.cancel),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.grey900,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-
-            BasicButton(
-                onClick = {
-                    onLogOut()
-                    onDismiss()
-                },
-                text = stringResource(R.string.log_out),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.red600,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-        }
     }
 }
 

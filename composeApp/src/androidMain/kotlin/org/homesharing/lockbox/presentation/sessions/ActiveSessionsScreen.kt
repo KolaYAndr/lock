@@ -5,7 +5,6 @@ import android.icu.text.SimpleDateFormat
 import android.net.ConnectivityManager
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -42,16 +40,19 @@ import org.homesharing.lockbox.domain.model.sessions.Session
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
-private const val MINUTE_MILLIS = 60 * 1000L
-private const val HOUR_MILLIS = 60 * MINUTE_MILLIS
-private const val DAY_MILLIS = 24 * HOUR_MILLIS
-private const val FOURTEEN_DAYS_MILLIS = 14 * DAY_MILLIS
+private val minuteMillis = TimeUnit.MINUTES.toMillis(1)
+private val hourMillis = TimeUnit.HOURS.toMillis(1)
+private val dayMillis = TimeUnit.DAYS.toMillis(1)
+private val fourteenDaysMillis = TimeUnit.DAYS.toMillis(14)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +61,7 @@ internal fun ActiveSessionScreen(
     onNavBack: () -> Unit,
     onFinishSessions: () -> Unit,
     onRefresh: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showCloseSessionsDialog by remember { mutableStateOf(false) }
     Column(
@@ -118,14 +119,14 @@ internal fun ActiveSessionScreen(
 
                         BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-                        Text(
+                        BasicButton(
+                            onClick = { showCloseSessionsDialog = true },
                             text = stringResource(R.string.finish_all_other_sessions),
-                            style = LockBoxTheme.typography.headlineLarge,
-                            color = LockBoxTheme.colors.red600,
+                            style = BasicButtonStyle.red(),
+                            paddingValues = PaddingValues(0.dp),
                             modifier = Modifier
-                                .clickable { showCloseSessionsDialog = true }
+                                .padding(horizontal = 16.dp)
                                 .fillMaxWidth()
-                                .padding(vertical = 14.dp, horizontal = 16.dp)
                         )
                     }
                 }
@@ -173,55 +174,24 @@ internal fun ActiveSessionScreen(
 }
 
 @Composable
-private fun CloseSessionsDialog(onDismiss: () -> Unit, onFinishSessions: () -> Unit, modifier: Modifier = Modifier) {
+private fun CloseSessionsDialog(
+    onDismiss: () -> Unit,
+    onFinishSessions: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     BasicDialog(
         onDismiss = onDismiss,
         modifier = modifier
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = stringResource(R.string.finish_all_other_sessions_question),
-                style = LockBoxTheme.typography.titleMedium,
-                color = LockBoxTheme.colors.grey100
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
-        ) {
-            BasicButton(
-                onClick = onDismiss,
-                text = stringResource(R.string.cancel),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.grey900,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-
-            BasicButton(
-                onClick = {
-                    onFinishSessions()
-                    onDismiss()
-                },
-                text = stringResource(R.string.finish),
-                paddingValues = PaddingValues(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.red600,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
-            )
-        }
+        BasicDialogContent(
+            title = stringResource(R.string.finish_all_other_sessions_question),
+            onDismiss = onDismiss,
+            onDangerButtonAction = {
+                onFinishSessions()
+                onDismiss()
+            },
+            dangerButtonText = stringResource(R.string.finish)
+        )
     }
 }
 
@@ -232,7 +202,7 @@ private fun lastAccessedString(lastAccessed: Long): String {
     val diff = now - lastAccessed
 
     return when {
-        diff > FOURTEEN_DAYS_MILLIS -> {
+        diff > fourteenDaysMillis -> {
             val configuration = LocalConfiguration.current
             val sdf = SimpleDateFormat(
                 "dd.MM.yyyy",
@@ -242,18 +212,18 @@ private fun lastAccessedString(lastAccessed: Long): String {
             sdf.format(Date(lastAccessed))
         }
 
-        diff < HOUR_MILLIS -> {
-            val minutes = (diff / MINUTE_MILLIS).toInt().coerceAtLeast(1)
+        diff < hourMillis -> {
+            val minutes = (diff / minuteMillis).toInt().coerceAtLeast(1)
             pluralStringResource(R.plurals.minutes_ago, minutes, minutes)
         }
 
-        diff < DAY_MILLIS -> {
-            val hours = (diff / HOUR_MILLIS).toInt().coerceAtLeast(1)
+        diff < dayMillis -> {
+            val hours = (diff / hourMillis).toInt().coerceAtLeast(1)
             pluralStringResource(R.plurals.hours_ago, hours, hours)
         }
 
         else -> {
-            val days = (diff / DAY_MILLIS).toInt().coerceAtLeast(1)
+            val days = (diff / dayMillis).toInt().coerceAtLeast(1)
             pluralStringResource(R.plurals.days_ago, days, days)
         }
     }
@@ -265,7 +235,7 @@ private fun Device(
     name: String,
     location: String,
     accessTime: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.padding(horizontal = 16.dp, vertical = 10.dp),

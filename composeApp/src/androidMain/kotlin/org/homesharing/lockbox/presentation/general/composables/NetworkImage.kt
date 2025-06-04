@@ -23,8 +23,8 @@ private const val CROSSFADE_DURATION = 300
 internal fun NetworkImage(url: String, modifier: Modifier = Modifier) {
     val request = ImageRequest.Builder(LocalContext.current)
         .data(url)
-        .diskCachePolicy(CachePolicy.DISABLED)
-        .memoryCachePolicy(CachePolicy.DISABLED)
+//        .diskCachePolicy(CachePolicy.DISABLED)
+//        .memoryCachePolicy(CachePolicy.DISABLED)
         .crossfade(CROSSFADE_DURATION)
         .build()
 

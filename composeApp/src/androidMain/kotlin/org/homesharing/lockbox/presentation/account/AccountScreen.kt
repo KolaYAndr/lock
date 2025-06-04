@@ -40,7 +40,9 @@ import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.RoundText
 import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
@@ -145,7 +147,8 @@ internal fun AccountScreen(
                 .padding(horizontal = 16.dp)
                 .padding(top = 28.dp)
         ) {
-            ContactInfo(title = stringResource(R.string.email),
+            ContactInfo(
+                title = stringResource(R.string.email),
                 subtitle = accountUiState.email.ifEmpty {
                     stringResource(R.string.email_not_set)
                 },
@@ -168,10 +171,7 @@ internal fun AccountScreen(
             onClick = { showDeleteAccountDialog = true },
             text = stringResource(R.string.delete_account),
             paddingValues = PaddingValues(14.dp),
-            colors = ButtonDefaults.buttonColors(
-                contentColor = LockBoxTheme.colors.red600,
-                containerColor = LockBoxTheme.colors.grey900
-            ),
+            style = BasicButtonStyle.red(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -180,51 +180,32 @@ internal fun AccountScreen(
     }
 
     if (showDeleteAccountDialog) {
-        BasicDialog(
-            onDismiss = { showDeleteAccountDialog = false },
-        ) {
-            DeleteAccountDialog(onHideDialog = { showDeleteAccountDialog = false }, onDelete = onDelete)
-        }
+        DeleteAccountDialog(
+            onHideDialog = { showDeleteAccountDialog = false },
+            onDelete = onDelete
+        )
     }
 }
 
 @Composable
-private fun DeleteAccountDialog(onHideDialog: () -> Unit, onDelete: () -> Unit) {
-    Text(
-        text = stringResource(R.string.delete_account_question),
-        style = LockBoxTheme.typography.titleMedium,
-        color = LockBoxTheme.colors.grey100
-    )
-
-    Text(
-        text = stringResource(R.string.not_cancellable_delete_account),
-        style = LockBoxTheme.typography.bodyMedium,
-        color = LockBoxTheme.colors.grey500,
-        modifier = Modifier.padding(top = 8.dp)
-    )
-
-    Row(
-        modifier = Modifier
-            .padding(top = 16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+private fun DeleteAccountDialog(
+    onHideDialog: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BasicDialog(
+        onDismiss = onHideDialog,
+        modifier = modifier
     ) {
-        Text(text = stringResource(R.string.cancel),
-            style = LockBoxTheme.typography.headlineMedium,
-            color = LockBoxTheme.colors.grey100,
-            modifier = Modifier
-                .padding(10.dp)
-                .clickable { onHideDialog() })
-
-        BasicButton(
-            onClick = onDelete,
-            text = stringResource(R.string.delete),
-            paddingValues = PaddingValues(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LockBoxTheme.colors.red600,
-                contentColor = LockBoxTheme.colors.grey100
-            )
+        BasicDialogContent(
+            title = stringResource(R.string.delete_account_question),
+            subtitle = stringResource(R.string.not_cancellable_delete_account),
+            onDismiss = onHideDialog,
+            onDangerButtonAction = {
+                onDelete()
+                onHideDialog()
+            },
+            dangerButtonText = stringResource(R.string.delete)
         )
     }
 }
@@ -237,9 +218,10 @@ private fun ContactInfo(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier
-        .clickable { onClick() }
-        .padding(horizontal = 16.dp, vertical = 10.dp),
+    Row(
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start) {
         Column(
@@ -262,7 +244,7 @@ private fun ContactInfo(
 
         Text(
             text = if (isValueSet) stringResource(R.string.change_full)
-                    else stringResource(R.string.add_full),
+            else stringResource(R.string.add_full),
             style = LockBoxTheme.typography.headlineLarge,
             color = LockBoxTheme.colors.grey500,
             modifier = Modifier.padding(horizontal = 12.dp)

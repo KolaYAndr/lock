@@ -51,6 +51,7 @@ import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRef
 import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
@@ -357,10 +358,7 @@ private fun ConnectModalSheet(
                 text = stringResource(R.string.cancel),
                 modifier = Modifier.padding(top = 12.dp),
                 paddingValues = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LockBoxTheme.colors.grey900,
-                    contentColor = LockBoxTheme.colors.grey100
-                )
+                style = BasicButtonStyle.grey()
             )
         }
     }

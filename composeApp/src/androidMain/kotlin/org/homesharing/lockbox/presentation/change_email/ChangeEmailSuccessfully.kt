@@ -58,7 +58,7 @@ internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifi
         BasicButton(
             text = stringResource(R.string.ready),
             modifier = Modifier.padding(top = 12.dp),
-            onClick = { onDone() },
+            onClick = onDone,
             paddingValues = PaddingValues(10.dp)
         )
     }

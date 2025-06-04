@@ -40,9 +40,9 @@ internal class AccessModalSheetViewModel(
         _uiState.update { it.copy(loading = false) }
     }
 
-    fun addGuest() {
+    fun addGuest() {}
 
-    }
+    fun toStep(step: AccessModalSheetStep) = _uiState.update { it.copy(step = step) }
 
     private companion object {
         fun couldNotLoadGuestList(onRetry: () -> Unit) = SnackbarEvent(
@@ -58,6 +58,12 @@ internal class AccessModalSheetViewModel(
 @Immutable
 internal data class AccessModalSheetUiState(
     val macAddress: String = "",
+    val step: AccessModalSheetStep = AccessModalSheetStep.GuestList,
     val accesses: List<Access> = emptyList(),
     val loading: Boolean = false,
 )
+
+internal sealed interface AccessModalSheetStep {
+    data object GuestList: AccessModalSheetStep
+    data object AddGuest: AccessModalSheetStep
+}

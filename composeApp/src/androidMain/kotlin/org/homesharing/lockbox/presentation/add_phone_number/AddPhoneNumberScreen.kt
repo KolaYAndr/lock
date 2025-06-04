@@ -36,6 +36,7 @@ import org.homesharing.lockbox.presentation.general.composables.PhoneNumberInput
 import org.homesharing.lockbox.presentation.general.composables.Pin
 import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
@@ -164,13 +165,8 @@ private fun ConfirmNumberStep(
         BasicButton(
             text = stringResource(R.string.send_again),
             paddingValues = PaddingValues(10.dp),
-            onClick = {
-                onSendAgain()
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LockBoxTheme.colors.grey950,
-                contentColor = LockBoxTheme.colors.grey100
-            ),
+            onClick = onSendAgain,
+            style = BasicButtonStyle.darkerGrey(),
             modifier = Modifier.padding(top = 12.dp)
         )
     }
@@ -211,7 +207,7 @@ fun PhoneNumberChangedSuccessfullyStep(onDone: () -> Unit) {
         BasicButton(
             text = stringResource(R.string.ready),
             modifier = Modifier.padding(top = 12.dp),
-            onClick = { onDone() },
+            onClick = onDone,
             paddingValues = PaddingValues(10.dp)
         )
     }
@@ -299,9 +295,7 @@ private fun NewNumberInputStep(
         BasicButton(
             text = stringResource(R.string.add_phone_number),
             paddingValues = PaddingValues(14.dp),
-            onClick = {
-                changePhoneNumber()
-            },
+            onClick = changePhoneNumber,
             modifier = Modifier
                 .padding(top = 24.dp)
                 .fillMaxWidth()
@@ -313,10 +307,7 @@ private fun NewNumberInputStep(
             onClick = {
                 onToStep(AddPhoneNumberStep.WantToChange)
             },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LockBoxTheme.colors.grey950,
-                contentColor = LockBoxTheme.colors.grey100
-            ),
+            style = BasicButtonStyle.darkerGrey(),
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth()

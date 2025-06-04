@@ -222,7 +222,16 @@ private fun PreviewSignIn() {
         val state = SignInUiState()
         SignInCard(
             signInUiState = state,
-            {}, {}, {}, false, false, "", "", {}, {}, {}
+            onDismiss = {},
+            onPasswordChange = {},
+            onEmailChange = {},
+            passwordError = false,
+            emailError = false,
+            passwordErrorText = "",
+            emailErrorText = "",
+            onPasswordSeenChange = {},
+            onToTypeAuth = {},
+            onSignIn = {}
         )
     }
 }

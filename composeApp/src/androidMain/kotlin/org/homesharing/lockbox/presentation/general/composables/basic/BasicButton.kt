@@ -19,19 +19,14 @@ internal fun BasicButton(
     onClick: () -> Unit,
     text: String,
     paddingValues: PaddingValues = PaddingValues(8.dp),
-    colors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = LockBoxTheme.colors.green500,
-        contentColor = LockBoxTheme.colors.grey900,
-        disabledContentColor = LockBoxTheme.colors.grey700,
-        disabledContainerColor = LockBoxTheme.colors.grey800
-    ),
+    style: ButtonColors = BasicButtonStyle.outerGreen(),
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick::invoke,
         shape = LockBoxTheme.shape.roundedCornerShape8,
-        colors = colors,
+        colors = style,
         contentPadding = paddingValues,
         enabled = enabled,
         modifier = modifier
@@ -44,13 +39,138 @@ internal fun BasicButton(
     }
 }
 
+internal object BasicButtonStyle {
+    @Composable
+    fun outerGreen(): ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = LockBoxTheme.colors.green500,
+        contentColor = LockBoxTheme.colors.grey900,
+        disabledContentColor = LockBoxTheme.colors.grey700,
+        disabledContainerColor = LockBoxTheme.colors.grey800
+    )
+
+    @Composable
+    fun lighterGrey(): ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = LockBoxTheme.colors.grey800,
+        contentColor = LockBoxTheme.colors.grey100,
+        disabledContainerColor = LockBoxTheme.colors.grey800,
+        disabledContentColor = LockBoxTheme.colors.grey700
+    )
+
+    @Composable
+    fun grey(): ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = LockBoxTheme.colors.grey900,
+        contentColor = LockBoxTheme.colors.grey100,
+        disabledContentColor = LockBoxTheme.colors.grey700,
+        disabledContainerColor = LockBoxTheme.colors.grey800
+    )
+
+    @Composable
+    fun darkerGrey(): ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = LockBoxTheme.colors.grey950,
+        contentColor = LockBoxTheme.colors.grey100,
+        disabledContentColor = LockBoxTheme.colors.grey700,
+        disabledContainerColor = LockBoxTheme.colors.grey800
+    )
+
+    @Composable
+    fun red(): ButtonColors = ButtonDefaults.buttonColors(
+        contentColor = LockBoxTheme.colors.red600,
+        containerColor = LockBoxTheme.colors.grey900,
+        disabledContentColor = LockBoxTheme.colors.grey700,
+        disabledContainerColor = LockBoxTheme.colors.grey800
+    )
+
+    @Composable
+    fun outerRed(): ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = LockBoxTheme.colors.red600,
+        contentColor = LockBoxTheme.colors.grey100,
+        disabledContentColor = LockBoxTheme.colors.grey700,
+        disabledContainerColor = LockBoxTheme.colors.grey800
+    )
+}
+
 @Composable
 @Preview
-private fun PreviewButton() {
+private fun PreviewGreenButton() {
     LockBoxTheme {
         BasicButton(
             onClick = { },
             text = "Voyti",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewOuterRedButton() {
+    LockBoxTheme {
+        BasicButton(
+            onClick = { },
+            text = "Voyti",
+            style = BasicButtonStyle.outerRed(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewRedButton() {
+    LockBoxTheme {
+        BasicButton(
+            onClick = { },
+            text = "Voyti",
+            style = BasicButtonStyle.red(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewLighterGreyButton() {
+    LockBoxTheme {
+        BasicButton(
+            onClick = { },
+            text = "Voyti",
+            style = BasicButtonStyle.lighterGrey(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewGreyButton() {
+    LockBoxTheme {
+        BasicButton(
+            onClick = { },
+            text = "Voyti",
+            style = BasicButtonStyle.grey(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewDarkerGreyButton() {
+    LockBoxTheme {
+        BasicButton(
+            onClick = { },
+            text = "Voyti",
+            style = BasicButtonStyle.darkerGrey(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)

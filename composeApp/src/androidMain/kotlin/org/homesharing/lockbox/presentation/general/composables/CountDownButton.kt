@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.ConfigurationCompat
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import java.util.concurrent.TimeUnit
 
@@ -64,12 +65,7 @@ internal fun CountDownButton(
         },
         paddingValues = PaddingValues(vertical = 12.dp),
         enabled = isEnabled,
-        colors = ButtonDefaults.buttonColors(
-            disabledContainerColor = LockBoxTheme.colors.grey800,
-            disabledContentColor = LockBoxTheme.colors.grey700,
-            containerColor = LockBoxTheme.colors.grey800,
-            contentColor = LockBoxTheme.colors.grey100
-        ),
+        style = BasicButtonStyle.lighterGrey(),
         modifier = modifier
     )
 }

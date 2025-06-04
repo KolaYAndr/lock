@@ -36,7 +36,8 @@ import java.time.format.DateTimeFormatter
 internal fun AccessModalSheet(
     onDismiss: () -> Unit,
     accessList: List<Access>,
-    onAddGuest: () -> Unit,
+    step: AccessModalSheetStep,
+    changeStep: (AccessModalSheetStep) -> Unit,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -48,47 +49,62 @@ internal fun AccessModalSheet(
         TitledTopWithCloseAndBackButtons(
             title = stringResource(R.string.access_device),
             subtitle = stringResource(R.string.add_user),
-            onDismiss = onDismiss,
+            onDismiss = {
+                if (step is AccessModalSheetStep.GuestList) onDismiss()
+                else changeStep(AccessModalSheetStep.GuestList)
+            },
             modifier = Modifier.fillMaxWidth()
         )
         AnimatedContent(
-            targetState = isLoading
-        ) { loading ->
-            when (loading) {
-                true -> {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        LockBoxCircularProgress()
-                    }
+            targetState = step
+        ) { step ->
+            when (step) {
+                AccessModalSheetStep.AddGuest -> {
+
                 }
-                false -> {
-                    LazyColumn(
-                        contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp),
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        items(
-                            count = accessList.size,
-                            key = { index -> accessList[index].macAddress }
-                        ) { index ->
-                            Access(
-                                access = accessList[index],
-                                formatter = formatter,
-                                modifier = Modifier.fillMaxWidth()
-                            )
 
-                            BasicHorizontalDivider()
-                        }
+                AccessModalSheetStep.GuestList -> {
+                    AnimatedContent(
+                        targetState = isLoading
+                    ) { loading ->
+                        when (loading) {
+                            true -> {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    LockBoxCircularProgress()
+                                }
+                            }
+                            false -> {
+                                LazyColumn(
+                                    contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp),
+                                    modifier = Modifier.fillMaxSize(),
+                                ) {
+                                    items(
+                                        count = accessList.size,
+                                        key = { index -> accessList[index].macAddress }
+                                    ) { index ->
+                                        Access(
+                                            access = accessList[index],
+                                            formatter = formatter,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
 
-                        item {
-                            AddRow(
-                                onAdd = onAddGuest,
-                                text = stringResource(R.string.add_user),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 10.dp)
-                            )
+                                        BasicHorizontalDivider()
+                                    }
+
+                                    item {
+                                        AddRow(
+                                            onAdd = { changeStep(AccessModalSheetStep.AddGuest) },
+                                            text = stringResource(R.string.add_user),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(vertical = 10.dp)
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

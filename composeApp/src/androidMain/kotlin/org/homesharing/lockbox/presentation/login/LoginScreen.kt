@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,8 +49,8 @@ internal fun LoginScreen(
     topRowContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.isLoggedIn) {
-        onLoggedIn()
+    LaunchedEffect(state.isLoggedIn) {
+        if (state.isLoggedIn) onLoggedIn()
     }
 
     var showModal by remember { mutableStateOf(false) }
@@ -58,8 +59,10 @@ internal fun LoginScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically
         ) {
             topRowContent()
@@ -96,8 +99,7 @@ internal fun LoginScreen(
                 onClick = { showModal = true },
                 text = stringResource(R.string.sing_in),
                 paddingValues = PaddingValues(10.dp),
-                modifier = Modifier
-                    .padding(top = 16.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
         }
 
