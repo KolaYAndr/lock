@@ -18,7 +18,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun HelpTextWithIcon(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun HelpTextWithIcon(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.clickable { onClick() },
         horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
@@ -41,7 +41,7 @@ fun HelpTextWithIcon(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun PreviewHelp() {
+private fun PreviewHelp() {
     LockBoxTheme {
         HelpTextWithIcon({}, Modifier.fillMaxWidth())
     }

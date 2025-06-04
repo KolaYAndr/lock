@@ -13,7 +13,7 @@ private const val EXIT_ANIMATION_DURATION = 250
 private const val ENTER_ANIMATION_DURATION = 200
 private const val ANIMATION_OFFSET = 0.92f
 
-val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
+internal val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
     {
         slideOutOfContainer(
             animationSpec = tween(EXIT_ANIMATION_DURATION, easing = LinearEasing),
@@ -21,7 +21,7 @@ val exitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> Exit
             targetOffset = { -it }
         )
     }
-val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
+internal val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
     {
         slideIntoContainer(
             animationSpec = tween(ENTER_ANIMATION_DURATION, easing = LinearEasing),
@@ -30,12 +30,12 @@ val enterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> Ent
         )
     }
 
-val globalEnterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
+internal val globalEnterAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?) =
     {
         scaleIn(animationSpec = tween(ENTER_ANIMATION_DURATION), initialScale = ANIMATION_OFFSET)
     }
 
-val globalExitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
+internal val globalExitAnimation: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?) =
     {
         scaleOut(animationSpec = tween(ENTER_ANIMATION_DURATION), targetScale = ANIMATION_OFFSET)
     }

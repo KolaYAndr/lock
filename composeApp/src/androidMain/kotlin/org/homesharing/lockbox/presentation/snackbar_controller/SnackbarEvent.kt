@@ -4,18 +4,18 @@ import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarDuration
 import org.homesharing.lockbox.R
 
-data class SnackbarEvent(
+internal data class SnackbarEvent(
     @StringRes val message: Int,
     val duration: SnackbarDuration = SnackbarDuration.Long,
     val action: SnackbarAction? = null
 )
 
-data class SnackbarAction(
+internal data class SnackbarAction(
     @StringRes val name: Int,
     val effect: suspend () -> Unit,
 )
 
-object SnackbarDefaultEvents {
+internal object SnackbarDefaultEvents {
     fun couldNotLoadAccountInfo(onRetry: suspend () -> Unit) = SnackbarEvent(
         message = R.string.could_not_load_user_info,
         action = SnackbarAction(

@@ -17,7 +17,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicDialog(
+internal fun BasicDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,

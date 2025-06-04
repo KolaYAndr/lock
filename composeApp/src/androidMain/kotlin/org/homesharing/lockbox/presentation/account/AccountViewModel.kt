@@ -24,7 +24,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
 private const val UPDATE_TIME = 500L
 
-class AccountViewModel(private val repository: AccountRepository) : ViewModel() {
+internal class AccountViewModel(private val repository: AccountRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<AccountUiState> = MutableStateFlow(AccountUiState())
     val uiState: StateFlow<AccountUiState> get() = _uiState.asStateFlow()
 
@@ -140,7 +140,7 @@ class AccountViewModel(private val repository: AccountRepository) : ViewModel() 
     }
 }
 
-data class AccountUiState(
+internal data class AccountUiState(
     val name: String = "",
     val surname: String = "",
     val email: String = "",

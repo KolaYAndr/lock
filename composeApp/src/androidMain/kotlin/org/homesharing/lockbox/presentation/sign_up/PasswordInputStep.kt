@@ -24,7 +24,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicButto
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun PasswordInputStep(
+internal fun PasswordInputStep(
     password: String,
     onPasswordChange: (String) -> Unit,
     isPasswordSeen: Boolean,

@@ -14,7 +14,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun CloseRoundButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun CloseRoundButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         modifier = modifier
             .size(24.dp),

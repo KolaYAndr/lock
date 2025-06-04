@@ -7,7 +7,7 @@ import androidx.core.net.toUri
 private const val USER_AGREEMENT_URL = "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf"
 private const val PRIVACY_POLICY_URL = "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf"
 
-fun downloadlServiceConditions(context: Context) {
+internal fun downloadlServiceConditions(context: Context) {
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     val destinationUri = context.externalCacheDir ?: return
 
@@ -22,7 +22,7 @@ fun downloadlServiceConditions(context: Context) {
     downloadManager.enqueue(request)
 }
 
-fun downloadPrivacyPolicy(context: Context) {
+internal fun downloadPrivacyPolicy(context: Context) {
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     val destinationUri = context.externalCacheDir ?: return
 

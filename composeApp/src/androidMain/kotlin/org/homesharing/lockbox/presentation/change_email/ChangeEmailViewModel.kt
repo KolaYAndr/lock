@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class ChangeEmailViewModel : ViewModel() {
+internal class ChangeEmailViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<ChangeEmailUiState> =
         MutableStateFlow(ChangeEmailUiState())
     val uiState: StateFlow<ChangeEmailUiState> get() = _uiState.asStateFlow()
@@ -32,15 +32,15 @@ class ChangeEmailViewModel : ViewModel() {
     }
 }
 
-data class ChangeEmailUiState(
+internal data class ChangeEmailUiState(
     val newEmail: String = "",
     val emailError: DoestMatchEmailPattern? = null,
     val changeEmailStep: ChangeEmailStep = ChangeEmailStep.WantToChange
 )
 
-data object DoestMatchEmailPattern
+internal data object DoestMatchEmailPattern
 
-sealed class ChangeEmailStep {
+internal sealed class ChangeEmailStep {
     data object WantToChange : ChangeEmailStep()
     data object NewEmailInput : ChangeEmailStep()
     data object ConfirmNewEmail : ChangeEmailStep()

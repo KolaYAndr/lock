@@ -23,7 +23,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicButto
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifier = Modifier) {
+internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifier = Modifier) {
     BackHandler(enabled = false) {}
     Column(
         modifier = modifier

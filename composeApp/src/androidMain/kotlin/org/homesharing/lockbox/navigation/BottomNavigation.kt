@@ -23,7 +23,7 @@ import org.homesharing.lockbox.navigation.routes.TopLevelRoute
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun BottomNavigation(
+internal fun BottomNavigation(
     topLevelRoutes: List<TopLevelRoute<out Routes>>,
     navBackStackEntry: NavBackStackEntry?,
     onClick: (Routes) -> Unit,

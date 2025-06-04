@@ -23,7 +23,7 @@ import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun SecurityScreen(
+internal fun SecurityScreen(
     onNavBack: () -> Unit,
     onToActiveSessions: () -> Unit,
     onChangePassword: () -> Unit,

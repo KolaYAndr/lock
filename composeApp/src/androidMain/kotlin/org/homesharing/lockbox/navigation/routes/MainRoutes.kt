@@ -2,7 +2,7 @@ package org.homesharing.lockbox.navigation.routes
 
 import kotlinx.serialization.Serializable
 
-sealed class MainRoutes {
+internal sealed class MainRoutes {
     @Serializable
     data object Boxes: MainRoutes()
 

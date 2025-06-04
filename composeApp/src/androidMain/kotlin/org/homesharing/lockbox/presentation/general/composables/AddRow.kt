@@ -18,7 +18,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun AddRow(onAdd: () -> Unit, text: String, modifier: Modifier = Modifier) {
+internal fun AddRow(onAdd: () -> Unit, text: String, modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier
             .clickable { onAdd() }

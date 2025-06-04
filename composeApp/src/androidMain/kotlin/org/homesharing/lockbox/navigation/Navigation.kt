@@ -51,7 +51,7 @@ import org.koin.androidx.compose.koinViewModel
 private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
 
 @Composable
-fun Navigation(
+internal fun Navigation(
     navController: NavHostController,
     startFromLogin: Boolean,
     modifier: Modifier = Modifier,

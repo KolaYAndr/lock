@@ -24,7 +24,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicInput
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun EmailInput(
+internal fun EmailInput(
     email: String,
     onValueChange: (String) -> Unit,
     onClearText: () -> Unit,

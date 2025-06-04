@@ -20,7 +20,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicHoriz
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun CardTopRow(
+internal fun CardTopRow(
     onBackPressed: () -> Unit,
     onDismiss: () -> Unit,
     titleText: String,

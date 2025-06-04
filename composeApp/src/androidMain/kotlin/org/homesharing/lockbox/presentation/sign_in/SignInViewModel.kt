@@ -13,7 +13,9 @@ import org.homesharing.lockbox.domain.repository.AuthRepository
 import org.homesharing.lockbox.presentation.login.EmailError
 import java.net.UnknownHostException
 
-class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
+private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
+
+internal class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SignInUiState> = MutableStateFlow(SignInUiState())
     val uiState: StateFlow<SignInUiState> get() = _uiState.asStateFlow()
     private val emailPattern = Patterns.EMAIL_ADDRESS
@@ -74,7 +76,7 @@ class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() 
     }
 }
 
-data class SignInUiState(
+internal data class SignInUiState(
     val email: String = "",
     val emailError: EmailError? = null,
     val password: String = "",
@@ -82,9 +84,7 @@ data class SignInUiState(
     val passwordError: SignInPasswordError = SignInPasswordError.None,
 )
 
-private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
-
-sealed interface SignInPasswordError {
+internal sealed interface SignInPasswordError {
     data object None : SignInPasswordError
     data object InvalidUserCredentials : SignInPasswordError
     data object Unexpected : SignInPasswordError

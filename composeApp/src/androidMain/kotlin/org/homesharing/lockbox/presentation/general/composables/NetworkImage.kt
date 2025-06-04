@@ -20,7 +20,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 private const val CROSSFADE_DURATION = 300
 
 @Composable
-fun NetworkImage(url: String, modifier: Modifier = Modifier) {
+internal fun NetworkImage(url: String, modifier: Modifier = Modifier) {
     val request = ImageRequest.Builder(LocalContext.current)
         .data(url)
         .diskCachePolicy(CachePolicy.DISABLED)

@@ -16,7 +16,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun LockBoxesTopRow() {
+internal fun LockBoxesTopRow() {
     Box(
         modifier = Modifier
             .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 12.dp)

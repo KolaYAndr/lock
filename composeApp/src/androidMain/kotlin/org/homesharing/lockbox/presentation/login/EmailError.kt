@@ -1,5 +1,5 @@
 package org.homesharing.lockbox.presentation.login
 
-sealed interface EmailError {
+internal sealed interface EmailError {
     data object DoesntMatchEmailPattern: EmailError
 }

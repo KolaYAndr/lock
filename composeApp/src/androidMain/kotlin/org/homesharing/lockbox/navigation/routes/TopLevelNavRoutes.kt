@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 import org.homesharing.lockbox.R
 
-sealed class Routes {
+internal sealed class Routes {
     @Serializable
     data object Main : Routes()
 
@@ -13,7 +13,7 @@ sealed class Routes {
     data object Settings : Routes()
 }
 
-data class TopLevelRoute<T : Any>(
+internal data class TopLevelRoute<T : Any>(
     @StringRes val name: Int,
     val route: T,
     @DrawableRes val icon: Int,

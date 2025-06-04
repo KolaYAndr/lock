@@ -56,7 +56,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun LockBoxesScreen(
+internal fun LockBoxesScreen(
     avatarLink: String,
     boxes: Flow<PagingData<Box>>,
     onNavigateToBox: (String) -> Unit,

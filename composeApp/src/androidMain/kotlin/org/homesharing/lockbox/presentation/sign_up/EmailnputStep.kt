@@ -31,7 +31,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.login.EmailError
 
 @Composable
-fun EmailInputStep(
+internal  fun EmailInputStep(
     email: String,
     emailError: EmailError?,
     onEmailChange: (String) -> Unit,

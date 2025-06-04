@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class AddPhoneNumberViewModel : ViewModel() {
+internal class AddPhoneNumberViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<AddPhoneNumberUiState> =
         MutableStateFlow(AddPhoneNumberUiState())
     val uiState: StateFlow<AddPhoneNumberUiState> get() = _uiState.asStateFlow()
@@ -38,14 +38,14 @@ class AddPhoneNumberViewModel : ViewModel() {
     }
 }
 
-data class AddPhoneNumberUiState(
+internal data class AddPhoneNumberUiState(
     val phoneNumber: String = "",
     val numberError: String? = "",
     val step: AddPhoneNumberStep = AddPhoneNumberStep.WantToChange,
     val confirmationCode: String = ""
 )
 
-sealed class AddPhoneNumberStep {
+internal sealed class AddPhoneNumberStep {
     data object WantToChange : AddPhoneNumberStep()
     data object NewNumberInput : AddPhoneNumberStep()
     data object ConfirmPhoneNumber : AddPhoneNumberStep()

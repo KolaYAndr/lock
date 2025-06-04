@@ -2,7 +2,7 @@ package org.homesharing.lockbox.navigation.routes
 
 import kotlinx.serialization.Serializable
 
-sealed class ChangeEmailRoutes {
+internal sealed class ChangeEmailRoutes {
     @Serializable
     data object Main: ChangeEmailRoutes()
 

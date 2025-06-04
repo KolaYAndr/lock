@@ -17,7 +17,7 @@ import org.homesharing.lockbox.presentation.login.EmailError
 private const val USER_EXISTS_STRING = "{\"errorMessage\":\"User exists with same email\"}"
 private const val PASSWORDS_DONT_MATCH_STRING = "web.exchange.bind.exception"
 
-class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
+internal class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> get() = _uiState.asStateFlow()
     private val emailMatcher = Patterns.EMAIL_ADDRESS
@@ -118,7 +118,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     }
 }
 
-data class SignUpUiState(
+internal data class SignUpUiState(
     val email: String = "",
     val emailError: EmailError? = null,
     val password: String = "",
@@ -134,13 +134,13 @@ private const val STEP_ONE = 1
 private const val STEP_TWO = 2
 private const val STEP_THREE = 3
 
-sealed class SignUpStep(val index: Int) {
+internal sealed class SignUpStep(val index: Int) {
     data object EmailInput : SignUpStep(STEP_ONE)
     data object PasswordInput : SignUpStep(STEP_TWO)
     data object EmailConfirmation : SignUpStep(STEP_THREE)
 }
 
-sealed class PasswordRepeatedError(@StringRes val messageId: Int?) {
+internal sealed class PasswordRepeatedError(@StringRes val messageId: Int?) {
     data object None : PasswordRepeatedError(null)
     data object PasswordsDontMatch : PasswordRepeatedError(R.string.password_dont_match)
     data object UserExists : PasswordRepeatedError(R.string.user_already_exists)

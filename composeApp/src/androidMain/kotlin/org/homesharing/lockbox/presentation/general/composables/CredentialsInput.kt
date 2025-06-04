@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun CredentialsInput(
+internal fun CredentialsInput(
     text: String,
     onTextChange: (String) -> Unit,
     placeholderText: String,

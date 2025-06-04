@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun BasicGroup(
+internal fun BasicGroup(
     shape: Shape = LockBoxTheme.shape.roundedCornerShape8,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit

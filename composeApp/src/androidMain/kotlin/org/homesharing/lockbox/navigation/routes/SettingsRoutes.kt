@@ -2,7 +2,7 @@ package org.homesharing.lockbox.navigation.routes
 
 import kotlinx.serialization.Serializable
 
-sealed class SettingsRoutes {
+internal sealed class SettingsRoutes {
     @Serializable
     data object Settings: SettingsRoutes()
 

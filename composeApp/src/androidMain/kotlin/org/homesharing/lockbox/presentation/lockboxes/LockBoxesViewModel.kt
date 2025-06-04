@@ -15,7 +15,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotLoadAccountInfo
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotRefreshAccountInfo
 
-class LockBoxesViewModel(
+internal class LockBoxesViewModel(
     private val accountRepository: AccountRepository,
     boxesRepository: BoxesRepository,
 ) : ViewModel() {

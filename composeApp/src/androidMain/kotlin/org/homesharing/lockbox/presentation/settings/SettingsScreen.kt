@@ -41,7 +41,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     settingsUiState: SettingsUiState,
     onNavigate: (SettingsRoutes) -> Unit,
     onLogOut: () -> Unit,

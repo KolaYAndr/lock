@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun BasicInput(
+internal fun BasicInput(
     value: String,
     onValueChange: (String) -> Unit,
     placeholderText: String,

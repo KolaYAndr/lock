@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun LockBoxSnackbar(snackbarData: SnackbarData, modifier: Modifier = Modifier) {
+internal fun LockBoxSnackbar(snackbarData: SnackbarData, modifier: Modifier = Modifier) {
     Snackbar(
         modifier = modifier,
         containerColor = LockBoxTheme.colors.grey800,

@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun LockBoxCircularProgress(modifier: Modifier = Modifier) {
+internal fun LockBoxCircularProgress(modifier: Modifier = Modifier) {
     CircularProgressIndicator(
         color = LockBoxTheme.colors.green500,
         strokeWidth = 4.dp,

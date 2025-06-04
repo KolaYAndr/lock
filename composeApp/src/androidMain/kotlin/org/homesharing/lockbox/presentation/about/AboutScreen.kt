@@ -28,7 +28,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicHoriz
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.Top,

@@ -41,7 +41,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicButto
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun ChangeEmailScreen(
+internal fun ChangeEmailScreen(
     uiState: ChangeEmailUiState,
     onNavBack: () -> Unit,
     onToStep: (ChangeEmailStep) -> Unit,

@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun LockBoxPropertyInput(
+internal fun LockBoxPropertyInput(
     value: String,
     onValueChange: (String) -> Unit,
     onDone: () -> Unit,

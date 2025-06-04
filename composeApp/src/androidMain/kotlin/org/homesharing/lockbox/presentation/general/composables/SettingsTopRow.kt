@@ -10,7 +10,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun SettingsTopRowText() {
+internal fun SettingsTopRowText() {
     Text(
         text = stringResource(R.string.settings),
         style = LockBoxTheme.typography.titleSmall,

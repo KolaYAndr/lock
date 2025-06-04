@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
-class LoginViewModel(private val repository: AccountRepository): ViewModel() {
+internal class LoginViewModel(private val repository: AccountRepository): ViewModel() {
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> get() = _uiState.asStateFlow()
 
@@ -36,12 +36,13 @@ class LoginViewModel(private val repository: AccountRepository): ViewModel() {
 
 private const val STEP_ONE = 1
 private const val STEP_TWO = 2
-sealed class LoginType(val hierarchyIndex: Int) {
+
+internal sealed class LoginType(val hierarchyIndex: Int) {
     data object SignIn : LoginType(STEP_ONE)
     data object SignUp : LoginType(STEP_TWO)
 }
 
-data class LoginUiState(
+internal data class LoginUiState(
     val loginType: LoginType = LoginType.SignIn,
     val isLoggedIn: Boolean = false,
 )

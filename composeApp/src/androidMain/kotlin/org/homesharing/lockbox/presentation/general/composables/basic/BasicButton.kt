@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun BasicButton(
+internal fun BasicButton(
     onClick: () -> Unit,
     text: String,
     paddingValues: PaddingValues = PaddingValues(8.dp),

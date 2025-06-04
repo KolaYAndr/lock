@@ -26,7 +26,7 @@ private val countDownInterval = TimeUnit.SECONDS.toMillis(1)
 private val standardTime = TimeUnit.MINUTES.toMillis(1)
 
 @Composable
-fun CountDownButton(
+internal fun CountDownButton(
     onClick: () -> Unit,
     startingTime: Long = standardTime,
     modifier: Modifier = Modifier,

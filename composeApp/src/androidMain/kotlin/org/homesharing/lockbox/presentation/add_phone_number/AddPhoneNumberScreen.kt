@@ -39,7 +39,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicButto
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun AddPhoneNumberScreen(
+internal fun AddPhoneNumberScreen(
     uiState: AddPhoneNumberUiState,
     onNavBack: () -> Unit,
     onToStep: (AddPhoneNumberStep) -> Unit,
@@ -92,7 +92,7 @@ fun AddPhoneNumberScreen(
 }
 
 @Composable
-fun ConfirmNumberStep(
+private fun ConfirmNumberStep(
     value: String,
     onCodeChange: (String) -> Unit,
     onConfirm: () -> Unit,
@@ -218,7 +218,7 @@ fun PhoneNumberChangedSuccessfullyStep(onDone: () -> Unit) {
 }
 
 @Composable
-fun NewNumberInputStep(
+private fun NewNumberInputStep(
     number: String,
     numberError: String?,
     onNumberChange: (String) -> Unit,

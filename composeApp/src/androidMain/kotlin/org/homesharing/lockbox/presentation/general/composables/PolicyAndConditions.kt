@@ -24,7 +24,7 @@ private const val POLICY_TAG = "policy"
 private const val CONDITION_TAG = "condition"
 
 @Composable
-fun PolicyAndConditions(
+internal fun PolicyAndConditions(
     onConditionsClick: () -> Unit,
     onPolicyClick: () -> Unit,
     modifier: Modifier = Modifier

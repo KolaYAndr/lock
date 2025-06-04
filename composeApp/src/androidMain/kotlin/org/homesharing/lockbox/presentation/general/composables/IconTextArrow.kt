@@ -19,7 +19,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun IconTextArrow(
+internal fun IconTextArrow(
     painter: Painter,
     text: String,
     onClick: () -> Unit,
@@ -58,7 +58,7 @@ fun IconTextArrow(
 
 @Composable
 @Preview
-fun PreviewIconTextArrow() {
+private fun PreviewIconTextArrow() {
     LockBoxTheme {
         IconTextArrow(
             painterResource(R.drawable.headset),

@@ -19,7 +19,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun TitledTopWithCloseAndBackButtons(
+internal fun TitledTopWithCloseAndBackButtons(
     title: String,
     subtitle: String? = null,
     onDismiss: () -> Unit,

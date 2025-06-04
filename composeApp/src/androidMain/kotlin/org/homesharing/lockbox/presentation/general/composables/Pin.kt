@@ -31,7 +31,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun Pin(
+internal fun Pin(
     value: String,
     onPinChange: (String) -> Unit,
     onConfirm: () -> Unit,

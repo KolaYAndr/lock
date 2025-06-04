@@ -23,7 +23,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicInput
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun PasswordInput(
+internal fun PasswordInput(
     password: String,
     onValueChange: (String) -> Unit,
     isSeen: Boolean,

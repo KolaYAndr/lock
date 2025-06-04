@@ -46,7 +46,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicHoriz
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun AccountScreen(
+internal fun AccountScreen(
     accountUiState: AccountUiState,
     onChangeName: (String) -> Unit,
     onChangeSurname: (String) -> Unit,

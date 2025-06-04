@@ -15,7 +15,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LockBoxPullToRefresh(
+internal fun LockBoxPullToRefresh(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     state: PullToRefreshState = rememberPullToRefreshState(),

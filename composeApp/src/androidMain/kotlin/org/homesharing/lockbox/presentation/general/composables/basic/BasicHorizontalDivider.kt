@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun BasicHorizontalDivider(modifier: Modifier = Modifier) {
+internal fun BasicHorizontalDivider(modifier: Modifier = Modifier) {
     HorizontalDivider(
         modifier = modifier,
         thickness = 0.5.dp,

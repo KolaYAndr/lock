@@ -24,7 +24,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicButto
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
+internal fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
     BackHandler(enabled = false) {  }
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950).padding(horizontal = 32.dp),

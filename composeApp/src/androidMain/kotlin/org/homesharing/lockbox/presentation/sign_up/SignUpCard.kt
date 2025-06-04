@@ -18,7 +18,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
 private const val TOTAL_STEPS = 3
 
 @Composable
-fun SignUpCard(
+internal fun SignUpCard(
     signUpUiState: SignUpUiState,
     onSignIn: () -> Unit,
     onDismiss: () -> Unit,

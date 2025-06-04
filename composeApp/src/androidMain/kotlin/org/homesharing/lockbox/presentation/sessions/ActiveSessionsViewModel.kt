@@ -17,7 +17,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class ActiveSessionsViewModel(private val accountRepository: AccountRepository) : ViewModel() {
+internal class ActiveSessionsViewModel(private val accountRepository: AccountRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<ActiveSessionsUiState> =
         MutableStateFlow(ActiveSessionsUiState())
     val uiState: StateFlow<ActiveSessionsUiState> get() = _uiState.asStateFlow()
@@ -87,7 +87,7 @@ class ActiveSessionsViewModel(private val accountRepository: AccountRepository) 
 }
 
 @Immutable
-data class ActiveSessionsUiState(
+internal data class ActiveSessionsUiState(
     val sessions: List<Session> = emptyList(),
     val isRefreshing: Boolean = false,
 )

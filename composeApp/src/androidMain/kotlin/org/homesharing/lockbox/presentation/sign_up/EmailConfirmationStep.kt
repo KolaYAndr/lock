@@ -30,7 +30,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 private const val CHECK_CONFIRMATION_DELAY = 15000L
 
 @Composable
-fun EmailConfirmationStep(
+internal fun EmailConfirmationStep(
     email: String,
     onConfirmEmail: () -> Unit,
     onChangeEmailClick: () -> Unit,

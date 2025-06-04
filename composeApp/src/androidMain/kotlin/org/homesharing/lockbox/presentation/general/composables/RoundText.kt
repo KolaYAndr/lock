@@ -18,7 +18,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun RoundText(text: String, modifier: Modifier = Modifier) {
+internal fun RoundText(text: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .border(

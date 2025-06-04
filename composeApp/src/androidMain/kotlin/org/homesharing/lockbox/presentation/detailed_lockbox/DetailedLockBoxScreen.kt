@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -36,15 +37,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.toJavaLocalDateTime
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.box.Box
-import org.homesharing.lockbox.presentation.general.composables.AddRow
+import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
+import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetViewModel
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPropertyInput
-import org.homesharing.lockbox.presentation.general.composables.RoundText
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
@@ -53,14 +53,14 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
-import java.time.format.DateTimeFormatter
+import org.koin.androidx.compose.koinViewModel
 
 private const val SIGNAL_STRENGTH_COLOR_HIGHER_BOUND = -60
 private const val SIGNAL_STRENGTH_COLOR_MIDDLE_BOUND = -90
 private const val SIGNAL_STRENGTH_COLOR_LOWER_BOUND = -100
 
 @Composable
-fun DetailedLockBoxScreen(
+internal fun DetailedLockBoxScreen(
     uiState: DetailedLockBoxUiState,
     onNavBack: () -> Unit,
     onOpenBox: () -> Unit,
@@ -345,10 +345,16 @@ fun DetailedLockBoxScreen(
     }
 
     if (showAccessModal) {
+        val accessModalSheetViewModel = koinViewModel<AccessModalSheetViewModel>()
+        val accessModalSheetState by accessModalSheetViewModel.uiState.collectAsStateWithLifecycle()
+        LaunchedEffect(uiState.macAddress) {
+            accessModalSheetViewModel.loadGuestList(uiState.macAddress)
+        }
         AccessModalSheet(
             onDismiss = { showAccessModal = false },
-            accessList = uiState.accessList,
-            onAddGuest = {},
+            accessList = accessModalSheetState.accesses,
+            onAddGuest = accessModalSheetViewModel::addGuest,
+            isLoading = accessModalSheetState.loading,
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -468,96 +474,6 @@ private fun UnbindDeviceDialog(
                 )
             )
         }
-    }
-}
-
-@Composable
-private fun AccessModalSheet(
-    onDismiss: () -> Unit,
-    accessList: List<Access>,
-    onAddGuest: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
-    BasicModal(
-        onDismiss = onDismiss,
-        modifier = modifier
-    ) {
-        TitledTopWithCloseAndBackButtons(
-            title = stringResource(R.string.access_device),
-            subtitle = stringResource(R.string.add_user),
-            onDismiss = onDismiss,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        LazyColumn(
-            contentPadding = PaddingValues(top = 12.dp, start = 16.dp, end = 16.dp),
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            items(
-                count = accessList.size,
-                key = { index -> accessList[index].macAddress }
-            ) { index ->
-                Access(
-                    access = accessList[index],
-                    formatter = formatter,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                BasicHorizontalDivider()
-            }
-
-            item {
-                AddRow(
-                    onAdd = onAddGuest,
-                    text = stringResource(R.string.add_user),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun Access(access: Access, formatter: DateTimeFormatter, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.padding(vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RoundText(
-            text = access.name ?: stringResource(R.string.guest),
-            modifier = Modifier.size(40.dp)
-        )
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
-        ) {
-            Text(
-                text = access.name ?: stringResource(R.string.guest),
-                color = LockBoxTheme.colors.white,
-                style = LockBoxTheme.typography.headlineLarge
-            )
-
-            val endDateText = formatter.format(access.endTime.toJavaLocalDateTime().toLocalDate())
-            Text(
-                text = endDateText,
-                color = LockBoxTheme.colors.grey500,
-                style = LockBoxTheme.typography.footnote
-            )
-
-        }
-
-        Icon(
-            painter = painterResource(R.drawable.arrow_right),
-            tint = LockBoxTheme.colors.grey500,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp)
-        )
     }
 }
 

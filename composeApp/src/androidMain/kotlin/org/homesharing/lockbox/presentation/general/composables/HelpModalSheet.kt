@@ -24,7 +24,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
+internal fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     BasicModal(

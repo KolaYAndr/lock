@@ -44,7 +44,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-fun SignInCard(
+internal fun SignInCard(
     signInUiState: SignInUiState,
     onDismiss: () -> Unit,
     onPasswordChange: (String) -> Unit,

@@ -30,6 +30,7 @@ import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResp
 import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.domain.api.AccountApi
 
+private const val BASE = "https://api.lockboxes.ru"
 private const val REALM = "realms/lockbox"
 private const val PROTOCOL = "protocol"
 private const val OPENID_CONNECT_TOKEN = "openid-connect/token"
@@ -41,8 +42,8 @@ private const val RESET_PASSWORD = "reset-password"
 private const val UPLOAD = "upload"
 private const val MAIL = "mail"
 private const val SEND = "send"
-private const val ME = "me"
 
+private const val ME = "me"
 private const val PASSWORD = "password"
 private const val USERNAME = "username"
 private const val OFFLINE_ACCESS_SCOPE = "openid offline_access"
@@ -52,7 +53,6 @@ private const val GRANT_TYPE = "grant_type"
 private const val SCOPE = "scope"
 private const val REFRESH_TOKEN = "refresh_token"
 
-private const val BASE = "https://api.lockboxes.ru"
 //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
 private const val TOKEN_URL = "$BASE:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 private const val SIGN_UP_URL = "$BASE:8445/$ACCOUNTS/$SIGN_UP"

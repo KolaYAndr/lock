@@ -70,7 +70,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 //}
 
 @Composable
-fun SearchBar(
+internal fun SearchBar(
     search: String,
     onSearchChange: (String) -> Unit,
     placeholderText: String,

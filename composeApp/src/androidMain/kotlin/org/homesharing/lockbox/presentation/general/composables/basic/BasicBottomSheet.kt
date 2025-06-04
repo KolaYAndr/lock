@@ -21,7 +21,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicBottomSheet(
+internal fun BasicBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = LockBoxTheme.shape.roundedCornerShape24,

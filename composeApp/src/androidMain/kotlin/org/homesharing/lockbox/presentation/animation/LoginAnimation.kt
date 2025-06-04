@@ -11,7 +11,7 @@ import androidx.compose.animation.togetherWith
 private const val BACKWARD_ANIMATION_DURATION = 250
 private const val FORWARD_ANIMATION_DURATION = 200
 
-val forwardAnimation: ContentTransform =
+internal val forwardAnimation: ContentTransform =
     (slideInHorizontally(
         initialOffsetX = { fullWidth -> fullWidth },
         animationSpec = tween(durationMillis = FORWARD_ANIMATION_DURATION)
@@ -22,7 +22,7 @@ val forwardAnimation: ContentTransform =
         ) + fadeOut(animationSpec = tween(FORWARD_ANIMATION_DURATION))
     )
 
-val backwardAnimation: ContentTransform = (slideInHorizontally(
+internal val backwardAnimation: ContentTransform = (slideInHorizontally(
     initialOffsetX = { fullWidth -> -fullWidth },
     animationSpec = tween(durationMillis = BACKWARD_ANIMATION_DURATION)
 ) + fadeIn(animationSpec = tween(BACKWARD_ANIMATION_DURATION))).togetherWith(

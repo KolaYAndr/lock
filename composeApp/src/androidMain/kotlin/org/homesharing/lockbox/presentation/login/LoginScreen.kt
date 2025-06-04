@@ -41,7 +41,7 @@ import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     state: LoginUiState,
     onToTypeAuth: (LoginType) -> Unit,
     onLoggedIn: () -> Unit,

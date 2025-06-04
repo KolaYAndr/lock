@@ -11,7 +11,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class SecurityViewModel(
+internal class SecurityViewModel(
     private val accountRepository: AccountRepository,
 ) : ViewModel() {
 
@@ -44,4 +44,3 @@ class SecurityViewModel(
         )
     }
 }
-

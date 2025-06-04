@@ -13,7 +13,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotLoadAccountInfo
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotRefreshAccountInfo
 
-class SettingsViewModel(private val repository: AccountRepository) : ViewModel() {
+internal class SettingsViewModel(private val repository: AccountRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> get() = _uiState.asStateFlow()
 
@@ -78,7 +78,7 @@ class SettingsViewModel(private val repository: AccountRepository) : ViewModel()
     }
 }
 
-data class SettingsUiState(
+internal data class SettingsUiState(
     val fullName: String = "",
     val email: String = "",
     val imageLink: String = "",
