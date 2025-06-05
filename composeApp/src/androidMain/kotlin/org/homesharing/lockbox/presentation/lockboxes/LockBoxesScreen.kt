@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,10 +44,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
-import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.AddRow
+import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.NetworkImage
+import org.homesharing.lockbox.presentation.general.composables.LockBoxesTopRow
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
@@ -61,7 +60,7 @@ internal fun LockBoxesScreen(
     avatarLink: String,
     boxes: Flow<PagingData<Box>>,
     onNavigateToBox: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var showModal by remember { mutableStateOf(false) }
     val settingsLauncher =
@@ -122,7 +121,7 @@ private fun LoadingScreen() {
 private fun ErrorScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    message: String?
+    message: String?,
 ) {
     LockBoxPullToRefresh(
         isRefreshing = isRefreshing,
@@ -204,7 +203,7 @@ private fun LockBoxScreen(
 private fun LockBox(
     box: Box,
     onClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.clickable { onClick(box.macAddress) }) {
@@ -272,15 +271,11 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            NetworkImage(modifier = Modifier.size(40.dp), url = model)
-
-            Text(
-                text = stringResource(R.string.main),
-                style = LockBoxTheme.typography.titleMedium,
-                color = LockBoxTheme.colors.grey50,
-                modifier = Modifier.padding(horizontal = 12.dp)
-            )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            LockBoxesTopRow(avatarLink = model)
         }
 
         IconButton(
@@ -302,7 +297,7 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
 @Composable
 private fun ConnectModalSheet(
     onDismiss: () -> Unit,
-    toWifiConnection: () -> Unit
+    toWifiConnection: () -> Unit,
 ) {
     BasicModal(
         onDismiss = onDismiss,
@@ -367,7 +362,7 @@ private fun ConnectModalSheet(
 @Composable
 private fun EmptyScreen(
     onAddDevice: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,

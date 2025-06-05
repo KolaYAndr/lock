@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.general.composables
+package org.homesharing.lockbox.presentation.general.composables.inputs
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +18,7 @@ internal fun CredentialsInput(
     placeholderText: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TextField(
         value = text,
@@ -52,8 +52,20 @@ internal fun CredentialsInput(
 
 @Preview
 @Composable
-private fun PreviewCredentialsInput() {
+private fun PreviewLighterCredentialsInput() {
     LockBoxTheme {
-        CredentialsInput("", {}, "Vashe imya")
+        CredentialsInput(
+            text = "Aga",
+            onTextChange = {},
+            placeholderText = "Vashe imya",
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewDarkerCredentialsInput() {
+    LockBoxTheme {
+        CredentialsInput(text = "Aga", onTextChange = {}, placeholderText = "Vashe imya")
     }
 }

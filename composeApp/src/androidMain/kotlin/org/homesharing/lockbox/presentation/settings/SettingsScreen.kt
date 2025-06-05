@@ -31,6 +31,7 @@ import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.RoundText
+import org.homesharing.lockbox.presentation.general.composables.SettingsTopRowText
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
@@ -49,15 +50,15 @@ internal fun SettingsScreen(
     Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
         var showExitDialog by remember { mutableStateOf(false) }
         var showHelpModal by remember { mutableStateOf(false) }
-        Text(
-            text = stringResource(R.string.settings),
-            style = LockBoxTheme.typography.titleSmall,
-            color = LockBoxTheme.colors.grey100,
+        Row(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp)
-                .align(Alignment.Start)
-        )
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SettingsTopRowText()
+        }
 
         LockBoxPullToRefresh(
             modifier = Modifier.fillMaxSize(),

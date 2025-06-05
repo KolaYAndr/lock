@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.EmailInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput
 import org.homesharing.lockbox.presentation.general.composables.PolicyAndConditions
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme

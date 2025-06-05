@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.general.composables
+package org.homesharing.lockbox.presentation.general.composables.inputs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

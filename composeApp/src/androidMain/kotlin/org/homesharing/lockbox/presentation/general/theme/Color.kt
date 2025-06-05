@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.general.composables
+package org.homesharing.lockbox.presentation.general.theme
 
 import androidx.compose.ui.graphics.Color
 

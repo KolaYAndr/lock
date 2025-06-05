@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.homesharing.lockbox.presentation.general.composables.EmailInput
-import org.homesharing.lockbox.presentation.general.composables.PasswordInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.PasswordInput
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable

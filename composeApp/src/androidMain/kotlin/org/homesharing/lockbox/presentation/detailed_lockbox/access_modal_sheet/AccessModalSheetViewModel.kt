@@ -42,6 +42,10 @@ internal class AccessModalSheetViewModel(
 
     fun addGuest() {}
 
+    fun onChangeGuestName(newGuestName: String) = _uiState.update {
+        it.copy(guestName = newGuestName)
+    }
+
     fun toStep(step: AccessModalSheetStep) = _uiState.update { it.copy(step = step) }
 
     private companion object {
@@ -61,9 +65,10 @@ internal data class AccessModalSheetUiState(
     val step: AccessModalSheetStep = AccessModalSheetStep.GuestList,
     val accesses: List<Access> = emptyList(),
     val loading: Boolean = false,
+    val guestName: String = "",
 )
 
 internal sealed interface AccessModalSheetStep {
-    data object GuestList: AccessModalSheetStep
-    data object AddGuest: AccessModalSheetStep
+    data object GuestList : AccessModalSheetStep
+    data class AddGuest(val lockboxName: String, val lockboxAddress: String) : AccessModalSheetStep
 }

@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.general.composables
+package org.homesharing.lockbox.presentation.general.composables.inputs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicInput
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicInputWithError
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
@@ -35,7 +35,7 @@ internal fun PhoneNumberInput(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
 ) {
-    BasicInput(
+    BasicInputWithError(
         value = number,
         onValueChange = onValueChange::invoke,
         placeholderText = stringResource(R.string.phone_number_placeholder),

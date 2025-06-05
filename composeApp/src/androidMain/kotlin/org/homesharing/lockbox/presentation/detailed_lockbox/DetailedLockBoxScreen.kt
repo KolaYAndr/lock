@@ -40,10 +40,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
+import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetStep
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetViewModel
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
-import org.homesharing.lockbox.presentation.general.composables.LockBoxPropertyInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.LockBoxPropertyInput
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
@@ -231,15 +232,15 @@ internal fun DetailedLockBoxScreen(
                         .padding(vertical = 12.dp)
                 ) {
                     ActionableProperty(
-                        title = stringResource(R.string.address),
-                        text = uiState.address,
+                        title = stringResource(R.string.device_address),
+                        subtitle = uiState.address,
                         onClick = { showChangeAddressBottomSheet = true },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     ActionableProperty(
                         title = stringResource(R.string.device_name),
-                        text = uiState.boxName,
+                        subtitle = uiState.boxName,
                         onClick = { showChangeNameBottomSheet = true },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -315,8 +316,9 @@ internal fun DetailedLockBoxScreen(
     if (showChangeAddressBottomSheet) {
         ChangePropertyBottomSheet(
             initialValue = uiState.address,
-            titleText = stringResource(R.string.address),
+            titleText = stringResource(R.string.device_address),
             onDismiss = { showChangeAddressBottomSheet = false },
+            placeholderText = stringResource(R.string.device_address),
             onSaveChanges = onSaveAddress,
         )
     }
@@ -326,6 +328,7 @@ internal fun DetailedLockBoxScreen(
             initialValue = uiState.boxName,
             titleText = stringResource(R.string.device_name),
             onDismiss = { showChangeNameBottomSheet = false },
+            placeholderText = stringResource(R.string.device_name),
             onSaveChanges = onSaveName,
         )
     }
@@ -355,8 +358,18 @@ internal fun DetailedLockBoxScreen(
             onDismiss = { showAccessModal = false },
             accessList = accessModalSheetState.accesses,
             step = accessModalSheetState.step,
+            toAddGuest = {
+                accessModalSheetViewModel.toStep(
+                    AccessModalSheetStep.AddGuest(
+                        lockboxName = uiState.boxName,
+                        lockboxAddress = uiState.address
+                    )
+                )
+            },
             changeStep = accessModalSheetViewModel::toStep,
             isLoading = accessModalSheetState.loading,
+            guestName = accessModalSheetState.guestName,
+            onChangeGuestName = accessModalSheetViewModel::onChangeGuestName,
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -430,7 +443,7 @@ private fun UnbindDeviceDialog(
             title = stringResource(R.string.unbind_device_question),
             subtitle = stringResource(R.string.not_cancellable_unbind_device),
             onDismiss = onDismiss,
-            onDangerButtonAction =  {
+            onDangerButtonAction = {
                 onUnbind()
                 onDismiss()
             },
@@ -550,6 +563,7 @@ private fun ChangePropertyBottomSheet(
     initialValue: String,
     onDismiss: () -> Unit,
     onSaveChanges: (String) -> Unit,
+    placeholderText: String,
     modifier: Modifier = Modifier,
 ) {
     var currentValue by remember { mutableStateOf(initialValue) }
@@ -580,6 +594,7 @@ private fun ChangePropertyBottomSheet(
                         onDismiss()
                     }
                 },
+                placeholderText = placeholderText,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -673,7 +688,7 @@ private fun OpenDeviceDialog(
 @Composable
 private fun ActionableProperty(
     title: String,
-    text: String? = null,
+    subtitle: String? = null,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -696,9 +711,9 @@ private fun ActionableProperty(
                 color = LockBoxTheme.colors.white
             )
 
-            if (!text.isNullOrEmpty()) {
+            subtitle?.let { subtitleText ->
                 Text(
-                    text = text,
+                    text = subtitleText,
                     style = LockBoxTheme.typography.footnote,
                     color = LockBoxTheme.colors.grey500
                 )

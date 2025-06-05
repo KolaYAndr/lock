@@ -36,8 +36,8 @@ import org.homesharing.lockbox.downloadPrivacyPolicy
 import org.homesharing.lockbox.downloadlServiceConditions
 import org.homesharing.lockbox.presentation.login.LoginType
 import org.homesharing.lockbox.presentation.general.composables.CloseRoundButton
-import org.homesharing.lockbox.presentation.general.composables.EmailInput
-import org.homesharing.lockbox.presentation.general.composables.PasswordInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.PasswordInput
 import org.homesharing.lockbox.presentation.general.composables.PolicyAndConditions
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
