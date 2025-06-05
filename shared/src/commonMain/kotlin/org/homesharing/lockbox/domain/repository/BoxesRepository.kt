@@ -3,7 +3,9 @@ package org.homesharing.lockbox.domain.repository
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
+import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
@@ -23,4 +25,8 @@ interface BoxesRepository {
     suspend fun updateBoxAddress(macAddress: String, newAddress: String): Response<UpdateBox>
 
     suspend fun getListOfAccesses(macAddress: String): Response<Accesses>
+
+    suspend fun createAccess(macAddress: String): Response<Access>
+
+    suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke>
 }

@@ -30,7 +30,7 @@ import org.homesharing.lockbox.domain.repository.AccountRepository
 internal class AccountRepositoryImpl(
     private val api: AccountApi,
     private val tokenStorage: TokenStorage,
-    private val refreshManager: RefreshManager
+    private val refreshManager: RefreshManager,
 ) : AccountRepository {
 
     override suspend fun parseAccountInfo(): Response<AccountInfo> {
@@ -90,14 +90,23 @@ internal class AccountRepositoryImpl(
     override suspend fun getImageLink(sub: String): String = api.getImageLink(sub)
 
 
-    override suspend fun sendImage(data: ByteArray) {
+    override suspend fun sendImage(data: ByteArray): Response<Unit> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
-        api.sendImage(
-            accessToken = tokenStorage.getAccessToken(),
-            data = data
-        )
+
+        return parseLockBoxApiResponse {
+            api.sendImage(
+                accessToken = tokenStorage.getAccessToken(),
+                data = data
+            )
+        }
     }
 
     override suspend fun getSessions(): Response<List<Session>> {
@@ -110,6 +119,7 @@ internal class AccountRepositoryImpl(
                 return Response.Failure(e.message.orEmpty())
             }
         }
+
         return parseLockBoxApiResponse(
             apiCall = { api.getSessions(accessToken = tokenStorage.getAccessToken()) },
             mapper = SessionsResponseDto::toDomain
@@ -119,7 +129,7 @@ internal class AccountRepositoryImpl(
     override suspend fun updateInfo(
         name: String?,
         surname: String?,
-        email: String?
+        email: String?,
     ): Response<UpdateAccount> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
             try {
@@ -130,6 +140,7 @@ internal class AccountRepositoryImpl(
                 return Response.Failure(e.message.orEmpty())
             }
         }
+
         return parseLockBoxApiResponse(
             apiCall = {
                 api.updateUserInfo(
@@ -145,8 +156,15 @@ internal class AccountRepositoryImpl(
 
     override suspend fun deactivateUser(): Response<UpdateAccount> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
+
         return parseLockBoxApiResponse(
             apiCall = {
                 api.updateUserInfo(
@@ -168,6 +186,7 @@ internal class AccountRepositoryImpl(
                 return Response.Failure(e.message.orEmpty())
             }
         }
+
         return try {
             Response.Success(
                 api.closeOtherSessions(
@@ -184,8 +203,15 @@ internal class AccountRepositoryImpl(
 
     override suspend fun sendLinkToChangeEmail(): Response<ResetPassword> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
+
         return parseLockBoxApiResponse(
             apiCall = {
                 api.sendLinkToChangePassword(

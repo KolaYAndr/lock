@@ -12,4 +12,5 @@ data class Access(
     val endTime: LocalDateTime,
     val macAddress: String,
     val token: String,
+    val id: String,
 )

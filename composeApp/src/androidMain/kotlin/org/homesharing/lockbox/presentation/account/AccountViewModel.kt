@@ -3,7 +3,6 @@ package org.homesharing.lockbox.presentation.account
 import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -107,13 +106,9 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
 
     fun sendImage(data: ByteArray) {
         viewModelScope.launch {
-            try {
-                repository.sendImage(data)
-                SnackbarController.receiveEvent(successfulUpdateUserImageEvent)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                SnackbarController.receiveEvent(couldNotUpdateUserImageEvent)
+            when (repository.sendImage(data)) {
+                is Response.Success -> SnackbarController.receiveEvent(successfulUpdateUserImageEvent)
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotUpdateUserImageEvent)
             }
         }
     }

@@ -23,8 +23,8 @@ private const val CROSSFADE_DURATION = 300
 internal fun NetworkImage(url: String, modifier: Modifier = Modifier) {
     val request = ImageRequest.Builder(LocalContext.current)
         .data(url)
-//        .diskCachePolicy(CachePolicy.DISABLED)
-//        .memoryCachePolicy(CachePolicy.DISABLED)
+        .diskCachePolicy(CachePolicy.DISABLED)
+        .memoryCachePolicy(CachePolicy.DISABLED)
         .crossfade(CROSSFADE_DURATION)
         .build()
 
@@ -37,11 +37,8 @@ internal fun NetworkImage(url: String, modifier: Modifier = Modifier) {
                 color = LockBoxTheme.colors.grey700,
                 shape = LockBoxTheme.shape.circleShape
             )
-            .background(
-                color = LockBoxTheme.colors.grey700,
-                shape = LockBoxTheme.shape.circleShape
-            )
             .clip(LockBoxTheme.shape.circleShape)
+            .background(LockBoxTheme.colors.grey700)
             .size(64.dp),
         contentScale = ContentScale.Crop,
         placeholder = painterResource(R.drawable.user),

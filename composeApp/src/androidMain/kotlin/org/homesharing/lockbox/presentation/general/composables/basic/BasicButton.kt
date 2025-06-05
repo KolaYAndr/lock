@@ -19,7 +19,7 @@ internal fun BasicButton(
     onClick: () -> Unit,
     text: String,
     paddingValues: PaddingValues = PaddingValues(8.dp),
-    style: ButtonColors = BasicButtonStyle.outerGreen(),
+    style: ButtonColors = BasicButtonStyle.greenBackground(),
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
@@ -41,7 +41,7 @@ internal fun BasicButton(
 
 internal object BasicButtonStyle {
     @Composable
-    fun outerGreen(): ButtonColors = ButtonDefaults.buttonColors(
+    fun greenBackground(): ButtonColors = ButtonDefaults.buttonColors(
         containerColor = LockBoxTheme.colors.green500,
         contentColor = LockBoxTheme.colors.grey900,
         disabledContentColor = LockBoxTheme.colors.grey700,
@@ -81,7 +81,7 @@ internal object BasicButtonStyle {
     )
 
     @Composable
-    fun outerRed(): ButtonColors = ButtonDefaults.buttonColors(
+    fun redBackGround(): ButtonColors = ButtonDefaults.buttonColors(
         containerColor = LockBoxTheme.colors.red600,
         contentColor = LockBoxTheme.colors.grey100,
         disabledContentColor = LockBoxTheme.colors.grey700,
@@ -110,7 +110,7 @@ private fun PreviewOuterRedButton() {
         BasicButton(
             onClick = { },
             text = "Voyti",
-            style = BasicButtonStyle.outerRed(),
+            style = BasicButtonStyle.redBackGround(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)

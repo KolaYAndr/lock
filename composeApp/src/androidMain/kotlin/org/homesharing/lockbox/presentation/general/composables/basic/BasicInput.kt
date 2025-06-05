@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,16 +42,13 @@ internal fun BasicInput(
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        val isFocused = interactionSource.collectIsFocusedAsState()
-        val borderModifier = if (isError) Modifier.border(
+        val isFocused by interactionSource.collectIsFocusedAsState()
+        val borderModifier = Modifier.border(
             width = 1.dp,
-            color = LockBoxTheme.colors.red600,
-            shape = LockBoxTheme.shape.roundedCornerShape8
-        ) else if (isFocused.value) Modifier.border(
-            width = 1.dp,
-            color = LockBoxTheme.colors.grey500,
-            shape = LockBoxTheme.shape.roundedCornerShape8
-        ) else Modifier
+            shape = LockBoxTheme.shape.roundedCornerShape8,
+            color = if (isError) LockBoxTheme.colors.red600
+                else if (isFocused) LockBoxTheme.colors.grey500 else Color.Transparent
+        )
 
         TextField(
             interactionSource = interactionSource,
@@ -61,7 +59,7 @@ internal fun BasicInput(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             trailingIcon = {
-                if (isFocused.value) {
+                if (isFocused) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
@@ -97,7 +95,6 @@ internal fun BasicInput(
                 text = errorText,
                 style = LockBoxTheme.typography.footnote,
                 color = LockBoxTheme.colors.red600,
-                maxLines = 1
             )
         }
     }

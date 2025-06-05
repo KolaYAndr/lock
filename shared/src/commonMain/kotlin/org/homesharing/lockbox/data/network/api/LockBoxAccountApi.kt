@@ -13,6 +13,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.isSuccess
 import io.ktor.http.parameters
 import org.homesharing.lockbox.data.network.client.bearerToken
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequestDto
@@ -118,16 +119,24 @@ internal class LockBoxAccountApi(
         ).body()
     }
 
-    override suspend fun sendImage(accessToken: String, data: ByteArray) {
+    override suspend fun sendImage(accessToken: String, data: ByteArray): ApiResponse<Unit> {
         val response = client.post {
             url(AVATARS_POST_URL)
             header(HttpHeaders.Authorization, bearerToken(accessToken))
         }.body<ApiResponse<PostImageResponseDto>>()
 
-        client.put {
-            header(HttpHeaders.ContentType, ContentType.Image.PNG)
+        if (response.error) return ApiResponse(body = null, error = true, errorText = response.errorText)
+
+        val putCall = client.put {
             url(response.body!!.link)
+            header(HttpHeaders.ContentType, ContentType.Image.PNG)
             setBody(data)
+        }
+
+        return if (putCall.status.isSuccess()) {
+            ApiResponse(body = Unit, error = false, errorText = null)
+        } else {
+            ApiResponse(body = null, error = true, errorText = "Unexpected status: ${putCall.status}")
         }
     }
 

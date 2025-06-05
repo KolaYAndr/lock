@@ -6,12 +6,12 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-internal value class AccessedResponseDto(
-    val listOfAccesses: List<AccessedDto>
+internal value class AccessResponseDto(
+    val listOfAccesses: List<AccessDto>
 )
 
 @Serializable
-internal data class AccessedDto(
+internal data class AccessDto(
     val alias: String?,
     @SerialName("end_time")
     val endTime: String,

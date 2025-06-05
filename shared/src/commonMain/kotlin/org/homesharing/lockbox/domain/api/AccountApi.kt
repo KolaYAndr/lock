@@ -32,7 +32,7 @@ internal interface AccountApi {
     suspend fun sendImage(
         accessToken: String,
         data: ByteArray
-    )
+    ): ApiResponse<Unit>
 
     suspend fun getSessions(accessToken: String): ApiResponse<SessionsResponseDto>
 

@@ -665,7 +665,7 @@ private fun OpenDeviceDialog(
                 onDismiss()
             },
             dangerButtonText = stringResource(R.string.open),
-            dangerButtonStyle = BasicButtonStyle.outerGreen()
+            dangerButtonStyle = BasicButtonStyle.greenBackground()
         )
     }
 }

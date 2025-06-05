@@ -64,7 +64,7 @@ internal fun BasicDialogContent(
     onDismiss: () -> Unit,
     onDangerButtonAction: () -> Unit,
     dangerButtonText: String,
-    dangerButtonStyle: ButtonColors = BasicButtonStyle.outerRed()
+    dangerButtonStyle: ButtonColors = BasicButtonStyle.redBackGround()
 ) {
     Text(
         text = title,

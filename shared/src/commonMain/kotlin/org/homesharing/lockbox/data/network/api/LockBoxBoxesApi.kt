@@ -13,7 +13,9 @@ import io.ktor.client.request.url
 import io.ktor.http.HttpHeaders
 import io.ktor.http.parameters
 import org.homesharing.lockbox.data.network.client.bearerToken
-import org.homesharing.lockbox.data.network.dto.accessed.AccessedResponseDto
+import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
@@ -101,9 +103,25 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
     override suspend fun getAccessedList(
         accessToken: String,
         mac: String,
-    ): ApiResponse<AccessedResponseDto> =
+    ): ApiResponse<AccessResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url("$BOXES/$ACCESS/$mac/$ACCESSES")
+        }.body()
+
+    override suspend fun createAccess(accessToken: String, mac: String): ApiResponse<AccessDto> =
+        client.post {
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
+            url("$BOXES/$ACCESS/$mac/$ACCESSES")
+        }.body()
+
+    override suspend fun revokeAccess(
+        accessToken: String,
+        mac: String,
+        tokenId: String,
+    ): ApiResponse<AccessRevokeResponseDto> =
+        client.delete {
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
+            url("$BOXES/$ACCESS/$mac/$ACCESSES/$tokenId")
         }.body()
 }

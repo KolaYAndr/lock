@@ -1,17 +1,18 @@
 package org.homesharing.lockbox.domain.model.access
 
 import kotlinx.datetime.LocalDateTime
-import org.homesharing.lockbox.data.network.dto.accessed.AccessedDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessedResponseDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
 
-internal fun AccessedResponseDto.toDomain(): Accesses = Accesses(
+internal fun AccessResponseDto.toDomain(): Accesses = Accesses(
     accessList = listOfAccesses.map { accessedDto -> accessedDto.toDomain() }
 )
 
-private fun AccessedDto.toDomain(): Access = Access(
+internal fun AccessDto.toDomain(): Access = Access(
     name = alias,
     startTime = LocalDateTime.parse(startTime),
     endTime = LocalDateTime.parse(endTime),
     macAddress = macAddress,
-    token = token
+    token = token,
+    id = uuid
 )

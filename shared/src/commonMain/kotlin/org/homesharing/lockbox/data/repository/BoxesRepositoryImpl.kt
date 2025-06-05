@@ -5,7 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import org.homesharing.lockbox.data.network.dto.accessed.AccessedResponseDto
+import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
@@ -16,8 +18,11 @@ import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access.toDomain
+import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
+import org.homesharing.lockbox.domain.model.access_revoke.toDomain
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
@@ -33,7 +38,7 @@ internal class BoxesRepositoryImpl(
     private val accountApi: AccountApi,
     private val refreshManager: RefreshManager,
     private val tokenStorage: TokenStorage,
-    private val pagingSourceFactory: () -> BoxesPagingSource
+    private val pagingSourceFactory: () -> BoxesPagingSource,
 ) : BoxesRepository {
 
     override fun getBoxesPagingFlow(): Flow<PagingData<Box>> =
@@ -138,7 +143,7 @@ internal class BoxesRepositoryImpl(
 
     override suspend fun updateBoxAddress(
         macAddress: String,
-        newAddress: String
+        newAddress: String,
     ): Response<UpdateBox> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
             try {
@@ -164,7 +169,13 @@ internal class BoxesRepositoryImpl(
 
     override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
         }
 
         return parseLockBoxApiResponse(
@@ -174,7 +185,52 @@ internal class BoxesRepositoryImpl(
                     mac = macAddress
                 )
             },
-            mapper = AccessedResponseDto::toDomain
+            mapper = AccessResponseDto::toDomain
+        )
+    }
+
+    override suspend fun createAccess(macAddress: String): Response<Access> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
+
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.createAccess(
+                    accessToken = tokenStorage.getAccessToken(),
+                    mac = macAddress
+                )
+            },
+            mapper = AccessDto::toDomain
+        )
+    }
+
+    override suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
+
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.revokeAccess(
+                    accessToken = tokenStorage.getAccessToken(),
+                    mac = macAddress,
+                    tokenId = tokenId
+                )
+            },
+            mapper = AccessRevokeResponseDto::toDomain
         )
     }
 

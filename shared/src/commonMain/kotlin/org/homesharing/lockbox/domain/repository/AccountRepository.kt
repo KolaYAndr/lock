@@ -20,7 +20,7 @@ interface AccountRepository {
 
     suspend fun getImageLink(sub: String): String
 
-    suspend fun sendImage(data: ByteArray)
+    suspend fun sendImage(data: ByteArray): Response<Unit>
 
     suspend fun getSessions(): Response<List<Session>>
 
