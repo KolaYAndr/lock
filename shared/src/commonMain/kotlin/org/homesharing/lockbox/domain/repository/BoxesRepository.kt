@@ -26,7 +26,7 @@ interface BoxesRepository {
 
     suspend fun getListOfAccesses(macAddress: String): Response<Accesses>
 
-    suspend fun createAccess(macAddress: String): Response<Access>
+    suspend fun createAccess(macAddress: String, startTime: Long, endTime: Long, alias: String?): Response<Access>
 
     suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke>
 }

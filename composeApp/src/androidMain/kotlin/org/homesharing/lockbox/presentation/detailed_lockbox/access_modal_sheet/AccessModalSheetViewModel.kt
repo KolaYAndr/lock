@@ -40,7 +40,24 @@ internal class AccessModalSheetViewModel(
         _uiState.update { it.copy(loading = false) }
     }
 
-    fun addGuest() {}
+    fun addGuest() {
+        uiState.value.selectedStartDate?.let { startTime ->
+            uiState.value.selectedEndDate?.let { endTime ->
+                viewModelScope.launch {
+                    repository.createAccess(
+                        macAddress = uiState.value.macAddress,
+                        startTime = startTime,
+                        endTime = endTime,
+                        alias = uiState.value.guestName,
+                    )
+                }
+            }
+        }
+    }
+
+    fun onChangeStartDate(newStart: Long) = _uiState.update { it.copy(selectedStartDate = newStart) }
+
+    fun onChangeEndDate(newEnd: Long) = _uiState.update { it.copy(selectedEndDate = newEnd) }
 
     fun onChangeGuestName(newGuestName: String) = _uiState.update {
         it.copy(guestName = newGuestName)
@@ -65,7 +82,9 @@ internal data class AccessModalSheetUiState(
     val step: AccessModalSheetStep = AccessModalSheetStep.GuestList,
     val accesses: List<Access> = emptyList(),
     val loading: Boolean = false,
-    val guestName: String = "",
+    val guestName: String? = null,
+    val selectedStartDate: Long? = null,
+    val selectedEndDate: Long? = null
 )
 
 internal sealed interface AccessModalSheetStep {

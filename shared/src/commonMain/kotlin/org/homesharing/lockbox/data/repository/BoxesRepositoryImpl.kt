@@ -5,6 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
 import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
@@ -189,7 +192,12 @@ internal class BoxesRepositoryImpl(
         )
     }
 
-    override suspend fun createAccess(macAddress: String): Response<Access> {
+    override suspend fun createAccess(
+        macAddress: String,
+        startTime: Long,
+        endTime: Long,
+        alias: String?,
+    ): Response<Access> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
             try {
                 refreshToken()
@@ -204,7 +212,10 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.createAccess(
                     accessToken = tokenStorage.getAccessToken(),
-                    mac = macAddress
+                    mac = macAddress,
+                    alias = alias,
+                    startTime = formatToBackendTimestamp(startTime),
+                    endTime = formatToBackendTimestamp(endTime)
                 )
             },
             mapper = AccessDto::toDomain
@@ -232,6 +243,21 @@ internal class BoxesRepositoryImpl(
             },
             mapper = AccessRevokeResponseDto::toDomain
         )
+    }
+
+    private fun formatToBackendTimestamp(epochMillis: Long): String {
+        val ldt = Instant
+            .fromEpochMilliseconds(epochMillis)
+            .toLocalDateTime(TimeZone.UTC)
+
+        val year   = ldt.year.toString().padStart(4, '0')
+        val month  = ldt.monthNumber.toString().padStart(2, '0')
+        val day    = ldt.dayOfMonth.toString().padStart(2, '0')
+        val hour   = ldt.hour.toString().padStart(2, '0')
+        val minute = ldt.minute.toString().padStart(2, '0')
+        val second = ldt.second.toString().padStart(2, '0')
+
+        return "$year-$month-$day" + "T" + "$hour:$minute:$second"
     }
 
     private suspend fun refreshToken() {

@@ -2,6 +2,8 @@ package org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +47,8 @@ import org.homesharing.lockbox.presentation.general.composables.AddRow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.RoundText
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.composables.inputs.DateInput
@@ -66,7 +70,10 @@ internal fun AccessModalSheet(
     toAddGuest: () -> Unit,
     isLoading: Boolean,
     guestName: String,
+    onChangeStartDate: (Long) -> Unit,
+    onChangeEndDate: (Long) -> Unit,
     onChangeGuestName: (String) -> Unit,
+    addGuest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
@@ -96,6 +103,10 @@ internal fun AccessModalSheet(
                         lockboxAddress = step.lockboxAddress,
                         guestName = guestName,
                         onChangeGuestName = onChangeGuestName,
+                        onChangeStartDate = onChangeStartDate,
+                        onChangeEndDate = onChangeEndDate,
+                        addGuest = addGuest,
+                        onNavBack = { changeStep(AccessModalSheetStep.GuestList) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -121,10 +132,16 @@ private fun AddGuestContent(
     lockboxAddress: String,
     guestName: String,
     onChangeGuestName: (String) -> Unit,
+    onChangeStartDate: (Long) -> Unit,
+    onChangeEndDate: (Long) -> Unit,
+    addGuest: () -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState())
+        modifier = modifier
+            .padding(top = 12.dp, bottom = 16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier
@@ -177,6 +194,7 @@ private fun AddGuestContent(
             selectableDates = startAvailableDates
         )
         val selectedStartDate: String? = startDatePickerState.selectedDateMillis?.let { time ->
+            onChangeStartDate(time)
             formatter.format(Date(time))
         }
 
@@ -246,11 +264,11 @@ private fun AddGuestContent(
             selectableDates = endAvailableDates
         )
         val selectedEndDate: String? = endDatePickerState.selectedDateMillis?.let { time ->
+            onChangeEndDate(time)
             formatter.format(Date(time))
         }
 
         var showEndDatePicker by remember { mutableStateOf(false) }
-
         Column(
             modifier = modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -264,17 +282,17 @@ private fun AddGuestContent(
                 style = LockBoxTheme.typography.subHeadlineLarge
             )
 
-            AnimatedVisibility(showEndDatePicker) {
-                DockedDatePicker(
-                    datePickerState = endDatePickerState
-                )
-            }
-
             DateInput(
                 date = selectedEndDate.orEmpty(),
                 onFieldClick = { showEndDatePicker = !showEndDatePicker },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            AnimatedVisibility(showEndDatePicker) {
+                DockedDatePicker(
+                    datePickerState = endDatePickerState
+                )
+            }
         }
 
         val keyboardManager = LocalSoftwareKeyboardController.current
@@ -300,6 +318,50 @@ private fun AddGuestContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            CopyButton(onClick = addGuest, modifier = Modifier.fillMaxWidth())
+
+            BasicButton(
+                onClick = onNavBack,
+                text = stringResource(R.string.cancel),
+                style = BasicButtonStyle.grey(),
+                paddingValues = PaddingValues(14.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun CopyButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = Modifier
+            .clip(LockBoxTheme.shape.roundedCornerShape8)
+            .background(LockBoxTheme.colors.green500)
+            .clickable { onClick() }
+            .padding(12.dp)
+            .then(modifier),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.copy),
+            contentDescription = null,
+            tint = LockBoxTheme.colors.grey900,
+            modifier = Modifier.size(24.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.copy_link),
+            color = LockBoxTheme.colors.grey900,
+            style = LockBoxTheme.typography.headlineLarge
+        )
     }
 }
 

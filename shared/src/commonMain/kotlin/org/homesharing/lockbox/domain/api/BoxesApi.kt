@@ -52,7 +52,10 @@ internal interface BoxesApi {
 
     suspend fun createAccess(
         accessToken: String,
-        mac: String
+        mac: String,
+        alias: String?,
+        startTime: String,
+        endTime: String,
     ): ApiResponse<AccessDto>
 
     suspend fun revokeAccess(

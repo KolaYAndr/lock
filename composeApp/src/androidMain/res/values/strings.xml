@@ -173,6 +173,7 @@
     <string name="date_and_time_of_access_end">Дата и время окончания приглашения</string>
     <string name="choose_date_and_time_of_access_end">Выберите дату и время окончания приглашения</string>
     <string name="choose_date">Выберите дату</string>
+    <string name="copy_link">Копировать ссылку</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

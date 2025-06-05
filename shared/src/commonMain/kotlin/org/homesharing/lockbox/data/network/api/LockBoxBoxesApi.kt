@@ -23,6 +23,7 @@ import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequestDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.domain.api.BoxesApi
+import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
 
 private const val BOXES = "https://api.lockboxes.ru:8445/boxes"
 private const val STATUS = "status"
@@ -39,8 +40,8 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
     override suspend fun getBoxes(
         accessToken: String,
         page: Int,
-        size: Int
-    ): ApiResponse<BoxListResponseDto>  =
+        size: Int,
+    ): ApiResponse<BoxListResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(BOXES)
@@ -52,7 +53,7 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
 
     override suspend fun getBoxByMac(
         accessToken: String,
-        address: String
+        address: String,
     ): ApiResponse<BoxResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
@@ -61,8 +62,8 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
 
     override suspend fun getBoxStatusByMac(
         accessToken: String,
-        address: String
-    ): ApiResponse<BoxStatusResponseDto>  =
+        address: String,
+    ): ApiResponse<BoxStatusResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url("$BOXES/$address/$STATUS")
@@ -72,7 +73,7 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
         accessToken: String,
         macAddress: String,
         alias: String?,
-        address: String?
+        address: String?,
     ): ApiResponse<UpdateBoxResponseDto> {
         val request = UpdateBoxRequestDto(alias, address)
         return client.patch {
@@ -84,7 +85,7 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
 
     override suspend fun openBox(
         accessToken: String,
-        mac: String
+        mac: String,
     ): ApiResponse<OpenBoxResponseDto> =
         client.post {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
@@ -93,7 +94,7 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
 
     override suspend fun deleteBox(
         accessToken: String,
-        mac: String
+        mac: String,
     ): ApiResponse<UpdateBoxResponseDto> =
         client.delete {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
@@ -109,11 +110,20 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
             url("$BOXES/$ACCESS/$mac/$ACCESSES")
         }.body()
 
-    override suspend fun createAccess(accessToken: String, mac: String): ApiResponse<AccessDto> =
-        client.post {
+    override suspend fun createAccess(
+        accessToken: String,
+        mac: String,
+        alias: String?,
+        startTime: String,
+        endTime: String,
+    ): ApiResponse<AccessDto> {
+        val request = AccessCreateRequestDto(startTime, endTime, alias)
+        return client.post {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url("$BOXES/$ACCESS/$mac/$ACCESSES")
+            setBody(request)
         }.body()
+    }
 
     override suspend fun revokeAccess(
         accessToken: String,

@@ -368,8 +368,11 @@ internal fun DetailedLockBoxScreen(
             },
             changeStep = accessModalSheetViewModel::toStep,
             isLoading = accessModalSheetState.loading,
-            guestName = accessModalSheetState.guestName,
+            guestName = accessModalSheetState.guestName.orEmpty(),
             onChangeGuestName = accessModalSheetViewModel::onChangeGuestName,
+            onChangeStartDate = accessModalSheetViewModel::onChangeStartDate,
+            onChangeEndDate = accessModalSheetViewModel::onChangeEndDate,
+            addGuest = accessModalSheetViewModel::addGuest,
             modifier = Modifier.fillMaxSize()
         )
     }

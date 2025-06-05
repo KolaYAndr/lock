@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
@@ -64,7 +65,8 @@ fun BasicInput(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             showKeyboardOnFocus = true,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
+            capitalization = KeyboardCapitalization.Words
         ),
         keyboardActions = KeyboardActions(
             onDone = { onDone() }
