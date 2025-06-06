@@ -54,7 +54,7 @@ internal fun ChangeEmailScreen(
     ) {
         TitledTopBar(
             title = stringResource(R.string.change_email),
-            onNavigate = onNavBack::invoke,
+            onNavigate = onNavBack,
             modifier = Modifier.fillMaxWidth()
         )
 

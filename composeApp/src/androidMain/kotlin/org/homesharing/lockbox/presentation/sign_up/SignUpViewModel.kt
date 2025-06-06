@@ -19,7 +19,7 @@ private const val PASSWORDS_DONT_MATCH_STRING = "web.exchange.bind.exception"
 
 internal class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
-    val uiState: StateFlow<SignUpUiState> get() = _uiState.asStateFlow()
+    val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
     private val emailMatcher = Patterns.EMAIL_ADDRESS
 
     fun onChangeEmail(newEmail: String) {
@@ -28,14 +28,12 @@ internal class SignUpViewModel(private val authRepository: AuthRepository) : Vie
         }
     }
 
-    suspend fun checkIfConfirmed() {
-        try {
-            authRepository.loadTokensInitially(
-                uiState.value.email,
-                uiState.value.password
-            )
-        } catch (e: Exception) {}
-    }
+    suspend fun checkIfConfirmed() = try {
+        authRepository.loadTokensInitially(
+            uiState.value.email,
+            uiState.value.password
+        )
+    } catch (e: Exception) { }
 
     fun signUp() {
         viewModelScope.launch {
@@ -70,51 +68,36 @@ internal class SignUpViewModel(private val authRepository: AuthRepository) : Vie
             else -> PasswordRepeatedError.Unexpected
         }
 
-    fun sendEmailConfirmation() {
-        viewModelScope.launch {
-            authRepository.sendConfirmation(uiState.value.email)
-        }
+    fun sendEmailConfirmation() = viewModelScope.launch {
+        authRepository.sendConfirmation(uiState.value.email)
     }
 
-    fun onChangePassword(newPassword: String) {
-        _uiState.update {
-            it.copy(password = newPassword)
-        }
+    fun onChangePassword(newPassword: String) = _uiState.update {
+        it.copy(password = newPassword)
     }
 
-    fun onChangePasswordRepeat(newRepeatedPassword: String) {
-        _uiState.update {
-            it.copy(
-                passwordRepeated = newRepeatedPassword,
-                passwordRepeatedError = PasswordRepeatedError.None
-            )
-        }
+
+    fun onChangePasswordRepeat(newRepeatedPassword: String) = _uiState.update {
+        it.copy(
+            passwordRepeated = newRepeatedPassword,
+            passwordRepeatedError = PasswordRepeatedError.None
+        )
     }
 
-    fun onPasswordSeenChange() {
-        _uiState.update {
-            it.copy(isPasswordSeen = !it.isPasswordSeen)
-        }
+    fun onPasswordSeenChange() = _uiState.update {
+        it.copy(isPasswordSeen = !it.isPasswordSeen)
     }
 
-    fun onPasswordRepeatedSeenChange() {
-        _uiState.update {
-            it.copy(isPasswordRepeatedSeen = !it.isPasswordRepeatedSeen)
-        }
+    fun onPasswordRepeatedSeenChange() = _uiState.update {
+        it.copy(isPasswordRepeatedSeen = !it.isPasswordRepeatedSeen)
     }
 
-    fun toStep(nextStep: SignUpStep) {
-        when (nextStep) {
-            SignUpStep.PasswordInput -> {
-                if (emailMatcher.matcher(uiState.value.email).matches()) {
-                    _uiState.update { it.copy(signUpStep = nextStep) }
-                } else _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
-            }
+    fun toStep(nextStep: SignUpStep) = when (nextStep) {
+        SignUpStep.PasswordInput -> if (emailMatcher.matcher(uiState.value.email).matches()) {
+            _uiState.update { it.copy(signUpStep = nextStep) }
+        } else _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
 
-            else -> {
-                _uiState.update { it.copy(signUpStep = nextStep) }
-            }
-        }
+        else -> _uiState.update { it.copy(signUpStep = nextStep) }
     }
 }
 

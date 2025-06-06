@@ -23,7 +23,7 @@
     <string name="have_an_account">Есть аккаунт?</string>
     <string name="log_in">Войдите</string>
     <string name="check_your_email">Проверьте почту</string>
-    <string name="link_sent_to_email">Мы отправили Вам ссылку для подтверждения по указанному адресу:</string>
+    <string name="link_sent_to_email">Мы отправили Вам ссылку для подтверждения по указанному адресу</string>
     <string name="change_short">(Изм.)</string>
     <string name="before_sending_one_more_time">Отправить ещё раз (%1$s:%2$s)</string>
     <string name="send_one_more_time">Отправить ещё раз</string>
@@ -174,6 +174,7 @@
     <string name="choose_date_and_time_of_access_end">Выберите дату и время окончания приглашения</string>
     <string name="choose_date">Выберите дату</string>
     <string name="copy_link">Копировать ссылку</string>
+    <string name="could_not_send_link_to_change_email">Не удалось отправить ссылку для смены почты</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>
