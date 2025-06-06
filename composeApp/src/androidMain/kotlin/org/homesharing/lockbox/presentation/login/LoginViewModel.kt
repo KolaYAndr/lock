@@ -2,8 +2,11 @@ package org.homesharing.lockbox.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -11,8 +14,11 @@ import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
 internal class LoginViewModel(private val repository: AccountRepository) : ViewModel() {
-    private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    private val _loginType: MutableStateFlow<LoginType> = MutableStateFlow(LoginType.SignIn)
+    val loginType: StateFlow<LoginType> = _loginType.asStateFlow()
+
+    private val _loggedIn: MutableSharedFlow<Unit> = MutableSharedFlow()
+    val loggedIn: SharedFlow<Unit> = _loggedIn.asSharedFlow()
 
     init {
         checkIfLoggedIn()
@@ -20,13 +26,11 @@ internal class LoginViewModel(private val repository: AccountRepository) : ViewM
 
     private fun checkIfLoggedIn() = viewModelScope.launch {
         repository.loggedIn().collectLatest { hasToken ->
-            _uiState.update { it.copy(isLoggedIn = hasToken) }
+            if (hasToken) _loggedIn.emit(Unit)
         }
     }
 
-    fun toTypeAuth(authType: LoginType) = _uiState.update {
-        it.copy(loginType = authType)
-    }
+    fun toTypeAuth(authType: LoginType) = _loginType.update { authType }
 }
 
 
@@ -38,7 +42,3 @@ internal sealed class LoginType(val hierarchyIndex: Int) {
     data object SignUp : LoginType(STEP_TWO)
 }
 
-internal data class LoginUiState(
-    val loginType: LoginType = LoginType.SignIn,
-    val isLoggedIn: Boolean = false,
-)

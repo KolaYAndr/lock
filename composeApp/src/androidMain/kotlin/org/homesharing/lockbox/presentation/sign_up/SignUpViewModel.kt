@@ -33,8 +33,7 @@ internal class SignUpViewModel(private val authRepository: AuthRepository) : Vie
             uiState.value.email,
             uiState.value.password
         )
-    } catch (e: Exception) {
-    }
+    } catch (e: Exception) { }
 
     fun signUp() = viewModelScope.launch {
         if (uiState.value.password != uiState.value.passwordRepeated) {
@@ -109,7 +108,6 @@ internal data class SignUpUiState(
     val isPasswordRepeatedSeen: Boolean = false,
     val signUpStep: SignUpStep = SignUpStep.EmailInput,
 )
-
 
 private const val STEP_ONE = 1
 private const val STEP_TWO = 2

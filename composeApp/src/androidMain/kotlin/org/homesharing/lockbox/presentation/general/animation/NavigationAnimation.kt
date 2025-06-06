@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.animation
+package org.homesharing.lockbox.presentation.general.animation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition

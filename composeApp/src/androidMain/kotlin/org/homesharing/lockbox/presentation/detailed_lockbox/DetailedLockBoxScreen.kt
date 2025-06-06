@@ -32,12 +32,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
@@ -45,7 +49,6 @@ import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetViewModel
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
-import org.homesharing.lockbox.presentation.general.composables.inputs.LockBoxPropertyInput
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
@@ -55,12 +58,14 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialo
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
+import org.homesharing.lockbox.presentation.general.composables.inputs.LockBoxPropertyInput
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 
 private const val SIGNAL_STRENGTH_COLOR_HIGHER_BOUND = -60
 private const val SIGNAL_STRENGTH_COLOR_MIDDLE_BOUND = -90
 private const val SIGNAL_STRENGTH_COLOR_LOWER_BOUND = -100
+private const val URL_PREFIX = "https://lockboxes.ru/open"
 
 @Composable
 internal fun DetailedLockBoxScreen(
@@ -352,6 +357,16 @@ internal fun DetailedLockBoxScreen(
     if (showAccessModal) {
         val accessModalSheetViewModel = koinViewModel<AccessModalSheetViewModel>()
         val accessModalSheetState by accessModalSheetViewModel.uiState.collectAsStateWithLifecycle()
+
+        val lifecycleOwner = LocalLifecycleOwner.current
+        val clipboardManager = LocalClipboardManager.current
+        ActionOnSharedFlow(
+            lifecycleOwner = lifecycleOwner,
+            flow = accessModalSheetViewModel.tokenData
+        ) { token ->
+            clipboardManager.setText(AnnotatedString("$URL_PREFIX/$token"))
+        }
+
         LaunchedEffect(uiState.macAddress) {
             accessModalSheetViewModel.loadGuestList(uiState.macAddress)
         }

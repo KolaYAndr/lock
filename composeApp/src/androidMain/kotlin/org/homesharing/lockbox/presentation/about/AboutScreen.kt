@@ -20,8 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.downloadPrivacyPolicy
-import org.homesharing.lockbox.downloadlServiceConditions
+import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
+import org.homesharing.lockbox.presentation.general.downloadlServiceConditions
 import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider

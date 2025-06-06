@@ -1,8 +1,9 @@
-package org.homesharing.lockbox
+package org.homesharing.lockbox.presentation.general
 
 import android.app.DownloadManager
 import android.content.Context
 import androidx.core.net.toUri
+import org.homesharing.lockbox.R
 
 private const val USER_AGREEMENT_URL = "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf"
 private const val PRIVACY_POLICY_URL = "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf"

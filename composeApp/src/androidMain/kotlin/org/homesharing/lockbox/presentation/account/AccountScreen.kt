@@ -91,7 +91,7 @@ internal fun AccountScreen(
                 }
                 .padding(top = 24.dp)
         ) {
-            if (accountUiState.imageUri.isNotEmpty()) NetworkImage(url = accountUiState.imageUri)
+            if (accountUiState.imageUrl.isNotEmpty()) NetworkImage(url = accountUiState.imageUrl)
             else RoundText(text = "${accountUiState.name} ${accountUiState.surname}")
 
             Text(

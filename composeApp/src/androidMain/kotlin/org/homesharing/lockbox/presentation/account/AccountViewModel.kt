@@ -86,7 +86,7 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
 
     private suspend fun getAvatarLink(sub: String) {
         val avatarLink = repository.getImageLink(sub)
-        _uiState.update { it.copy(imageUri = avatarLink) }
+        _uiState.update { it.copy(imageUrl = avatarLink) }
     }
 
 
@@ -101,9 +101,8 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
     fun sendImage(data: ByteArray) {
         viewModelScope.launch {
             when (repository.sendImage(data)) {
-                is Response.Success -> SnackbarController.receiveEvent(
-                    successfulUpdateUserImageEvent
-                )
+                is Response.Success ->
+                    SnackbarController.receiveEvent(successfulUpdateUserImageEvent)
 
                 is Response.Failure -> SnackbarController.receiveEvent(couldNotUpdateUserImageEvent)
             }
@@ -135,6 +134,6 @@ internal data class AccountUiState(
     val surname: String = "",
     val email: String = "",
     val phoneNumber: String = "",
-    val imageUri: String = "",
+    val imageUrl: String = "",
     val sub: String = "",
 )

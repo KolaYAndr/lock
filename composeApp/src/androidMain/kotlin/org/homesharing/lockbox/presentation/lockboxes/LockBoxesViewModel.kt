@@ -31,10 +31,8 @@ internal class LockBoxesViewModel(
     private fun fetchAccountInfo() {
         viewModelScope.launch {
             when (val info = accountRepository.parseAccountInfo()) {
-                is Response.Success -> {
-                    val imageLink = accountRepository.getImageLink(info.data.sub)
-                    _avatarLink.update { imageLink }
-                }
+                is Response.Success ->
+                    _avatarLink.update { accountRepository.getImageLink(info.data.sub) }
 
                 is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotLoadAccountInfo { retryLoadingAccountInfo() })
@@ -45,10 +43,8 @@ internal class LockBoxesViewModel(
 
     private suspend fun retryLoadingAccountInfo() {
         when (val info = accountRepository.refreshAccount()) {
-            is Response.Success -> {
-                val imageLink = accountRepository.getImageLink(info.data.sub)
-                _avatarLink.update { imageLink }
-            }
+            is Response.Success ->
+                _avatarLink.update { accountRepository.getImageLink(info.data.sub) }
 
             is Response.Failure -> SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retryLoadingAccountInfo() })
         }

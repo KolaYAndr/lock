@@ -32,8 +32,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.downloadPrivacyPolicy
-import org.homesharing.lockbox.downloadlServiceConditions
+import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
+import org.homesharing.lockbox.presentation.general.downloadlServiceConditions
 import org.homesharing.lockbox.presentation.login.LoginType
 import org.homesharing.lockbox.presentation.general.composables.CloseRoundButton
 import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput

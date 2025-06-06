@@ -32,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.navigation.BottomNavigation
@@ -67,7 +68,7 @@ class LockBoxActivity : ComponentActivity() {
         setContent {
             val lockboxActivityViewModel = koinViewModel<LockBoxActivityViewModel>()
             val isLoggedIn by
-                lockboxActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
+            lockboxActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
 
             val snackbarHostState = remember { SnackbarHostState() }
             CollectSnackbarEvents(snackbarHostState)
@@ -124,7 +125,7 @@ class LockBoxActivity : ComponentActivity() {
         LaunchedEffect(lifecycleOwner.lifecycle) {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.Main.immediate) {
-                    SnackbarController.events.collect { event ->
+                    SnackbarController.events.flowOn(Dispatchers.Main.immediate).collect { event ->
                         scope.launch {
                             snackbarHostState.currentSnackbarData?.dismiss()
 

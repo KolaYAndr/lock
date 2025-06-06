@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -15,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
 import org.homesharing.lockbox.navigation.routes.MainRoutes
@@ -24,10 +26,10 @@ import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.account.AccountViewModel
-import org.homesharing.lockbox.presentation.animation.enterAnimation
-import org.homesharing.lockbox.presentation.animation.exitAnimation
-import org.homesharing.lockbox.presentation.animation.globalEnterAnimation
-import org.homesharing.lockbox.presentation.animation.globalExitAnimation
+import org.homesharing.lockbox.presentation.general.animation.enterAnimation
+import org.homesharing.lockbox.presentation.general.animation.exitAnimation
+import org.homesharing.lockbox.presentation.general.animation.globalEnterAnimation
+import org.homesharing.lockbox.presentation.general.animation.globalExitAnimation
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
@@ -73,14 +75,19 @@ internal fun Navigation(
                 popExitTransition = globalExitAnimation
             ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
-                val state by loginViewModel.uiState.collectAsStateWithLifecycle()
+                val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
+
+                val lifecycleOwner = LocalLifecycleOwner.current
+                ActionOnSharedFlow(
+                    flow = loginViewModel.loggedIn,
+                    lifecycleOwner = lifecycleOwner
+                ) {
+                    navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
+                }
 
                 LoginScreen(
-                    state = state,
+                    loginType = loginType,
                     onToTypeAuth = loginViewModel::toTypeAuth,
-                    onLoggedIn = {
-                        navController.navigateToDestinationWithNoBackstack(MainRoutes.Boxes)
-                    },
                     topRowContent = { LockBoxesTopRow() },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -149,14 +156,19 @@ internal fun Navigation(
                 popExitTransition = globalExitAnimation
             ) {
                 val loginViewModel = koinViewModel<LoginViewModel>()
-                val state by loginViewModel.uiState.collectAsStateWithLifecycle()
+                val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
+
+                val lifecycleOwner = LocalLifecycleOwner.current
+                ActionOnSharedFlow(
+                    flow = loginViewModel.loggedIn,
+                    lifecycleOwner = lifecycleOwner
+                ) {
+                    navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
+                }
 
                 LoginScreen(
-                    state = state,
+                    loginType = loginType,
                     onToTypeAuth = loginViewModel::toTypeAuth,
-                    onLoggedIn = {
-                        navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
-                    },
                     topRowContent = { SettingsTopRowText() },
                     modifier = Modifier.fillMaxSize()
                 )

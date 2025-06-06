@@ -55,12 +55,14 @@ internal class ActiveSessionsViewModel(private val accountRepository: AccountRep
 
     fun finishOtherSessions() {
         viewModelScope.launch {
-            val accountInfo = accountRepository.parseAccountInfo()
+            when (val accountInfo = accountRepository.parseAccountInfo()) {
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotCloseOtherSessions { finishOtherSessions() })
 
-            if (accountInfo is Response.Success) {
-                accountRepository.closeOtherSessions(accountInfo.data.sessionId)
-                getSessions()
-            } else SnackbarController.receiveEvent(couldNotCloseOtherSessions { finishOtherSessions() })
+                is Response.Success -> {
+                    accountRepository.closeOtherSessions(accountInfo.data.sessionId)
+                    getSessions()
+                }
+            }
         }
     }
 

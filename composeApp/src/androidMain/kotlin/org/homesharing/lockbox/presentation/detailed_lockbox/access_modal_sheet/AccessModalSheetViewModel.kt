@@ -3,8 +3,11 @@ package org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,10 +26,13 @@ internal class AccessModalSheetViewModel(
         MutableStateFlow(AccessModalSheetUiState())
     val uiState: StateFlow<AccessModalSheetUiState> = _uiState.asStateFlow()
 
+    private val _tokenData: MutableSharedFlow<String> = MutableSharedFlow()
+    val tokenData: SharedFlow<String> = _tokenData.asSharedFlow()
+
     fun loadGuestList(mac: String) {
         _uiState.update { it.copy(loading = true) }
         viewModelScope.launch {
-            _uiState.update { it.copy(macAddress = mac) }
+            if (mac != uiState.value.macAddress) _uiState.update { it.copy(macAddress = mac) }
             when (val response = repository.getListOfAccesses(uiState.value.macAddress)) {
                 is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotLoadGuestList { loadGuestList(uiState.value.macAddress) })
@@ -40,16 +46,19 @@ internal class AccessModalSheetViewModel(
     fun addGuest() = uiState.value.selectedStartDate?.let { startTime ->
         uiState.value.selectedEndDate?.let { endTime ->
             viewModelScope.launch {
-                repository.createAccess(
+                val response = repository.createAccess(
                     macAddress = uiState.value.macAddress,
                     startTime = startTime,
                     endTime = endTime,
                     alias = uiState.value.guestName,
                 )
+
+                if (response is Response.Success) {
+                    _tokenData.emit(response.data.token)
+                }
             }
         }
     }
-
 
     fun onChangeStartDate(newStart: Long) =
         _uiState.update { it.copy(selectedStartDate = newStart) }
@@ -60,7 +69,10 @@ internal class AccessModalSheetViewModel(
         it.copy(guestName = newGuestName)
     }
 
-    fun toStep(step: AccessModalSheetStep) = _uiState.update { it.copy(step = step) }
+    fun toStep(step: AccessModalSheetStep) {
+        if (step is AccessModalSheetStep.GuestList) loadGuestList(uiState.value.macAddress)
+        _uiState.update { it.copy(step = step) }
+    }
 
     private companion object {
         fun couldNotLoadGuestList(onRetry: () -> Unit) = SnackbarEvent(

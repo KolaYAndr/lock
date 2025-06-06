@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.animation.backwardAnimation
-import org.homesharing.lockbox.presentation.animation.forwardAnimation
+import org.homesharing.lockbox.presentation.general.animation.backwardAnimation
+import org.homesharing.lockbox.presentation.general.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
@@ -43,16 +42,11 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun LoginScreen(
-    state: LoginUiState,
+    loginType: LoginType,
     onToTypeAuth: (LoginType) -> Unit,
-    onLoggedIn: () -> Unit,
     topRowContent: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(state.isLoggedIn) {
-        if (state.isLoggedIn) onLoggedIn()
-    }
-
     var showModal by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
@@ -108,7 +102,7 @@ internal fun LoginScreen(
                 onDismissRequest = { showModal = false },
             ) {
                 AnimatedContent(
-                    targetState = state.loginType,
+                    targetState = loginType,
                     transitionSpec = {
                         if (targetState.hierarchyIndex > initialState.hierarchyIndex) {
                             forwardAnimation
@@ -179,10 +173,10 @@ private fun getErrorText(passwordError: SignInPasswordError) =
 @Composable
 private fun PreviewLoginScreen() {
     LockBoxTheme {
-        val uiState = LoginUiState()
+        val loginType = LoginType.SignIn
         LoginScreen(
-            state = uiState,
-            {}, {}, {},
+            loginType = loginType,
+            {}, {},
             modifier = Modifier.fillMaxSize()
         )
     }

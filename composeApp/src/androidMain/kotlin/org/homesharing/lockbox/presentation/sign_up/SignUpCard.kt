@@ -8,10 +8,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.downloadPrivacyPolicy
-import org.homesharing.lockbox.downloadlServiceConditions
-import org.homesharing.lockbox.presentation.animation.backwardAnimation
-import org.homesharing.lockbox.presentation.animation.forwardAnimation
+import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
+import org.homesharing.lockbox.presentation.general.downloadlServiceConditions
+import org.homesharing.lockbox.presentation.general.animation.backwardAnimation
+import org.homesharing.lockbox.presentation.general.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.general.composables.CardTopRow
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
 

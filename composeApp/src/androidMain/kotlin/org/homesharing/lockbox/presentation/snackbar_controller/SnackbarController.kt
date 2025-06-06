@@ -7,7 +7,5 @@ internal object SnackbarController {
     private val _events = Channel<SnackbarEvent>()
     val events = _events.receiveAsFlow()
 
-    suspend fun receiveEvent(event: SnackbarEvent) {
-        _events.send(event)
-    }
+    suspend fun receiveEvent(event: SnackbarEvent) = _events.send(event)
 }

@@ -36,8 +36,7 @@ internal class SettingsViewModel(private val repository: AccountRepository) : Vi
                     }
 
                     launch {
-                        val imageLink = repository.getImageLink(info.data.sub)
-                        _uiState.update { it.copy(imageLink = imageLink) }
+                        _uiState.update { it.copy(imageLink = repository.getImageLink(info.data.sub)) }
                     }
                 }
 
