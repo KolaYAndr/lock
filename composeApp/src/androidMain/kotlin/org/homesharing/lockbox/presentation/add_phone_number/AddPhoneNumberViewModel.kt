@@ -10,39 +10,33 @@ import kotlinx.coroutines.flow.update
 internal class AddPhoneNumberViewModel : ViewModel() {
     private val _uiState: MutableStateFlow<AddPhoneNumberUiState> =
         MutableStateFlow(AddPhoneNumberUiState())
-    val uiState: StateFlow<AddPhoneNumberUiState> get() = _uiState.asStateFlow()
+    val uiState: StateFlow<AddPhoneNumberUiState> = _uiState.asStateFlow()
     private val phonePattern = Patterns.PHONE
 
-    fun onNumberChange(newNumber: String) {
-        _uiState.update {
-            it.copy(phoneNumber = newNumber)
-        }
+    fun onNumberChange(newNumber: String) = _uiState.update {
+        it.copy(phoneNumber = newNumber)
     }
 
-    fun toStep(step: AddPhoneNumberStep) {
+    fun toStep(step: AddPhoneNumberStep) =
         _uiState.update {
             it.copy(step = step)
         }
-    }
 
-    fun onConfirmationCodeChanged(code: String) {
+    fun onConfirmationCodeChanged(code: String) =
         _uiState.update {
             it.copy(confirmationCode = code)
         }
-    }
 
-    fun  sendConfirmationCode() {
-        if (phonePattern.matcher(uiState.value.phoneNumber).matches()) {
-            toStep(AddPhoneNumberStep.ConfirmPhoneNumber)
-        } else _uiState.update { it.copy(numberError = "Doesn't match phone number pattern") }
-    }
+    fun sendConfirmationCode() = if (phonePattern.matcher(uiState.value.phoneNumber).matches()) {
+        toStep(AddPhoneNumberStep.ConfirmPhoneNumber)
+    } else _uiState.update { it.copy(numberError = true) }
 }
 
 internal data class AddPhoneNumberUiState(
     val phoneNumber: String = "",
-    val numberError: String? = "",
+    val numberError: Boolean = false,
     val step: AddPhoneNumberStep = AddPhoneNumberStep.WantToChange,
-    val confirmationCode: String = ""
+    val confirmationCode: String = "",
 )
 
 internal sealed class AddPhoneNumberStep {

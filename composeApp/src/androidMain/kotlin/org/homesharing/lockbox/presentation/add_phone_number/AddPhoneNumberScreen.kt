@@ -215,7 +215,7 @@ fun PhoneNumberChangedSuccessfullyStep(onDone: () -> Unit) {
 @Composable
 private fun NewNumberInputStep(
     number: String,
-    numberError: String?,
+    numberError: Boolean,
     onNumberChange: (String) -> Unit,
     onToStep: (AddPhoneNumberStep) -> Unit,
     changePhoneNumber: () -> Unit
@@ -269,8 +269,8 @@ private fun NewNumberInputStep(
             number = number,
             onValueChange = onNumberChange,
             onClearText = { onNumberChange("") },
-            isError = numberError == null,
-            errorText = numberError ?: "",
+            isError = numberError,
+            errorText = stringResource(R.string.phone_number_doesnt_match_pattern),
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {

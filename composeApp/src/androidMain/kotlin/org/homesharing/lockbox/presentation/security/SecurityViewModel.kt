@@ -18,13 +18,10 @@ internal class SecurityViewModel(
     fun sendLinkToChangePassword() {
         viewModelScope.launch {
             when (accountRepository.sendLinkToChangeEmail()) {
-                is Response.Failure -> SnackbarController.receiveEvent(
-                    couldNotSendLinkToEmail { sendLinkToChangePassword() }
-                )
+                is Response.Failure ->
+                    SnackbarController.receiveEvent(couldNotSendLinkToEmail { sendLinkToChangePassword() })
 
-                is Response.Success -> SnackbarController.receiveEvent(
-                    linkSentToResetPassword
-                )
+                is Response.Success -> SnackbarController.receiveEvent(linkSentToResetPassword)
             }
         }
     }

@@ -19,9 +19,8 @@ internal class LockBoxesViewModel(
     private val accountRepository: AccountRepository,
     boxesRepository: BoxesRepository,
 ) : ViewModel() {
-
     private val _avatarLink: MutableStateFlow<String> = MutableStateFlow("")
-    val avatarLink: StateFlow<String> get() = _avatarLink.asStateFlow()
+    val avatarLink: StateFlow<String> = _avatarLink.asStateFlow()
 
     val boxes = boxesRepository.getBoxesPagingFlow().cachedIn(viewModelScope)
 
@@ -37,9 +36,9 @@ internal class LockBoxesViewModel(
                     _avatarLink.update { imageLink }
                 }
 
-                is Response.Failure -> {
+                is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotLoadAccountInfo { retryLoadingAccountInfo() })
-                }
+
             }
         }
     }
@@ -51,9 +50,7 @@ internal class LockBoxesViewModel(
                 _avatarLink.update { imageLink }
             }
 
-            is Response.Failure -> {
-                SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retryLoadingAccountInfo() })
-            }
+            is Response.Failure -> SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retryLoadingAccountInfo() })
         }
     }
 }

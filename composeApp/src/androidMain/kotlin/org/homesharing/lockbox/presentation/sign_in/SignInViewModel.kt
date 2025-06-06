@@ -17,25 +17,19 @@ private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
 
 internal class SignInViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SignInUiState> = MutableStateFlow(SignInUiState())
-    val uiState: StateFlow<SignInUiState> get() = _uiState.asStateFlow()
+    val uiState: StateFlow<SignInUiState> = _uiState.asStateFlow()
     private val emailPattern = Patterns.EMAIL_ADDRESS
 
-    fun onChangeEmail(newEmail: String) {
-        _uiState.update {
-            it.copy(email = newEmail, emailError = null)
-        }
+    fun onChangeEmail(newEmail: String) = _uiState.update {
+        it.copy(email = newEmail, emailError = null)
     }
 
-    fun onChangePassword(newPassword: String) {
-        _uiState.update {
-            it.copy(password = newPassword, passwordError = SignInPasswordError.None)
-        }
+    fun onChangePassword(newPassword: String) = _uiState.update {
+        it.copy(password = newPassword, passwordError = SignInPasswordError.None)
     }
 
-    fun switchPasswordToggle() {
-        _uiState.update {
-            it.copy(isPasswordSeen = !it.isPasswordSeen)
-        }
+    fun switchPasswordToggle() = _uiState.update {
+        it.copy(isPasswordSeen = !it.isPasswordSeen)
     }
 
     private fun parsePasswordError(message: String): SignInPasswordError = when (message) {
@@ -43,35 +37,30 @@ internal class SignInViewModel(private val authRepository: AuthRepository) : Vie
         else -> SignInPasswordError.Unexpected
     }
 
-    fun signIn() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(emailError = null, passwordError = SignInPasswordError.None) }
-            if (!emailPattern.matcher(uiState.value.email).matches()) {
-                _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
-            } else try {
-                val response = authRepository.loadTokensInitially(
-                    uiState.value.email,
-                    uiState.value.password
-                )
+    fun signIn() = viewModelScope.launch {
+        _uiState.update { it.copy(emailError = null, passwordError = SignInPasswordError.None) }
+        if (!emailPattern.matcher(uiState.value.email).matches()) {
+            _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
+        } else try {
+            val response = authRepository.loadTokensInitially(
+                uiState.value.email,
+                uiState.value.password
+            )
 
-                response.error?.let {
-                    _uiState.update {
-                        it.copy(
-                            passwordError = parsePasswordError(response.errorDescription!!)
-                        )
-                    }
+            response.error?.let {
+                _uiState.update {
+                    it.copy(
+                        passwordError = parsePasswordError(response.errorDescription!!)
+                    )
                 }
+            }
 
-            }
-            catch (e: UnknownHostException) {
-                _uiState.update { it.copy(passwordError = SignInPasswordError.UnknownHost) }
-            }
-            catch (e: HttpRequestTimeoutException) {
-                _uiState.update { it.copy(passwordError = SignInPasswordError.Timeout) }
-            }
-            catch (e: Exception) {
-                _uiState.update { it.copy(passwordError = SignInPasswordError.Unexpected) }
-            }
+        } catch (e: UnknownHostException) {
+            _uiState.update { it.copy(passwordError = SignInPasswordError.UnknownHost) }
+        } catch (e: HttpRequestTimeoutException) {
+            _uiState.update { it.copy(passwordError = SignInPasswordError.Timeout) }
+        } catch (e: Exception) {
+            _uiState.update { it.copy(passwordError = SignInPasswordError.Unexpected) }
         }
     }
 }

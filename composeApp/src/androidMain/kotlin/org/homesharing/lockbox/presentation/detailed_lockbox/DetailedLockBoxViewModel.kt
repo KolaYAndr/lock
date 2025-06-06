@@ -24,13 +24,9 @@ internal class DetailedLockBoxViewModel(
     fun openBox() {
         viewModelScope.launch {
             when (boxesRepository.openBoxByMac(uiState.value.macAddress)) {
-                is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotOpenBox { openBox() })
-                }
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotOpenBox { openBox() })
 
-                is Response.Success -> {
-                    SnackbarController.receiveEvent(boxOpenedSuccessfully)
-                }
+                is Response.Success -> SnackbarController.receiveEvent(boxOpenedSuccessfully)
             }
         }
     }
@@ -51,9 +47,9 @@ internal class DetailedLockBoxViewModel(
                     }
                 }
 
-                is Response.Failure -> {
+                is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotUpdateAddress { saveAddress(newAddress) })
-                }
+
             }
         }
     }
@@ -66,13 +62,11 @@ internal class DetailedLockBoxViewModel(
                     newName = newName
                 )
             ) {
-                is Response.Success -> {
-                    _uiState.update { it.copy(boxName = response.data.alias) }
-                }
+                is Response.Success -> _uiState.update { it.copy(boxName = response.data.alias) }
 
-                is Response.Failure -> {
+                is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotUpdateBoxName { saveName(newName) })
-                }
+
             }
         }
     }
@@ -80,11 +74,9 @@ internal class DetailedLockBoxViewModel(
     fun unbindDevice(macAddress: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
             when (boxesRepository.unbindBox(macAddress)) {
-                is Response.Success -> {
-                    onSuccess()
-                }
+                is Response.Success -> onSuccess()
 
-                is Response.Failure -> {
+                is Response.Failure ->
                     SnackbarController.receiveEvent(
                         couldNotUnbindBox {
                             unbindDevice(
@@ -93,7 +85,6 @@ internal class DetailedLockBoxViewModel(
                             )
                         }
                     )
-                }
             }
         }
     }
@@ -103,20 +94,19 @@ internal class DetailedLockBoxViewModel(
             _uiState.update { it.copy(macAddress = address) }
 
             when (val response = boxesRepository.getBoxByMac(address)) {
-                is Response.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            boxName = response.data.alias,
-                            address = response.data.address,
-                            signalStrength = response.data.signalStrength.toInt(),
-                            batteryLevel = response.data.batteryLevel.toInt()
-                        )
-                    }
+                is Response.Success -> _uiState.update {
+                    it.copy(
+                        boxName = response.data.alias,
+                        address = response.data.address,
+                        signalStrength = response.data.signalStrength.toInt(),
+                        batteryLevel = response.data.batteryLevel.toInt()
+                    )
                 }
 
-                is Response.Failure -> {
+
+                is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotLoadBoxInfo { findBoxByMac(uiState.value.macAddress) })
-                }
+
             }
         }
     }

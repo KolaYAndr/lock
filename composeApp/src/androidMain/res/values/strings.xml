@@ -175,6 +175,7 @@
     <string name="choose_date">Выберите дату</string>
     <string name="copy_link">Копировать ссылку</string>
     <string name="could_not_send_link_to_change_email">Не удалось отправить ссылку для смены почты</string>
+    <string name="phone_number_doesnt_match_pattern">Введите действительный телефон</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

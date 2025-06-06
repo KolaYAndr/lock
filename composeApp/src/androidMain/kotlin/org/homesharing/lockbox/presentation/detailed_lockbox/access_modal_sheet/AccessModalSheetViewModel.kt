@@ -28,34 +28,31 @@ internal class AccessModalSheetViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(macAddress = mac) }
             when (val response = repository.getListOfAccesses(uiState.value.macAddress)) {
-                is Response.Failure -> {
+                is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotLoadGuestList { loadGuestList(uiState.value.macAddress) })
-                }
 
-                is Response.Success -> _uiState.update {
-                    it.copy(accesses = response.data.accessList)
-                }
+                is Response.Success -> _uiState.update { it.copy(accesses = response.data.accessList) }
             }
         }
         _uiState.update { it.copy(loading = false) }
     }
 
-    fun addGuest() {
-        uiState.value.selectedStartDate?.let { startTime ->
-            uiState.value.selectedEndDate?.let { endTime ->
-                viewModelScope.launch {
-                    repository.createAccess(
-                        macAddress = uiState.value.macAddress,
-                        startTime = startTime,
-                        endTime = endTime,
-                        alias = uiState.value.guestName,
-                    )
-                }
+    fun addGuest() = uiState.value.selectedStartDate?.let { startTime ->
+        uiState.value.selectedEndDate?.let { endTime ->
+            viewModelScope.launch {
+                repository.createAccess(
+                    macAddress = uiState.value.macAddress,
+                    startTime = startTime,
+                    endTime = endTime,
+                    alias = uiState.value.guestName,
+                )
             }
         }
     }
 
-    fun onChangeStartDate(newStart: Long) = _uiState.update { it.copy(selectedStartDate = newStart) }
+
+    fun onChangeStartDate(newStart: Long) =
+        _uiState.update { it.copy(selectedStartDate = newStart) }
 
     fun onChangeEndDate(newEnd: Long) = _uiState.update { it.copy(selectedEndDate = newEnd) }
 
@@ -84,7 +81,7 @@ internal data class AccessModalSheetUiState(
     val loading: Boolean = false,
     val guestName: String? = null,
     val selectedStartDate: Long? = null,
-    val selectedEndDate: Long? = null
+    val selectedEndDate: Long? = null,
 )
 
 internal sealed interface AccessModalSheetStep {

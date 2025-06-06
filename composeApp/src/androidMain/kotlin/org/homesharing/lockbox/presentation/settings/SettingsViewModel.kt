@@ -15,7 +15,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultE
 
 internal class SettingsViewModel(private val repository: AccountRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<SettingsUiState> = MutableStateFlow(SettingsUiState())
-    val uiState: StateFlow<SettingsUiState> get() = _uiState.asStateFlow()
+    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
         fetchInfo()
@@ -41,9 +41,7 @@ internal class SettingsViewModel(private val repository: AccountRepository) : Vi
                     }
                 }
 
-                is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotLoadAccountInfo { fetchInfo() })
-                }
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotLoadAccountInfo { fetchInfo() })
             }
         }
     }
@@ -63,9 +61,7 @@ internal class SettingsViewModel(private val repository: AccountRepository) : Vi
                     }
                 }
 
-                is Response.Failure -> {
-                    SnackbarController.receiveEvent(couldNotRefreshAccountInfo { refreshAccountInfo() })
-                }
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotRefreshAccountInfo { refreshAccountInfo() })
             }
             _uiState.update { it.copy(isRefreshing = false) }
         }
@@ -83,5 +79,5 @@ internal data class SettingsUiState(
     val email: String = "",
     val imageLink: String = "",
     val sub: String = "",
-    val isRefreshing: Boolean = false
+    val isRefreshing: Boolean = false,
 )

@@ -10,26 +10,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
-internal class LoginViewModel(private val repository: AccountRepository): ViewModel() {
+internal class LoginViewModel(private val repository: AccountRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> get() = _uiState.asStateFlow()
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     init {
         checkIfLoggedIn()
     }
 
-    private fun checkIfLoggedIn() {
-        viewModelScope.launch {
-            repository.loggedIn().collectLatest { hasToken ->
-                _uiState.update { it.copy(isLoggedIn = hasToken) }
-            }
+    private fun checkIfLoggedIn() = viewModelScope.launch {
+        repository.loggedIn().collectLatest { hasToken ->
+            _uiState.update { it.copy(isLoggedIn = hasToken) }
         }
     }
 
-    fun toTypeAuth(authType: LoginType) {
-        _uiState.update {
-            it.copy(loginType = authType)
-        }
+    fun toTypeAuth(authType: LoginType) = _uiState.update {
+        it.copy(loginType = authType)
     }
 }
 

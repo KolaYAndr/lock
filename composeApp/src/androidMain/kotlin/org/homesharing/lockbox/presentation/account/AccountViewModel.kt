@@ -42,9 +42,8 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
                 .collectLatest { (name, surname) ->
                     val response = repository.updateInfo(name = name, surname = surname)
 
-                    if (response is Response.Failure) {
+                    if (response is Response.Failure)
                         SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retryUpdatingInfo() })
-                    }
                 }
         }
     }
@@ -55,9 +54,9 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
             surname = uiState.value.surname
         )
 
-        if (response is Response.Failure) {
+        if (response is Response.Failure)
             SnackbarController.receiveEvent(couldNotUpdateUserInfoEvent { retryUpdatingInfo() })
-        }
+
     }
 
     private fun fetchInfo() {
@@ -79,9 +78,8 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
                     }
                 }
 
-                is Response.Failure -> {
+                is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotRefreshAccountInfo { retryUpdatingInfo() })
-                }
             }
         }
     }
@@ -92,31 +90,28 @@ internal class AccountViewModel(private val repository: AccountRepository) : Vie
     }
 
 
-    fun onNameChange(newName: String) {
-        _uiState.update {
-            it.copy(name = newName)
-        }
+    fun onNameChange(newName: String) = _uiState.update {
+        it.copy(name = newName)
     }
 
-    fun onSurnameChange(newSurname: String) {
-        _uiState.update {
-            it.copy(surname = newSurname)
-        }
+    fun onSurnameChange(newSurname: String) = _uiState.update {
+        it.copy(surname = newSurname)
     }
 
     fun sendImage(data: ByteArray) {
         viewModelScope.launch {
             when (repository.sendImage(data)) {
-                is Response.Success -> SnackbarController.receiveEvent(successfulUpdateUserImageEvent)
+                is Response.Success -> SnackbarController.receiveEvent(
+                    successfulUpdateUserImageEvent
+                )
+
                 is Response.Failure -> SnackbarController.receiveEvent(couldNotUpdateUserImageEvent)
             }
         }
     }
 
-    fun deleteAccount() {
-        viewModelScope.launch {
-            repository.deactivateUser()
-        }
+    fun deleteAccount() = viewModelScope.launch {
+        repository.deactivateUser()
     }
 
     private companion object {

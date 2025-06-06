@@ -17,10 +17,11 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-internal class ActiveSessionsViewModel(private val accountRepository: AccountRepository) : ViewModel() {
+internal class ActiveSessionsViewModel(private val accountRepository: AccountRepository) :
+    ViewModel() {
     private val _uiState: MutableStateFlow<ActiveSessionsUiState> =
         MutableStateFlow(ActiveSessionsUiState())
-    val uiState: StateFlow<ActiveSessionsUiState> get() = _uiState.asStateFlow()
+    val uiState: StateFlow<ActiveSessionsUiState> = _uiState.asStateFlow()
 
     init {
         getSessions()
@@ -35,16 +36,12 @@ internal class ActiveSessionsViewModel(private val accountRepository: AccountRep
             val id = currentSessionIdDeferred.await()
 
             when {
-                sessions is Response.Success && id is Response.Success -> {
-                    _uiState.update {
-                        it.copy(sessions = sessions.data.filter { session -> session.sessionId != id.data.sessionId }
-                            .sortedBy { session -> session.lastAccessed }.reversed())
-                    }
+                sessions is Response.Success && id is Response.Success -> _uiState.update {
+                    it.copy(sessions = sessions.data.filter { session -> session.sessionId != id.data.sessionId }
+                        .sortedBy { session -> session.lastAccessed }.reversed())
                 }
 
-                else -> {
-                    SnackbarController.receiveEvent(couldNotLoadActiveSessions { refreshSessions() })
-                }
+                else -> SnackbarController.receiveEvent(couldNotLoadActiveSessions { refreshSessions() })
             }
 
             _uiState.update { it.copy(isRefreshing = false) }

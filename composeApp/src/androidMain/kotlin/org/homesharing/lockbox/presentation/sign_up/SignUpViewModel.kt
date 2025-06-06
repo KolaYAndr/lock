@@ -33,36 +33,34 @@ internal class SignUpViewModel(private val authRepository: AuthRepository) : Vie
             uiState.value.email,
             uiState.value.password
         )
-    } catch (e: Exception) { }
+    } catch (e: Exception) {
+    }
 
-    fun signUp() {
-        viewModelScope.launch {
-            if (uiState.value.password != uiState.value.passwordRepeated) {
-                _uiState.update { it.copy(passwordRepeatedError = PasswordRepeatedError.PasswordsDontMatch) }
-            } else when (
-                val response = authRepository.signUp(
-                    uiState.value.email,
-                    uiState.value.password,
-                    uiState.value.passwordRepeated
-                )
-            ) {
-                is Response.Failure -> {
-                    _uiState.update {
-                        it.copy(
-                            passwordRepeatedError = parsePasswordRepeatedError(response.message)
-                        )
-                    }
+    fun signUp() = viewModelScope.launch {
+        if (uiState.value.password != uiState.value.passwordRepeated) {
+            _uiState.update { it.copy(passwordRepeatedError = PasswordRepeatedError.PasswordsDontMatch) }
+        } else when (
+            val response = authRepository.signUp(
+                uiState.value.email,
+                uiState.value.password,
+                uiState.value.passwordRepeated
+            )
+        ) {
+            is Response.Failure -> {
+                _uiState.update {
+                    it.copy(
+                        passwordRepeatedError = parsePasswordRepeatedError(response.message)
+                    )
                 }
+            }
 
-                is Response.Success -> {
-                    toStep(SignUpStep.EmailConfirmation)
-                }
+            is Response.Success -> {
+                toStep(SignUpStep.EmailConfirmation)
             }
         }
     }
 
-    private fun parsePasswordRepeatedError(message: String): PasswordRepeatedError =
-        when (message) {
+    private fun parsePasswordRepeatedError(message: String): PasswordRepeatedError = when (message) {
             USER_EXISTS_STRING -> PasswordRepeatedError.UserExists
             PASSWORDS_DONT_MATCH_STRING -> PasswordRepeatedError.PasswordsDontMatch
             else -> PasswordRepeatedError.Unexpected
