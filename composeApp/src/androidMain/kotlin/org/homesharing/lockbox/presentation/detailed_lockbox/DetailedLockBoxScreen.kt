@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -693,7 +694,7 @@ private fun ActionableProperty(
     title: String,
     subtitle: String? = null,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = Modifier
@@ -737,7 +738,7 @@ private fun StatusInfo(
     statusCategory: String,
     status: String,
     alertImage: (@Composable () -> Unit)? = null,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.padding(vertical = 10.dp, horizontal = 16.dp),

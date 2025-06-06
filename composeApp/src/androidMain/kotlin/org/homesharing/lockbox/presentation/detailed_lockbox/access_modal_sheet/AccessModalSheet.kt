@@ -325,7 +325,13 @@ private fun AddGuestContent(
                 .padding(vertical = 12.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            CopyButton(onClick = addGuest, modifier = Modifier.fillMaxWidth())
+            val start = startDatePickerState.selectedDateMillis
+            val end = endDatePickerState.selectedDateMillis
+            CopyButton(
+                onClick = addGuest,
+                enabled = start != null && end != null && start <= end,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             BasicButton(
                 onClick = onNavBack,
@@ -339,12 +345,12 @@ private fun AddGuestContent(
 }
 
 @Composable
-private fun CopyButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun CopyButton(onClick: () -> Unit, enabled: Boolean, modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier
             .clip(LockBoxTheme.shape.roundedCornerShape8)
-            .background(LockBoxTheme.colors.green500)
-            .clickable { onClick() }
+            .background(if (enabled) LockBoxTheme.colors.green500 else LockBoxTheme.colors.grey800)
+            .clickable { if (enabled) onClick() }
             .padding(12.dp)
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
@@ -353,13 +359,13 @@ private fun CopyButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         Icon(
             painter = painterResource(R.drawable.copy),
             contentDescription = null,
-            tint = LockBoxTheme.colors.grey900,
+            tint = if (enabled) LockBoxTheme.colors.grey900 else LockBoxTheme.colors.grey700,
             modifier = Modifier.size(24.dp)
         )
 
         Text(
             text = stringResource(R.string.copy_link),
-            color = LockBoxTheme.colors.grey900,
+            color = if (enabled) LockBoxTheme.colors.grey900 else LockBoxTheme.colors.grey700,
             style = LockBoxTheme.typography.headlineLarge
         )
     }
@@ -438,7 +444,7 @@ private fun GuestListContent(
                 ) {
                     items(
                         count = accessList.size,
-                        key = { index -> accessList[index].macAddress }
+                        key = { index -> accessList[index].id }
                     ) { index ->
                         Access(
                             access = accessList[index],

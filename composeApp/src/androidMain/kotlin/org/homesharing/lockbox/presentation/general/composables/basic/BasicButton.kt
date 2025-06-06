@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.general.composables.basic
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,7 @@ internal fun BasicButton(
     paddingValues: PaddingValues = PaddingValues(8.dp),
     style: ButtonColors = BasicButtonStyle.greenBackground(),
     enabled: Boolean = true,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick::invoke,
