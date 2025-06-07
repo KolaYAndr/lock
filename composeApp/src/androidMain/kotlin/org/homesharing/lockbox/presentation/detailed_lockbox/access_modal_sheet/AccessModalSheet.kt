@@ -665,7 +665,7 @@ private fun Access(
             val endDateText =
                 formatter.format(access.endTime.toJavaLocalDateTime().toLocalDate())
             Text(
-                text = endDateText,
+                text = stringResource(R.string.until_date, endDateText),
                 color = LockBoxTheme.colors.grey500,
                 style = LockBoxTheme.typography.footnote
             )

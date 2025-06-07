@@ -178,6 +178,7 @@
     <string name="could_not_send_link_to_change_email">Не удалось отправить ссылку для смены почты</string>
     <string name="phone_number_doesnt_match_pattern">Введите действительный телефон</string>
     <string name="set_parameters_and_send_link">Настройте параметры и отправьте ссылку-приглашение чтобы поделится доступом к устройству</string>
+    <string name="until_date">до %s</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>
