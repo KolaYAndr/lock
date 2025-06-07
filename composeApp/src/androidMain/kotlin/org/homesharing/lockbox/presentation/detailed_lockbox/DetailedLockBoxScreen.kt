@@ -44,7 +44,6 @@ import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
-import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetStep
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetViewModel
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
@@ -368,16 +367,10 @@ internal fun DetailedLockBoxScreen(
 
         AccessModalSheet(
             onDismiss = { showAccessModal = false },
+            lockboxName = uiState.boxName,
+            lockboxAddress = uiState.address,
             accessList = accessModalSheetState.accesses,
             step = accessModalSheetState.step,
-            toAddGuest = {
-                accessModalSheetViewModel.toStep(
-                    AccessModalSheetStep.AddGuest(
-                        lockboxName = uiState.boxName,
-                        lockboxAddress = uiState.address
-                    )
-                )
-            },
             changeStep = accessModalSheetViewModel::toStep,
             isLoading = accessModalSheetState.loading,
             guestName = accessModalSheetState.guestName.orEmpty(),
@@ -385,6 +378,8 @@ internal fun DetailedLockBoxScreen(
             onChangeStartDate = accessModalSheetViewModel::onChangeStartDate,
             onChangeEndDate = accessModalSheetViewModel::onChangeEndDate,
             addGuest = accessModalSheetViewModel::addGuest,
+            onCopyLink = accessModalSheetViewModel::emitLink,
+            onRevokeToken = accessModalSheetViewModel::revokeToken,
             modifier = Modifier.fillMaxSize()
         )
     }

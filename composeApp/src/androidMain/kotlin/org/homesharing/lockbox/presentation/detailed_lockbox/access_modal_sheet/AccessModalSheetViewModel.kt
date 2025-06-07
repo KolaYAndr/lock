@@ -42,7 +42,7 @@ internal class AccessModalSheetViewModel(
         loadGuestList()
     }
 
-    fun loadGuestList() {
+    private fun loadGuestList() {
         _uiState.update { it.copy(loading = true) }
         viewModelScope.launch {
             when (val response = repository.getListOfAccesses(macAddress)) {
@@ -66,10 +66,16 @@ internal class AccessModalSheetViewModel(
                 )
 
                 if (response is Response.Success) {
-                    _tokenData.emit(response.data.token)
+                    emitLink(response.data.token)
                 }
             }
         }
+    }
+
+    fun emitLink(link: String) = viewModelScope.launch { _tokenData.emit(link) }
+
+    fun revokeToken(tokenId: String) = viewModelScope.launch {
+        repository.revokeAccess(macAddress, tokenId)
     }
 
     fun onChangeStartDate(newStart: Long) =
@@ -82,7 +88,10 @@ internal class AccessModalSheetViewModel(
     }
 
     fun toStep(step: AccessModalSheetStep) {
-        if (step is AccessModalSheetStep.GuestList) loadGuestList()
+        if (step is AccessModalSheetStep.GuestList) {
+            loadGuestList()
+            _uiState.update { it.copy(guestName = null, selectedStartDate = null, selectedEndDate = null) }
+        }
         _uiState.update { it.copy(step = step) }
     }
 
@@ -109,5 +118,6 @@ internal data class AccessModalSheetUiState(
 
 internal sealed interface AccessModalSheetStep {
     data object GuestList : AccessModalSheetStep
-    data class AddGuest(val lockboxName: String, val lockboxAddress: String) : AccessModalSheetStep
+    data object AddGuest : AccessModalSheetStep
+    data class GuestInfo(val access: Access) : AccessModalSheetStep
 }

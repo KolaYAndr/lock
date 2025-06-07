@@ -64,16 +64,19 @@ import java.util.Date
 @Composable
 internal fun AccessModalSheet(
     onDismiss: () -> Unit,
+    lockboxName: String,
+    lockboxAddress: String,
     accessList: List<Access>,
     step: AccessModalSheetStep,
     changeStep: (AccessModalSheetStep) -> Unit,
-    toAddGuest: () -> Unit,
     isLoading: Boolean,
     guestName: String,
     onChangeStartDate: (Long) -> Unit,
     onChangeEndDate: (Long) -> Unit,
     onChangeGuestName: (String) -> Unit,
     addGuest: () -> Unit,
+    onCopyLink: (String) -> Unit,
+    onRevokeToken: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
@@ -99,8 +102,6 @@ internal fun AccessModalSheet(
             when (step) {
                 is AccessModalSheetStep.AddGuest -> {
                     AddGuestContent(
-                        lockboxName = step.lockboxName,
-                        lockboxAddress = step.lockboxAddress,
                         guestName = guestName,
                         onChangeGuestName = onChangeGuestName,
                         onChangeStartDate = onChangeStartDate,
@@ -111,12 +112,27 @@ internal fun AccessModalSheet(
                     )
                 }
 
+                is AccessModalSheetStep.GuestInfo -> {
+                    GuestInfoContent(
+                        lockboxName = lockboxName,
+                        lockboxAddress = lockboxAddress,
+                        access = step.access,
+                        onCopyLink = onCopyLink,
+                        onUnbindUser = onRevokeToken,
+                        onNavBack = { changeStep(AccessModalSheetStep.GuestList) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
                 AccessModalSheetStep.GuestList -> {
                     GuestListContent(
                         isLoading = isLoading,
                         accessList = accessList,
                         formatter = formatter,
-                        toAddGuest = toAddGuest,
+                        toAddGuest = { changeStep(AccessModalSheetStep.AddGuest) },
+                        toAccessInfo = { access ->
+                            changeStep(AccessModalSheetStep.GuestInfo(access))
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -125,16 +141,13 @@ internal fun AccessModalSheet(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddGuestContent(
+private fun GuestInfoContent(
     lockboxName: String,
     lockboxAddress: String,
-    guestName: String,
-    onChangeGuestName: (String) -> Unit,
-    onChangeStartDate: (Long) -> Unit,
-    onChangeEndDate: (Long) -> Unit,
-    addGuest: () -> Unit,
+    access: Access,
+    onCopyLink: (String) -> Unit,
+    onUnbindUser: (String) -> Unit,
     onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -159,6 +172,151 @@ private fun AddGuestContent(
 
             Text(
                 text = lockboxAddress,
+                textAlign = TextAlign.Center,
+                style = LockBoxTheme.typography.headlineLarge,
+                color = LockBoxTheme.colors.grey500
+            )
+        }
+
+        val locale = LocalConfiguration.current.locales[0]!!
+        val formatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy", locale) }
+
+        val selectedStartDate = access.startTime.toJavaLocalDateTime().format(formatter)
+        Column(
+            modifier = modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        ) {
+            Text(
+                text = stringResource(R.string.date_and_time_of_access_start),
+                color = LockBoxTheme.colors.grey100,
+                style = LockBoxTheme.typography.subHeadlineLarge,
+            )
+
+            DateInput(
+                date = selectedStartDate,
+                onFieldClick = {},
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        val selectedEndDate = access.endTime.toJavaLocalDateTime().format(formatter)
+        Column(
+            modifier = modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        ) {
+            Text(
+                text = stringResource(R.string.date_and_time_of_access_end),
+                color = LockBoxTheme.colors.grey100,
+                style = LockBoxTheme.typography.subHeadlineLarge,
+            )
+
+            DateInput(
+                date = selectedEndDate,
+                onFieldClick = {},
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Column(
+            modifier = modifier
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        ) {
+            Text(
+                text = stringResource(R.string.guest_name),
+                color = LockBoxTheme.colors.grey100,
+                style = LockBoxTheme.typography.subHeadlineLarge
+            )
+
+            LockBoxPropertyInput(
+                value = access.name ?: stringResource(R.string.guest_name),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            CopyButton(
+                onClick = { onCopyLink(access.token) },
+                enabled = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            BasicButton(
+                onClick = {
+                    onUnbindUser(access.id)
+                    onNavBack()
+                },
+                text = stringResource(R.string.unbind_user),
+                style = BasicButtonStyle.red(),
+                paddingValues = PaddingValues(14.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            BasicButton(
+                onClick = onNavBack,
+                text = stringResource(R.string.back),
+                style = BasicButtonStyle.grey(),
+                paddingValues = PaddingValues(14.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddGuestContent(
+    guestName: String,
+    onChangeGuestName: (String) -> Unit,
+    onChangeStartDate: (Long) -> Unit,
+    onChangeEndDate: (Long) -> Unit,
+    addGuest: () -> Unit,
+    onNavBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .padding(top = 12.dp, bottom = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 32.dp, vertical = 48.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.user), //todo поправить иконку
+                contentDescription = null,
+                tint = LockBoxTheme.colors.grey500,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(48.dp)
+            )
+
+            Text(
+                text = stringResource(R.string.add_user),
+                textAlign = TextAlign.Center,
+                style = LockBoxTheme.typography.titleMedium,
+                color = LockBoxTheme.colors.grey100
+            )
+
+            Text(
+                text = stringResource(R.string.set_parameters_and_send_link),
                 textAlign = TextAlign.Center,
                 style = LockBoxTheme.typography.headlineLarge,
                 color = LockBoxTheme.colors.grey500
@@ -421,6 +579,7 @@ private fun GuestListContent(
     accessList: List<Access>,
     formatter: DateTimeFormatter,
     toAddGuest: () -> Unit,
+    toAccessInfo: (Access) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedContent(
@@ -449,6 +608,7 @@ private fun GuestListContent(
                         Access(
                             access = accessList[index],
                             formatter = formatter,
+                            onAccessClick = { toAccessInfo(accessList[index]) },
                             modifier = Modifier.fillMaxWidth()
                         )
 
@@ -474,10 +634,15 @@ private fun GuestListContent(
 private fun Access(
     access: Access,
     formatter: DateTimeFormatter,
+    onAccessClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.padding(vertical = 10.dp),
+        modifier = Modifier
+            .clip(LockBoxTheme.shape.roundedCornerShape8)
+            .clickable { onAccessClick() }
+            .padding(vertical = 10.dp)
+            .then(modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RoundText(

@@ -25,6 +25,21 @@ internal fun LockBoxPropertyInput(
     )
 }
 
+@Composable
+internal fun LockBoxPropertyInput(
+    value: String,
+    modifier: Modifier
+) {
+    BasicInput(
+        value = value,
+        onValueChange = {},
+        enabled = false,
+        placeholderText = "",
+        onDone = {},
+        modifier = modifier
+    )
+}
+
 @Preview
 @Composable
 private fun PreviewPropertyInput() {

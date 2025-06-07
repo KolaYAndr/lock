@@ -110,6 +110,7 @@
     <string name="device_name">Название устройства</string>
     <string name="about_device">Об устройстве</string>
     <string name="unbind_device">Отвязать устройство</string>
+    <string name="unbind_user">Отвязать пользователя</string>
     <string name="open_device_question">Открыть устройство?</string>
     <string name="unbind_device_question">Отвязать устройство?</string>
     <string name="not_cancellable_unbind_device">Это действие нельзя отменить. Вы можете настроить устройство ещё раз при необходимости</string>
@@ -176,6 +177,7 @@
     <string name="copy_link">Копировать ссылку</string>
     <string name="could_not_send_link_to_change_email">Не удалось отправить ссылку для смены почты</string>
     <string name="phone_number_doesnt_match_pattern">Введите действительный телефон</string>
+    <string name="set_parameters_and_send_link">Настройте параметры и отправьте ссылку-приглашение чтобы поделится доступом к устройству</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>
