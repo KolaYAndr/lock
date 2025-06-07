@@ -25,7 +25,7 @@ internal class SignInViewModel(private val authRepository: AuthRepository) : Vie
     }
 
     fun onChangePassword(newPassword: String) = _uiState.update {
-        it.copy(password = newPassword, passwordError = SignInPasswordError.None)
+        it.copy(password = newPassword, passwordError = null)
     }
 
     fun switchPasswordToggle() = _uiState.update {
@@ -38,7 +38,7 @@ internal class SignInViewModel(private val authRepository: AuthRepository) : Vie
     }
 
     fun signIn() = viewModelScope.launch {
-        _uiState.update { it.copy(emailError = null, passwordError = SignInPasswordError.None) }
+        _uiState.update { it.copy(emailError = null, passwordError = null) }
         if (!emailPattern.matcher(uiState.value.email).matches()) {
             _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
         } else try {
@@ -70,11 +70,10 @@ internal data class SignInUiState(
     val emailError: EmailError? = null,
     val password: String = "",
     val isPasswordSeen: Boolean = false,
-    val passwordError: SignInPasswordError = SignInPasswordError.None,
+    val passwordError: SignInPasswordError? = null,
 )
 
 internal sealed interface SignInPasswordError {
-    data object None : SignInPasswordError
     data object InvalidUserCredentials : SignInPasswordError
     data object Unexpected : SignInPasswordError
     data object UnknownHost : SignInPasswordError

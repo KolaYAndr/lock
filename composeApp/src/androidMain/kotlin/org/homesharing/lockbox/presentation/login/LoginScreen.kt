@@ -122,7 +122,7 @@ internal fun LoginScreen(
                                 onEmailChange = signInViewModel::onChangeEmail,
                                 onPasswordChange = signInViewModel::onChangePassword,
                                 onPasswordSeenChange = signInViewModel::switchPasswordToggle,
-                                passwordError = signInState.passwordError != SignInPasswordError.None,
+                                passwordError = signInState.passwordError != null,
                                 passwordErrorText = getErrorText(signInState.passwordError),
                                 emailError = signInState.emailError != null,
                                 onToTypeAuth = onToTypeAuth,
@@ -157,13 +157,13 @@ internal fun LoginScreen(
 
 @Composable
 @ReadOnlyComposable
-private fun getErrorText(passwordError: SignInPasswordError) =
+private fun getErrorText(passwordError: SignInPasswordError?) =
     when (passwordError) {
-        SignInPasswordError.None -> ""
         SignInPasswordError.InvalidUserCredentials -> stringResource(R.string.invalid_credentials)
         SignInPasswordError.Unexpected -> stringResource(R.string.unknown_error)
         SignInPasswordError.Timeout -> stringResource(R.string.timeout)
         SignInPasswordError.UnknownHost -> stringResource(R.string.check_internet_connection)
+        null -> ""
     }
 
 @Preview
