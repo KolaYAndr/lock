@@ -11,9 +11,11 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
@@ -49,6 +51,7 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
+import kotlin.reflect.typeOf
 
 private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
 
@@ -118,15 +121,10 @@ internal fun Navigation(
                 exitTransition = null,
                 enterTransition = enterAnimation,
                 popExitTransition = exitAnimation,
-                popEnterTransition = null
-            ) { backStackEntry: NavBackStackEntry ->
-                val args = backStackEntry.toRoute<MainRoutes.DetailedBox>()
-                val macAddress = args.macAddress
-
+                popEnterTransition = null,
+                typeMap = mapOf(typeOf<String>() to NavType.StringType)
+            ) {
                 val detailedLockBoxViewModel = koinViewModel<DetailedLockBoxViewModel>()
-                LaunchedEffect(macAddress) {
-                    detailedLockBoxViewModel.findBoxByMac(macAddress)
-                }
                 val state by detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
 
                 DetailedLockBoxScreen(
@@ -135,7 +133,6 @@ internal fun Navigation(
                     onOpenBox = detailedLockBoxViewModel::openBox,
                     onUnbindDevice = {
                         detailedLockBoxViewModel.unbindDevice(
-                            macAddress = macAddress,
                             onSuccess = navController::navigateUp
                         )
                     },

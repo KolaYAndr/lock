@@ -1,8 +1,11 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavType
+import androidx.navigation.toRoute
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -15,12 +18,15 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.repository.BoxesRepository
+import org.homesharing.lockbox.navigation.routes.MainRoutes
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
+import kotlin.reflect.typeOf
 
 internal class AccessModalSheetViewModel(
     private val repository: BoxesRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<AccessModalSheetUiState> =
         MutableStateFlow(AccessModalSheetUiState())
@@ -29,13 +35,19 @@ internal class AccessModalSheetViewModel(
     private val _tokenData: MutableSharedFlow<String> = MutableSharedFlow()
     val tokenData: SharedFlow<String> = _tokenData.asSharedFlow()
 
-    fun loadGuestList(mac: String) {
+    private val macAddress: String =
+        savedStateHandle.toRoute<MainRoutes.DetailedBox>(typeMap = mapOf(typeOf<String>() to NavType.StringType)).macAddress
+
+    init {
+        loadGuestList()
+    }
+
+    fun loadGuestList() {
         _uiState.update { it.copy(loading = true) }
         viewModelScope.launch {
-            if (mac != uiState.value.macAddress) _uiState.update { it.copy(macAddress = mac) }
-            when (val response = repository.getListOfAccesses(uiState.value.macAddress)) {
+            when (val response = repository.getListOfAccesses(macAddress)) {
                 is Response.Failure ->
-                    SnackbarController.receiveEvent(couldNotLoadGuestList { loadGuestList(uiState.value.macAddress) })
+                    SnackbarController.receiveEvent(couldNotLoadGuestList { loadGuestList() })
 
                 is Response.Success -> _uiState.update { it.copy(accesses = response.data.accessList) }
             }
@@ -47,7 +59,7 @@ internal class AccessModalSheetViewModel(
         uiState.value.selectedEndDate?.let { endTime ->
             viewModelScope.launch {
                 val response = repository.createAccess(
-                    macAddress = uiState.value.macAddress,
+                    macAddress = macAddress,
                     startTime = startTime,
                     endTime = endTime,
                     alias = uiState.value.guestName,
@@ -70,7 +82,7 @@ internal class AccessModalSheetViewModel(
     }
 
     fun toStep(step: AccessModalSheetStep) {
-        if (step is AccessModalSheetStep.GuestList) loadGuestList(uiState.value.macAddress)
+        if (step is AccessModalSheetStep.GuestList) loadGuestList()
         _uiState.update { it.copy(step = step) }
     }
 
@@ -87,7 +99,6 @@ internal class AccessModalSheetViewModel(
 
 @Immutable
 internal data class AccessModalSheetUiState(
-    val macAddress: String = "",
     val step: AccessModalSheetStep = AccessModalSheetStep.GuestList,
     val accesses: List<Access> = emptyList(),
     val loading: Boolean = false,

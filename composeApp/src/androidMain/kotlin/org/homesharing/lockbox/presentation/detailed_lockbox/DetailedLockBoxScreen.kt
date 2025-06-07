@@ -21,7 +21,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -367,9 +366,6 @@ internal fun DetailedLockBoxScreen(
             clipboardManager.setText(AnnotatedString("$URL_PREFIX/$token"))
         }
 
-        LaunchedEffect(uiState.macAddress) {
-            accessModalSheetViewModel.loadGuestList(uiState.macAddress)
-        }
         AccessModalSheet(
             onDismiss = { showAccessModal = false },
             accessList = accessModalSheetState.accesses,
