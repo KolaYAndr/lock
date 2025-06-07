@@ -52,7 +52,6 @@ internal fun SignInCard(
     passwordError: Boolean,
     emailError: Boolean,
     passwordErrorText: String,
-    emailErrorText: String,
     onPasswordSeenChange: () -> Unit,
     onToTypeAuth: (LoginType) -> Unit,
     onSignIn: () -> Unit,
@@ -108,7 +107,7 @@ internal fun SignInCard(
             onClearText = { onEmailChange("") },
             interactionSource = emailInteractionSource,
             isError = emailError,
-            errorText = emailErrorText,
+            errorText = stringResource(R.string.email_doesnt_match_pattern),
             keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
                 autoCorrectEnabled = false,
@@ -228,7 +227,6 @@ private fun PreviewSignIn() {
             passwordError = false,
             emailError = false,
             passwordErrorText = "",
-            emailErrorText = "",
             onPasswordSeenChange = {},
             onToTypeAuth = {},
             onSignIn = {}

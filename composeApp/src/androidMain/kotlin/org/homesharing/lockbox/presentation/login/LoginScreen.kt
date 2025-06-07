@@ -125,9 +125,6 @@ internal fun LoginScreen(
                                 passwordError = signInState.passwordError != SignInPasswordError.None,
                                 passwordErrorText = getErrorText(signInState.passwordError),
                                 emailError = signInState.emailError != null,
-                                emailErrorText = if (signInState.emailError == null) "" else stringResource(
-                                    R.string.email_doesnt_match_pattern
-                                ),
                                 onToTypeAuth = onToTypeAuth,
                                 onSignIn = signInViewModel::signIn
                             )

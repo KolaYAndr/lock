@@ -26,8 +26,8 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
 internal fun BasicCard(
-    elevation: CardElevation = CardDefaults.cardElevation(1.dp),
     modifier: Modifier = Modifier,
+    elevation: CardElevation = CardDefaults.cardElevation(1.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Card(
