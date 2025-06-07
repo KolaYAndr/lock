@@ -300,7 +300,7 @@ private fun AddGuestContent(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
         ) {
             Icon(
-                painter = painterResource(R.drawable.user), //todo поправить иконку
+                painter = painterResource(R.drawable.user_plus),
                 contentDescription = null,
                 tint = LockBoxTheme.colors.grey500,
                 modifier = Modifier

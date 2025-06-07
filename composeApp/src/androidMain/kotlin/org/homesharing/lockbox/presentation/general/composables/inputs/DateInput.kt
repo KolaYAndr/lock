@@ -23,7 +23,7 @@ internal fun DateInput(
         enabled = false,
         onDone = {},
         placeholderText = stringResource(R.string.choose_date),
-        leadingPainter = painterResource(R.drawable.calendar), //todo поправить
+        leadingPainter = painterResource(R.drawable.calendar),
         onFieldClick = onFieldClick
     )
 }
