@@ -5,7 +5,7 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
 import org.homesharing.lockbox.domain.model.reset_password.ResetPassword
-import org.homesharing.lockbox.domain.model.sessions.Session
+import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
 interface AccountRepository {
@@ -22,7 +22,7 @@ interface AccountRepository {
 
     suspend fun sendImage(data: ByteArray): Response<Unit>
 
-    suspend fun getSessions(): Response<List<Session>>
+    suspend fun getSessions(): Response<Sessions>
 
     suspend fun updateInfo(
         name: String? = null,

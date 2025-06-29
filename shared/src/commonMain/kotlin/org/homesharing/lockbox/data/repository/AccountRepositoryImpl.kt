@@ -6,8 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
-import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordDto
+import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoResponseDto
+import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
@@ -21,7 +21,7 @@ import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
 import org.homesharing.lockbox.domain.model.close_sessions.toDomain
 import org.homesharing.lockbox.domain.model.reset_password.ResetPassword
 import org.homesharing.lockbox.domain.model.reset_password.toDomain
-import org.homesharing.lockbox.domain.model.sessions.Session
+import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 import org.homesharing.lockbox.domain.model.update_account.toDomain
@@ -75,11 +75,11 @@ internal class AccountRepositoryImpl(
     }
 
 
-    private suspend fun decodeJWT(jwt: String): AccountInfoDto = withContext(Dispatchers.Default) {
+    private suspend fun decodeJWT(jwt: String): AccountInfoResponseDto = withContext(Dispatchers.Default) {
         val parts = jwt.split(".")
         val accountInfoDto = parts[1].decodeBase64String()
 
-        Json.decodeFromString<AccountInfoDto>(accountInfoDto)
+        Json.decodeFromString<AccountInfoResponseDto>(accountInfoDto)
     }
 
     override suspend fun logOut() = tokenStorage.clearInfo()
@@ -109,7 +109,7 @@ internal class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun getSessions(): Response<List<Session>> {
+    override suspend fun getSessions(): Response<Sessions> {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
             try {
                 refreshToken()
@@ -218,7 +218,7 @@ internal class AccountRepositoryImpl(
                     accessToken = tokenStorage.getAccessToken()
                 )
             },
-            mapper = ResetPasswordDto::toDomain
+            mapper = ResetPasswordResponseDto::toDomain
         )
     }
 

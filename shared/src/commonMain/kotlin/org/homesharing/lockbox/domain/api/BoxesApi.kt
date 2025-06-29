@@ -20,12 +20,12 @@ internal interface BoxesApi {
 
     suspend fun getBoxByMac(
         accessToken: String,
-        address: String
+        macAddress: String
     ): ApiResponse<BoxResponseDto>
 
     suspend fun getBoxStatusByMac(
         accessToken: String,
-        address: String
+        macAddress: String
     ): ApiResponse<BoxStatusResponseDto>
 
     suspend fun updateBoxByMac(
@@ -37,22 +37,22 @@ internal interface BoxesApi {
 
     suspend fun openBox(
         accessToken: String,
-        mac: String
+        macAddress: String
     ): ApiResponse<OpenBoxResponseDto>
 
     suspend fun deleteBox(
         accessToken: String,
-        mac: String
+        macAddress: String
     ): ApiResponse<UpdateBoxResponseDto>
 
     suspend fun getAccessedList(
         accessToken: String,
-        mac: String
+        macAddress: String
     ): ApiResponse<AccessResponseDto>
 
     suspend fun createAccess(
         accessToken: String,
-        mac: String,
+        macAddress: String,
         alias: String?,
         startTime: String,
         endTime: String,
@@ -60,7 +60,7 @@ internal interface BoxesApi {
 
     suspend fun revokeAccess(
         accessToken: String,
-        mac: String,
+        macAddress: String,
         tokenId: String
     ): ApiResponse<AccessRevokeResponseDto>
 }

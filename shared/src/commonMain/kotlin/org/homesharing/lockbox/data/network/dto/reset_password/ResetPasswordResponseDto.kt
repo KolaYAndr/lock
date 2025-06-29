@@ -5,4 +5,4 @@ import kotlin.jvm.JvmInline
 
 @Serializable
 @JvmInline
-internal value class ResetPasswordDto(val message: String)
+internal value class ResetPasswordResponseDto(val message: String)

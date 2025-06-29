@@ -40,6 +40,12 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlin.test.junit)
+            implementation(libs.dateTime)
+            implementation(libs.ktor.mock)
+        }
     }
 }
 

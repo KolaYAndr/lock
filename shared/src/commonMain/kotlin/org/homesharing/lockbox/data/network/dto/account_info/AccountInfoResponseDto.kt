@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AccountInfoDto(
+internal data class AccountInfoResponseDto(
     val acr: String,
     @SerialName("allowed-origins")
     val allowedOrigins: List<String>,

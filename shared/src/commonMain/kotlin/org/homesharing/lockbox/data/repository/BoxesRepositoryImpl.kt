@@ -70,7 +70,7 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.getBoxByMac(
                     accessToken = tokenStorage.getAccessToken(),
-                    address = address
+                    macAddress = address
                 )
             },
             mapper = BoxResponseDto::toDomain
@@ -92,7 +92,7 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.openBox(
                     accessToken = tokenStorage.getAccessToken(),
-                    mac = address
+                    macAddress = address
                 )
             },
             mapper = OpenBoxResponseDto::toDomain
@@ -114,7 +114,7 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.deleteBox(
                     accessToken = tokenStorage.getAccessToken(),
-                    mac = address
+                    macAddress = address
                 )
             },
             mapper = UpdateBoxResponseDto::toDomain
@@ -185,7 +185,7 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.getAccessedList(
                     accessToken = tokenStorage.getAccessToken(),
-                    mac = macAddress
+                    macAddress = macAddress
                 )
             },
             mapper = AccessResponseDto::toDomain
@@ -212,7 +212,7 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.createAccess(
                     accessToken = tokenStorage.getAccessToken(),
-                    mac = macAddress,
+                    macAddress = macAddress,
                     alias = alias,
                     startTime = formatToBackendTimestamp(startTime),
                     endTime = formatToBackendTimestamp(endTime)
@@ -237,7 +237,7 @@ internal class BoxesRepositoryImpl(
             apiCall = {
                 boxesApi.revokeAccess(
                     accessToken = tokenStorage.getAccessToken(),
-                    mac = macAddress,
+                    macAddress = macAddress,
                     tokenId = tokenId
                 )
             },

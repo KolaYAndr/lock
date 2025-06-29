@@ -1,8 +1,8 @@
 package org.homesharing.lockbox.domain.model.account_info
 
-import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
+import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoResponseDto
 
-internal fun AccountInfoDto.toDomain(): AccountInfo = AccountInfo(
+internal fun AccountInfoResponseDto.toDomain(): AccountInfo = AccountInfo(
     email = email,
     fullName = name,
     givenName = givenName,

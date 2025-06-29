@@ -25,12 +25,12 @@ import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
 
-private const val BOXES = "https://api.lockboxes.ru:8445/boxes"
-private const val STATUS = "status"
-private const val AUTH = "auth"
-private const val OPEN = "open"
-private const val ACCESS = "access"
-private const val ACCESSES = "accesses"
+internal const val BOXES_URL = "https://api.lockboxes.ru:8445/boxes"
+internal const val STATUS = "status"
+internal const val AUTH = "auth"
+internal const val OPEN = "open"
+internal const val ACCESS = "access"
+internal const val ACCESSES = "accesses"
 
 private const val PAGE_PARAMETER = "page"
 private const val SIZE_PARAMETER = "size"
@@ -44,7 +44,7 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
     ): ApiResponse<BoxListResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url(BOXES)
+            url(BOXES_URL)
             parameters {
                 parameter(SIZE_PARAMETER, size)
                 parameter(PAGE_PARAMETER, page)
@@ -53,20 +53,20 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
 
     override suspend fun getBoxByMac(
         accessToken: String,
-        address: String,
+        macAddress: String,
     ): ApiResponse<BoxResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$address")
+            url("$BOXES_URL/$macAddress")
         }.body()
 
     override suspend fun getBoxStatusByMac(
         accessToken: String,
-        address: String,
+        macAddress: String,
     ): ApiResponse<BoxStatusResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$address/$STATUS")
+            url("$BOXES_URL/$macAddress/$STATUS")
         }.body()
 
     override suspend fun updateBoxByMac(
@@ -78,41 +78,41 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
         val request = UpdateBoxRequestDto(alias, address)
         return client.patch {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$macAddress")
+            url("$BOXES_URL/$macAddress")
             setBody(request)
         }.body()
     }
 
     override suspend fun openBox(
         accessToken: String,
-        mac: String,
+        macAddress: String,
     ): ApiResponse<OpenBoxResponseDto> =
         client.post {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$AUTH/$OPEN/$mac")
+            url("$BOXES_URL/$AUTH/$OPEN/$macAddress")
         }.body()
 
     override suspend fun deleteBox(
         accessToken: String,
-        mac: String,
+        macAddress: String,
     ): ApiResponse<UpdateBoxResponseDto> =
         client.delete {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$mac")
+            url("$BOXES_URL/$macAddress")
         }.body()
 
     override suspend fun getAccessedList(
         accessToken: String,
-        mac: String,
+        macAddress: String,
     ): ApiResponse<AccessResponseDto> =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$ACCESS/$mac/$ACCESSES")
+            url("$BOXES_URL/$ACCESS/$macAddress/$ACCESSES")
         }.body()
 
     override suspend fun createAccess(
         accessToken: String,
-        mac: String,
+        macAddress: String,
         alias: String?,
         startTime: String,
         endTime: String,
@@ -120,18 +120,18 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
         val request = AccessCreateRequestDto(startTime, endTime, alias)
         return client.post {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$ACCESS/$mac/$ACCESSES")
+            url("$BOXES_URL/$ACCESS/$macAddress/$ACCESSES")
             setBody(request)
         }.body()
     }
 
     override suspend fun revokeAccess(
         accessToken: String,
-        mac: String,
+        macAddress: String,
         tokenId: String,
     ): ApiResponse<AccessRevokeResponseDto> =
         client.delete {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES/$ACCESS/$mac/$ACCESSES/$tokenId")
+            url("$BOXES_URL/$ACCESS/$macAddress/$ACCESSES/$tokenId")
         }.body()
 }
