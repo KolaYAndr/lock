@@ -23,50 +23,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class LockBoxAccountApiTest {
-
     private lateinit var api: LockBoxAccountApi
-    private lateinit var client: HttpClient
-
-    private val headers = headersOf(
-        name = HttpHeaders.ContentType,
-        value = "${ContentType.Application.Json.contentType}/${ContentType.Application.Json.contentSubtype}"
-    )
-
-    private val mockRequestHandler: MockRequestHandler = { request ->
-        val url = request.url.toString()
-        val contentKey = when {
-            url == SESSIONS_URL && request.method == HttpMethod.Delete -> "$SESSIONS_URL/${HttpMethod.Delete.value}"
-            else -> url
-        }
-
-        val content = urlToContent.getOrElse(contentKey) {
-            error("Unhandled request: ${request.method} ${request.url}")
-        }
-
-        respond(content = content, headers = headers)
-    }
 
     @BeforeTest
     fun setUp() {
-        val mockEngine = MockEngine(mockRequestHandler)
-
-        client = HttpClient(mockEngine) {
-            install(ContentNegotiation) {
-                json(
-                    json = Json {
-                        ignoreUnknownKeys = true
-                        prettyPrint = true
-                        isLenient = true
-                    },
-                )
-            }
-
-            defaultRequest {
-                contentType(ContentType.Application.Json)
-            }
-        }
-
-        api = LockBoxAccountApi(client)
+        api = LockBoxAccountApi(mockAccountClient)
     }
 
     @Test
@@ -203,8 +164,14 @@ class LockBoxAccountApiTest {
         assertEquals("user.message:password_reset_email_sent", result.body.message)
     }
 
-    private val urlToContent = mapOf(
-        SIGN_UP_URL to """
+    companion object {
+        private val headers = headersOf(
+            name = HttpHeaders.ContentType,
+            value = "${ContentType.Application.Json.contentType}/${ContentType.Application.Json.contentSubtype}"
+        )
+
+        private val urlToContent = mapOf(
+            SIGN_UP_URL to """
                         {
                             "body": {
                                 "user": {
@@ -221,7 +188,7 @@ class LockBoxAccountApiTest {
                             "error_text": null
                         }
                         """,
-        TOKEN_URL to """
+            TOKEN_URL to """
                 {
                     "access_token": "test-access-token",
                     "expires_in": 3600,
@@ -231,7 +198,7 @@ class LockBoxAccountApiTest {
                 }
                 """,
 
-        SESSIONS_URL to """
+            SESSIONS_URL to """
             {
                 "body": {
                     "sessions": [
@@ -262,7 +229,7 @@ class LockBoxAccountApiTest {
             }
         """,
 
-        "$SESSIONS_URL/${HttpMethod.Delete.value}" to """
+            "$SESSIONS_URL/${HttpMethod.Delete.value}" to """
             {
                 "body": "session:deleted",
                 "error": false,
@@ -270,7 +237,7 @@ class LockBoxAccountApiTest {
                 }
             """,
 
-        CONFIRM_EMAIL_URL to """
+            CONFIRM_EMAIL_URL to """
             {
                 "body": "Sent",
                 "error": false,
@@ -278,7 +245,7 @@ class LockBoxAccountApiTest {
             }
             """,
 
-        UPDATE_ACCOUNT_URL to """
+            UPDATE_ACCOUNT_URL to """
             {
                 "body": {
                     "id": "97b9279c-7741-4017-bb62-a3d21431e9b3",
@@ -294,12 +261,45 @@ class LockBoxAccountApiTest {
             }
             """,
 
-        RESET_PASSWORD_URL to """
+            RESET_PASSWORD_URL to """
             {
                 "body": "user.message:password_reset_email_sent",
                 "error": false,
                 "error_text": null
             }
         """
-    )
+        )
+
+        private val mockRequestHandler: MockRequestHandler = { request ->
+            val url = request.url.toString()
+            val contentKey = when {
+                url == SESSIONS_URL && request.method == HttpMethod.Delete -> "$SESSIONS_URL/${HttpMethod.Delete.value}"
+                else -> url
+            }
+
+            val content = urlToContent.getOrElse(contentKey) {
+                error("Unhandled request: ${request.method} ${request.url}")
+            }
+
+            respond(content = content, headers = headers)
+        }
+
+        private val mockEngine = MockEngine(mockRequestHandler)
+
+        val mockAccountClient = HttpClient(mockEngine) {
+            install(ContentNegotiation) {
+                json(
+                    json = Json {
+                        ignoreUnknownKeys = true
+                        prettyPrint = true
+                        isLenient = true
+                    },
+                )
+            }
+
+            defaultRequest {
+                contentType(ContentType.Application.Json)
+            }
+        }
+    }
 }
