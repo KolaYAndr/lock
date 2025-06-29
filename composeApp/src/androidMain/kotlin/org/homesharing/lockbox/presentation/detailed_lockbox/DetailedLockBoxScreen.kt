@@ -598,7 +598,7 @@ private fun ChangePropertyBottomSheet(
             LockBoxPropertyInput(
                 value = currentValue,
                 onValueChange = { newValue -> currentValue = newValue },
-                onDone = {
+                onAny = {
                     if (canSaveChanges) {
                         onSaveChanges(currentValue)
                         onDismiss()

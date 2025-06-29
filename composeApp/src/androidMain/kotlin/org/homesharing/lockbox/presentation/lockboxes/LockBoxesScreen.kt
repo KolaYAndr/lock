@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -54,6 +55,9 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicButto
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModal
+import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun LockBoxesScreen(
@@ -62,12 +66,13 @@ internal fun LockBoxesScreen(
     onNavigateToBox: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showModal by remember { mutableStateOf(false) }
+    var showConnectModal by remember { mutableStateOf(false) }
+    var showAddVirtualDeviceModal by remember { mutableStateOf(false) }
     val settingsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
-        TopRow(model = avatarLink, onAddDevice = { showModal = true })
+        TopRow(model = avatarLink, onAddDevice = { showConnectModal = true })
         val lazyBoxes = boxes.collectAsLazyPagingItems()
 
         when (lazyBoxes.loadState.refresh) {
@@ -75,7 +80,7 @@ internal fun LockBoxesScreen(
                 LockBoxScreen(
                     boxes = lazyBoxes,
                     onBoxClick = onNavigateToBox,
-                    onAddDevice = { showModal = true }
+                    onAddDevice = { showConnectModal = true }
                 )
             }
 
@@ -98,10 +103,19 @@ internal fun LockBoxesScreen(
         }
     }
 
-    if (showModal) {
+    if (showConnectModal) {
         ConnectModalSheet(
-            onDismiss = { showModal = false },
-            toWifiConnection = { settingsLauncher.launch(Intent(Settings.ACTION_WIFI_SETTINGS)) }
+            modifier = Modifier.fillMaxSize(),
+            onDismiss = { showConnectModal = false },
+            toWifiConnection = { settingsLauncher.launch(Intent(Settings.ACTION_WIFI_SETTINGS)) },
+            onAddVirtualDevice = { showAddVirtualDeviceModal = true }
+        )
+    }
+
+    if (showAddVirtualDeviceModal) {
+        VirtualDeviceModal(
+            modifier = Modifier.fillMaxSize(),
+            onDismiss = { showAddVirtualDeviceModal = false }
         )
     }
 }
@@ -295,13 +309,34 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
 }
 
 @Composable
-private fun ConnectModalSheet(
+private fun VirtualDeviceModal(
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+) {
+    val addVirtualDeviceViewModel = koinViewModel<AddVirtualDeviceViewModel>()
+    val addVirtualDeviceUiState by addVirtualDeviceViewModel.addVirtualDeviceUiState.collectAsStateWithLifecycle()
+
+    AddVirtualDeviceModal(
+        modifier = modifier,
+        onDismiss = onDismiss,
+        deviceName = addVirtualDeviceUiState.deviceName,
+        onChangeDeviceName = addVirtualDeviceViewModel::onChangeDeviceName,
+        deviceAddress = addVirtualDeviceUiState.deviceAddress,
+        onChangeDeviceAddress = addVirtualDeviceViewModel::onChangeDeviceAddress,
+        onCreateVirtualDevice = addVirtualDeviceViewModel::onCreateVirtualDevice
+    )
+}
+
+@Composable
+private fun ConnectModalSheet(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+    onAddVirtualDevice: () -> Unit,
     toWifiConnection: () -> Unit,
 ) {
     BasicModal(
+        modifier = modifier,
         onDismiss = onDismiss,
-        modifier = Modifier.fillMaxSize()
     ) {
         TitledTopWithCloseAndBackButtons(
             title = stringResource(R.string.device_connection),
@@ -313,7 +348,7 @@ private fun ConnectModalSheet(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -342,20 +377,30 @@ private fun ConnectModalSheet(
             )
 
             BasicButton(
-                onClick = { toWifiConnection() },
+                onClick = toWifiConnection,
                 text = stringResource(R.string.open_wifi_settings),
                 paddingValues = PaddingValues(10.dp),
                 modifier = Modifier.padding(top = 16.dp)
             )
 
             BasicButton(
-                onClick = { onDismiss() },
+                onClick = onDismiss,
                 text = stringResource(R.string.cancel),
                 modifier = Modifier.padding(top = 12.dp),
-                paddingValues = PaddingValues(0.dp),
+                paddingValues = PaddingValues(horizontal = 12.dp),
                 style = BasicButtonStyle.grey()
             )
         }
+
+        BasicButton(
+            onClick = onAddVirtualDevice,
+            text = stringResource(R.string.add_virtual_device),
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .align(Alignment.CenterHorizontally),
+            paddingValues = PaddingValues(horizontal = 12.dp),
+            style = BasicButtonStyle.grey()
+        )
     }
 }
 

@@ -37,7 +37,7 @@ internal class ActiveSessionsViewModel(private val accountRepository: AccountRep
 
             when {
                 sessions is Response.Success && id is Response.Success -> _uiState.update {
-                    it.copy(sessions = sessions.data.filter { session -> session.sessionId != id.data.sessionId }
+                    it.copy(sessions = sessions.data.sessions.filter { session -> session.sessionId != id.data.sessionId }
                         .sortedBy { session -> session.lastAccessed }.reversed())
                 }
 

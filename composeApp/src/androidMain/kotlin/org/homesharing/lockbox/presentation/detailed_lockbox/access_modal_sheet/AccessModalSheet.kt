@@ -472,7 +472,7 @@ private fun AddGuestContent(
                 value = guestName,
                 onValueChange = onChangeGuestName,
                 placeholderText = stringResource(R.string.guest_name_placeholder),
-                onDone = { keyboardManager?.hide() },
+                onAny = { keyboardManager?.hide() },
                 modifier = Modifier.fillMaxWidth()
             )
         }

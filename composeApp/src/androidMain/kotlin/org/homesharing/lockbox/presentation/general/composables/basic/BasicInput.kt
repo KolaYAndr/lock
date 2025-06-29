@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
@@ -22,9 +21,14 @@ fun BasicInput(
     onValueChange: (String) -> Unit,
     enabled: Boolean,
     placeholderText: String,
-    onDone: () -> Unit,
+    onAny: () -> Unit,
     leadingPainter: Painter? = null,
     onFieldClick: (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Text,
+        showKeyboardOnFocus = true,
+        imeAction = ImeAction.Done
+    ),
     modifier: Modifier = Modifier,
 ) {
     val leadingIconSlot: (@Composable () -> Unit)? = leadingPainter?.let {
@@ -62,14 +66,9 @@ fun BasicInput(
                 color = LockBoxTheme.colors.grey500
             )
         },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            showKeyboardOnFocus = true,
-            imeAction = ImeAction.Done,
-            capitalization = KeyboardCapitalization.Words
-        ),
+        keyboardOptions = keyboardOptions,
         keyboardActions = KeyboardActions(
-            onDone = { onDone() }
+            onAny = { onAny() }
         ),
         leadingIcon = leadingIconSlot
     )

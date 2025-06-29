@@ -106,8 +106,10 @@
     <string name="signal_level">Уровень сигнала</string>
     <string name="battery_percent">%d%%</string>
     <string name="access_device">Доступ к устройству</string>
-    <string name="device_address">Адрес</string>
+    <string name="device_address">Адрес устройства</string>
+    <string name="device_address_placeholder">Введите адрес устройства</string>
     <string name="device_name">Название устройства</string>
+    <string name="device_name_placeholder">Введите название устройства</string>
     <string name="about_device">Об устройстве</string>
     <string name="unbind_device">Отвязать устройство</string>
     <string name="unbind_user">Отвязать пользователя</string>
@@ -154,6 +156,7 @@
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="finish_all_other_sessions_question">Завершить остальные сессии?</string>
     <string name="finish">Завершить</string>
+    <string name="finish_setting_up">Завершить настройку</string>
     <string name="password_dont_match">Пароли не совпадают</string>
     <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
     <string name="email_doesnt_match_pattern">Введите действительную почту</string>
@@ -179,6 +182,9 @@
     <string name="phone_number_doesnt_match_pattern">Введите действительный телефон</string>
     <string name="set_parameters_and_send_link">Настройте параметры и отправьте ссылку-приглашение чтобы поделится доступом к устройству</string>
     <string name="until_date">до %s</string>
+    <string name="add_virtual_device">Добавить виртуальное устройство</string>
+    <string name="set_up_a_device">Настройте устройство</string>
+    <string name="set_name_and_address_to_finish">Укажите название и адрес устройства для завершения настройки</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>
