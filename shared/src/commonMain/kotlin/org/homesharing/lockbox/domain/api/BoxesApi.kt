@@ -7,6 +7,7 @@ import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 
@@ -63,4 +64,8 @@ internal interface BoxesApi {
         macAddress: String,
         tokenId: String
     ): ApiResponse<AccessRevokeResponseDto>
+
+    suspend fun createLinkingCode(
+        accessToken: String,
+    ): ApiResponse<CreateLinkingCodeDto>
 }

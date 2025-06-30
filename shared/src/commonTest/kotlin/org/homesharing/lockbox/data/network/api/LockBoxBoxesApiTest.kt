@@ -165,6 +165,20 @@ class LockBoxBoxesApiTest {
         assertEquals(expectedResult, result.body.result)
     }
 
+    @Test
+    fun `createLinkingCode returns CreateLinkingCode on success`() = runBlocking {
+        val token = "token"
+        val expectedCode = 298545
+
+        val result = api.createLinkingCode(token)
+
+        assertFalse(result.error)
+        assertNull(result.errorText)
+        assertNotNull(result.body)
+
+        assertEquals(expectedCode, result.body.code)
+    }
+
     companion object {
         private val urlToContent: Map<String, String> = mapOf(
             "$BOXES_URL?size=10&page=0/${HttpMethod.Get.value}" to """
@@ -298,7 +312,17 @@ class LockBoxBoxesApiTest {
             "error": false,
             "error_text": null
         }
-    """
+    """,
+
+            "$BOXES_URL/$SIGNUP/${HttpMethod.Post.value}" to """
+                {
+                    "body": {
+                        "code": 298545
+                    },
+                    "error": false,
+                    "error_text": null
+                }
+            """
         )
 
         private val mockRequestHandler: MockRequestHandler = { request ->

@@ -12,6 +12,7 @@ import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeRespon
 import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
 import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
+import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
@@ -28,6 +29,8 @@ import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.access_revoke.toDomain
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.toDomain
+import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
+import org.homesharing.lockbox.domain.model.create_linking_code.toDomain
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.open_box.toDomain
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
@@ -250,10 +253,10 @@ internal class BoxesRepositoryImpl(
             .fromEpochMilliseconds(epochMillis)
             .toLocalDateTime(TimeZone.UTC)
 
-        val year   = ldt.year.toString().padStart(4, '0')
-        val month  = ldt.monthNumber.toString().padStart(2, '0')
-        val day    = ldt.dayOfMonth.toString().padStart(2, '0')
-        val hour   = ldt.hour.toString().padStart(2, '0')
+        val year = ldt.year.toString().padStart(4, '0')
+        val month = ldt.monthNumber.toString().padStart(2, '0')
+        val day = ldt.dayOfMonth.toString().padStart(2, '0')
+        val hour = ldt.hour.toString().padStart(2, '0')
         val minute = ldt.minute.toString().padStart(2, '0')
         val second = ldt.second.toString().padStart(2, '0')
 
@@ -278,5 +281,26 @@ internal class BoxesRepositoryImpl(
                 saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
         }
+    }
+
+    override suspend fun createLinkingCode(): Response<CreateLinkingCode> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
+
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.createLinkingCode(
+                    accessToken = tokenStorage.getAccessToken()
+                )
+            },
+            mapper = CreateLinkingCodeDto::toDomain
+        )
     }
 }

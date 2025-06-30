@@ -70,10 +70,10 @@ internal fun LockBoxesScreen(
     var showAddVirtualDeviceModal by remember { mutableStateOf(false) }
     val settingsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+    val lazyBoxes = boxes.collectAsLazyPagingItems()
 
     Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
         TopRow(model = avatarLink, onAddDevice = { showConnectModal = true })
-        val lazyBoxes = boxes.collectAsLazyPagingItems()
 
         when (lazyBoxes.loadState.refresh) {
             is LoadState.NotLoading -> {
@@ -115,7 +115,11 @@ internal fun LockBoxesScreen(
     if (showAddVirtualDeviceModal) {
         VirtualDeviceModal(
             modifier = Modifier.fillMaxSize(),
-            onDismiss = { showAddVirtualDeviceModal = false }
+            onDismiss = { showAddVirtualDeviceModal = false },
+            onFinish = {
+                showConnectModal = false
+                lazyBoxes.refresh()
+            }
         )
     }
 }
@@ -312,6 +316,7 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
 private fun VirtualDeviceModal(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+    onFinish: () -> Unit
 ) {
     val addVirtualDeviceViewModel = koinViewModel<AddVirtualDeviceViewModel>()
     val addVirtualDeviceUiState by addVirtualDeviceViewModel.addVirtualDeviceUiState.collectAsStateWithLifecycle()
@@ -323,7 +328,10 @@ private fun VirtualDeviceModal(
         onChangeDeviceName = addVirtualDeviceViewModel::onChangeDeviceName,
         deviceAddress = addVirtualDeviceUiState.deviceAddress,
         onChangeDeviceAddress = addVirtualDeviceViewModel::onChangeDeviceAddress,
-        onCreateVirtualDevice = addVirtualDeviceViewModel::onCreateVirtualDevice
+        onCreateVirtualDevice = {
+            addVirtualDeviceViewModel.onCreateVirtualDevice()
+            onFinish()
+        }
     )
 }
 

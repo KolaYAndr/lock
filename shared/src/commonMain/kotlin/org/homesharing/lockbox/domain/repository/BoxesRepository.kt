@@ -7,6 +7,7 @@ import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 
@@ -29,4 +30,6 @@ interface BoxesRepository {
     suspend fun createAccess(macAddress: String, startTime: Long, endTime: Long, alias: String?): Response<Access>
 
     suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke>
+
+    suspend fun createLinkingCode(): Response<CreateLinkingCode>
 }

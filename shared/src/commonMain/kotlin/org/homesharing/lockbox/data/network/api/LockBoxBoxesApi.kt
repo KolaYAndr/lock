@@ -24,6 +24,7 @@ import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequestDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
+import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 
 internal const val BOXES_URL = "https://api.lockboxes.ru:8445/boxes"
 internal const val STATUS = "status"
@@ -31,6 +32,7 @@ internal const val AUTH = "auth"
 internal const val OPEN = "open"
 internal const val ACCESS = "access"
 internal const val ACCESSES = "accesses"
+internal const val SIGNUP = "signup"
 
 private const val PAGE_PARAMETER = "page"
 private const val SIZE_PARAMETER = "size"
@@ -133,5 +135,11 @@ internal class LockBoxBoxesApi(private val client: HttpClient) : BoxesApi {
         client.delete {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url("$BOXES_URL/$ACCESS/$macAddress/$ACCESSES/$tokenId")
+        }.body()
+
+    override suspend fun createLinkingCode(accessToken: String): ApiResponse<CreateLinkingCodeDto> =
+        client.post {
+            url("$BOXES_URL/$SIGNUP")
+            header(HttpHeaders.Authorization, bearerToken(accessToken))
         }.body()
 }

@@ -185,6 +185,7 @@
     <string name="add_virtual_device">Добавить виртуальное устройство</string>
     <string name="set_up_a_device">Настройте устройство</string>
     <string name="set_name_and_address_to_finish">Укажите название и адрес устройства для завершения настройки</string>
+    <string name="could_not_create_virtual_device">Не удалось создать виртуальное устройство</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>
