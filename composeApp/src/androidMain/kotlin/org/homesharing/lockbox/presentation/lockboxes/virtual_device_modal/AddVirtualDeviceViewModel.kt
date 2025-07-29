@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,13 +33,12 @@ internal class AddVirtualDeviceViewModel(
 
     fun onCreateVirtualDevice() {
         viewModelScope.launch {
-            val codeResponse = boxesRepository.createLinkingCode()
-
-            when (codeResponse) {
+            when (val codeResponse = boxesRepository.createLinkingCode()) {
                 is Response.Success -> {
-                    val boxLinking = boxesRepository.boxLinking(
-
-                    )
+                    when(boxesRepository.physicalSignUp(codeResponse.data.code)) {
+                        is Response.Failure -> SnackbarController.receiveEvent(couldNotCreateVirtualDevice { onCreateVirtualDevice() })
+                        is Response.Success -> SnackbarController.receiveEvent(virtualDeviceCreated)
+                    }
                 }
 
                 is Response.Failure ->
@@ -48,6 +48,11 @@ internal class AddVirtualDeviceViewModel(
     }
 
     private companion object {
+        val virtualDeviceCreated = SnackbarEvent(
+            message = R.string.virtual_device_created,
+            duration = SnackbarDuration.Short
+        )
+
         fun couldNotCreateVirtualDevice(onRetry: () -> Unit) = SnackbarEvent(
             message = R.string.could_not_create_virtual_device,
             action = SnackbarAction(

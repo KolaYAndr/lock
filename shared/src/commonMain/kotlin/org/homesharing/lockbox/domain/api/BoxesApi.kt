@@ -8,6 +8,7 @@ import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
+import org.homesharing.lockbox.data.network.dto.mockbox.MockboxDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 
@@ -68,4 +69,9 @@ internal interface BoxesApi {
     suspend fun createLinkingCode(
         accessToken: String,
     ): ApiResponse<CreateLinkingCodeDto>
+
+    suspend fun physicalSignUp(
+        accessToken: String,
+        code: Int
+    ): ApiResponse<MockboxDto>
 }

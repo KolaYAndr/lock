@@ -13,6 +13,7 @@ import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
 import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
+import org.homesharing.lockbox.data.network.dto.mockbox.MockboxDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
@@ -31,6 +32,8 @@ import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.create_linking_code.toDomain
+import org.homesharing.lockbox.domain.model.mockbox.Mockbox
+import org.homesharing.lockbox.domain.model.mockbox.toDomain
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.open_box.toDomain
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
@@ -301,6 +304,28 @@ internal class BoxesRepositoryImpl(
                 )
             },
             mapper = CreateLinkingCodeDto::toDomain
+        )
+    }
+
+    override suspend fun physicalSignUp(code: Int): Response<Mockbox> {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            try {
+                refreshToken()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                return Response.Failure(e.message.orEmpty())
+            }
+        }
+
+        return parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.physicalSignUp(
+                    accessToken = tokenStorage.getAccessToken(),
+                    code = code
+                )
+            },
+            mapper = MockboxDto::toDomain
         )
     }
 }
