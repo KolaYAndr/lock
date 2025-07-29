@@ -10,7 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -27,19 +30,18 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 internal fun PasswordInputStep(
     password: String,
     onPasswordChange: (String) -> Unit,
-    isPasswordSeen: Boolean,
-    onPasswordSeenChanged: () -> Unit,
     passwordRepeated: String,
     passwordRepeatedError: PasswordRepeatedError,
     onPasswordRepeatedChange: (String) -> Unit,
-    isPasswordRepeatedSeen: Boolean,
-    onPasswordRepeatedSeenChange: () -> Unit,
     onCreate: () -> Unit
 ) {
     val passwordFocusRequester = remember { FocusRequester() }
     val passwordRepeatedFocusRequester = remember { FocusRequester() }
     val passwordInteractionSource = remember { MutableInteractionSource() }
     val passwordRepeatedInteractionSource = remember { MutableInteractionSource() }
+
+    var isPasswordSeen by remember { mutableStateOf(false) }
+    var isPasswordRepeatedSeen by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         passwordFocusRequester.requestFocus()
@@ -72,7 +74,7 @@ internal fun PasswordInputStep(
             imeAction = ImeAction.Next
         ),
         isSeen = isPasswordSeen,
-        onSeenChange = { onPasswordSeenChanged() },
+        onSeenChange = { isPasswordSeen = !isPasswordSeen },
         modifier = Modifier
             .focusRequester(passwordFocusRequester)
             .padding(top = 6.dp, start = 16.dp, end = 16.dp)
@@ -92,7 +94,7 @@ internal fun PasswordInputStep(
         isError = passwordRepeatedError != PasswordRepeatedError.None,
         errorText = parsePasswordRepeatedErrorText(passwordRepeatedError),
         isSeen = isPasswordRepeatedSeen,
-        onSeenChange = { onPasswordRepeatedSeenChange() },
+        onSeenChange = { isPasswordRepeatedSeen = !isPasswordRepeatedSeen },
         keyboardActions = KeyboardActions(onDone = { onCreate() }),
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,

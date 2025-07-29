@@ -81,14 +81,6 @@ internal class SignUpViewModel(private val authRepository: AuthRepository) : Vie
         )
     }
 
-    fun onPasswordSeenChange() = _uiState.update {
-        it.copy(isPasswordSeen = !it.isPasswordSeen)
-    }
-
-    fun onPasswordRepeatedSeenChange() = _uiState.update {
-        it.copy(isPasswordRepeatedSeen = !it.isPasswordRepeatedSeen)
-    }
-
     fun toStep(nextStep: SignUpStep) = when (nextStep) {
         SignUpStep.PasswordInput -> if (emailMatcher.matcher(uiState.value.email).matches()) {
             _uiState.update { it.copy(signUpStep = nextStep) }
@@ -104,8 +96,6 @@ internal data class SignUpUiState(
     val password: String = "",
     val passwordRepeated: String = "",
     val passwordRepeatedError: PasswordRepeatedError = PasswordRepeatedError.None,
-    val isPasswordSeen: Boolean = false,
-    val isPasswordRepeatedSeen: Boolean = false,
     val signUpStep: SignUpStep = SignUpStep.EmailInput,
 )
 

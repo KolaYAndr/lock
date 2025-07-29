@@ -33,7 +33,6 @@ internal class LoginViewModel(private val repository: AccountRepository) : ViewM
     fun toTypeAuth(authType: LoginType) = _loginType.update { authType }
 }
 
-
 private const val STEP_ONE = 1
 private const val STEP_TWO = 2
 

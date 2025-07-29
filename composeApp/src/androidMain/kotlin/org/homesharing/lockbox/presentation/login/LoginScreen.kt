@@ -121,7 +121,6 @@ internal fun LoginScreen(
                                 onDismiss = { showModal = false },
                                 onEmailChange = signInViewModel::onChangeEmail,
                                 onPasswordChange = signInViewModel::onChangePassword,
-                                onPasswordSeenChange = signInViewModel::switchPasswordToggle,
                                 passwordError = signInState.passwordError != null,
                                 passwordErrorText = getErrorText(signInState.passwordError),
                                 emailError = signInState.emailError != null,
@@ -142,8 +141,6 @@ internal fun LoginScreen(
                                 onToStep = signUpViewModel::toStep,
                                 onPasswordChange = signUpViewModel::onChangePassword,
                                 onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
-                                onPasswordSeenChange = signUpViewModel::onPasswordSeenChange,
-                                onPasswordRepeatedSeenChange = signUpViewModel::onPasswordRepeatedSeenChange,
                                 onCheckConfirmation = signUpViewModel::checkIfConfirmed,
                                 onCreate = signUpViewModel::signUp
                             )

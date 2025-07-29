@@ -28,10 +28,6 @@ internal class SignInViewModel(private val authRepository: AuthRepository) : Vie
         it.copy(password = newPassword, passwordError = null)
     }
 
-    fun switchPasswordToggle() = _uiState.update {
-        it.copy(isPasswordSeen = !it.isPasswordSeen)
-    }
-
     private fun parsePasswordError(message: String): SignInPasswordError = when (message) {
         INVALID_USER_CREDENTIALS -> SignInPasswordError.InvalidUserCredentials
         else -> SignInPasswordError.Unexpected
@@ -69,7 +65,6 @@ internal data class SignInUiState(
     val email: String = "",
     val emailError: EmailError? = null,
     val password: String = "",
-    val isPasswordSeen: Boolean = false,
     val passwordError: SignInPasswordError? = null,
 )
 

@@ -15,7 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -52,7 +55,6 @@ internal fun SignInCard(
     passwordError: Boolean,
     passwordErrorText: String,
     emailError: Boolean,
-    onPasswordSeenChange: () -> Unit,
     onToTypeAuth: (LoginType) -> Unit,
     onSignIn: () -> Unit,
     modifier: Modifier = Modifier,
@@ -66,6 +68,9 @@ internal fun SignInCard(
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
+
+        var isPasswordSeen by remember { mutableStateOf(false) }
+
         LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -135,8 +140,8 @@ internal fun SignInCard(
             interactionSource = passwordInteractionSource,
             isError = passwordError,
             errorText = passwordErrorText,
-            isSeen = signInUiState.isPasswordSeen,
-            onSeenChange = onPasswordSeenChange,
+            isSeen = isPasswordSeen,
+            onSeenChange = { isPasswordSeen = !isPasswordSeen },
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
@@ -227,7 +232,6 @@ private fun PreviewSignIn() {
             passwordError = false,
             emailError = false,
             passwordErrorText = "",
-            onPasswordSeenChange = {},
             onToTypeAuth = {},
             onSignIn = {}
         )
