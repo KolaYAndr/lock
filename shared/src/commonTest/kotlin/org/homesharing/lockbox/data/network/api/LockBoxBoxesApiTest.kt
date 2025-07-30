@@ -179,6 +179,24 @@ class LockBoxBoxesApiTest {
         assertEquals(expectedCode, result.body.code)
     }
 
+    @Test
+    fun `physicalSignUp returns Mockbox on success`() = runBlocking {
+        val token = "token"
+        val code = 298545
+
+        val mac = "MAC1"
+        val alias = "aboba"
+
+        val result = api.physicalSignUp(token, code)
+
+        assertFalse(result.error)
+        assertNull(result.errorText)
+        assertNotNull(result.body)
+
+        assertEquals(mac, result.body.macAddress)
+        assertEquals(alias, result.body.alias)
+    }
+
     companion object {
         private val urlToContent: Map<String, String> = mapOf(
             "$BOXES_URL?size=10&page=0/${HttpMethod.Get.value}" to """
@@ -318,6 +336,17 @@ class LockBoxBoxesApiTest {
                 {
                     "body": {
                         "code": 298545
+                    },
+                    "error": false,
+                    "error_text": null
+                }
+            """,
+
+            "$BOXES_URL/$PHYSICAL_SIGNUP/${HttpMethod.Post.value}" to """
+                {
+                    "body": {
+                        "mac_address": "MAC1",
+                        "alias": "aboba"
                     },
                     "error": false,
                     "error_text": null
