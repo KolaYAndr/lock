@@ -42,7 +42,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.kotlin.test.junit)
             implementation(libs.dateTime)
             implementation(libs.ktor.mock)
         }
