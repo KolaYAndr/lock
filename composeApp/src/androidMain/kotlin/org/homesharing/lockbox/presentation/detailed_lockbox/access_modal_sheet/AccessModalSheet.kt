@@ -39,11 +39,15 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.DateTimeFormatBuilder
 import kotlinx.datetime.toJavaLocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.presentation.general.composables.AddRow
+import org.homesharing.lockbox.presentation.general.composables.DockedDatePicker
 import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.RoundText
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
@@ -377,9 +381,7 @@ private fun AddGuestContent(
             )
 
             AnimatedVisibility(showStartDatePicker) {
-                DockedDatePicker(
-                    datePickerState = startDatePickerState
-                )
+                DockedDatePicker(datePickerState = startDatePickerState)
             }
         }
 
@@ -447,9 +449,7 @@ private fun AddGuestContent(
             )
 
             AnimatedVisibility(showEndDatePicker) {
-                DockedDatePicker(
-                    datePickerState = endDatePickerState
-                )
+                DockedDatePicker(datePickerState = endDatePickerState)
             }
         }
 
@@ -527,50 +527,6 @@ private fun CopyButton(onClick: () -> Unit, enabled: Boolean, modifier: Modifier
             style = LockBoxTheme.typography.headlineLarge
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DockedDatePicker(
-    datePickerState: DatePickerState,
-) {
-    DatePicker(
-        modifier = Modifier.clip(LockBoxTheme.shape.roundedCornerShape8),
-        state = datePickerState,
-        showModeToggle = false,
-        colors = DatePickerDefaults.colors(
-            containerColor = LockBoxTheme.colors.grey800,
-            yearContentColor = LockBoxTheme.colors.grey100,
-            subheadContentColor = LockBoxTheme.colors.grey100,
-            dayContentColor = LockBoxTheme.colors.grey100,
-            weekdayContentColor = LockBoxTheme.colors.grey100,
-            titleContentColor = LockBoxTheme.colors.grey100,
-            todayContentColor = LockBoxTheme.colors.grey100,
-            navigationContentColor = LockBoxTheme.colors.grey100,
-            headlineContentColor = LockBoxTheme.colors.grey100,
-            selectedDayContentColor = LockBoxTheme.colors.grey100,
-            selectedYearContentColor = LockBoxTheme.colors.grey100,
-            selectedDayContainerColor = LockBoxTheme.colors.grey700,
-            selectedYearContainerColor = LockBoxTheme.colors.grey700,
-            currentYearContentColor = LockBoxTheme.colors.grey50,
-            todayDateBorderColor = LockBoxTheme.colors.grey50,
-            dateTextFieldColors = TextFieldDefaults.colors(
-                focusedTextColor = LockBoxTheme.colors.grey100,
-                unfocusedTextColor = LockBoxTheme.colors.grey100,
-                errorTextColor = LockBoxTheme.colors.red600,
-                cursorColor = LockBoxTheme.colors.white,
-                errorCursorColor = LockBoxTheme.colors.red600,
-                focusedContainerColor = LockBoxTheme.colors.grey800,
-                unfocusedContainerColor = LockBoxTheme.colors.grey800,
-                errorContainerColor = LockBoxTheme.colors.grey800,
-                focusedIndicatorColor = LockBoxTheme.colors.grey100,
-                unfocusedIndicatorColor = LockBoxTheme.colors.grey500,
-                errorIndicatorColor = LockBoxTheme.colors.red600,
-                focusedLabelColor = LockBoxTheme.colors.grey100,
-                unfocusedLabelColor = LockBoxTheme.colors.grey500,
-            ),
-        ),
-    )
 }
 
 @Composable
@@ -677,6 +633,137 @@ private fun Access(
             tint = LockBoxTheme.colors.grey500,
             contentDescription = null,
             modifier = Modifier.size(24.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewAccess() {
+    LockBoxTheme {
+        val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
+        Access(
+            access = Access(
+                name = null,
+                startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                macAddress = "1A:2B",
+                token = "123",
+                id = "123"
+            ),
+            formatter = formatter,
+            onAccessClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewCopyButton() {
+    LockBoxTheme {
+        CopyButton(
+            onClick = {},
+            enabled = true,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewCopyButtonDisabled() {
+    LockBoxTheme {
+        CopyButton(
+            onClick = {},
+            enabled = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewGuestListContent() {
+    LockBoxTheme {
+        val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
+        val list = listOf(
+            Access(
+                name = null,
+                startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                macAddress = "1A:2B",
+                token = "123",
+                id = "123"
+            ),
+        )
+
+        GuestListContent(
+            isLoading = false,
+            accessList = list,
+            formatter = formatter,
+            toAddGuest = {},
+            toAccessInfo = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewGuestListContentLoading() {
+    LockBoxTheme {
+        val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
+        val list = listOf(
+            Access(
+                name = null,
+                startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                macAddress = "1A:2B",
+                token = "123",
+                id = "123"
+            ),
+        )
+
+        GuestListContent(
+            isLoading = true,
+            accessList = list,
+            formatter = formatter,
+            toAddGuest = {},
+            toAccessInfo = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewAddGuestListContent() {
+    LockBoxTheme {
+        AddGuestContent(
+            guestName = "Гость",
+            onChangeGuestName = {},
+            onChangeStartDate = {},
+            onChangeEndDate = {},
+            addGuest = {},
+            onNavBack = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewGuestInfoContent() {
+    LockBoxTheme {
+        GuestInfoContent(
+            lockboxName = "Dom",
+            lockboxAddress = "ul. Doma",
+            access = Access(
+                name = null,
+                startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
+                macAddress = "1A:2B",
+                token = "123",
+                id = "123"
+            ),
+            onCopyLink = {},
+            onUnbindUser = {},
+            onNavBack = {},
         )
     }
 }
