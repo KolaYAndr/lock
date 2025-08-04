@@ -16,16 +16,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,12 +39,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format.DateTimeFormatBuilder
 import kotlinx.datetime.toJavaLocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.presentation.general.composables.AddRow
 import org.homesharing.lockbox.presentation.general.composables.DockedDatePicker
+import org.homesharing.lockbox.presentation.general.composables.DockedTimePicker
 import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.RoundText
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
@@ -57,6 +54,7 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicHoriz
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.composables.inputs.DateInput
 import org.homesharing.lockbox.presentation.general.composables.inputs.LockBoxPropertyInput
+import org.homesharing.lockbox.presentation.general.composables.inputs.TimeInput
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -360,7 +358,20 @@ private fun AddGuestContent(
             formatter.format(Date(time))
         }
 
+        val startTimePickerState = rememberTimePickerState(
+            initialHour = calendar.get(Calendar.HOUR_OF_DAY),
+            initialMinute = calendar.get(Calendar.MINUTE),
+            is24Hour = true,
+        )
+        val selectedStartTime: String = remember(startTimePickerState.hour, startTimePickerState.minute) {
+            String.format("%02d:%02d", startTimePickerState.hour, startTimePickerState.minute)
+        }.let { formatted ->
+//            onChangeStartTime(timeToMillis(startTimePickerState.hour, startTimePickerState.minute))
+            formatted
+        }
+
         var showStartDatePicker by remember { mutableStateOf(false) }
+        var showStartTimePicker by remember { mutableStateOf(false) }
         Column(
             modifier = modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -374,14 +385,28 @@ private fun AddGuestContent(
                 style = LockBoxTheme.typography.subHeadlineLarge,
             )
 
-            DateInput(
-                date = selectedStartDate.orEmpty(),
-                onFieldClick = { showStartDatePicker = !showStartDatePicker },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
+            ) {
+                DateInput(
+                    date = selectedStartDate.orEmpty(),
+                    onFieldClick = { showStartDatePicker = !showStartDatePicker },
+                )
+
+                TimeInput(
+                    time = selectedStartTime,
+                    onInputClick = { showStartTimePicker = !showStartTimePicker }
+                )
+            }
 
             AnimatedVisibility(showStartDatePicker) {
                 DockedDatePicker(datePickerState = startDatePickerState)
+            }
+
+            AnimatedVisibility(showStartDatePicker) {
+                DockedTimePicker(timePickerState = startTimePickerState)
             }
         }
 

@@ -14,7 +14,7 @@ class LockBoxApp: Application() {
 
         startKoin(koinAndroidConfiguration(this))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+            val uiModeManager = getSystemService(UI_MODE_SERVICE) as UiModeManager
             uiModeManager.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

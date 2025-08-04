@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,20 +32,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetViewModel
+import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
@@ -357,12 +358,13 @@ internal fun DetailedLockBoxScreen(
         val accessModalSheetState by accessModalSheetViewModel.uiState.collectAsStateWithLifecycle()
 
         val lifecycleOwner = LocalLifecycleOwner.current
-        val clipboardManager = LocalClipboardManager.current
+        val clipboard = LocalClipboard.current
+        val label = stringResource(R.string.link_copied)
         ActionOnSharedFlow(
             lifecycleOwner = lifecycleOwner,
             flow = accessModalSheetViewModel.tokenData
         ) { token ->
-            clipboardManager.setText(AnnotatedString("$URL_PREFIX/$token"))
+            clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(label, "$URL_PREFIX/$token")))
         }
 
         AccessModalSheet(

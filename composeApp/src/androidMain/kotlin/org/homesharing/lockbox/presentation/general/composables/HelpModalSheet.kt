@@ -22,6 +22,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import androidx.core.net.toUri
 
 @Composable
 internal fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
@@ -77,7 +78,7 @@ internal fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier
                 text = email,
                 onClick = {
                     val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = Uri.parse("mailto:")
+                        data = "mailto:".toUri()
                         putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
                     }
                     launcher.launch(emailIntent)
@@ -92,7 +93,7 @@ internal fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier
                 text = stringResource(R.string.telegram),
                 onClick = {
                      val tgIntent = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(Uri.parse("https://t.me/korolev_2512"), "text/plain")
+                        setDataAndType("https://t.me/korolev_2512".toUri(), "text/plain")
                     }
                     launcher.launch(tgIntent)
                 }
@@ -106,7 +107,7 @@ internal fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier
                 text = stringResource(R.string.whatsapp),
                 onClick = {
                     val tgIntent = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(Uri.parse("https://t.me/korolev_2512"), "text/plain")
+                        setDataAndType("https://t.me/korolev_2512".toUri(), "text/plain")
                     }
                     launcher.launch(tgIntent)
                 }

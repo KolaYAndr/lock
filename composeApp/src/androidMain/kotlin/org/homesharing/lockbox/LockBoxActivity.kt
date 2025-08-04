@@ -38,11 +38,10 @@ import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.navigation.BottomNavigation
 import org.homesharing.lockbox.navigation.Navigation
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
+import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.snackbar_controller.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
-import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 private const val SPLASH_SCREEN_TIME = 1000L
 
@@ -74,43 +73,41 @@ class LockBoxActivity : ComponentActivity() {
             CollectSnackbarEvents(snackbarHostState)
 
             val navController = rememberNavController()
-            KoinAndroidContext {
-                LockBoxTheme {
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    Scaffold(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(LockBoxTheme.colors.grey950)
-                            .systemBarsPadding()
-                            .navigationBarsPadding(),
-                        bottomBar = {
-                            BottomNavigation(
-                                topLevelRoutes = topLevelRoutes,
-                                navBackStackEntry = navBackStackEntry
-                            ) { route ->
-                                navController.navigate(route) {
-                                    popUpTo(route)
-                                    launchSingleTop = true
-                                    restoreState = false
-                                }
-                            }
-                        },
-                        snackbarHost = {
-                            SnackbarHost(
-                                hostState = snackbarHostState
-                            ) { data ->
-                                LockBoxSnackbar(
-                                    snackbarData = data
-                                )
+            LockBoxTheme {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(LockBoxTheme.colors.grey950)
+                        .systemBarsPadding()
+                        .navigationBarsPadding(),
+                    bottomBar = {
+                        BottomNavigation(
+                            topLevelRoutes = topLevelRoutes,
+                            navBackStackEntry = navBackStackEntry
+                        ) { route ->
+                            navController.navigate(route) {
+                                popUpTo(route)
+                                launchSingleTop = true
+                                restoreState = false
                             }
                         }
-                    ) { paddingValues ->
-                        Navigation(
-                            navController = navController,
-                            startFromLogin = !isLoggedIn,
-                            modifier = Modifier.padding(paddingValues)
-                        )
+                    },
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState
+                        ) { data ->
+                            LockBoxSnackbar(
+                                snackbarData = data
+                            )
+                        }
                     }
+                ) { paddingValues ->
+                    Navigation(
+                        navController = navController,
+                        startFromLogin = !isLoggedIn,
+                        modifier = Modifier.padding(paddingValues)
+                    )
                 }
             }
         }

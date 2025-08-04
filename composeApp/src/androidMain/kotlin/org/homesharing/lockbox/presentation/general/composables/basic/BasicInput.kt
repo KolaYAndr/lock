@@ -29,6 +29,7 @@ fun BasicInput(
         showKeyboardOnFocus = true,
         imeAction = ImeAction.Done
     ),
+    singleLine: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val leadingIconSlot: (@Composable () -> Unit)? = leadingPainter?.let {
@@ -70,6 +71,7 @@ fun BasicInput(
         keyboardActions = KeyboardActions(
             onAny = { onAny() }
         ),
-        leadingIcon = leadingIconSlot
+        leadingIcon = leadingIconSlot,
+        singleLine = singleLine
     )
 }

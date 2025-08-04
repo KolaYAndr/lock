@@ -10,7 +10,11 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.withContext
 
 @Composable
-internal fun <T> ActionOnSharedFlow(lifecycleOwner: LifecycleOwner, flow: SharedFlow<T>, onFlowCollected: (T) -> Unit) {
+internal fun <T> ActionOnSharedFlow(
+    lifecycleOwner: LifecycleOwner,
+    flow: SharedFlow<T>,
+    onFlowCollected: suspend (T) -> Unit,
+) {
     LaunchedEffect(lifecycleOwner.lifecycle) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
