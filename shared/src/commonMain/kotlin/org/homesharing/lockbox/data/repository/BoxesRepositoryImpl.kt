@@ -200,7 +200,9 @@ internal class BoxesRepositoryImpl(
 
     override suspend fun createAccess(
         macAddress: String,
+        startDate: Long,
         startTime: Long,
+        endDate: Long,
         endTime: Long,
         alias: String?,
     ): Response<Access> {
@@ -220,8 +222,8 @@ internal class BoxesRepositoryImpl(
                     accessToken = tokenStorage.getAccessToken(),
                     macAddress = macAddress,
                     alias = alias,
-                    startTime = formatToBackendTimestamp(startTime),
-                    endTime = formatToBackendTimestamp(endTime)
+                    startTime = formatToBackendTimestamp(startDate + startTime),
+                    endTime = formatToBackendTimestamp(endDate + endTime)
                 )
             },
             mapper = AccessDto::toDomain

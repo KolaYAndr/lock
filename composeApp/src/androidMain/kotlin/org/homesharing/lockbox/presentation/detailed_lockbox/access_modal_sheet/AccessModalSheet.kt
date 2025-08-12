@@ -21,9 +21,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,7 +76,9 @@ internal fun AccessModalSheet(
     isLoading: Boolean,
     guestName: String,
     onChangeStartDate: (Long) -> Unit,
+    onChangeStartTime: (Long) -> Unit,
     onChangeEndDate: (Long) -> Unit,
+    onChangeEndTime: (Long) -> Unit,
     onChangeGuestName: (String) -> Unit,
     addGuest: () -> Unit,
     onCopyLink: (String) -> Unit,
@@ -107,7 +111,9 @@ internal fun AccessModalSheet(
                         guestName = guestName,
                         onChangeGuestName = onChangeGuestName,
                         onChangeStartDate = onChangeStartDate,
+                        onChangeStartTime = onChangeStartTime,
                         onChangeEndDate = onChangeEndDate,
+                        onChangeEndTime = onChangeEndTime,
                         addGuest = addGuest,
                         onNavBack = { changeStep(AccessModalSheetStep.GuestList) },
                         modifier = Modifier.fillMaxWidth()
@@ -284,7 +290,9 @@ private fun AddGuestContent(
     guestName: String,
     onChangeGuestName: (String) -> Unit,
     onChangeStartDate: (Long) -> Unit,
+    onChangeStartTime: (Long) -> Unit,
     onChangeEndDate: (Long) -> Unit,
+    onChangeEndTime: (Long) -> Unit,
     addGuest: () -> Unit,
     onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -326,9 +334,7 @@ private fun AddGuestContent(
         }
 
         val currentTime = System.currentTimeMillis()
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = currentTime
-        }
+        val calendar = Calendar.getInstance().apply { timeInMillis = currentTime }
         val currentYear = calendar.get(Calendar.YEAR)
         val locale = LocalConfiguration.current.locales[0]!!
         val formatter = remember { SimpleDateFormat("dd.MM.yyyy", locale) }
@@ -363,11 +369,11 @@ private fun AddGuestContent(
             initialMinute = calendar.get(Calendar.MINUTE),
             is24Hour = true,
         )
-        val selectedStartTime: String = remember(startTimePickerState.hour, startTimePickerState.minute) {
+        val selectedStartTime =
             String.format("%02d:%02d", startTimePickerState.hour, startTimePickerState.minute)
-        }.let { formatted ->
-//            onChangeStartTime(timeToMillis(startTimePickerState.hour, startTimePickerState.minute))
-            formatted
+
+        LaunchedEffect(startTimePickerState.hour, startTimePickerState.minute) {
+            onChangeStartTime(startTimePickerState.toMillis())
         }
 
         var showStartDatePicker by remember { mutableStateOf(false) }
@@ -392,12 +398,18 @@ private fun AddGuestContent(
             ) {
                 DateInput(
                     date = selectedStartDate.orEmpty(),
-                    onFieldClick = { showStartDatePicker = !showStartDatePicker },
+                    onFieldClick = {
+                        showStartDatePicker = !showStartDatePicker
+                        showStartTimePicker = false
+                    }
                 )
 
                 TimeInput(
                     time = selectedStartTime,
-                    onInputClick = { showStartTimePicker = !showStartTimePicker }
+                    onFieldClick = {
+                        showStartTimePicker = !showStartTimePicker
+                        showStartDatePicker = false
+                    }
                 )
             }
 
@@ -405,8 +417,11 @@ private fun AddGuestContent(
                 DockedDatePicker(datePickerState = startDatePickerState)
             }
 
-            AnimatedVisibility(showStartDatePicker) {
-                DockedTimePicker(timePickerState = startTimePickerState)
+            AnimatedVisibility(showStartTimePicker) {
+                DockedTimePicker(
+                    timePickerState = startTimePickerState,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
 
@@ -453,7 +468,16 @@ private fun AddGuestContent(
             formatter.format(Date(time))
         }
 
+        val endTimePickerState = rememberTimePickerState(is24Hour = true)
+        val selectedEndTime =
+            String.format("%02d:%02d", endTimePickerState.hour, endTimePickerState.minute)
+
+        LaunchedEffect(endTimePickerState.hour, endTimePickerState.minute) {
+            onChangeEndTime(endTimePickerState.toMillis())
+        }
+
         var showEndDatePicker by remember { mutableStateOf(false) }
+        var showEndTimePicker by remember { mutableStateOf(false) }
         Column(
             modifier = modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -467,14 +491,37 @@ private fun AddGuestContent(
                 style = LockBoxTheme.typography.subHeadlineLarge
             )
 
-            DateInput(
-                date = selectedEndDate.orEmpty(),
-                onFieldClick = { showEndDatePicker = !showEndDatePicker },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
+            ) {
+                DateInput(
+                    date = selectedEndDate.orEmpty(),
+                    onFieldClick = {
+                        showEndDatePicker = !showEndDatePicker
+                        showEndTimePicker = false
+                    }
+                )
+
+                TimeInput(
+                    time = selectedEndTime,
+                    onFieldClick = {
+                        showEndTimePicker = !showEndTimePicker
+                        showEndDatePicker = false
+                    }
+                )
+            }
 
             AnimatedVisibility(showEndDatePicker) {
                 DockedDatePicker(datePickerState = endDatePickerState)
+            }
+
+            AnimatedVisibility(showEndTimePicker) {
+                DockedTimePicker(
+                    timePickerState = endTimePickerState,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
 
@@ -662,6 +709,9 @@ private fun Access(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TimePickerState.toMillis() = (this.hour * 3_600_000 + this.minute * 6_000).toLong()
+
 @Preview
 @Composable
 private fun PreviewAccess() {
@@ -764,7 +814,9 @@ private fun PreviewAddGuestListContent() {
             guestName = "Гость",
             onChangeGuestName = {},
             onChangeStartDate = {},
+            onChangeStartTime = {},
             onChangeEndDate = {},
+            onChangeEndTime = {},
             addGuest = {},
             onNavBack = {},
         )

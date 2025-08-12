@@ -29,6 +29,7 @@ internal fun LockBoxPropertyInput(
         enabled = true,
         placeholderText = placeholderText,
         onAny = onAny,
+        keyboardOptions = keyboardOptions,
         modifier = modifier
     )
 }

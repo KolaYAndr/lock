@@ -21,7 +21,7 @@ fun BasicInput(
     onValueChange: (String) -> Unit,
     enabled: Boolean,
     placeholderText: String,
-    onAny: () -> Unit,
+    onAny: (() -> Unit)? = null,
     leadingPainter: Painter? = null,
     onFieldClick: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
@@ -69,7 +69,7 @@ fun BasicInput(
         },
         keyboardOptions = keyboardOptions,
         keyboardActions = KeyboardActions(
-            onAny = { onAny() }
+            onAny = { onAny?.invoke() }
         ),
         leadingIcon = leadingIconSlot,
         singleLine = singleLine

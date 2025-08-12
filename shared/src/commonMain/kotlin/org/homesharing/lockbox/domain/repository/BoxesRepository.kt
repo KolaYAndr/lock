@@ -28,11 +28,19 @@ interface BoxesRepository {
 
     suspend fun getListOfAccesses(macAddress: String): Response<Accesses>
 
-    suspend fun createAccess(macAddress: String, startTime: Long, endTime: Long, alias: String?): Response<Access>
+    suspend fun createAccess(
+        macAddress: String,
+        startDate: Long,
+        startTime: Long,
+        endDate: Long,
+        endTime: Long,
+        alias: String?,
+    ): Response<Access>
 
     suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke>
 
     suspend fun createLinkingCode(): Response<CreateLinkingCode>
 
-    suspend fun physicalSignUp(code: Int) : Response<Mockbox>
+    suspend fun physicalSignUp(code: Int): Response<Mockbox>
+
 }

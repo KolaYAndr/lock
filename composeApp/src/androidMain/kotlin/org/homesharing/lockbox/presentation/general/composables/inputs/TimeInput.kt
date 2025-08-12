@@ -9,12 +9,12 @@ import org.homesharing.lockbox.presentation.general.composables.basic.BasicInput
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-internal fun TimeInput(time: String, onInputClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun TimeInput(time: String, onFieldClick: () -> Unit, modifier: Modifier = Modifier) {
     BasicInput(
         value = time,
         onValueChange = {},
         enabled = false,
-        onAny = onInputClick,
+        onFieldClick = onFieldClick,
         placeholderText = stringResource(R.string.choose_time),
         singleLine = true,
         modifier = modifier
@@ -25,6 +25,6 @@ internal fun TimeInput(time: String, onInputClick: () -> Unit, modifier: Modifie
 @Composable
 private fun PreviewTimeInput() {
     LockBoxTheme {
-        TimeInput(time = "12:00", onInputClick = {})
+        TimeInput(time = "12:00", onFieldClick = {})
     }
 }
