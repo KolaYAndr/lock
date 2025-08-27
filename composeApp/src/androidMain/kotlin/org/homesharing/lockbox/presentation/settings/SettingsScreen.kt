@@ -31,7 +31,7 @@ import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.composables.RoundText
-import org.homesharing.lockbox.presentation.general.composables.SettingsTopRowText
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.SettingsTopRowText
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup

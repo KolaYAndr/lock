@@ -1,42 +1,35 @@
 package org.homesharing.lockbox.domain.api
 
-import org.homesharing.lockbox.data.network.api.ApiResponse
-import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
-import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
-import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
-import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
-import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.api.response.AuthResponse
 
 internal interface AccountApi {
-
     suspend fun signUp(
         username: String,
         password: String,
         passwordRepeated: String
-    ): ApiResponse<SignUpResponseDto>
+    ): ApiResponse
 
     suspend fun loadTokensInitially(
         username: String,
         password: String
-    ): TokenResponseDto
+    ): AuthResponse
 
     suspend fun refreshTokens(
         accessToken: String,
         refreshToken: String
-    ): TokenResponseDto
+    ): AuthResponse
 
     suspend fun getImageLink(sub: String): String
 
     suspend fun sendImage(
         accessToken: String,
         data: ByteArray
-    ): ApiResponse<Unit>
+    ): ApiResponse
 
-    suspend fun getSessions(accessToken: String): ApiResponse<SessionsResponseDto>
+    suspend fun getSessions(accessToken: String): ApiResponse
 
-    suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailResponseDto>
+    suspend fun confirmEmail(email: String): ApiResponse
 
     suspend fun updateUserInfo(
         accessToken: String,
@@ -44,14 +37,14 @@ internal interface AccountApi {
         enabled: Boolean? = null,
         firstName: String? = null,
         lastName: String? = null
-    ): ApiResponse<UpdateAccountResponseDto>
+    ): ApiResponse
 
     suspend fun closeOtherSessions(
         accessToken: String,
         id: String
-    ): ApiResponse<CloseSessionsResponseDto>
+    ): ApiResponse
 
     suspend fun sendLinkToChangePassword(
         accessToken: String,
-    ): ApiResponse<ResetPasswordResponseDto>
+    ): ApiResponse
 }

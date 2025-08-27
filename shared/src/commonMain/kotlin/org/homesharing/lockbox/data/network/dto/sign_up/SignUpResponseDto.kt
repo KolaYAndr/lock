@@ -4,10 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignUpResponseDto(val user: UserBody)
+internal data class SignUpResponseDto(val user: UserBody)
 
 @Serializable
-data class UserBody(
+internal data class UserBody(
     val id: String,
     val username: String,
     val email: String,

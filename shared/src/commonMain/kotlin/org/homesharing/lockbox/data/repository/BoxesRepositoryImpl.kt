@@ -3,11 +3,10 @@ package org.homesharing.lockbox.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
 import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
@@ -39,8 +38,11 @@ import org.homesharing.lockbox.domain.model.open_box.toDomain
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 import org.homesharing.lockbox.domain.model.update_box.toDomain
 import org.homesharing.lockbox.domain.repository.BoxesRepository
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 private const val PAGE_SIZE = 10
+private const val PAD_ZERO = '0'
 
 internal class BoxesRepositoryImpl(
     private val boxesApi: BoxesApi,
@@ -49,7 +51,6 @@ internal class BoxesRepositoryImpl(
     private val tokenStorage: TokenStorage,
     private val pagingSourceFactory: () -> BoxesPagingSource,
 ) : BoxesRepository {
-
     override fun getBoxesPagingFlow(): Flow<PagingData<Box>> =
         Pager(
             config = PagingConfig(
@@ -61,142 +62,106 @@ internal class BoxesRepositoryImpl(
         ).flow
 
 
-    override suspend fun getBoxByMac(address: String): Response<Box> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    override suspend fun getBoxByMac(address: String): Response<Box> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.getBoxByMac(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = address
+                    )
+                },
+                mapper = BoxResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.getBoxByMac(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = address
-                )
-            },
-            mapper = BoxResponseDto::toDomain
-        )
-    }
-
-    override suspend fun openBoxByMac(address: String): Response<OpenBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    override suspend fun openBoxByMac(address: String): Response<OpenBox> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.openBox(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = address
+                    )
+                },
+                mapper = OpenBoxResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.openBox(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = address
-                )
-            },
-            mapper = OpenBoxResponseDto::toDomain
-        )
-    }
-
-    override suspend fun unbindBox(address: String): Response<UpdateBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    override suspend fun unbindBox(address: String): Response<UpdateBox> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.deleteBox(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = address
+                    )
+                },
+                mapper = UpdateBoxResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.deleteBox(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = address
-                )
-            },
-            mapper = UpdateBoxResponseDto::toDomain
-        )
-    }
-
-    override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.updateBoxByMac(
+                        macAddress = macAddress,
+                        alias = newName,
+                        accessToken = tokenStorage.getAccessToken(),
+                    )
+                },
+                mapper = UpdateBoxResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.updateBoxByMac(
-                    macAddress = macAddress,
-                    alias = newName,
-                    accessToken = tokenStorage.getAccessToken(),
-                )
-            },
-            mapper = UpdateBoxResponseDto::toDomain
-        )
-    }
 
     override suspend fun updateBoxAddress(
         macAddress: String,
         newAddress: String,
-    ): Response<UpdateBox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    ): Response<UpdateBox> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.updateBoxByMac(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = macAddress,
+                        address = newAddress
+                    )
+                },
+                mapper = UpdateBoxResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.updateBoxByMac(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = macAddress,
-                    address = newAddress
-                )
-            },
-            mapper = UpdateBoxResponseDto::toDomain
-        )
-    }
-
-    override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.getAccessedList(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = macAddress
+                    )
+                },
+                mapper = AccessResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.getAccessedList(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = macAddress
-                )
-            },
-            mapper = AccessResponseDto::toDomain
-        )
-    }
 
     override suspend fun createAccess(
         macAddress: String,
@@ -205,80 +170,100 @@ internal class BoxesRepositoryImpl(
         endDate: Long,
         endTime: Long,
         alias: String?,
-    ): Response<Access> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    ): Response<Access> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.createAccess(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = macAddress,
+                        alias = alias,
+                        startTime = formatToBackendTimestamp(startDate + startTime),
+                        endTime = formatToBackendTimestamp(endDate + endTime)
+                    )
+                },
+                mapper = AccessDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.createAccess(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = macAddress,
-                    alias = alias,
-                    startTime = formatToBackendTimestamp(startDate + startTime),
-                    endTime = formatToBackendTimestamp(endDate + endTime)
-                )
-            },
-            mapper = AccessDto::toDomain
-        )
-    }
-
-    override suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+    override suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.revokeAccess(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = macAddress,
+                        tokenId = tokenId
+                    )
+                },
+                mapper = AccessRevokeResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.revokeAccess(
-                    accessToken = tokenStorage.getAccessToken(),
-                    macAddress = macAddress,
-                    tokenId = tokenId
-                )
-            },
-            mapper = AccessRevokeResponseDto::toDomain
+    override suspend fun createLinkingCode(): Response<CreateLinkingCode> = try {
+        refreshTokenIfNeed()
+        parseLockBoxApiResponse(
+            apiCall = { boxesApi.createLinkingCode(accessToken = tokenStorage.getAccessToken()) },
+            mapper = CreateLinkingCodeDto::toDomain
         )
+    } catch (e: Exception) {
+        Response.Failure(e.message ?: "")
     }
 
+    override suspend fun physicalSignUp(code: Int): Response<Mockbox> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.physicalSignUp(
+                        accessToken = tokenStorage.getAccessToken(),
+                        code = code
+                    )
+                },
+                mapper = MockboxDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
+        }
+
+    @OptIn(ExperimentalTime::class)
     private fun formatToBackendTimestamp(epochMillis: Long): String {
         val ldt = Instant
             .fromEpochMilliseconds(epochMillis)
             .toLocalDateTime(TimeZone.UTC)
 
-        val year = ldt.year.toString().padStart(4, '0')
-        val month = ldt.monthNumber.toString().padStart(2, '0')
-        val day = ldt.dayOfMonth.toString().padStart(2, '0')
-        val hour = ldt.hour.toString().padStart(2, '0')
-        val minute = ldt.minute.toString().padStart(2, '0')
-        val second = ldt.second.toString().padStart(2, '0')
+        val year = ldt.year.toString().padStart(4, PAD_ZERO)
+        val month = ldt.month.toString().padStart(2, PAD_ZERO)
+        val day = ldt.day.toString().padStart(2, PAD_ZERO)
+        val hour = ldt.hour.toString().padStart(2, PAD_ZERO)
+        val minute = ldt.minute.toString().padStart(2, PAD_ZERO)
+        val second = ldt.second.toString().padStart(2, PAD_ZERO)
 
-        return "$year-$month-$day" + "T" + "$hour:$minute:$second"
+        return "$year-$month-${day}T$hour:$minute:$second"
+    }
+
+    private suspend fun refreshTokenIfNeed() {
+        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
+            refreshToken()
+        }
     }
 
     private suspend fun refreshToken() {
-        val tokenResponse =
-            accountApi.refreshTokens(
-                accessToken = tokenStorage.getAccessToken(),
-                refreshToken = tokenStorage.getRefreshToken()
-            )
+        val tokenResponse = accountApi.refreshTokens(
+            accessToken = tokenStorage.getAccessToken(),
+            refreshToken = tokenStorage.getRefreshToken()
+        )
 
-        if (tokenResponse.error.isNullOrEmpty()) {
-            val accessToken = tokenResponse.accessToken!!
-            val refreshToken = tokenResponse.refreshToken!!
-            val expiresIn = tokenResponse.expiresIn!!
+        if (tokenResponse is AuthResponse.Success) {
+            val accessToken = tokenResponse.accessToken
+            val refreshToken = tokenResponse.refreshToken
+            val expiresIn = tokenResponse.expiresIn
 
             with(tokenStorage) {
                 saveAccessToken(accessToken)
@@ -286,48 +271,5 @@ internal class BoxesRepositoryImpl(
                 saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
         }
-    }
-
-    override suspend fun createLinkingCode(): Response<CreateLinkingCode> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
-        }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.createLinkingCode(
-                    accessToken = tokenStorage.getAccessToken()
-                )
-            },
-            mapper = CreateLinkingCodeDto::toDomain
-        )
-    }
-
-    override suspend fun physicalSignUp(code: Int): Response<Mockbox> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
-        }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                boxesApi.physicalSignUp(
-                    accessToken = tokenStorage.getAccessToken(),
-                    code = code
-                )
-            },
-            mapper = MockboxDto::toDomain
-        )
     }
 }

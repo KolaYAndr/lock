@@ -2,16 +2,16 @@ package org.homesharing.lockbox.navigation.routes
 
 import kotlinx.serialization.Serializable
 
-internal sealed class AccountRoutes {
+internal sealed interface AccountRoutes {
     @Serializable
-    data object Account: AccountRoutes()
+    data object Account: AccountRoutes
 
     @Serializable
-    data object ChangePhoneNumber: AccountRoutes()
+    data object ChangePhoneNumber: AccountRoutes
 
     @Serializable
-    data object ChangeEmail: AccountRoutes()
+    data object ChangeEmail: AccountRoutes
 
     @Serializable
-    data object Warning: AccountRoutes()
+    data object Warning: AccountRoutes
 }

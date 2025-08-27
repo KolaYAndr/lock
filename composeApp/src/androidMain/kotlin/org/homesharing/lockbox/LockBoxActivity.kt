@@ -86,11 +86,11 @@ class LockBoxActivity : ComponentActivity() {
                             topLevelRoutes = topLevelRoutes,
                             navBackStackEntry = navBackStackEntry
                         ) { route ->
-                            navController.navigate(route) {
+                            navController.navigate(route) /*{
                                 popUpTo(route)
                                 launchSingleTop = true
                                 restoreState = false
-                            }
+                            }*/
                         }
                     },
                     snackbarHost = {

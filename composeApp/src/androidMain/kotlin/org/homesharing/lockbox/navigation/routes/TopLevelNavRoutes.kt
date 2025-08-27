@@ -5,21 +5,25 @@ import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 import org.homesharing.lockbox.R
 
-internal sealed class Routes {
+internal sealed interface Routes {
     @Serializable
-    data object Main : Routes()
+    data object Main : Routes
 
     @Serializable
-    data object Settings : Routes()
+    data object Settings : Routes
+
+    @Serializable
+    data object Documents: Routes
 }
 
-internal data class TopLevelRoute<T : Any>(
-    @StringRes val name: Int,
+internal data class TopLevelRoute<T : Routes>(
+    @field:StringRes val name: Int,
     val route: T,
-    @DrawableRes val icon: Int,
+    @field:DrawableRes val icon: Int,
 )
 
 internal val topLevelRoutes = listOf(
     TopLevelRoute(R.string.main, Routes.Main, R.drawable.house),
+//    TopLevelRoute(R.string.documents, Routes.Documents, R.drawable.document),
     TopLevelRoute(R.string.settings, Routes.Settings, R.drawable.settings)
 )

@@ -1,16 +1,6 @@
 package org.homesharing.lockbox.domain.api
 
-import org.homesharing.lockbox.data.network.api.ApiResponse
-import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
-import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
-import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
-import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
-import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
-import org.homesharing.lockbox.data.network.dto.mockbox.MockboxDto
-import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
-import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
 
 internal interface BoxesApi {
 
@@ -18,39 +8,39 @@ internal interface BoxesApi {
         accessToken: String,
         page: Int,
         size: Int
-    ): ApiResponse<BoxListResponseDto>
+    ): ApiResponse
 
     suspend fun getBoxByMac(
         accessToken: String,
         macAddress: String
-    ): ApiResponse<BoxResponseDto>
+    ): ApiResponse
 
     suspend fun getBoxStatusByMac(
         accessToken: String,
         macAddress: String
-    ): ApiResponse<BoxStatusResponseDto>
+    ): ApiResponse
 
     suspend fun updateBoxByMac(
         accessToken: String,
         macAddress: String,
         alias: String? = null,
         address: String? = null
-    ): ApiResponse<UpdateBoxResponseDto>
+    ): ApiResponse
 
     suspend fun openBox(
         accessToken: String,
         macAddress: String
-    ): ApiResponse<OpenBoxResponseDto>
+    ): ApiResponse
 
     suspend fun deleteBox(
         accessToken: String,
         macAddress: String
-    ): ApiResponse<UpdateBoxResponseDto>
+    ): ApiResponse
 
     suspend fun getAccessedList(
         accessToken: String,
         macAddress: String
-    ): ApiResponse<AccessResponseDto>
+    ): ApiResponse
 
     suspend fun createAccess(
         accessToken: String,
@@ -58,20 +48,20 @@ internal interface BoxesApi {
         alias: String?,
         startTime: String,
         endTime: String,
-    ): ApiResponse<AccessDto>
+    ): ApiResponse
 
     suspend fun revokeAccess(
         accessToken: String,
         macAddress: String,
         tokenId: String
-    ): ApiResponse<AccessRevokeResponseDto>
+    ): ApiResponse
 
     suspend fun createLinkingCode(
         accessToken: String,
-    ): ApiResponse<CreateLinkingCodeDto>
+    ): ApiResponse
 
     suspend fun physicalSignUp(
         accessToken: String,
         code: Int
-    ): ApiResponse<MockboxDto>
+    ): ApiResponse
 }

@@ -16,6 +16,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
+import org.homesharing.lockbox.navigation.routes.DocumentRoutes
 import org.homesharing.lockbox.navigation.routes.MainRoutes
 import org.homesharing.lockbox.navigation.routes.Routes
 import org.homesharing.lockbox.navigation.routes.SecurityRoutes
@@ -33,8 +34,9 @@ import org.homesharing.lockbox.presentation.general.animation.enterAnimation
 import org.homesharing.lockbox.presentation.general.animation.exitAnimation
 import org.homesharing.lockbox.presentation.general.animation.globalEnterAnimation
 import org.homesharing.lockbox.presentation.general.animation.globalExitAnimation
-import org.homesharing.lockbox.presentation.general.composables.LockBoxesTopRow
-import org.homesharing.lockbox.presentation.general.composables.SettingsTopRowText
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.DocumentsTopRow
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.SettingsTopRowText
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
@@ -57,6 +59,8 @@ internal fun Navigation(
     startFromLogin: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val loginViewModel = koinViewModel<LoginViewModel>()
+    val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
         startDestination = Routes.Main,
@@ -64,6 +68,7 @@ internal fun Navigation(
         exitTransition = { ExitTransition.None },
         enterTransition = { EnterTransition.None }
     ) {
+
         navigation<Routes.Main>(
             startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes,
         ) {
@@ -73,9 +78,6 @@ internal fun Navigation(
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
-                val loginViewModel = koinViewModel<LoginViewModel>()
-                val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
-
                 val lifecycleOwner = LocalLifecycleOwner.current
                 ActionOnSharedFlow(
                     flow = loginViewModel.loggedIn,
@@ -148,9 +150,6 @@ internal fun Navigation(
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
-                val loginViewModel = koinViewModel<LoginViewModel>()
-                val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
-
                 val lifecycleOwner = LocalLifecycleOwner.current
                 ActionOnSharedFlow(
                     flow = loginViewModel.loggedIn,
@@ -314,11 +313,46 @@ internal fun Navigation(
 //                    )
 //                }
             }
+
+            navigation<Routes.Documents>(
+                startDestination = if (startFromLogin) DocumentRoutes.Login else DocumentRoutes.Documents,
+            ) {
+                composable<DocumentRoutes.Login>(
+                    enterTransition = globalEnterAnimation,
+                    exitTransition = null,
+                    popEnterTransition = null,
+                    popExitTransition = globalExitAnimation
+                ) {
+                    val lifecycleOwner = LocalLifecycleOwner.current
+                    ActionOnSharedFlow(
+                        flow = loginViewModel.loggedIn,
+                        lifecycleOwner = lifecycleOwner
+                    ) {
+                        navController.navigateToDestinationWithNoBackstack(DocumentRoutes.Documents)
+                    }
+
+                    LoginScreen(
+                        loginType = loginType,
+                        onToTypeAuth = loginViewModel::toTypeAuth,
+                        topRowContent = { DocumentsTopRow() },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                composable<DocumentRoutes.Documents>(
+                    enterTransition = globalEnterAnimation,
+                    exitTransition = null,
+                    popEnterTransition = null,
+                    popExitTransition = globalExitAnimation
+                ) {
+
+                }
+            }
         }
     }
 }
 
-private fun <T : Any> NavHostController.navigateToDestinationWithNoBackstack(destination: T) {
+private fun <T : Any > NavHostController.navigateToDestinationWithNoBackstack(destination: T) {
     this.navigate(destination) {
         popUpTo(destination) {
             inclusive = false

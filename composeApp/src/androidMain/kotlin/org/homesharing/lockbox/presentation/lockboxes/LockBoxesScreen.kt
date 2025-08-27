@@ -48,7 +48,7 @@ import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.presentation.general.composables.AddRow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.LockBoxesTopRow
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
 import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle

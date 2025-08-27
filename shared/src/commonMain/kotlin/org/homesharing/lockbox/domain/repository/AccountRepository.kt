@@ -9,7 +9,6 @@ import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
 interface AccountRepository {
-
     suspend fun parseAccountInfo(): Response<AccountInfo>
 
     suspend fun refreshAccount(): Response<AccountInfo>

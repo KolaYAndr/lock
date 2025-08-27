@@ -5,4 +5,4 @@ import kotlin.jvm.JvmInline
 
 @JvmInline
 @Serializable
-value class ConfirmEmailResponseDto(val response: String)
+internal value class ConfirmEmailResponseDto(val response: String)

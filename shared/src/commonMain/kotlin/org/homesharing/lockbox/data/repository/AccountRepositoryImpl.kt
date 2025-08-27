@@ -6,7 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoResponseDto
+import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
@@ -31,8 +33,8 @@ internal class AccountRepositoryImpl(
     private val api: AccountApi,
     private val tokenStorage: TokenStorage,
     private val refreshManager: RefreshManager,
+    private val json: Json,
 ) : AccountRepository {
-
     override suspend fun parseAccountInfo(): Response<AccountInfo> {
         return try {
             val token = tokenStorage.getAccessToken()
@@ -53,20 +55,23 @@ internal class AccountRepositoryImpl(
                     refreshToken = tokenStorage.getRefreshToken()
                 )
 
-            if (!tokenResponse.error.isNullOrEmpty()) {
-                return Response.Failure(tokenResponse.errorDescription!!)
+            return when (tokenResponse) {
+                is AuthResponse.Error -> Response.Failure(tokenResponse.errorDescription)
+                is AuthResponse.Success -> {
+                    val accessToken = tokenResponse.accessToken
+                    val refreshToken = tokenResponse.refreshToken
+                    val expiresIn = tokenResponse.expiresIn
+
+                    with(tokenStorage) {
+                        saveAccessToken(accessToken)
+                        saveRefreshToken(refreshToken)
+                        saveNextRefreshTime(expiresIn + refreshManager.currentTime)
+                    }
+
+                    val accountInfo = decodeJWT(accessToken).toDomain()
+                    Response.Success(accountInfo)
+                }
             }
-
-            val accessToken = tokenResponse.accessToken!!
-            val refreshToken = tokenResponse.refreshToken!!
-
-            with(tokenStorage) {
-                saveAccessToken(accessToken)
-                saveRefreshToken(refreshToken)
-            }
-
-            val accountInfo = decodeJWT(accessToken).toDomain()
-            Response.Success(accountInfo)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -75,12 +80,13 @@ internal class AccountRepositoryImpl(
     }
 
 
-    private suspend fun decodeJWT(jwt: String): AccountInfoResponseDto = withContext(Dispatchers.Default) {
-        val parts = jwt.split(".")
-        val accountInfoDto = parts[1].decodeBase64String()
+    private suspend fun decodeJWT(jwt: String): AccountInfoResponseDto =
+        withContext(Dispatchers.Default) {
+            val parts = jwt.split(".")
+            val accountInfoDto = parts[1].decodeBase64String()
 
-        Json.decodeFromString<AccountInfoResponseDto>(accountInfoDto)
-    }
+            json.decodeFromString<AccountInfoResponseDto>(accountInfoDto)
+        }
 
     override suspend fun logOut() = tokenStorage.clearInfo()
 
@@ -90,136 +96,104 @@ internal class AccountRepositoryImpl(
     override suspend fun getImageLink(sub: String): String = api.getImageLink(sub)
 
 
-    override suspend fun sendImage(data: ByteArray): Response<Unit> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
+    override suspend fun sendImage(data: ByteArray): Response<Unit> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse {
+                api.sendImage(
+                    accessToken = tokenStorage.getAccessToken(),
+                    data = data
+                )
             }
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
 
-        return parseLockBoxApiResponse {
-            api.sendImage(
-                accessToken = tokenStorage.getAccessToken(),
-                data = data
+    override suspend fun getSessions(): Response<Sessions> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = { api.getSessions(accessToken = tokenStorage.getAccessToken()) },
+                mapper = SessionsResponseDto::toDomain
             )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
         }
-    }
-
-    override suspend fun getSessions(): Response<Sessions> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
-        }
-
-        return parseLockBoxApiResponse(
-            apiCall = { api.getSessions(accessToken = tokenStorage.getAccessToken()) },
-            mapper = SessionsResponseDto::toDomain
-        )
-    }
 
     override suspend fun updateInfo(
         name: String?,
         surname: String?,
         email: String?,
-    ): Response<UpdateAccount> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
-        }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                api.updateUserInfo(
-                    accessToken = tokenStorage.getAccessToken(),
-                    email = email,
-                    firstName = name,
-                    lastName = surname
-                )
-            },
-            mapper = UpdateAccountResponseDto::toDomain
-        )
-    }
-
-    override suspend fun deactivateUser(): Response<UpdateAccount> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
-        }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                api.updateUserInfo(
-                    accessToken = tokenStorage.getAccessToken(),
-                    enabled = false
-                )
-            },
-            mapper = UpdateAccountResponseDto::toDomain
-        )
-    }
-
-    override suspend fun closeOtherSessions(currentSessionId: String): Response<CloseSessions> {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
-        }
-
-        return try {
-            Response.Success(
-                api.closeOtherSessions(
-                    accessToken = tokenStorage.getAccessToken(),
-                    id = currentSessionId
-                ).body!!.toDomain()
+    ): Response<UpdateAccount> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    api.updateUserInfo(
+                        accessToken = tokenStorage.getAccessToken(),
+                        email = email,
+                        firstName = name,
+                        lastName = surname
+                    )
+                },
+                mapper = UpdateAccountResponseDto::toDomain
             )
-        } catch (e: CancellationException) {
-            throw e
         } catch (e: Exception) {
-            Response.Failure(e.message.orEmpty())
+            Response.Failure(e.message ?: "")
         }
-    }
 
-    override suspend fun sendLinkToChangeEmail(): Response<ResetPassword> {
+    override suspend fun deactivateUser(): Response<UpdateAccount> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    api.updateUserInfo(
+                        accessToken = tokenStorage.getAccessToken(),
+                        enabled = false
+                    )
+                },
+                mapper = UpdateAccountResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
+        }
+
+    override suspend fun closeOtherSessions(currentSessionId: String): Response<CloseSessions> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    api.closeOtherSessions(
+                        accessToken = tokenStorage.getAccessToken(),
+                        id = currentSessionId
+                    )
+                },
+                mapper = CloseSessionsResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
+        }
+
+    override suspend fun sendLinkToChangeEmail(): Response<ResetPassword> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    api.sendLinkToChangePassword(
+                        accessToken = tokenStorage.getAccessToken()
+                    )
+                },
+                mapper = ResetPasswordResponseDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
+        }
+
+
+    private suspend fun refreshTokenIfNeed() {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            try {
-                refreshToken()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                return Response.Failure(e.message.orEmpty())
-            }
+            refreshToken()
         }
-
-        return parseLockBoxApiResponse(
-            apiCall = {
-                api.sendLinkToChangePassword(
-                    accessToken = tokenStorage.getAccessToken()
-                )
-            },
-            mapper = ResetPasswordResponseDto::toDomain
-        )
     }
 
     private suspend fun refreshToken() {
@@ -229,10 +203,10 @@ internal class AccountRepositoryImpl(
                 refreshToken = tokenStorage.getRefreshToken()
             )
 
-        if (tokenResponse.error.isNullOrEmpty()) {
-            val accessToken = tokenResponse.accessToken!!
-            val refreshToken = tokenResponse.refreshToken!!
-            val expiresIn = tokenResponse.expiresIn!!
+        if (tokenResponse is AuthResponse.Success) {
+            val accessToken = tokenResponse.accessToken
+            val refreshToken = tokenResponse.refreshToken
+            val expiresIn = tokenResponse.expiresIn
 
             with(tokenStorage) {
                 saveAccessToken(accessToken)

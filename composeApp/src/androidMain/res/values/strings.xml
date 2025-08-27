@@ -36,6 +36,7 @@
     <string name="main">Главная</string>
     <string name="menu">Меню</string>
     <string name="settings">Настройки</string>
+    <string name="documents">Документы</string>
     <string name="account">Аккаунт</string>
     <string name="security">Безопасность</string>
     <string name="about_app">О приложении</string>
@@ -188,6 +189,7 @@
     <string name="set_name_and_address_to_finish">Укажите название и адрес устройства для завершения настройки</string>
     <string name="could_not_create_virtual_device">Не удалось создать виртуальное устройство</string>
     <string name="virtual_device_created">Виртуальное устройство создано</string>
+    <string name="link_copied">Ссылка скопирована</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>
         <item quantity="few">%d минуты назад</item>

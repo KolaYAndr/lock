@@ -14,20 +14,28 @@ import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.api.response.AuthResponse
+import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
+import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
+import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
+import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
+import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+@Suppress("UNCHECKED_CAST")
 class LockBoxAccountApiTest {
     private lateinit var api: LockBoxAccountApi
 
     @BeforeTest
     fun setUp() {
-        api = LockBoxAccountApi(mockAccountClient)
+        api = LockBoxAccountApi(mockAccountClient, json)
     }
 
     @Test
@@ -37,18 +45,14 @@ class LockBoxAccountApiTest {
             username = username,
             password = "aboba",
             passwordRepeated = "aboba",
-        )
+        ) as ApiResponse.Success<SignUpResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(username, result.body.user.username)
-        assertFalse(result.body.user.emailVerified)
-        assertTrue(result.body.user.enabled)
-        assertNull(result.body.user.firstName)
-        assertNull(result.body.user.lastName)
-        assertEquals(username, result.body.user.username)
+        assertEquals(username, result.data.user.username)
+        assertFalse(result.data.user.emailVerified)
+        assertTrue(result.data.user.enabled)
+        assertNull(result.data.user.firstName)
+        assertNull(result.data.user.lastName)
+        assertEquals(username, result.data.user.username)
     }
 
     @Test
@@ -56,7 +60,7 @@ class LockBoxAccountApiTest {
         val username = "test-user"
         val password = "test-password"
 
-        val result = api.loadTokensInitially(username, password)
+        val result = api.loadTokensInitially(username, password) as AuthResponse.Success
 
         assertEquals("test-access-token", result.accessToken)
         assertEquals("test-refresh-token", result.refreshToken)
@@ -69,14 +73,10 @@ class LockBoxAccountApiTest {
     fun `getSessions returns sessions and credentials when authorized`() = runBlocking {
         val accessToken = "valid-token"
 
-        val result = api.getSessions(accessToken)
+        val result = api.getSessions(accessToken) as ApiResponse.Success<SessionsResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        val sessions = result.body.sessions
-        val credentials = result.body.credentials
+        val sessions = result.data.sessions
+        val credentials = result.data.credentials
 
         assertEquals(1, sessions.size)
         assertEquals(1, credentials.size)
@@ -105,24 +105,18 @@ class LockBoxAccountApiTest {
         val accessToken = "valid-token"
         val sessionId = "test-session-id"
 
-        val result = api.closeOtherSessions(accessToken, sessionId)
+        val result = api.closeOtherSessions(accessToken, sessionId) as ApiResponse.Success<CloseSessionsResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-        assertEquals("session:deleted", result.body.message)
+        assertEquals("session:deleted", result.data.message)
     }
 
     @Test
     fun `confirmEmail returns success response for valid email`() = runBlocking {
         val testEmail = "test@example.com"
 
-        val result = api.confirmEmail(testEmail)
+        val result = api.confirmEmail(testEmail) as ApiResponse.Success<ConfirmEmailResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-        assertEquals("Sent", result.body.response)
+        assertEquals("Sent", result.data.response)
     }
 
     @Test
@@ -135,13 +129,9 @@ class LockBoxAccountApiTest {
             enabled = true,
             firstName = "Stupid",
             lastName = "Aboba"
-        )
+        ) as ApiResponse.Success<UpdateAccountResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        with(result.body) {
+        with(result.data) {
             assertEquals("97b9279c-7741-4017-bb62-a3d21431e9b3", id)
             assertEquals("studid@fuck.com", username)
             assertEquals("studid@fuck.com", email)
@@ -156,12 +146,9 @@ class LockBoxAccountApiTest {
     fun `sendLinkToChangePassword returns success message when authorized`() = runBlocking {
         val accessToken = "valid-token"
 
-        val result = api.sendLinkToChangePassword(accessToken)
+        val result = api.sendLinkToChangePassword(accessToken) as ApiResponse.Success<ResetPasswordResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-        assertEquals("user.message:password_reset_email_sent", result.body.message)
+        assertEquals("user.message:password_reset_email_sent", result.data.message)
     }
 
     companion object {
@@ -286,14 +273,16 @@ class LockBoxAccountApiTest {
 
         private val mockEngine = MockEngine(mockRequestHandler)
 
+        private val json = Json {
+            ignoreUnknownKeys = true
+            prettyPrint = true
+            isLenient = true
+        }
+
         val mockAccountClient = HttpClient(mockEngine) {
             install(ContentNegotiation) {
                 json(
-                    json = Json {
-                        ignoreUnknownKeys = true
-                        prettyPrint = true
-                        isLenient = true
-                    },
+                    json = json,
                 )
             }
 

@@ -1,39 +1,52 @@
 package org.homesharing.lockbox.data.network.api
 
-import io.ktor.client.*
-import io.ktor.client.engine.mock.*
-import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandler
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.contentType
+import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
+import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
+import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
+import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
+import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
+import org.homesharing.lockbox.data.network.dto.mockbox.MockboxDto
+import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
+import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
+@Suppress("UNCHECKED_CAST")
 class LockBoxBoxesApiTest {
     private lateinit var api: LockBoxBoxesApi
 
     @BeforeTest
     fun setUp() {
-        api = LockBoxBoxesApi(mockBoxesClient)
+        api = LockBoxBoxesApi(mockBoxesClient, json)
     }
 
     @Test
     fun `getBoxes returns BoxListResponseDto on success`() = runBlocking {
-        val result = api.getBoxes("token", page = 0, size = 10)
+        val result =
+            api.getBoxes("token", page = 0, size = 10) as ApiResponse.Success<BoxListResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-        assertEquals(1, result.body.boxes.size)
-        assertEquals(1, result.body.totalBoxes)
-        assertEquals(0, result.body.currentPage)
-        assertEquals(1, result.body.boxesOnPage)
+        assertEquals(1, result.data.boxes.size)
+        assertEquals(1, result.data.totalBoxes)
+        assertEquals(0, result.data.currentPage)
+        assertEquals(1, result.data.boxesOnPage)
     }
 
     @Test
@@ -43,14 +56,10 @@ class LockBoxBoxesApiTest {
         val expectedAddress = "A1"
         val expectedAlias = "BoxA"
 
-        val result = api.getBoxByMac(token, mac)
+        val result = api.getBoxByMac(token, mac) as ApiResponse.Success<BoxResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(expectedAddress, result.body.address)
-        assertEquals(expectedAlias, result.body.alias)
+        assertEquals(expectedAddress, result.data.address)
+        assertEquals(expectedAlias, result.data.alias)
     }
 
     @Test
@@ -58,13 +67,9 @@ class LockBoxBoxesApiTest {
         val token = "token"
         val mac = "MAC1"
 
-        val result = api.getBoxStatusByMac(token, mac)
+        val result = api.getBoxStatusByMac(token, mac) as ApiResponse.Success<BoxStatusResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(mac, result.body.macAddress)
+        assertEquals(mac, result.data.macAddress)
     }
 
     @Test
@@ -74,14 +79,10 @@ class LockBoxBoxesApiTest {
         val newAlias = "BoxB"
         val newAddress = "B2"
 
-        val result = api.updateBoxByMac(token, mac, alias = newAlias, address = newAddress)
+        val result = api.updateBoxByMac(token, mac, alias = newAlias, address = newAddress) as ApiResponse.Success<UpdateBoxResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(newAlias, result.body.alias)
-        assertEquals(newAddress, result.body.address)
+        assertEquals(newAlias, result.data.alias)
+        assertEquals(newAddress, result.data.address)
     }
 
     @Test
@@ -90,12 +91,9 @@ class LockBoxBoxesApiTest {
         val mac = "MAC1"
         val expectedCall = "CALL123"
 
-        val result = api.openBox(token, mac)
+        val result = api.openBox(token, mac) as ApiResponse.Success<OpenBoxResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-        assertEquals(expectedCall, result.body.call)
+        assertEquals(expectedCall, result.data.call)
     }
 
     @Test
@@ -105,14 +103,10 @@ class LockBoxBoxesApiTest {
         val expectedAlias = "BoxC"
         val expectedAddress = "C3"
 
-        val result = api.deleteBox(token, mac)
+        val result = api.deleteBox(token, mac) as ApiResponse.Success<UpdateBoxResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(expectedAlias, result.body.alias)
-        assertEquals(expectedAddress, result.body.address)
+        assertEquals(expectedAlias, result.data.alias)
+        assertEquals(expectedAddress, result.data.address)
     }
 
     @Test
@@ -121,13 +115,9 @@ class LockBoxBoxesApiTest {
         val mac = "MAC1"
         val expectedSize = 1
 
-        val result = api.getAccessedList(token, mac)
+        val result = api.getAccessedList(token, mac) as ApiResponse.Success<AccessResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(expectedSize, result.body.listOfAccesses.size)
+        assertEquals(expectedSize, result.data.listOfAccesses.size)
     }
 
     @Test
@@ -139,14 +129,10 @@ class LockBoxBoxesApiTest {
         val end = "2025-06-11T11:00:00"
         val expectedUuid = "id2"
 
-        val result = api.createAccess(token, mac, alias = alias, startTime = start, endTime = end)
+        val result = api.createAccess(token, mac, alias = alias, startTime = start, endTime = end) as ApiResponse.Success<AccessDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(alias, result.body.alias)
-        assertEquals(expectedUuid, result.body.uuid)
+        assertEquals(alias, result.data.alias)
+        assertEquals(expectedUuid, result.data.uuid)
     }
 
     @Test
@@ -156,13 +142,9 @@ class LockBoxBoxesApiTest {
         val tokenId = "tok-id"
         val expectedResult = "revoked"
 
-        val result = api.revokeAccess(token, mac, tokenId)
+        val result = api.revokeAccess(token, mac, tokenId) as ApiResponse.Success<AccessRevokeResponseDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(expectedResult, result.body.result)
+        assertEquals(expectedResult, result.data.result)
     }
 
     @Test
@@ -170,13 +152,9 @@ class LockBoxBoxesApiTest {
         val token = "token"
         val expectedCode = 298545
 
-        val result = api.createLinkingCode(token)
+        val result = api.createLinkingCode(token) as ApiResponse.Success<CreateLinkingCodeDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(expectedCode, result.body.code)
+        assertEquals(expectedCode, result.data.code)
     }
 
     @Test
@@ -187,14 +165,10 @@ class LockBoxBoxesApiTest {
         val mac = "MAC1"
         val alias = "aboba"
 
-        val result = api.physicalSignUp(token, code)
+        val result = api.physicalSignUp(token, code) as ApiResponse.Success<MockboxDto>
 
-        assertFalse(result.error)
-        assertNull(result.errorText)
-        assertNotNull(result.body)
-
-        assertEquals(mac, result.body.macAddress)
-        assertEquals(alias, result.body.alias)
+        assertEquals(mac, result.data.macAddress)
+        assertEquals(alias, result.data.alias)
     }
 
     companion object {
@@ -371,14 +345,16 @@ class LockBoxBoxesApiTest {
 
         private val mockEngine = MockEngine(mockRequestHandler)
 
+        private val json = Json {
+            ignoreUnknownKeys = true
+            prettyPrint = true
+            isLenient = true
+        }
+
         val mockBoxesClient = HttpClient(mockEngine) {
             install(ContentNegotiation) {
                 json(
-                    json = Json {
-                        ignoreUnknownKeys = true
-                        prettyPrint = true
-                        isLenient = true
-                    },
+                    json = json,
                 )
             }
 

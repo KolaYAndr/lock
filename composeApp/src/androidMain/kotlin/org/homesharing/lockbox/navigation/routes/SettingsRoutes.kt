@@ -2,19 +2,19 @@ package org.homesharing.lockbox.navigation.routes
 
 import kotlinx.serialization.Serializable
 
-internal sealed class SettingsRoutes {
+internal sealed interface SettingsRoutes {
     @Serializable
-    data object Settings: SettingsRoutes()
+    data object Settings: SettingsRoutes
 
     @Serializable
-    data object Account: SettingsRoutes()
+    data object Account: SettingsRoutes
 
     @Serializable
-    data object Security: SettingsRoutes()
+    data object Security: SettingsRoutes
 
     @Serializable
-    data object AboutApp: SettingsRoutes()
+    data object AboutApp: SettingsRoutes
 
     @Serializable
-    data object Login: SettingsRoutes()
+    data object Login: SettingsRoutes
 }

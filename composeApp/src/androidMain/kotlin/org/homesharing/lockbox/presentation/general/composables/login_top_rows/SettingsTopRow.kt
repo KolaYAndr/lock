@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.general.composables
+package org.homesharing.lockbox.presentation.general.composables.login_top_rows
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

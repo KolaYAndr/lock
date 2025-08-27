@@ -1,19 +1,17 @@
 package org.homesharing.lockbox.domain.repository
 
-import org.homesharing.lockbox.data.network.dto.token_response.TokenResponseDto
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
-import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
+import org.homesharing.lockbox.domain.model.sign_up.SignUp
 
 interface AuthRepository {
-
     suspend fun signUp(
         username: String,
         password: String,
         passwordRepeated: String
-    ): Response<SignUpResponseDto>
+    ): Response<SignUp>
 
-    suspend fun loadTokensInitially(username: String, password: String): TokenResponseDto
+    suspend fun loadTokensInitially(username: String, password: String): Response<Unit>
 
-    suspend fun sendConfirmation(email: String): Response<ConfirmEmailResponseDto>
+    suspend fun sendConfirmation(email: String): Response<ConfirmEmail>
 }

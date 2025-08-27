@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -42,12 +43,13 @@ internal fun BottomNavigation(
         contentColor = LockBoxTheme.colors.green500
     ) {
         val currentDestination = navBackStackEntry?.destination
+        currentDestination?.hierarchy?.forEach { d ->
+            Log.d("kolya", "route = $d")
+        }
         topLevelRoutes.forEach { topLevelRoute ->
             NavigationBarItem(
                 selected = currentDestination?.hierarchy?.any {
-                    it.hasRoute(
-                        topLevelRoute.route::class
-                    )
+                    it.hasRoute(topLevelRoute.route::class)
                 } ?: false,
                 onClick = {
                     onClick(topLevelRoute.route)

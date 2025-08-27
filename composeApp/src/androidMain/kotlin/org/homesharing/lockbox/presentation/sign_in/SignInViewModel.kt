@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.repository.AuthRepository
 import org.homesharing.lockbox.presentation.login.EmailError
 import java.net.UnknownHostException
@@ -33,30 +34,30 @@ internal class SignInViewModel(private val authRepository: AuthRepository) : Vie
         else -> SignInPasswordError.Unexpected
     }
 
-    fun signIn() = viewModelScope.launch {
-        _uiState.update { it.copy(emailError = null, passwordError = null) }
-        if (!emailPattern.matcher(uiState.value.email).matches()) {
-            _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
-        } else try {
-            val response = authRepository.loadTokensInitially(
-                uiState.value.email,
-                uiState.value.password
-            )
-
-            response.error?.let {
-                _uiState.update {
-                    it.copy(
-                        passwordError = parsePasswordError(response.errorDescription!!)
-                    )
+    fun signIn() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(emailError = null, passwordError = null) }
+            if (!emailPattern.matcher(uiState.value.email).matches()) {
+                _uiState.update { it.copy(emailError = EmailError.DoesntMatchEmailPattern) }
+            } else try {
+                val response = authRepository.loadTokensInitially(
+                    uiState.value.email,
+                    uiState.value.password
+                )
+                if (response is Response.Failure) {
+                    _uiState.update {
+                        it.copy(
+                            passwordError = parsePasswordError(response.message)
+                        )
+                    }
                 }
+            } catch (_: UnknownHostException) {
+                _uiState.update { it.copy(passwordError = SignInPasswordError.UnknownHost) }
+            } catch (_: HttpRequestTimeoutException) {
+                _uiState.update { it.copy(passwordError = SignInPasswordError.Timeout) }
+            } catch (_: Exception) {
+                _uiState.update { it.copy(passwordError = SignInPasswordError.Unexpected) }
             }
-
-        } catch (e: UnknownHostException) {
-            _uiState.update { it.copy(passwordError = SignInPasswordError.UnknownHost) }
-        } catch (e: HttpRequestTimeoutException) {
-            _uiState.update { it.copy(passwordError = SignInPasswordError.Timeout) }
-        } catch (e: Exception) {
-            _uiState.update { it.copy(passwordError = SignInPasswordError.Unexpected) }
         }
     }
 }
