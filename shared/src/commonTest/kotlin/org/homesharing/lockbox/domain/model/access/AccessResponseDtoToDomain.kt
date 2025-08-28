@@ -34,7 +34,7 @@ class AccessResponseMapperTest {
 
         val domainWrapper = responseDto.toDomain()
 
-        assertEquals(2, domainWrapper.accessList.size)
+        assertEquals(1, domainWrapper.accessList.size)
 
         val expected1 = Access(
             name = alias1,

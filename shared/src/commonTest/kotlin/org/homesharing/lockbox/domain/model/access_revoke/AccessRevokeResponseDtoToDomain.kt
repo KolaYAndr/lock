@@ -38,7 +38,7 @@ class AccessRevokeResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with special characters in result`() {
-        val resultValue = "!@#\$%^&*()_+"
+        val resultValue = "!@#$%^&*()_+"
         val responseDto = AccessRevokeResponseDto(result = resultValue)
 
         val domain = responseDto.toDomain()

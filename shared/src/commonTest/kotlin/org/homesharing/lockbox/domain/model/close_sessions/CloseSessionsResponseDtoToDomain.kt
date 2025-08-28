@@ -38,7 +38,7 @@ class CloseSessionsResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with special characters in message`() {
-        val message = "!@#\$%^&*()_+"
+        val message = "!@#$%^&*()_+"
         val responseDto = CloseSessionsResponseDto(message = message)
 
         val domain = responseDto.toDomain()

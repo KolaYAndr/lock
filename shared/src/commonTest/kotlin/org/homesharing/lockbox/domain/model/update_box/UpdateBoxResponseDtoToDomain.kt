@@ -11,11 +11,13 @@ class UpdateBoxResponseDtoToDomainTest {
         val address = "Box Address 42"
         val alias = "Main Entrance"
         val macAddress = "AA:BB:CC:DD:EE:FF"
+        val ownerSub = "123"
 
         val dto = UpdateBoxResponseDto(
             address = address,
             alias = alias,
             macAddress = macAddress,
+            ownerSub = ownerSub
         )
 
         val domain = dto.toDomain()

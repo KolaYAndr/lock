@@ -13,7 +13,8 @@ class OpenBoxResponseDtoToDomainTest {
             id = 42,
             issuerSub = "issuer-xyz",
             issuerToken = "token-abc",
-            macAddress = "AA:BB:CC:DD:EE:FF"
+            macAddress = "AA:BB:CC:DD:EE:FF",
+            timestamp = "now"
         )
 
         val domain = dto.toDomain()
@@ -28,7 +29,8 @@ class OpenBoxResponseDtoToDomainTest {
             id = 1,
             issuerSub = "issuer-1",
             issuerToken = null,
-            macAddress = "11:22:33:44:55:66"
+            macAddress = "11:22:33:44:55:66",
+            timestamp = "now"
         )
 
         val domain = dto.toDomain()
@@ -43,7 +45,8 @@ class OpenBoxResponseDtoToDomainTest {
             id = 2,
             issuerSub = "issuer-2",
             issuerToken = "tok",
-            macAddress = "22:33:44:55:66:77"
+            macAddress = "22:33:44:55:66:77",
+            timestamp = "now"
         )
 
         val domain = dto.toDomain()
@@ -59,7 +62,8 @@ class OpenBoxResponseDtoToDomainTest {
             id = 3,
             issuerSub = "issuer-3",
             issuerToken = "tok3",
-            macAddress = "33:44:55:66:77:88"
+            macAddress = "33:44:55:66:77:88",
+            timestamp = "now"
         )
 
         val domain = dto.toDomain()
