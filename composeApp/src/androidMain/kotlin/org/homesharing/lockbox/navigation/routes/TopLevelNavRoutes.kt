@@ -10,10 +10,10 @@ internal sealed interface Routes {
     data object Main : Routes
 
     @Serializable
-    data object Settings : Routes
+    data object Documents: Routes
 
     @Serializable
-    data object Documents: Routes
+    data object Settings : Routes
 }
 
 internal data class TopLevelRoute<T : Routes>(
@@ -24,6 +24,6 @@ internal data class TopLevelRoute<T : Routes>(
 
 internal val topLevelRoutes = listOf(
     TopLevelRoute(R.string.main, Routes.Main, R.drawable.house),
-//    TopLevelRoute(R.string.documents, Routes.Documents, R.drawable.document),
+    TopLevelRoute(R.string.documents, Routes.Documents, R.drawable.document),
     TopLevelRoute(R.string.settings, Routes.Settings, R.drawable.settings)
 )

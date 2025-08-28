@@ -1,10 +1,10 @@
 package org.homesharing.lockbox.domain.model.box_list
 
-import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 
 data class BoxList(
-    val boxes: List<Box>,
-    val totalBoxes: Int,
-    val currentPage: Int,
-    val boxesOnPage: Int,
+    val boxes: List<BoxWithStatus>,
+    val total: Int,
+    val page: Int,
+    val size: Int,
 )

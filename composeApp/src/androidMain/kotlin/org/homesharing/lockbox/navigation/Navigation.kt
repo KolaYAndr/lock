@@ -24,6 +24,8 @@ import org.homesharing.lockbox.navigation.routes.SettingsRoutes
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.account.AccountViewModel
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScreen
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
@@ -68,7 +70,6 @@ internal fun Navigation(
         exitTransition = { ExitTransition.None },
         enterTransition = { EnterTransition.None }
     ) {
-
         navigation<Routes.Main>(
             startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes,
         ) {
@@ -295,67 +296,68 @@ internal fun Navigation(
                     }
                 }
 
-//                composable<AccountRoutes.ChangePhoneNumber> {
-//                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
-//                    val addPhoneUiState by
-//                    addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
-//
-//                    AddPhoneNumberScreen(
-//                        uiState = addPhoneUiState,
-//                        onNavBack = navController::navigateUp,
-//                        onToStep = addPhoneNumberViewModel::toStep,
-//                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
-//                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
-//                        onDone = { navController.navigate(SettingsRoutes.Account) },
-//                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
-//                        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
-//                        modifier = Modifier.fillMaxSize()
-//                    )
-//                }
-            }
+                composable<AccountRoutes.ChangePhoneNumber> {
+                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
+                    val addPhoneUiState by
+                    addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
 
-            navigation<Routes.Documents>(
-                startDestination = if (startFromLogin) DocumentRoutes.Login else DocumentRoutes.Documents,
-            ) {
-                composable<DocumentRoutes.Login>(
-                    enterTransition = globalEnterAnimation,
-                    exitTransition = null,
-                    popEnterTransition = null,
-                    popExitTransition = globalExitAnimation
-                ) {
-                    val lifecycleOwner = LocalLifecycleOwner.current
-                    ActionOnSharedFlow(
-                        flow = loginViewModel.loggedIn,
-                        lifecycleOwner = lifecycleOwner
-                    ) {
-                        navController.navigateToDestinationWithNoBackstack(DocumentRoutes.Documents)
-                    }
-
-                    LoginScreen(
-                        loginType = loginType,
-                        onToTypeAuth = loginViewModel::toTypeAuth,
-                        topRowContent = { DocumentsTopRow() },
+                    AddPhoneNumberScreen(
+                        uiState = addPhoneUiState,
+                        onNavBack = navController::navigateUp,
+                        onToStep = addPhoneNumberViewModel::toStep,
+                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
+                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
+                        onDone = { navController.navigate(SettingsRoutes.Account) },
+                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
+                        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
+            }
+        }
 
-                composable<DocumentRoutes.Documents>(
-                    enterTransition = globalEnterAnimation,
-                    exitTransition = null,
-                    popEnterTransition = null,
-                    popExitTransition = globalExitAnimation
+        navigation<Routes.Documents>(
+            startDestination = if (startFromLogin) DocumentRoutes.Login else DocumentRoutes.Documents,
+        ) {
+            composable<DocumentRoutes.Login>(
+                enterTransition = globalEnterAnimation,
+                exitTransition = null,
+                popEnterTransition = null,
+                popExitTransition = globalExitAnimation
+            ) {
+                val lifecycleOwner = LocalLifecycleOwner.current
+                ActionOnSharedFlow(
+                    flow = loginViewModel.loggedIn,
+                    lifecycleOwner = lifecycleOwner
                 ) {
-
+                    navController.navigateToDestinationWithNoBackstack(DocumentRoutes.Documents)
                 }
+
+                LoginScreen(
+                    loginType = loginType,
+                    onToTypeAuth = loginViewModel::toTypeAuth,
+                    topRowContent = { DocumentsTopRow() },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            composable<DocumentRoutes.Documents>(
+                enterTransition = globalEnterAnimation,
+                exitTransition = null,
+                popEnterTransition = null,
+                popExitTransition = globalExitAnimation
+            ) {
+
             }
         }
     }
 }
 
-private fun <T : Any > NavHostController.navigateToDestinationWithNoBackstack(destination: T) {
+private fun <T : Any> NavHostController.navigateToDestinationWithNoBackstack(destination: T) {
     this.navigate(destination) {
         popUpTo(destination) {
-            inclusive = false
+            inclusive = true
         }
+        launchSingleTop = true
     }
 }

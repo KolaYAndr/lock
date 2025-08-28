@@ -1,12 +1,10 @@
 package org.homesharing.lockbox.domain.model.box
 
-data class Box(
-    val address: String,
-    val alias: String,
-    val batteryLevel: Double,
-    val macAddress: String,
-    val opened: Boolean,
-    val signalStrength: Double,
+import kotlinx.datetime.LocalDateTime
+
+data class BoxWithStatus(
+    val box: Box,
+    val status: Status
 ) {
     companion object {
         const val BATTERY_PERCENT_ZERO = 0
@@ -22,3 +20,18 @@ data class Box(
         const val SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND = -20
     }
 }
+
+data class Box(
+    val address: String,
+    val alias: String,
+    val ownerSub: String,
+    val macAddress: String,
+)
+
+data class Status(
+    val macAddress: String,
+    val opened: Boolean,
+    val batteryLevel: Double,
+    val signalStrength: Double,
+    val timeStamp: LocalDateTime
+)

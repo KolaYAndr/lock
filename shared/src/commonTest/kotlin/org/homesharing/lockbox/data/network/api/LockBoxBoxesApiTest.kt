@@ -16,13 +16,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
+import org.homesharing.lockbox.data.network.dto.access.AccessDto
+import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
 import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
-import org.homesharing.lockbox.data.network.dto.mockbox.MockboxDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import kotlin.test.BeforeTest
@@ -44,9 +43,9 @@ class LockBoxBoxesApiTest {
             api.getBoxes("token", page = 0, size = 10) as ApiResponse.Success<BoxListResponseDto>
 
         assertEquals(1, result.data.boxes.size)
-        assertEquals(1, result.data.totalBoxes)
-        assertEquals(0, result.data.currentPage)
-        assertEquals(1, result.data.boxesOnPage)
+        assertEquals(1, result.data.total)
+        assertEquals(0, result.data.page)
+        assertEquals(1, result.data.size)
     }
 
     @Test
@@ -79,7 +78,12 @@ class LockBoxBoxesApiTest {
         val newAlias = "BoxB"
         val newAddress = "B2"
 
-        val result = api.updateBoxByMac(token, mac, alias = newAlias, address = newAddress) as ApiResponse.Success<UpdateBoxResponseDto>
+        val result = api.updateBoxByMac(
+            token,
+            mac,
+            alias = newAlias,
+            address = newAddress
+        ) as ApiResponse.Success<UpdateBoxResponseDto>
 
         assertEquals(newAlias, result.data.alias)
         assertEquals(newAddress, result.data.address)
@@ -129,7 +133,13 @@ class LockBoxBoxesApiTest {
         val end = "2025-06-11T11:00:00"
         val expectedUuid = "id2"
 
-        val result = api.createAccess(token, mac, alias = alias, startTime = start, endTime = end) as ApiResponse.Success<AccessDto>
+        val result = api.createAccess(
+            token,
+            mac,
+            alias = alias,
+            startTime = start,
+            endTime = end
+        ) as ApiResponse.Success<AccessDto>
 
         assertEquals(alias, result.data.alias)
         assertEquals(expectedUuid, result.data.uuid)
@@ -142,7 +152,8 @@ class LockBoxBoxesApiTest {
         val tokenId = "tok-id"
         val expectedResult = "revoked"
 
-        val result = api.revokeAccess(token, mac, tokenId) as ApiResponse.Success<AccessRevokeResponseDto>
+        val result =
+            api.revokeAccess(token, mac, tokenId) as ApiResponse.Success<AccessRevokeResponseDto>
 
         assertEquals(expectedResult, result.data.result)
     }
@@ -157,44 +168,31 @@ class LockBoxBoxesApiTest {
         assertEquals(expectedCode, result.data.code)
     }
 
-    @Test
-    fun `physicalSignUp returns Mockbox on success`() = runBlocking {
-        val token = "token"
-        val code = 298545
-
-        val mac = "MAC1"
-        val alias = "aboba"
-
-        val result = api.physicalSignUp(token, code) as ApiResponse.Success<MockboxDto>
-
-        assertEquals(mac, result.data.macAddress)
-        assertEquals(alias, result.data.alias)
-    }
-
     companion object {
         private val urlToContent: Map<String, String> = mapOf(
-            "$BOXES_URL?size=10&page=0/${HttpMethod.Get.value}" to """
-        {
-            "body": {
-                "boxes": [
-                    {
-                        "address": "A1",
-                        "alias": "BoxA",
-                        "owner_sub": "o1",
-                        "battery_level": 50,
-                        "mac_address": "MAC1",
-                        "opened": true,
-                        "signal_strength": -40,
-                        "timestamp": "2025-06-10T12:00:00Z"
-                    }
-                ],
-                "total_boxes": 1,
-                "current_page": 0,
-                "boxes_on_page": 1
-            },
-            "error": false,
-            "error_text": null
-        }
+            "$BOXES_URL/$BOXES?size=10&page=0/${HttpMethod.Get.value}" to """
+                {
+                 "boxes": [
+                   {
+                     "box": {
+                       "macAddress": "AA:BB:CC:DD:EE:FF",
+                       "ownerSub": "user-abcdef123456",
+                       "address": "ул. Ленина, д. 10, офис 5",
+                       "alias": "Офисный бокс"
+                     },
+                     "status": {
+                       "macAddress": "AA:BB:CC:DD:EE:FF",
+                       "batteryLevel": 86.5,
+                       "opened": false,
+                       "signalStrength": -67,
+                       "timestamp": "2025-07-15T10:23:45+02:00"
+                     }
+                   }
+                 ],
+                 "total": 1,
+                 "page": 0,
+                 "size": 1
+                }
     """,
 
             "$BOXES_URL/MAC1/${HttpMethod.Get.value}" to """
@@ -316,14 +314,12 @@ class LockBoxBoxesApiTest {
                 }
             """,
 
-            "$BOXES_URL/$PHYSICAL_SIGNUP/${HttpMethod.Post.value}" to """
+            "$BOXES_URL/$DEVICES/$BOXES/$SIGNUP/${HttpMethod.Post.value}" to """
                 {
-                    "body": {
-                        "mac_address": "MAC1",
-                        "alias": "aboba"
-                    },
-                    "error": false,
-                    "error_text": null
+                  "macAddress": "AA:BB:CC:DD:EE:FF",
+                  "ownerSub": "user-abcdef123456",
+                  "address": "ул. Ленина, д. 10, офис 5",
+                  "alias": "Офисный бокс"
                 }
             """
         )

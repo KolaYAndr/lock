@@ -27,6 +27,10 @@ internal class AddVirtualDeviceViewModel(
         it.copy(deviceName = newName)
     }
 
+    fun onChangeMacAddress(newMacAddress: String) = _addVirtualDeviceUiState.update {
+        it.copy(macAddress = newMacAddress)
+    }
+
     fun onChangeDeviceAddress(newAddress: String) = _addVirtualDeviceUiState.update {
         it.copy(deviceAddress = newAddress)
     }
@@ -35,8 +39,13 @@ internal class AddVirtualDeviceViewModel(
         viewModelScope.launch {
             when (val codeResponse = boxesRepository.createLinkingCode()) {
                 is Response.Success -> {
-                    when(boxesRepository.physicalSignUp(codeResponse.data.code)) {
-                        is Response.Failure -> SnackbarController.receiveEvent(couldNotCreateVirtualDevice { onCreateVirtualDevice() })
+                    when (boxesRepository.physicalSignUp(
+                        codeResponse.data.code,
+                        addVirtualDeviceUiState.value.macAddress
+                    )) {
+                        is Response.Failure -> SnackbarController.receiveEvent(
+                            couldNotCreateVirtualDevice { onCreateVirtualDevice() })
+
                         is Response.Success -> SnackbarController.receiveEvent(virtualDeviceCreated)
                     }
                 }
@@ -66,4 +75,5 @@ internal class AddVirtualDeviceViewModel(
 internal data class AddVirtualDeviceUiState(
     val deviceName: String = "",
     val deviceAddress: String = "",
+    val macAddress: String = "",
 )

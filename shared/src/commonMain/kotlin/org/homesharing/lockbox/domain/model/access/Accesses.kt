@@ -7,10 +7,9 @@ import kotlin.jvm.JvmInline
 value class Accesses(val accessList: List<Access>)
 
 data class Access(
-    val name: String?,
+    val name: String,
     val startTime: LocalDateTime,
     val endTime: LocalDateTime,
     val macAddress: String,
-    val token: String,
     val id: String,
 )

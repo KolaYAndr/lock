@@ -2,78 +2,99 @@ package org.homesharing.lockbox.domain.model.box_list
 
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
+import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.LocalDateTime
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.box.StatusDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class BoxListResponseDtoToDomainTest {
 
     @Test
-    fun `maps correctly with empty boxes list`() {
+    fun `maps correctly with multiple boxes`() = runBlocking {
+        val boxDto1 = BoxResponseDto(
+            address = "Addr1",
+            alias = "Alias1",
+            ownerSub = "owner1",
+            macAddress = "MAC1",
+        )
+        val statusDto1 = StatusDto(
+            macAddress = "MAC1",
+            opened = true,
+            batteryLevel = 50.0,
+            signalStrength = -50.0,
+            timeStamp = "2025-06-10T10:00:00"
+        )
+        val boxWithStatusDto1 = BoxWithStatusResponseDto(box = boxDto1, status = statusDto1)
+
+        val boxDto2 = BoxResponseDto(
+            address = "Addr2",
+            alias = "Alias2",
+            ownerSub = "owner2",
+            macAddress = "MAC2",
+        )
+        val statusDto2 = StatusDto(
+            macAddress = "MAC2",
+            opened = false,
+            batteryLevel = 10.0,
+            signalStrength = -70.0,
+            timeStamp = "2025-06-11T11:30:00"
+        )
+        val boxWithStatusDto2 = BoxWithStatusResponseDto(box = boxDto2, status = statusDto2)
+
         val responseDto = BoxListResponseDto(
-            boxes = emptyList(),
-            totalBoxes = 0,
-            currentPage = 1,
-            boxesOnPage = 0
+            boxes = listOf(boxWithStatusDto1, boxWithStatusDto2),
+            total = 2,
+            page = 0,
+            size = 10
         )
 
         val domain = responseDto.toDomain()
 
-        assertEquals(0, domain.boxes.size)
-        assertEquals(0, domain.totalBoxes)
-        assertEquals(1, domain.currentPage)
-        assertEquals(0, domain.boxesOnPage)
+        assertNotNull(domain)
+        assertEquals(2, domain.boxes.size)
+        assertEquals(2, domain.total)
+        assertEquals(0, domain.page)
+        assertEquals(10, domain.size)
+
+        val first = domain.boxes[0]
+        assertEquals("Addr1", first.box.address)
+        assertEquals("Alias1", first.box.alias)
+        assertEquals("owner1", first.box.ownerSub)
+        assertEquals("MAC1", first.box.macAddress)
+        assertEquals(true, first.status.opened)
+        assertEquals(50.0, first.status.batteryLevel)
+        assertEquals(-50.0, first.status.signalStrength)
+        assertEquals(LocalDateTime(2025, 6, 10, 10, 0, 0), first.status.timeStamp)
+
+        val second = domain.boxes[1]
+        assertEquals("Addr2", second.box.address)
+        assertEquals("Alias2", second.box.alias)
+        assertEquals("owner2", second.box.ownerSub)
+        assertEquals("MAC2", second.box.macAddress)
+        assertEquals(false, second.status.opened)
+        assertEquals(10.0, second.status.batteryLevel)
+        assertEquals(-70.0, second.status.signalStrength)
+        assertEquals(LocalDateTime(2025, 6, 11, 11, 30, 0), second.status.timeStamp)
     }
 
     @Test
-    fun `maps correctly with multiple boxes`() {
-        val dto1 = BoxResponseDto(
-            address = "123 Main St",
-            alias = "Box1",
-            ownerSub = "owner1",
-            batteryLevel = 50.0,
-            macAddress = "AA:BB:CC:DD:EE:01",
-            opened = true,
-            signalStrength = -40.0,
-            timestamp = "2025-06-10T12:00:00Z"
-        )
-        val dto2 = BoxResponseDto(
-            address = "456 Elm St",
-            alias = "Box2",
-            ownerSub = "owner2",
-            batteryLevel = 75.5,
-            macAddress = "AA:BB:CC:DD:EE:02",
-            opened = false,
-            signalStrength = -60.5,
-            timestamp = "2025-06-11T08:30:00Z"
-        )
+    fun `maps correctly with empty boxes list`() = runBlocking {
         val responseDto = BoxListResponseDto(
-            boxes = listOf(dto1, dto2),
-            totalBoxes = 2,
-            currentPage = 1,
-            boxesOnPage = 2
+            boxes = emptyList(),
+            total = 0,
+            page = 1,
+            size = 0
         )
 
         val domain = responseDto.toDomain()
 
-        assertEquals(2, domain.boxes.size)
-        val box1 = domain.boxes[0]
-        assertEquals("123 Main St", box1.address)
-        assertEquals("Box1", box1.alias)
-        assertEquals(50.0, box1.batteryLevel)
-        assertEquals("AA:BB:CC:DD:EE:01", box1.macAddress)
-        assertEquals(true, box1.opened)
-        assertEquals(-40.0, box1.signalStrength)
-
-        val box2 = domain.boxes[1]
-        assertEquals("456 Elm St", box2.address)
-        assertEquals("Box2", box2.alias)
-        assertEquals(75.5, box2.batteryLevel)
-        assertEquals("AA:BB:CC:DD:EE:02", box2.macAddress)
-        assertEquals(false, box2.opened)
-        assertEquals(-60.5, box2.signalStrength)
-
-        assertEquals(2, domain.totalBoxes)
-        assertEquals(1, domain.currentPage)
-        assertEquals(2, domain.boxesOnPage)
+        assertNotNull(domain)
+        assertEquals(0, domain.boxes.size)
+        assertEquals(0, domain.total)
+        assertEquals(1, domain.page)
+        assertEquals(0, domain.size)
     }
 }

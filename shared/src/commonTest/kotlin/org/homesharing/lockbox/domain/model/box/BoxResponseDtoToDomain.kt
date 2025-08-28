@@ -1,72 +1,120 @@
 package org.homesharing.lockbox.domain.model.box
 
+import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.box.StatusDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class BoxResponseDtoToDomainTest {
 
     @Test
-    fun `maps correctly with typical data`() {
+    fun `maps BoxResponseDto correctly with typical data`() = runBlocking {
         val address = "123 Main St"
-        val alias = "HomeBox"
+        val alias = "OfficeBox"
         val ownerSub = "owner-xyz"
-        val batteryLevel = 78.5
-        val macAddress = "AA:BB:CC:DD:EE:FF"
-        val opened = true
-        val signalStrength = -45.0
-        val timestamp = "2025-06-10T12:00:00Z"
+        val mac = "AA:BB:CC:DD:EE:FF"
 
         val dto = BoxResponseDto(
             address = address,
             alias = alias,
             ownerSub = ownerSub,
-            batteryLevel = batteryLevel,
-            macAddress = macAddress,
-            opened = opened,
-            signalStrength = signalStrength,
-            timestamp = timestamp
+            macAddress = mac,
         )
 
         val domain = dto.toDomain()
 
         assertEquals(address, domain.address)
         assertEquals(alias, domain.alias)
-        assertEquals(batteryLevel, domain.batteryLevel)
-        assertEquals(macAddress, domain.macAddress)
+        assertEquals(ownerSub, domain.ownerSub)
+        assertEquals(mac, domain.macAddress)
+    }
+}
+
+class StatusDtoToDomainTest {
+
+    @Test
+    fun `maps StatusDto and parses timestamp correctly`() = runBlocking {
+        val mac = "AA:BB:CC:DD:EE:FF"
+        val opened = false
+        val battery = 20.23939334833422
+        val signal = -61.65466085511442
+        val ts = "2025-06-10T12:34:56"
+
+        val dto = StatusDto(
+            macAddress = mac,
+            opened = opened,
+            batteryLevel = battery,
+            signalStrength = signal,
+            timeStamp = ts
+        )
+
+        val domain = dto.toDomain()
+
+        val expectedTime = LocalDateTime(2025, 6, 10, 12, 34, 56)
+
+        assertEquals(mac, domain.macAddress)
         assertEquals(opened, domain.opened)
-        assertEquals(signalStrength, domain.signalStrength)
+        assertEquals(battery, domain.batteryLevel)
+        assertEquals(signal, domain.signalStrength)
+        assertEquals(expectedTime, domain.timeStamp)
     }
 
     @Test
-    fun `maps correctly with empty strings`() {
-        val address = ""
-        val alias = ""
-        val ownerSub = ""
-        val batteryLevel = 0.0
-        val macAddress = ""
-        val opened = false
-        val signalStrength = 0.0
-        val timestamp = ""
-
-        val dto = BoxResponseDto(
-            address = address,
-            alias = alias,
-            ownerSub = ownerSub,
-            batteryLevel = batteryLevel,
-            macAddress = macAddress,
-            opened = opened,
-            signalStrength = signalStrength,
-            timestamp = timestamp
+    fun `throws when timestamp is invalid`() = runBlocking {
+        val dto = StatusDto(
+            macAddress = "M",
+            opened = true,
+            batteryLevel = 1.0,
+            signalStrength = -1.0,
+            timeStamp = "not-a-date"
         )
+
+        assertFailsWith<IllegalArgumentException> {
+            dto.toDomain()
+        }
+    }
+}
+
+class BoxWithStatusResponseDtoToDomainTest {
+
+    @Test
+    fun `maps BoxWithStatusResponseDto combining box and status`() = runBlocking {
+        val boxDto = BoxResponseDto(
+            address = "Addr",
+            alias = "Alias",
+            ownerSub = "owner",
+            macAddress = "MAC1",
+        )
+
+        val statusDto = StatusDto(
+            macAddress = "MAC1",
+            opened = true,
+            batteryLevel = 10.0,
+            signalStrength = -10.0,
+            timeStamp = "2025-06-10T10:00:00"
+        )
+
+        val dto = BoxWithStatusResponseDto(box = boxDto, status = statusDto)
 
         val domain = dto.toDomain()
 
-        assertEquals(address, domain.address)
-        assertEquals(alias, domain.alias)
-        assertEquals(batteryLevel, domain.batteryLevel)
-        assertEquals(macAddress, domain.macAddress)
-        assertEquals(opened, domain.opened)
-        assertEquals(signalStrength, domain.signalStrength)
+        assertNotNull(domain.box)
+        assertNotNull(domain.status)
+
+        assertEquals("Addr", domain.box.address)
+        assertEquals("Alias", domain.box.alias)
+        assertEquals("owner", domain.box.ownerSub)
+        assertEquals("MAC1", domain.box.macAddress)
+
+        assertEquals("MAC1", domain.status.macAddress)
+        assertEquals(true, domain.status.opened)
+        assertEquals(10.0, domain.status.batteryLevel)
+        assertEquals(-10.0, domain.status.signalStrength)
+        assertEquals(LocalDateTime(2025, 6, 10, 10, 0, 0), domain.status.timeStamp)
     }
 }

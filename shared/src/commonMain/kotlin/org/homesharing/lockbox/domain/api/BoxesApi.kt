@@ -3,33 +3,32 @@ package org.homesharing.lockbox.domain.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 
 internal interface BoxesApi {
-
     suspend fun getBoxes(
         accessToken: String,
         page: Int,
-        size: Int
+        size: Int,
     ): ApiResponse
 
     suspend fun getBoxByMac(
         accessToken: String,
-        macAddress: String
+        macAddress: String,
     ): ApiResponse
 
     suspend fun getBoxStatusByMac(
         accessToken: String,
-        macAddress: String
+        macAddress: String,
     ): ApiResponse
 
     suspend fun updateBoxByMac(
         accessToken: String,
         macAddress: String,
         alias: String? = null,
-        address: String? = null
+        address: String? = null,
     ): ApiResponse
 
     suspend fun openBox(
         accessToken: String,
-        macAddress: String
+        macAddress: String,
     ): ApiResponse
 
     suspend fun deleteBox(
@@ -39,7 +38,7 @@ internal interface BoxesApi {
 
     suspend fun getAccessedList(
         accessToken: String,
-        macAddress: String
+        macAddress: String,
     ): ApiResponse
 
     suspend fun createAccess(
@@ -53,7 +52,7 @@ internal interface BoxesApi {
     suspend fun revokeAccess(
         accessToken: String,
         macAddress: String,
-        tokenId: String
+        tokenId: String,
     ): ApiResponse
 
     suspend fun createLinkingCode(
@@ -62,6 +61,11 @@ internal interface BoxesApi {
 
     suspend fun physicalSignUp(
         accessToken: String,
-        code: Int
+        code: Int,
+        macAddress: String,
+    ): ApiResponse
+
+    suspend fun createTestDevice(
+        accessToken: String,
     ): ApiResponse
 }

@@ -110,7 +110,7 @@ internal fun AccountScreen(
         ) {
             CredentialsInput(
                 text = accountUiState.name,
-                onTextChange = { newValue -> onChangeName(newValue) },
+                onTextChange = onChangeName,
                 placeholderText = stringResource(R.string.input_name),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -127,7 +127,7 @@ internal fun AccountScreen(
 
             CredentialsInput(
                 text = accountUiState.surname,
-                onTextChange = { newValue -> onChangeSurname(newValue) },
+                onTextChange = onChangeSurname,
                 placeholderText = stringResource(R.string.input_surname),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
