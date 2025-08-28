@@ -19,13 +19,13 @@ import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeRespon
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
-import org.homesharing.lockbox.data.network.dto.box_status.BoxStatusResponseDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequestDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.box.StatusDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
@@ -80,7 +80,7 @@ internal class LockBoxBoxesApi(
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url("$BOXES_URL/$BOXES/$macAddress/$STATUS")
-        }.toApiResponse<BoxStatusResponseDto>(json)
+        }.toApiResponse<StatusDto>(json)
 
     override suspend fun updateBoxByMac(
         accessToken: String,
