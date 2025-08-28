@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
@@ -86,11 +87,13 @@ class LockBoxActivity : ComponentActivity() {
                             topLevelRoutes = topLevelRoutes,
                             navBackStackEntry = navBackStackEntry
                         ) { route ->
-                            navController.navigate(route) /*{
-                                popUpTo(route)
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
                                 launchSingleTop = true
-                                restoreState = false
-                            }*/
+                                restoreState = true
+                            }
                         }
                     },
                     snackbarHost = {

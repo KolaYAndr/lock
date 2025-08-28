@@ -108,7 +108,9 @@
     <string name="battery_percent">%d%%</string>
     <string name="access_device">Доступ к устройству</string>
     <string name="device_address">Адрес устройства</string>
+    <string name="device_mac_address">Мак-адрес устройства</string>
     <string name="device_address_placeholder">Введите адрес устройства</string>
+    <string name="device_mac_address_placeholder">Введите мак-адрес устройства</string>
     <string name="device_name">Название устройства</string>
     <string name="device_name_placeholder">Введите название устройства</string>
     <string name="about_device">Об устройстве</string>
@@ -188,7 +190,9 @@
     <string name="set_up_a_device">Настройте устройство</string>
     <string name="set_name_and_address_to_finish">Укажите название и адрес устройства для завершения настройки</string>
     <string name="could_not_create_virtual_device">Не удалось создать виртуальное устройство</string>
+    <string name="could_not_create_test_device">Не удалось создать тестовое устройство</string>
     <string name="virtual_device_created">Виртуальное устройство создано</string>
+    <string name="test_device_created">Тестовое устройство создано</string>
     <string name="link_copied">Ссылка скопирована</string>
     <plurals name="minutes_ago">
         <item quantity="one">%d минуту назад</item>

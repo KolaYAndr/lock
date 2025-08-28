@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheetViewModel
 import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
@@ -392,29 +392,29 @@ internal fun DetailedLockBoxScreen(
 @Composable
 private fun getBatteryAlertColor(batteryLevel: Int): Color =
     when (batteryLevel) {
-        in Box.BATTERY_PERCENT_ZERO..<Box.BATTERY_PERCENT_LOW -> LockBoxTheme.colors.red600
-        in Box.BATTERY_PERCENT_LOW..<Box.BATTERY_PERCENT_MEDIUM -> LockBoxTheme.colors.yellow500
+        in BoxWithStatus.BATTERY_PERCENT_ZERO..<BoxWithStatus.BATTERY_PERCENT_LOW -> LockBoxTheme.colors.red600
+        in BoxWithStatus.BATTERY_PERCENT_LOW..<BoxWithStatus.BATTERY_PERCENT_MEDIUM -> LockBoxTheme.colors.yellow500
         else -> Color.Transparent
     }
 
 @Composable
 private fun getBatteryImage(batteryLevel: Int): Painter =
     when (batteryLevel) {
-        in Box.BATTERY_PERCENT_LOW..<Box.BATTERY_PERCENT_MEDIUM -> painterResource(R.drawable.battery_low)
-        in Box.BATTERY_PERCENT_MEDIUM..<Box.BATTERY_PERCENT_HIGH -> painterResource(R.drawable.battery_medium)
-        in Box.BATTERY_PERCENT_HIGH..Box.BATTERY_PERCENT_FULL -> painterResource(R.drawable.battery_full)
+        in BoxWithStatus.BATTERY_PERCENT_LOW..<BoxWithStatus.BATTERY_PERCENT_MEDIUM -> painterResource(R.drawable.battery_low)
+        in BoxWithStatus.BATTERY_PERCENT_MEDIUM..<BoxWithStatus.BATTERY_PERCENT_HIGH -> painterResource(R.drawable.battery_medium)
+        in BoxWithStatus.BATTERY_PERCENT_HIGH..BoxWithStatus.BATTERY_PERCENT_FULL -> painterResource(R.drawable.battery_full)
         else -> painterResource(R.drawable.battery_empty)
     }
 
 @Composable
 private fun getSignalImage(signalStrength: Int): Painter =
     when (signalStrength) {
-        in Box.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<Box.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
             painterResource(R.drawable.signal_low)
 
-        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..<Box.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(R.drawable.signal_medium)
-        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..<Box.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(R.drawable.signal_high)
-        in Box.SIGNAL_STRENGTH_LEVEL_FULL..Box.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(R.drawable.signal_medium)
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(R.drawable.signal_high)
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL..BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
             painterResource(R.drawable.signal_full)
 
         else -> painterResource(R.drawable.signal_zero)
@@ -424,14 +424,12 @@ private fun getSignalImage(signalStrength: Int): Painter =
 @ReadOnlyComposable
 private fun getSignalStatus(signalStrength: Int): String =
     when (signalStrength) {
-        in Box.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<Box.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
             stringResource(R.string.signa_low)
-
-        in Box.SIGNAL_STRENGTH_LEVEL_MEDIUM..<Box.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(R.string.signal_medium)
-        in Box.SIGNAL_STRENGTH_LEVEL_HIGH..<Box.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(R.string.signal_high)
-        in Box.SIGNAL_STRENGTH_LEVEL_FULL..Box.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(R.string.signal_medium)
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(R.string.signal_high)
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL..BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
             stringResource(R.string.signal_full)
-
         else -> stringResource(R.string.signal_zero)
     }
 

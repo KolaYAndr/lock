@@ -1,6 +1,5 @@
-package org.homesharing.lockbox.data.network.dto.accessed
+package org.homesharing.lockbox.data.network.dto.access
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -12,13 +11,9 @@ internal value class AccessResponseDto(
 
 @Serializable
 internal data class AccessDto(
-    val alias: String?,
-    @SerialName("end_time")
+    val alias: String,
     val endTime: String,
-    @SerialName("mac_address")
     val macAddress: String,
-    @SerialName("start_time")
     val startTime: String,
-    val token: String,
     val uuid: String
 )

@@ -100,10 +100,10 @@ internal class DetailedLockBoxViewModel(
             when (val response = boxesRepository.getBoxByMac(macAddress)) {
                 is Response.Success -> _uiState.update {
                     it.copy(
-                        boxName = response.data.alias,
-                        address = response.data.address,
-                        signalStrength = response.data.signalStrength.toInt(),
-                        batteryLevel = response.data.batteryLevel.toInt()
+                        boxName = response.data.box.alias,
+                        address = response.data.box.address,
+                        signalStrength = response.data.status.signalStrength.toInt(),
+                        batteryLevel = response.data.status.batteryLevel.toInt()
                     )
                 }
 

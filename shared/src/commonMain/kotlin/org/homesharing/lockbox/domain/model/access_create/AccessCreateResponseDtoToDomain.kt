@@ -9,6 +9,5 @@ internal fun AccessCreateResponseDto.toDomain(): Access = Access(
     startTime = LocalDateTime.parse(access.startTime),
     endTime = LocalDateTime.parse(access.endTime),
     macAddress = access.macAddress,
-    token = access.token,
     id = access.uuid
 )

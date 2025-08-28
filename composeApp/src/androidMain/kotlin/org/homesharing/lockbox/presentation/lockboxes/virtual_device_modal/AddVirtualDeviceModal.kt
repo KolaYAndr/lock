@@ -40,18 +40,15 @@ internal fun AddVirtualDeviceModal(
     deviceName: String,
     onChangeDeviceName: (String) -> Unit,
     deviceAddress: String,
+    onChangeMacAddress: (String) -> Unit,
     onChangeDeviceAddress: (String) -> Unit,
     onCreateVirtualDevice: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val nameFocusRequester = remember { FocusRequester() }
+    val macAddressFocusRequester = remember { FocusRequester() }
     val addressFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { nameFocusRequester.requestFocus() }
-
-    val onFinishSettingUp = {
-        onCreateVirtualDevice()
-        onDismiss()
-    }
 
     BasicModal(
         onDismiss = onDismiss,
@@ -148,7 +145,39 @@ internal fun AddVirtualDeviceModal(
                     value = deviceAddress,
                     placeholderText = stringResource(R.string.device_address_placeholder),
                     onValueChange = onChangeDeviceAddress,
-                    onAny = onFinishSettingUp,
+                    onAny = macAddressFocusRequester::requestFocus,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        showKeyboardOnFocus = true,
+                        imeAction = ImeAction.Done,
+                    ),
+                    modifier = Modifier
+                        .focusRequester(addressFocusRequester)
+                        .fillMaxWidth()
+                )
+            }
+
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+            ) {
+                Text(
+                    text = stringResource(R.string.device_mac_address),
+                    color = LockBoxTheme.colors.grey100,
+                    style = LockBoxTheme.typography.subHeadlineLarge,
+                )
+
+                LockBoxPropertyInput(
+                    value = deviceAddress,
+                    placeholderText = stringResource(R.string.device_mac_address_placeholder),
+                    onValueChange = onChangeMacAddress,
+                    onAny = {
+                        onCreateVirtualDevice()
+                        onDismiss()
+                    },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         showKeyboardOnFocus = true,
@@ -163,7 +192,10 @@ internal fun AddVirtualDeviceModal(
             Spacer(modifier = Modifier.weight(1f))
 
             BasicButton(
-                onClick = onFinishSettingUp,
+                onClick = {
+                    onCreateVirtualDevice()
+                    onDismiss()
+                },
                 text = stringResource(R.string.finish_setting_up),
                 paddingValues = PaddingValues(14.dp),
                 modifier = Modifier

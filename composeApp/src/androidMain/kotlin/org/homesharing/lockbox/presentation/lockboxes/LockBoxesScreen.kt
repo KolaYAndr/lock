@@ -1,9 +1,5 @@
 package org.homesharing.lockbox.presentation.lockboxes
 
-import android.content.Intent
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,18 +39,20 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.domain.model.box.BoxWithStatus
+import org.homesharing.lockbox.domain.model.box.Status
 import org.homesharing.lockbox.presentation.general.composables.AddRow
 import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
-import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModal
+import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceViewModel
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModal
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -62,14 +60,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun LockBoxesScreen(
     avatarLink: String,
-    boxes: Flow<PagingData<Box>>,
+    boxes: Flow<PagingData<BoxWithStatus>>,
     onNavigateToBox: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showConnectModal by remember { mutableStateOf(false) }
-    var showAddVirtualDeviceModal by remember { mutableStateOf(false) }
-    val settingsLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+//    var showAddVirtualDeviceModal by remember { mutableStateOf(false) }
     val lazyBoxes = boxes.collectAsLazyPagingItems()
 
     Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
@@ -107,21 +103,17 @@ internal fun LockBoxesScreen(
         ConnectModalSheet(
             modifier = Modifier.fillMaxSize(),
             onDismiss = { showConnectModal = false },
-            toWifiConnection = { settingsLauncher.launch(Intent(Settings.ACTION_WIFI_SETTINGS)) },
-            onAddVirtualDevice = { showAddVirtualDeviceModal = true }
         )
     }
 
-    if (showAddVirtualDeviceModal) {
-        VirtualDeviceModal(
-            modifier = Modifier.fillMaxSize(),
-            onDismiss = { showAddVirtualDeviceModal = false },
-            onFinish = {
-                showConnectModal = false
-                lazyBoxes.refresh()
-            }
-        )
-    }
+//    if (showAddVirtualDeviceModal) {
+//        VirtualDeviceModal(
+//            modifier = Modifier.fillMaxSize(),
+//            onDismiss = { showAddVirtualDeviceModal = false },
+//            onFinish = lazyBoxes::refresh
+//
+//        )
+//    }
 }
 
 @Composable
@@ -173,7 +165,7 @@ private fun ErrorScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LockBoxScreen(
-    boxes: LazyPagingItems<Box>,
+    boxes: LazyPagingItems<BoxWithStatus>,
     onBoxClick: (String) -> Unit,
     onAddDevice: () -> Unit,
 ) {
@@ -194,12 +186,12 @@ private fun LockBoxScreen(
             } else {
                 items(
                     count = boxes.itemCount,
-                    key = { index -> boxes[index]?.macAddress ?: index }
+                    key = { index -> boxes[index]?.box?.macAddress ?: index }
                 ) { index ->
-                    boxes[index]?.let { box ->
+                    boxes[index]?.let { statusBox ->
                         LockBox(
-                            box = box,
-                            onClick = { onBoxClick(box.macAddress) },
+                            statusBox = statusBox,
+                            onClick = { onBoxClick(statusBox.box.macAddress) },
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -219,12 +211,12 @@ private fun LockBoxScreen(
 
 @Composable
 private fun LockBox(
-    box: Box,
+    statusBox: BoxWithStatus,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable { onClick(box.macAddress) }) {
+        modifier = modifier.clickable { onClick(statusBox.box.macAddress) }) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -244,20 +236,20 @@ private fun LockBox(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = box.alias,
+                    text = statusBox.box.alias,
                     style = LockBoxTheme.typography.headlineLarge,
                     color = LockBoxTheme.colors.white
                 )
 
                 Text(
-                    text = box.address,
+                    text = statusBox.box.address,
                     style = LockBoxTheme.typography.footnote,
                     color = LockBoxTheme.colors.grey500,
                     modifier = Modifier.padding(top = 2.dp)
                 )
             }
 
-            if (box.batteryLevel <= Box.BATTERY_PERCENT_LOW) {
+            if (statusBox.status.batteryLevel <= BoxWithStatus.BATTERY_PERCENT_LOW) {
                 Icon(
                     painter = painterResource(R.drawable.circle_alert),
                     contentDescription = null,
@@ -316,7 +308,7 @@ private fun TopRow(model: String, onAddDevice: () -> Unit) {
 private fun VirtualDeviceModal(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    onFinish: () -> Unit
+    onFinish: () -> Unit,
 ) {
     val addVirtualDeviceViewModel = koinViewModel<AddVirtualDeviceViewModel>()
     val addVirtualDeviceUiState by addVirtualDeviceViewModel.addVirtualDeviceUiState.collectAsStateWithLifecycle()
@@ -326,11 +318,13 @@ private fun VirtualDeviceModal(
         onDismiss = onDismiss,
         deviceName = addVirtualDeviceUiState.deviceName,
         onChangeDeviceName = addVirtualDeviceViewModel::onChangeDeviceName,
-        deviceAddress = addVirtualDeviceUiState.deviceAddress,
+        deviceAddress = addVirtualDeviceUiState.macAddress,
+        onChangeMacAddress = addVirtualDeviceViewModel::onChangeMacAddress,
         onChangeDeviceAddress = addVirtualDeviceViewModel::onChangeDeviceAddress,
         onCreateVirtualDevice = {
             addVirtualDeviceViewModel.onCreateVirtualDevice()
             onFinish()
+            onDismiss()
         }
     )
 }
@@ -339,77 +333,17 @@ private fun VirtualDeviceModal(
 private fun ConnectModalSheet(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    onAddVirtualDevice: () -> Unit,
-    toWifiConnection: () -> Unit,
 ) {
-    BasicModal(
-        modifier = modifier,
+    val connectDeviceViewModel = koinViewModel<ConnectDeviceViewModel>()
+
+    ConnectDeviceModal(
         onDismiss = onDismiss,
-    ) {
-        TitledTopWithCloseAndBackButtons(
-            title = stringResource(R.string.device_connection),
-            onDismiss = onDismiss,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.router),
-                contentDescription = null,
-                tint = LockBoxTheme.colors.grey500,
-                modifier = Modifier.size(48.dp),
-            )
-
-            Text(
-                text = stringResource(R.string.connect_to_lockbox_network),
-                style = LockBoxTheme.typography.titleMedium,
-                color = LockBoxTheme.colors.grey100,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.go_to_wifi_settings_to_connect),
-                style = LockBoxTheme.typography.bodyMedium,
-                color = LockBoxTheme.colors.grey500,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            BasicButton(
-                onClick = toWifiConnection,
-                text = stringResource(R.string.open_wifi_settings),
-                paddingValues = PaddingValues(10.dp),
-                modifier = Modifier.padding(top = 16.dp)
-            )
-
-            BasicButton(
-                onClick = onDismiss,
-                text = stringResource(R.string.cancel),
-                modifier = Modifier.padding(top = 12.dp),
-                paddingValues = PaddingValues(horizontal = 12.dp),
-                style = BasicButtonStyle.grey()
-            )
-        }
-
-        BasicButton(
-            onClick = onAddVirtualDevice,
-            text = stringResource(R.string.add_virtual_device),
-            modifier = Modifier
-                .padding(bottom = 12.dp)
-                .align(Alignment.CenterHorizontally),
-            paddingValues = PaddingValues(horizontal = 12.dp),
-            style = BasicButtonStyle.grey()
-        )
-    }
+        onCreateTestDevice = {
+            connectDeviceViewModel.createTestDevice()
+            onDismiss()
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -459,13 +393,20 @@ private fun EmptyScreen(
 private fun PreviewLockBox() {
     LockBoxTheme {
         LockBox(
-            box = Box(
-                address = "Doma",
-                macAddress = "1D:2C",
-                alias = "Demo",
-                opened = false,
-                signalStrength = 0.0,
-                batteryLevel = 0.0
+            statusBox = BoxWithStatus(
+                box = Box(
+                    address = "Dom",
+                    alias = "Domashniy",
+                    ownerSub = "1234",
+                    macAddress = "11:AA"
+                ),
+                status = Status(
+                    macAddress = "11:aa",
+                    opened = false,
+                    batteryLevel = 90.0,
+                    signalStrength = 0.0,
+                    timeStamp = LocalDateTime(2025, 4, 3, 12, 23, 14, 10)
+                )
             ),
             onClick = {},
             modifier = Modifier.fillMaxWidth()
@@ -481,29 +422,51 @@ private fun PreviewLockBoxesScreen() {
         val pagingData = flowOf(
             PagingData.from(
                 listOf(
-                    Box(
-                        address = "Doma",
-                        macAddress = "1D:3C",
-                        alias = "Demo",
-                        opened = false,
-                        signalStrength = 0.0,
-                        batteryLevel = 0.0
+                    BoxWithStatus(
+                        box = Box(
+                            address = "Dom",
+                            alias = "Domashniy",
+                            ownerSub = "1234",
+                            macAddress = "11:AA"
+                        ),
+                        status = Status(
+                            macAddress = "11:aa",
+                            opened = false,
+                            batteryLevel = 90.0,
+                            signalStrength = 0.0,
+                            timeStamp = LocalDateTime(2025, 4, 3, 12, 23, 14, 10)
+                        )
                     ),
-                    Box(
-                        address = "Doma",
-                        macAddress = "1D:2C",
-                        alias = "Demo",
-                        opened = false,
-                        signalStrength = 0.0,
-                        batteryLevel = 0.0
-                    ), Box(
-                        address = "Doma",
-                        macAddress = "1D:1C",
-                        alias = "Demo",
-                        opened = false,
-                        signalStrength = 0.0,
-                        batteryLevel = 0.0
-                    )
+                    BoxWithStatus(
+                        box = Box(
+                            address = "Dom",
+                            alias = "Domashniy",
+                            ownerSub = "1234",
+                            macAddress = "11:AA"
+                        ),
+                        status = Status(
+                            macAddress = "11:aa",
+                            opened = false,
+                            batteryLevel = 90.0,
+                            signalStrength = 0.0,
+                            timeStamp = LocalDateTime(2025, 4, 3, 12, 23, 14, 10)
+                        )
+                    ),
+                    BoxWithStatus(
+                        box = Box(
+                            address = "Dom",
+                            alias = "Domashniy",
+                            ownerSub = "1234",
+                            macAddress = "11:AA"
+                        ),
+                        status = Status(
+                            macAddress = "11:aa",
+                            opened = false,
+                            batteryLevel = 90.0,
+                            signalStrength = 0.0,
+                            timeStamp = LocalDateTime(2025, 4, 3, 12, 23, 14, 10)
+                        )
+                    ),
                 ),
                 LoadStates(
                     LoadState.NotLoading(false),
@@ -521,7 +484,7 @@ private fun PreviewLockBoxesScreen() {
 private fun PreviewLoading() {
     LockBoxTheme {
         val pagingData = flowOf(
-            PagingData.empty<Box>()
+            PagingData.empty<BoxWithStatus>()
         )
         LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
     }
@@ -532,7 +495,7 @@ private fun PreviewLoading() {
 private fun PreviewEmptyScreen() {
     LockBoxTheme {
         val pagingData = flowOf(
-            PagingData.empty<Box>(
+            PagingData.empty<BoxWithStatus>(
                 LoadStates(
                     LoadState.NotLoading(false),
                     LoadState.NotLoading(false),

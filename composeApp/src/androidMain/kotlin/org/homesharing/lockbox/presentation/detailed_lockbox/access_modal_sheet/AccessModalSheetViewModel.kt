@@ -68,7 +68,7 @@ internal class AccessModalSheetViewModel(
                 )
 
                 if (response is Response.Success) {
-                    emitLink(response.data.token)
+                    emitLink(response.data.id)
                 }
             }
         }
@@ -100,7 +100,7 @@ internal class AccessModalSheetViewModel(
             loadGuestList()
             _uiState.update {
                 it.copy(
-                    guestName = null,
+                    guestName = "",
                     selectedStartDate = null,
                     selectedEndDate = null
                 )
@@ -125,7 +125,7 @@ internal data class AccessModalSheetUiState(
     val step: AccessModalSheetStep = AccessModalSheetStep.GuestList,
     val accesses: List<Access> = emptyList(),
     val loading: Boolean = false,
-    val guestName: String? = null,
+    val guestName: String = "",
     val selectedStartDate: Long? = null,
     val selectedStartTime: Long? = null,
     val selectedEndDate: Long? = null,

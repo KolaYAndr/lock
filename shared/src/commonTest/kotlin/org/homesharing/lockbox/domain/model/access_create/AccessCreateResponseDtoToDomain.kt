@@ -2,10 +2,9 @@ package org.homesharing.lockbox.domain.model.access_create
 
 import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateResponseDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
+import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class AccessCreateResponseDtoToDomainTest {
 
@@ -15,7 +14,6 @@ class AccessCreateResponseDtoToDomainTest {
         val startTime = "2025-06-10T10:15:30"
         val endTime = "2025-06-10T12:45:00"
         val macAddress = "1A:2C:3D:4C"
-        val token = "tokenFor123"
         val id = "123"
 
         val accessDto = AccessDto(
@@ -23,7 +21,6 @@ class AccessCreateResponseDtoToDomainTest {
             startTime = startTime,
             endTime = endTime,
             macAddress = macAddress,
-            token = token,
             uuid = id
         )
         val responseDto = AccessCreateResponseDto(access = accessDto)
@@ -37,64 +34,7 @@ class AccessCreateResponseDtoToDomainTest {
         assertEquals(expectedStart, domain.startTime)
         assertEquals(expectedEnd, domain.endTime)
         assertEquals(macAddress, domain.macAddress)
-        assertEquals(token, domain.token)
         assertEquals(id, domain.id)
-    }
-
-    @Test
-    fun `maps correctly with null alias and appropriate data`() {
-        val alias: String? = null
-        val startTime = "2025-06-10T10:15:30"
-        val endTime = "2025-06-10T12:45:00"
-        val macAddress = "1A:2C:3D:4C"
-        val token = "tokenFor123"
-        val id = "123"
-
-        val accessDto = AccessDto(
-            alias = alias,
-            startTime = startTime,
-            endTime = endTime,
-            macAddress = macAddress,
-            token = token,
-            uuid = id
-        )
-        val responseDto = AccessCreateResponseDto(access = accessDto)
-
-        val domain = responseDto.toDomain()
-
-        val expectedStart = LocalDateTime(2025, 6, 10, 10, 15, 30)
-        val expectedEnd = LocalDateTime(2025, 6, 10, 12, 45, 0)
-
-        assertEquals(alias, domain.name)
-        assertEquals(expectedStart, domain.startTime)
-        assertEquals(expectedEnd, domain.endTime)
-        assertEquals(macAddress, domain.macAddress)
-        assertEquals(token, domain.token)
-        assertEquals(id, domain.id)
-    }
-
-    @Test
-    fun `throws with inappropriate time data`() {
-        val alias = "TestAlias"
-        val startTime = "not-a-date"
-        val endTime = "not-a-date"
-        val macAddress = "1A:2C:3D:4C"
-        val token = "tokenFor123"
-        val id = "123"
-
-        val accessDto = AccessDto(
-            alias = alias,
-            startTime = startTime,
-            endTime = endTime,
-            macAddress = macAddress,
-            token = token,
-            uuid = id
-        )
-        val responseDto = AccessCreateResponseDto(access = accessDto)
-
-        assertFailsWith<IllegalArgumentException> {
-            responseDto.toDomain()
-        }
     }
 
     @Test
@@ -103,7 +43,6 @@ class AccessCreateResponseDtoToDomainTest {
         val startTime = "2025-06-10T10:15:30.123"
         val endTime = "2025-06-10T12:45:00.456"
         val macAddress = "1A:2C:3D:4C"
-        val token = "tokenFor123"
         val id = "123"
 
         val accessDto = AccessDto(
@@ -111,7 +50,6 @@ class AccessCreateResponseDtoToDomainTest {
             startTime = startTime,
             endTime = endTime,
             macAddress = macAddress,
-            token = token,
             uuid = id
         )
         val responseDto = AccessCreateResponseDto(access = accessDto)
@@ -122,7 +60,6 @@ class AccessCreateResponseDtoToDomainTest {
         assertEquals(LocalDateTime.parse(endTime), domain.endTime)
         assertEquals(alias, domain.name)
         assertEquals(macAddress, domain.macAddress)
-        assertEquals(token, domain.token)
         assertEquals(id, domain.id)
     }
 }

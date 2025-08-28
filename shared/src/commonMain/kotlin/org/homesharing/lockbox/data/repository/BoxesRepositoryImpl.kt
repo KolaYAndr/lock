@@ -8,12 +8,13 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessDto
-import org.homesharing.lockbox.data.network.dto.accessed.AccessResponseDto
+import org.homesharing.lockbox.data.network.dto.access.AccessDto
+import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
-import org.homesharing.lockbox.data.network.dto.mockbox.MockboxDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
+import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
@@ -22,19 +23,20 @@ import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.model.physical_sign_up.PhysicalSignUp
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access.toDomain
 import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.access_revoke.toDomain
 import org.homesharing.lockbox.domain.model.box.Box
+import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.create_linking_code.toDomain
-import org.homesharing.lockbox.domain.model.mockbox.Mockbox
-import org.homesharing.lockbox.domain.model.mockbox.toDomain
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.open_box.toDomain
+import org.homesharing.lockbox.domain.model.physical_sign_up.toDomain
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 import org.homesharing.lockbox.domain.model.update_box.toDomain
 import org.homesharing.lockbox.domain.repository.BoxesRepository
@@ -51,7 +53,7 @@ internal class BoxesRepositoryImpl(
     private val tokenStorage: TokenStorage,
     private val pagingSourceFactory: () -> BoxesPagingSource,
 ) : BoxesRepository {
-    override fun getBoxesPagingFlow(): Flow<PagingData<Box>> =
+    override fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>> =
         Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
@@ -62,7 +64,7 @@ internal class BoxesRepositoryImpl(
         ).flow
 
 
-    override suspend fun getBoxByMac(address: String): Response<Box> =
+    override suspend fun getBoxByMac(address: String): Response<BoxWithStatus> =
         try {
             refreshTokenIfNeed()
             parseLockBoxApiResponse(
@@ -72,7 +74,7 @@ internal class BoxesRepositoryImpl(
                         macAddress = address
                     )
                 },
-                mapper = BoxResponseDto::toDomain
+                mapper = BoxWithStatusResponseDto::toDomain
             )
         } catch (e: Exception) {
             Response.Failure(e.message ?: "")
@@ -169,7 +171,7 @@ internal class BoxesRepositoryImpl(
         startTime: Long,
         endDate: Long,
         endTime: Long,
-        alias: String?,
+        alias: String
     ): Response<Access> =
         try {
             refreshTokenIfNeed()
@@ -216,21 +218,32 @@ internal class BoxesRepositoryImpl(
         Response.Failure(e.message ?: "")
     }
 
-    override suspend fun physicalSignUp(code: Int): Response<Mockbox> =
+    override suspend fun physicalSignUp(code: Int, macAddress: String): Response<PhysicalSignUp> =
         try {
             refreshTokenIfNeed()
             parseLockBoxApiResponse(
                 apiCall = {
                     boxesApi.physicalSignUp(
                         accessToken = tokenStorage.getAccessToken(),
-                        code = code
+                        code = code,
+                        macAddress = macAddress
                     )
                 },
-                mapper = MockboxDto::toDomain
+                mapper = PhysicalSignUpResponseDto::toDomain
             )
         } catch (e: Exception) {
             Response.Failure(e.message ?: "")
         }
+
+    override suspend fun createTestDevice(): Response<Box> = try {
+        refreshTokenIfNeed()
+        parseLockBoxApiResponse(
+            apiCall = { boxesApi.createTestDevice(accessToken = tokenStorage.getAccessToken()) },
+            mapper = BoxResponseDto::toDomain
+        )
+    } catch (e: Exception) {
+        Response.Failure(e.message ?: "")
+    }
 
     @OptIn(ExperimentalTime::class)
     private fun formatToBackendTimestamp(epochMillis: Long): String {

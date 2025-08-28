@@ -245,7 +245,7 @@ private fun GuestInfoContent(
             )
 
             LockBoxPropertyInput(
-                value = access.name ?: stringResource(R.string.guest_name),
+                value = access.name,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -257,7 +257,7 @@ private fun GuestInfoContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             CopyButton(
-                onClick = { onCopyLink(access.token) },
+                onClick = { onCopyLink(access.id) },
                 enabled = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -674,7 +674,7 @@ private fun Access(
         verticalAlignment = Alignment.CenterVertically
     ) {
         RoundText(
-            text = access.name ?: stringResource(R.string.guest),
+            text = access.name,
             modifier = Modifier.size(40.dp)
         )
 
@@ -685,7 +685,7 @@ private fun Access(
             verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
         ) {
             Text(
-                text = access.name ?: stringResource(R.string.guest),
+                text = access.name,
                 color = LockBoxTheme.colors.white,
                 style = LockBoxTheme.typography.headlineLarge
             )
@@ -719,11 +719,10 @@ private fun PreviewAccess() {
         val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
         Access(
             access = Access(
-                name = null,
+                name = "",
                 startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 macAddress = "1A:2B",
-                token = "123",
                 id = "123"
             ),
             formatter = formatter,
@@ -761,11 +760,10 @@ private fun PreviewGuestListContent() {
         val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
         val list = listOf(
             Access(
-                name = null,
+                name = "",
                 startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 macAddress = "1A:2B",
-                token = "123",
                 id = "123"
             ),
         )
@@ -787,11 +785,10 @@ private fun PreviewGuestListContentLoading() {
         val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
         val list = listOf(
             Access(
-                name = null,
+                name = "",
                 startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 macAddress = "1A:2B",
-                token = "123",
                 id = "123"
             ),
         )
@@ -831,11 +828,10 @@ private fun PreviewGuestInfoContent() {
             lockboxName = "Dom",
             lockboxAddress = "ul. Doma",
             access = Access(
-                name = null,
+                name = "",
                 startTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 endTime = LocalDateTime.parse("2004-09-16T23:59:58.75"),
                 macAddress = "1A:2B",
-                token = "123",
                 id = "123"
             ),
             onCopyLink = {},
