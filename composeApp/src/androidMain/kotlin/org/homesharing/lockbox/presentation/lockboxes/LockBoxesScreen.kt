@@ -3,7 +3,6 @@ package org.homesharing.lockbox.presentation.lockboxes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,8 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,11 +41,13 @@ import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.Status
 import org.homesharing.lockbox.presentation.general.composables.AddRow
-import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
+import org.homesharing.lockbox.presentation.general.composables.TopRowWithAddButton
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
+import org.homesharing.lockbox.presentation.general.composables.screens.EmptyScreenContent
+import org.homesharing.lockbox.presentation.general.composables.screens.ErrorScreenContent
+import org.homesharing.lockbox.presentation.general.composables.screens.LoadingScreenContent
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModal
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceViewModel
@@ -69,7 +67,7 @@ internal fun LockBoxesScreen(
     val lazyBoxes = boxes.collectAsLazyPagingItems()
 
     Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
-        TopRow(model = avatarLink, onAddDevice = { showConnectModal = true })
+        TopRow(avatar = avatarLink, onAddDevice = { showConnectModal = true })
 
         when (lazyBoxes.loadState.refresh) {
             is LoadState.NotLoading -> {
@@ -80,22 +78,8 @@ internal fun LockBoxesScreen(
                 )
             }
 
-            is LoadState.Loading -> {
-                LoadingScreen()
-            }
-
-            is LoadState.Error -> {
-                var isRefreshing by remember { mutableStateOf(false) }
-                ErrorScreen(
-                    message = stringResource(R.string.something_went_wrong_try_refreshing),
-                    isRefreshing = isRefreshing,
-                    onRefresh = {
-                        isRefreshing = true
-                        lazyBoxes.refresh()
-                        isRefreshing = false
-                    }
-                )
-            }
+            is LoadState.Loading -> { LoadingScreenContent(modifier = Modifier.fillMaxSize()) }
+            is LoadState.Error -> { ErrorScreen(onRefresh = lazyBoxes::refresh) }
         }
     }
 
@@ -116,50 +100,22 @@ internal fun LockBoxesScreen(
 //    }
 }
 
-@Composable
-private fun LoadingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        LockBoxCircularProgress()
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ErrorScreen(
-    isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    message: String?,
 ) {
-    LockBoxPullToRefresh(
+    var isRefreshing by remember { mutableStateOf(false) }
+    ErrorScreenContent(
         isRefreshing = isRefreshing,
-        onRefresh = onRefresh
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically)
-        ) {
-            item {
-                Text(
-                    text = message ?: stringResource(R.string.unknown_error),
-                    color = LockBoxTheme.colors.grey100,
-                    style = LockBoxTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            item {
-                BasicButton(
-                    onClick = onRefresh,
-                    text = stringResource(R.string.refresh),
-                )
-            }
-        }
-    }
+        onRefresh = {
+            isRefreshing = true
+            onRefresh()
+            isRefreshing = false
+        },
+        message = stringResource(R.string.something_went_wrong_try_refreshing),
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -181,7 +137,10 @@ private fun LockBoxScreen(
         ) {
             if (boxes.itemCount == 0) {
                 item {
-                    EmptyScreen(onAddDevice = onAddDevice, modifier = Modifier.fillParentMaxSize())
+                    EmptyBoxesScreen(
+                        onAddDevice = onAddDevice,
+                        modifier = Modifier.fillParentMaxSize()
+                    )
                 }
             } else {
                 items(
@@ -225,7 +184,7 @@ private fun LockBox(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(vertical = 6.dp)
-                    .size(64.dp),
+                    .size(30.dp),
                 tint = LockBoxTheme.colors.grey500
             )
 
@@ -273,35 +232,14 @@ private fun LockBox(
 }
 
 @Composable
-private fun TopRow(model: String, onAddDevice: () -> Unit) {
-    Row(
+private fun TopRow(avatar: String, onAddDevice: () -> Unit) {
+    TopRowWithAddButton(
+        rowContent = { LockBoxesTopRow(avatarLink = avatar) },
+        onAdd = onAddDevice,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            LockBoxesTopRow(avatarLink = model)
-        }
-
-        IconButton(
-            onClick = { onAddDevice() },
-            modifier = Modifier.size(40.dp),
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = LockBoxTheme.colors.grey100,
-                containerColor = LockBoxTheme.colors.grey950
-            )
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.plus),
-                contentDescription = null
-            )
-        }
-    }
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    )
 }
 
 @Composable
@@ -347,45 +285,17 @@ private fun ConnectModalSheet(
 }
 
 @Composable
-private fun EmptyScreen(
+private fun EmptyBoxesScreen(
     onAddDevice: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    EmptyScreenContent(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.circle_fading_plus),
-            contentDescription = null,
-            tint = LockBoxTheme.colors.grey500,
-            modifier = Modifier.size(48.dp)
-        )
-
-        Text(
-            text = stringResource(R.string.manage_devices),
-            modifier = Modifier.padding(top = 12.dp),
-            style = LockBoxTheme.typography.titleMedium,
-            color = LockBoxTheme.colors.grey100,
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = stringResource(R.string.here_will_be_devices_you_add),
-            modifier = Modifier.padding(top = 8.dp),
-            style = LockBoxTheme.typography.bodyMedium,
-            color = LockBoxTheme.colors.grey500,
-            textAlign = TextAlign.Center
-        )
-
-        BasicButton(
-            onClick = { onAddDevice() },
-            text = stringResource(R.string.add_device),
-            paddingValues = PaddingValues(10.dp),
-            modifier = Modifier.padding(top = 16.dp)
-        )
-    }
+        title = stringResource(R.string.manage_devices),
+        subtitle = stringResource(R.string.here_will_be_devices_you_add),
+        action = stringResource(R.string.add_device),
+        onAction = onAddDevice
+    )
 }
 
 @Preview
@@ -483,9 +393,7 @@ private fun PreviewLockBoxesScreen() {
 @Composable
 private fun PreviewLoading() {
     LockBoxTheme {
-        val pagingData = flowOf(
-            PagingData.empty<BoxWithStatus>()
-        )
+        val pagingData = flowOf(PagingData.empty<BoxWithStatus>())
         LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
     }
 }

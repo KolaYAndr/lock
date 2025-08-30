@@ -14,6 +14,7 @@ import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.
 import org.homesharing.lockbox.presentation.sessions.ActiveSessionsViewModel
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceViewModel
 import org.homesharing.lockbox.LockBoxActivityViewModel
+import org.homesharing.lockbox.presentation.documents.ContractsViewModel
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -34,4 +35,5 @@ internal val viewModelModule = module {
     viewModelOf(::AccessModalSheetViewModel)
     viewModelOf(::AddVirtualDeviceViewModel)
     viewModelOf(::ConnectDeviceViewModel)
+    viewModelOf(::ContractsViewModel)
 }

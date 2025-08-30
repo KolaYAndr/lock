@@ -16,7 +16,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
-import org.homesharing.lockbox.navigation.routes.DocumentRoutes
+import org.homesharing.lockbox.navigation.routes.ContractRoutes
 import org.homesharing.lockbox.navigation.routes.MainRoutes
 import org.homesharing.lockbox.navigation.routes.Routes
 import org.homesharing.lockbox.navigation.routes.SecurityRoutes
@@ -31,12 +31,14 @@ import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
 import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxScreen
 import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxViewModel
+import org.homesharing.lockbox.presentation.documents.ContractsScreen
+import org.homesharing.lockbox.presentation.documents.ContractsViewModel
 import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.general.animation.enterAnimation
 import org.homesharing.lockbox.presentation.general.animation.exitAnimation
 import org.homesharing.lockbox.presentation.general.animation.globalEnterAnimation
 import org.homesharing.lockbox.presentation.general.animation.globalExitAnimation
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.DocumentsTopRow
+import org.homesharing.lockbox.presentation.general.composables.login_top_rows.ContractsTopRow
 import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
 import org.homesharing.lockbox.presentation.general.composables.login_top_rows.SettingsTopRowText
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
@@ -316,10 +318,10 @@ internal fun Navigation(
             }
         }
 
-        navigation<Routes.Documents>(
-            startDestination = if (startFromLogin) DocumentRoutes.Login else DocumentRoutes.Documents,
+        navigation<Routes.Contracts>(
+            startDestination = if (startFromLogin) ContractRoutes.Login else ContractRoutes.Contracts,
         ) {
-            composable<DocumentRoutes.Login>(
+            composable<ContractRoutes.Login>(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
                 popEnterTransition = null,
@@ -330,24 +332,34 @@ internal fun Navigation(
                     flow = loginViewModel.loggedIn,
                     lifecycleOwner = lifecycleOwner
                 ) {
-                    navController.navigateToDestinationWithNoBackstack(DocumentRoutes.Documents)
+                    navController.navigateToDestinationWithNoBackstack(ContractRoutes.Contracts)
                 }
 
                 LoginScreen(
                     loginType = loginType,
                     onToTypeAuth = loginViewModel::toTypeAuth,
-                    topRowContent = { DocumentsTopRow() },
+                    topRowContent = { ContractsTopRow() },
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
-            composable<DocumentRoutes.Documents>(
+            composable<ContractRoutes.Contracts>(
                 enterTransition = globalEnterAnimation,
                 exitTransition = null,
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
+                val contractsViewModel = koinViewModel<ContractsViewModel>()
+                val avatar by contractsViewModel.avatarLink.collectAsStateWithLifecycle()
+                val selectedContract by contractsViewModel.contractSelected.collectAsStateWithLifecycle()
 
+                ContractsScreen(
+                    avatarLink = avatar,
+                    contracts = contractsViewModel.contracts,
+                    selectedContract = selectedContract,
+                    updateSelectedContract = contractsViewModel::updateContractSelected,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }

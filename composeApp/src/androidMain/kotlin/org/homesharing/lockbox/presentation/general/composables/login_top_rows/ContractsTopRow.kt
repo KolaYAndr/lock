@@ -11,13 +11,13 @@ import org.homesharing.lockbox.presentation.general.composables.NetworkImage
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 
 @Composable
-internal fun DocumentsTopRow(avatarLink: String? = null) {
+internal fun ContractsTopRow(avatarLink: String? = null) {
     NetworkImage(
         url = avatarLink,
         modifier = Modifier.size(40.dp)
     )
     Text(
-        text = stringResource(R.string.documents),
+        text = stringResource(R.string.contracts),
         style = LockBoxTheme.typography.titleMedium,
         color = LockBoxTheme.colors.grey50
     )

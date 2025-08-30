@@ -36,7 +36,7 @@
     <string name="main">Главная</string>
     <string name="menu">Меню</string>
     <string name="settings">Настройки</string>
-    <string name="documents">Документы</string>
+    <string name="contracts">Договоры</string>
     <string name="account">Аккаунт</string>
     <string name="security">Безопасность</string>
     <string name="about_app">О приложении</string>
@@ -94,8 +94,11 @@
     <string name="email_not_set">Почта не указана</string>
     <string name="add_full">Добавить</string>
     <string name="manage_devices">Управляйте устройствами</string>
+    <string name="manage_contracts">Управляйте договорами</string>
     <string name="here_will_be_devices_you_add">Здесь будут отображаться устройства, которые Вы добавите</string>
+    <string name="here_will_be_contracts_you_create">Здесь будут отображаться договоры, которые Вы создадите</string>
     <string name="add_device">Добавить устройство</string>
+    <string name="add_contract">Создать договор</string>
     <string name="device_connection">Подключение устройства</string>
     <string name="connect_to_lockbox_network">Подключитесь к сети:  LockBox-Network</string>
     <string name="go_to_wifi_settings_to_connect">Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети LockBox-Network</string>

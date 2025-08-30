@@ -36,7 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
-import org.homesharing.lockbox.presentation.general.downloadlServiceConditions
+import org.homesharing.lockbox.presentation.general.downloadUserAgreement
 import org.homesharing.lockbox.presentation.login.LoginType
 import org.homesharing.lockbox.presentation.general.composables.CloseRoundButton
 import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput
@@ -184,7 +184,7 @@ internal fun SignInCard(
         val context = LocalContext.current
         PolicyAndConditions(
             onConditionsClick = {
-                downloadlServiceConditions(context)
+                downloadUserAgreement(context)
             },
             onPolicyClick = {
                 downloadPrivacyPolicy(context)

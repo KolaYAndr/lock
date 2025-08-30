@@ -2,10 +2,10 @@ package org.homesharing.lockbox.navigation.routes
 
 import kotlinx.serialization.Serializable
 
-internal sealed interface DocumentRoutes {
+internal sealed interface ContractRoutes {
     @Serializable
-    data object Documents: DocumentRoutes
+    data object Contracts: ContractRoutes
 
     @Serializable
-    data object Login : DocumentRoutes
+    data object Login : ContractRoutes
 }

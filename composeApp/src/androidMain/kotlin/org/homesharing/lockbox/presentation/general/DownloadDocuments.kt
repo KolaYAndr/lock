@@ -2,20 +2,38 @@ package org.homesharing.lockbox.presentation.general
 
 import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import org.homesharing.lockbox.R
 
-private const val USER_AGREEMENT_URL = "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf"
-private const val PRIVACY_POLICY_URL = "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf"
+private const val USER_AGREEMENT_URL =
+    "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf"
+private const val PRIVACY_POLICY_URL =
+    "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf"
 
-internal fun downloadlServiceConditions(context: Context) {
+internal fun downloadUserAgreement(context: Context) =
+    downloadDocument(
+        context = context,
+        uri = USER_AGREEMENT_URL.toUri(),
+        fileResourceName = R.string.user_agreement
+    )
+
+internal fun downloadPrivacyPolicy(context: Context) =
+    downloadDocument(
+        context = context,
+        uri = PRIVACY_POLICY_URL.toUri(),
+        fileResourceName = R.string.privacy_policy
+    )
+
+internal fun downloadDocument(context: Context, uri: Uri, fileName: String) {
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     val destinationUri = context.externalCacheDir ?: return
 
-    val request = DownloadManager.Request(USER_AGREEMENT_URL.toUri()).apply {
+    val request = DownloadManager.Request(uri).apply {
         setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         setAllowedOverRoaming(false)
-        setTitle(context.getString(R.string.user_agreement))
+        setTitle(fileName)
         setDestinationUri(destinationUri.toUri())
         setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
     }
@@ -23,14 +41,15 @@ internal fun downloadlServiceConditions(context: Context) {
     downloadManager.enqueue(request)
 }
 
-internal fun downloadPrivacyPolicy(context: Context) {
+internal fun downloadDocument(context: Context, uri: Uri, @StringRes fileResourceName: Int) {
     val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     val destinationUri = context.externalCacheDir ?: return
+    val title = context.getString(fileResourceName)
 
-    val request = DownloadManager.Request(PRIVACY_POLICY_URL.toUri()).apply {
+    val request = DownloadManager.Request(uri).apply {
         setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         setAllowedOverRoaming(false)
-        setTitle(context.getString(R.string.privacy_policy))
+        setTitle(title)
         setDestinationUri(destinationUri.toUri())
         setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
     }
