@@ -50,9 +50,9 @@ import org.homesharing.lockbox.presentation.general.composables.screens.ErrorScr
 import org.homesharing.lockbox.presentation.general.composables.screens.LoadingScreenContent
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModal
-import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceViewModel
+import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModalViewModel
+import org.homesharing.lockbox.presentation.lockboxes.add_virtual_device_modal.AddVirtualDeviceModalViewModel
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModal
-import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -248,7 +248,7 @@ private fun VirtualDeviceModal(
     onDismiss: () -> Unit,
     onFinish: () -> Unit,
 ) {
-    val addVirtualDeviceViewModel = koinViewModel<AddVirtualDeviceViewModel>()
+    val addVirtualDeviceViewModel = koinViewModel<AddVirtualDeviceModalViewModel>()
     val addVirtualDeviceUiState by addVirtualDeviceViewModel.addVirtualDeviceUiState.collectAsStateWithLifecycle()
 
     AddVirtualDeviceModal(
@@ -272,7 +272,7 @@ private fun ConnectModalSheet(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
-    val connectDeviceViewModel = koinViewModel<ConnectDeviceViewModel>()
+    val connectDeviceViewModel = koinViewModel<ConnectDeviceModalViewModel>()
 
     ConnectDeviceModal(
         onDismiss = onDismiss,

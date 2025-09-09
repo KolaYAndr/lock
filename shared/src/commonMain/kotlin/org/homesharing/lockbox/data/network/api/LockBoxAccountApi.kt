@@ -34,6 +34,7 @@ import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResp
 import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.domain.api.AccountApi
 
+private const val API_VERSION = "api/v1"
 private const val REALM = "realms/lockbox"
 private const val PROTOCOL = "protocol"
 private const val OPENID_CONNECT_TOKEN = "openid-connect/token"
@@ -60,7 +61,7 @@ private const val REFRESH_TOKEN = "refresh_token"
 
 //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
 internal const val TOKEN_URL = "$BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
-internal const val SIGN_UP_URL = "$BASE_ENDPOINT:8445/$USERS/$SIGN_UP"
+internal const val SIGN_UP_URL = "$BASE_ENDPOINT/$API_VERSION/$USERS/$SIGN_UP"
 internal const val SESSIONS_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
 internal const val RESET_PASSWORD_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$RESET_PASSWORD"
 internal const val AVATARS_POST_URL = "$BASE_ENDPOINT:8445/$USER/$AVATAR/$UPLOAD"
@@ -81,7 +82,7 @@ internal class LockBoxAccountApi(
         val request = SignUpRequestDto(
             email = username,
             password = password,
-            repeatPassword = passwordRepeated,
+            passwordRepeat = passwordRepeated,
         )
         return client.post {
             url(SIGN_UP_URL)

@@ -30,8 +30,7 @@ import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkin
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
 
-//internal const val BOXES_URL = "$BASE_ENDPOINT/api/v1"
-internal const val BOXES_URL = "http://10.0.2.2:8080/api/v1"
+internal const val BOXES_URL = "http://ingress.lockboxes.ru:30088/api/v1"
 internal const val DEVICES = "devices"
 internal const val BOXES = "boxes"
 internal const val STATUS = "status"

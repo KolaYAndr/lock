@@ -8,5 +8,5 @@ import org.koin.dsl.KoinAppDeclaration
 internal fun koinAndroidConfiguration(context: Context) : KoinAppDeclaration = {
     androidContext(context)
     androidLogger()
-    modules(appModules + viewModelModule)
+    modules(sharedAppModules)
 }

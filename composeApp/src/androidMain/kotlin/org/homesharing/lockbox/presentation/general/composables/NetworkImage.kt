@@ -2,8 +2,11 @@ package org.homesharing.lockbox.presentation.general.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -20,28 +23,51 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 private const val CROSSFADE_DURATION = 300
 
 @Composable
-internal fun NetworkImage(url: String?, modifier: Modifier = Modifier) {
-    val request = ImageRequest.Builder(LocalContext.current)
-        .data(url)
-        .diskCachePolicy(CachePolicy.DISABLED)
-        .memoryCachePolicy(CachePolicy.DISABLED)
-        .crossfade(CROSSFADE_DURATION)
-        .build()
-
-    AsyncImage(
-        model = request,
-        contentDescription = null,
-        modifier = modifier
-            .border(
-                width = 0.5.dp,
-                color = LockBoxTheme.colors.grey700,
-                shape = LockBoxTheme.shape.circleShape
+internal fun NetworkImage(url: String, modifier: Modifier = Modifier) {
+    if (url.isEmpty()) {
+        Box(
+            modifier = modifier
+                .border(
+                    width = 0.5.dp,
+                    color = LockBoxTheme.colors.grey700,
+                    shape = LockBoxTheme.shape.circleShape
+                )
+                .background(
+                    color = LockBoxTheme.colors.grey800,
+                    shape = LockBoxTheme.shape.circleShape
+                )
+                .size(64.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.user),
+                contentDescription = null,
+                tint = LockBoxTheme.colors.grey500
             )
-            .clip(LockBoxTheme.shape.circleShape)
-            .background(LockBoxTheme.colors.grey700)
-            .size(64.dp),
-        contentScale = ContentScale.Crop,
-        placeholder = painterResource(R.drawable.user),
-        clipToBounds = true,
-    )
+        }
+    } else {
+        val request = ImageRequest.Builder(LocalContext.current)
+            .data(url)
+            .diskCachePolicy(CachePolicy.DISABLED)
+            .memoryCachePolicy(CachePolicy.DISABLED)
+            .crossfade(CROSSFADE_DURATION)
+            .build()
+
+        AsyncImage(
+            model = request,
+            contentDescription = null,
+            modifier = modifier
+                .border(
+                    width = 0.5.dp,
+                    color = LockBoxTheme.colors.grey700,
+                    shape = LockBoxTheme.shape.circleShape
+                )
+                .clip(LockBoxTheme.shape.circleShape)
+                .background(LockBoxTheme.colors.grey700)
+                .size(64.dp),
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.user),
+            clipToBounds = true,
+        )
+    }
 }

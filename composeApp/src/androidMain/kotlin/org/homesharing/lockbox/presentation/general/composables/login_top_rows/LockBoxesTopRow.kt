@@ -13,7 +13,7 @@ import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 @Composable
 internal fun LockBoxesTopRow(avatarLink: String? = null) {
     NetworkImage(
-        url = avatarLink,
+        url = avatarLink.orEmpty(),
         modifier = Modifier.size(40.dp)
     )
     Text(

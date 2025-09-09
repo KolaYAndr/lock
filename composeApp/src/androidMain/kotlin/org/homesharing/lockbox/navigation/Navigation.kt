@@ -4,16 +4,17 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import org.homesharing.lockbox.navigation.routes.AccountRoutes
 import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
 import org.homesharing.lockbox.navigation.routes.ContractRoutes
@@ -29,10 +30,10 @@ import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewM
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
+import org.homesharing.lockbox.presentation.contracts.ContractsScreen
+import org.homesharing.lockbox.presentation.contracts.ContractsViewModel
 import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxScreen
-import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxViewModel
-import org.homesharing.lockbox.presentation.documents.ContractsScreen
-import org.homesharing.lockbox.presentation.documents.ContractsViewModel
+import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockboxViewModel
 import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.general.animation.enterAnimation
 import org.homesharing.lockbox.presentation.general.animation.exitAnimation
@@ -42,7 +43,7 @@ import org.homesharing.lockbox.presentation.general.composables.login_top_rows.C
 import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
 import org.homesharing.lockbox.presentation.general.composables.login_top_rows.SettingsTopRowText
 import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
-import org.homesharing.lockbox.presentation.lockboxes.LockBoxesViewModel
+import org.homesharing.lockbox.presentation.lockboxes.LockboxesViewModel
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.security.SecurityScreen
@@ -53,7 +54,6 @@ import org.homesharing.lockbox.presentation.settings.SettingsScreen
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 import org.koin.androidx.compose.koinViewModel
-import kotlin.reflect.typeOf
 
 private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
 
@@ -103,7 +103,7 @@ internal fun Navigation(
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
-                val lockBoxesViewModel = koinViewModel<LockBoxesViewModel>()
+                val lockBoxesViewModel = koinViewModel<LockboxesViewModel>()
                 val link by lockBoxesViewModel.avatarLink.collectAsStateWithLifecycle()
 
                 LockBoxesScreen(
@@ -123,13 +123,16 @@ internal fun Navigation(
                 enterTransition = enterAnimation,
                 popExitTransition = exitAnimation,
                 popEnterTransition = null,
-                typeMap = mapOf(typeOf<String>() to NavType.StringType)
-            ) {
-                val detailedLockBoxViewModel = koinViewModel<DetailedLockBoxViewModel>()
+            ) { backStack ->
+                val detailedLockBoxViewModel = koinViewModel<DetailedLockboxViewModel>()
                 val state by detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
+                val mac = backStack.toRoute<MainRoutes.DetailedBox>().macAddress
+
+                LaunchedEffect(mac) { detailedLockBoxViewModel.setMacAddress(mac) }
 
                 DetailedLockBoxScreen(
                     uiState = state,
+                    macAddress = mac,
                     onNavBack = navController::navigateUp,
                     onOpenBox = detailedLockBoxViewModel::openBox,
                     onUnbindDevice = {

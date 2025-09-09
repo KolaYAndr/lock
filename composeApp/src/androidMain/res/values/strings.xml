@@ -163,7 +163,7 @@
     <string name="finish_all_other_sessions_question">Завершить остальные сессии?</string>
     <string name="finish">Завершить</string>
     <string name="finish_setting_up">Завершить настройку</string>
-    <string name="password_dont_match">Пароли не совпадают</string>
+    <string name="passwords_dont_match">Пароли не совпадают</string>
     <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
     <string name="email_doesnt_match_pattern">Введите действительную почту</string>
     <string name="could_not_close_other_sessions">Не удалось завершить другие сессии</string>

@@ -22,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -69,6 +70,7 @@ private const val URL_PREFIX = "https://lockboxes.ru/open"
 @Composable
 internal fun DetailedLockBoxScreen(
     uiState: DetailedLockBoxUiState,
+    macAddress: String,
     onNavBack: () -> Unit,
     onOpenBox: () -> Unit,
     onUnbindDevice: () -> Unit,
@@ -357,6 +359,8 @@ internal fun DetailedLockBoxScreen(
         val accessModalSheetViewModel = koinViewModel<AccessModalSheetViewModel>()
         val accessModalSheetState by accessModalSheetViewModel.uiState.collectAsStateWithLifecycle()
 
+        LaunchedEffect(macAddress) { accessModalSheetViewModel.setMacAddress(macAddress) }
+
         val lifecycleOwner = LocalLifecycleOwner.current
         val clipboard = LocalClipboard.current
         val label = stringResource(R.string.link_copied)
@@ -375,7 +379,7 @@ internal fun DetailedLockBoxScreen(
             step = accessModalSheetState.step,
             changeStep = accessModalSheetViewModel::toStep,
             isLoading = accessModalSheetState.loading,
-            guestName = accessModalSheetState.guestName.orEmpty(),
+            guestName = accessModalSheetState.guestName,
             onChangeGuestName = accessModalSheetViewModel::onChangeGuestName,
             onChangeStartDate = accessModalSheetViewModel::onChangeStartDate,
             onChangeStartTime = accessModalSheetViewModel::onChangeStartTime,
@@ -794,6 +798,7 @@ private fun PreviewDetailScreen() {
         val state = DetailedLockBoxUiState()
         DetailedLockBoxScreen(
             state,
+            "",
             {}, {}, {}, {}, {},
             Modifier.fillMaxSize()
         )

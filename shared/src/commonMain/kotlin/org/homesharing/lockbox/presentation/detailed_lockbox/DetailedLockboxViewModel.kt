@@ -1,0 +1,20 @@
+package org.homesharing.lockbox.presentation.detailed_lockbox
+
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.StateFlow
+
+abstract class DetailedLockboxViewModel : ViewModel() {
+    abstract val uiState: StateFlow<DetailedLockBoxUiState>
+    abstract fun setMacAddress(macAddress: String)
+    abstract fun openBox()
+    abstract fun saveAddress(newAddress: String)
+    abstract fun saveName(newName: String)
+    abstract fun unbindDevice(onSuccess: () -> Unit)
+}
+
+data class DetailedLockBoxUiState(
+    val boxName: String = "",
+    val address: String = "",
+    val signalStrength: Int = 0,
+    val batteryLevel: Int = 0,
+)

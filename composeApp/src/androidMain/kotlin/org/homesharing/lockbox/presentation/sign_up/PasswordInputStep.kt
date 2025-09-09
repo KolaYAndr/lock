@@ -31,9 +31,9 @@ internal fun PasswordInputStep(
     password: String,
     onPasswordChange: (String) -> Unit,
     passwordRepeated: String,
-    passwordRepeatedError: PasswordRepeatedError,
+    passwordRepeatedError: PasswordRepeatedError?,
     onPasswordRepeatedChange: (String) -> Unit,
-    onCreate: () -> Unit
+    onCreate: () -> Unit,
 ) {
     val passwordFocusRequester = remember { FocusRequester() }
     val passwordRepeatedFocusRequester = remember { FocusRequester() }
@@ -91,8 +91,8 @@ internal fun PasswordInputStep(
         onValueChange = { onPasswordRepeatedChange(it) },
         onClearText = { onPasswordRepeatedChange("") },
         interactionSource = passwordRepeatedInteractionSource,
-        isError = passwordRepeatedError != PasswordRepeatedError.None,
-        errorText = parsePasswordRepeatedErrorText(passwordRepeatedError),
+        isError = passwordRepeatedError != null,
+        errorText = passwordRepeatedError?.let {parsePasswordRepeatedErrorText(it) } ?: "",
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { isPasswordRepeatedSeen = !isPasswordRepeatedSeen },
         keyboardActions = KeyboardActions(onDone = { onCreate() }),
@@ -120,5 +120,10 @@ internal fun PasswordInputStep(
 @Composable
 @ReadOnlyComposable
 private fun parsePasswordRepeatedErrorText(passwordRepeatedError: PasswordRepeatedError) =
-    passwordRepeatedError.messageId?.let { stringResource(it) } ?: ""
-
+    stringResource(
+        when (passwordRepeatedError) {
+            PasswordRepeatedError.PasswordsDontMatch -> R.string.passwords_dont_match
+            PasswordRepeatedError.Unexpected -> R.string.unknown_error
+            PasswordRepeatedError.UserExists -> R.string.user_already_exists
+        }
+    )

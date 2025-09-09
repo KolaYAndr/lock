@@ -29,10 +29,10 @@ internal fun RoundText(text: String, modifier: Modifier = Modifier) {
                 shape = LockBoxTheme.shape.circleShape
             )
             .background(
-                color = LockBoxTheme.colors.grey700,
+                color = LockBoxTheme.colors.grey800,
                 shape = LockBoxTheme.shape.circleShape
             )
-            .size(64.dp),
+            .size(80.dp),
         contentAlignment = Alignment.Center
     ) {
         if (text.isNotEmpty()) {
@@ -48,7 +48,14 @@ internal fun RoundText(text: String, modifier: Modifier = Modifier) {
                 color = LockBoxTheme.colors.grey500,
                 textAlign = TextAlign.Center
             )
-        } else Icon(painter = painterResource(R.drawable.user), contentDescription = null)
+        } else {
+            Icon(
+                painter = painterResource(R.drawable.user),
+                contentDescription = null,
+                tint = LockBoxTheme.colors.grey500,
+                modifier = Modifier.size(48.dp)
+            )
+        }
     }
 }
 

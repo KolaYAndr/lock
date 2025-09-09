@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -39,10 +38,14 @@ import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.navigation.BottomNavigation
 import org.homesharing.lockbox.navigation.Navigation
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
+import org.homesharing.lockbox.presentation.activity.LockboxActivityViewModel
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation.snackbar_controller.LockBoxSnackbar
+import org.homesharing.lockbox.presentation.snackbar.LockBoxSnackbar
+import org.homesharing.lockbox.presentation.snackbar_controller.CommonStringKeys
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
+import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDuration
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.material3.SnackbarDuration as AndroidSnackbarDuration
 
 private const val SPLASH_SCREEN_TIME = 1000L
 
@@ -66,7 +69,7 @@ class LockBoxActivity : ComponentActivity() {
         }
 
         setContent {
-            val lockboxActivityViewModel = koinViewModel<LockBoxActivityViewModel>()
+            val lockboxActivityViewModel = koinViewModel<LockboxActivityViewModel>()
             val isLoggedIn by
             lockboxActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
 
@@ -120,7 +123,6 @@ class LockBoxActivity : ComponentActivity() {
     private fun CollectSnackbarEvents(snackbarHostState: SnackbarHostState) {
         val scope = rememberCoroutineScope()
         val lifecycleOwner = LocalLifecycleOwner.current
-        val context = LocalContext.current
 
         LaunchedEffect(lifecycleOwner.lifecycle) {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -130,10 +132,10 @@ class LockBoxActivity : ComponentActivity() {
                             snackbarHostState.currentSnackbarData?.dismiss()
 
                             val result = snackbarHostState.showSnackbar(
-                                message = context.getString(event.message),
-                                actionLabel = event.action?.name?.let { context.getString(it) },
+                                message = resolveKey(event.messageKey),
+                                actionLabel = event.action?.nameKey?.let { resolveKey(it) },
                                 withDismissAction = true,
-                                duration = event.duration
+                                duration = resolveDuration(event.duration)
                             )
 
                             if (result == SnackbarResult.ActionPerformed) {
@@ -144,5 +146,39 @@ class LockBoxActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun resolveKey(key: CommonStringKeys): String {
+        return getString(
+            when (key) {
+                CommonStringKeys.CouldNotLoadUserInfo -> R.string.could_not_load_user_info
+                CommonStringKeys.CouldNotRefreshUserInfo -> R.string.could_not_refresh_user_info
+                CommonStringKeys.CouldNotUpdateUserInfo -> R.string.could_not_update_user_info
+                CommonStringKeys.Retry -> R.string.retry
+                CommonStringKeys.CouldNotUpdateUserImage -> R.string.could_not_update_user_image
+                CommonStringKeys.ImageUpdated -> R.string.image_updated
+                CommonStringKeys.CouldNotSendLinkToChangeEmail -> R.string.could_not_send_link_to_change_email
+                CommonStringKeys.CouldNotLoadGuestList -> R.string.could_not_load_guest_list
+                CommonStringKeys.CouldNotLoadBoxInfo -> R.string.could_not_load_box_info
+                CommonStringKeys.CouldNotUpdateBoxAddress -> R.string.could_not_update_box_address
+                CommonStringKeys.CouldNotUpdateBoxName -> R.string.could_not_update_box_name
+                CommonStringKeys.CouldNotUnbindBox -> R.string.could_not_unbind_box
+                CommonStringKeys.CouldNotOpenBox -> R.string.could_not_open_box
+                CommonStringKeys.BoxOpenedSuccessfully -> R.string.box_opened_successfully
+                CommonStringKeys.TestDeviceCreated -> R.string.test_device_created
+                CommonStringKeys.CouldNotCreateTestDevice -> R.string.could_not_create_test_device
+                CommonStringKeys.VirtualDeviceCreated -> R.string.virtual_device_created
+                CommonStringKeys.CouldNotCreateVirtualDevice -> R.string.could_not_create_virtual_device
+                CommonStringKeys.CouldNotSendLinkToChangePassword -> R.string.could_not_send_link_to_change_password
+                CommonStringKeys.LinkSentToChangePassword -> R.string.link_sent_to_change_password
+                CommonStringKeys.CouldNotLoadActiveSessions -> R.string.could_not_load_active_sessions
+                CommonStringKeys.CouldNotCloseOtherSessions -> R.string.could_not_close_other_sessions
+            }
+        )
+    }
+
+    private fun resolveDuration(duration: SnackbarDuration): AndroidSnackbarDuration = when(duration) {
+        SnackbarDuration.Short -> AndroidSnackbarDuration.Short
+        SnackbarDuration.Long -> AndroidSnackbarDuration.Long
     }
 }

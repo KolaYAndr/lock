@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class SignUpRequestDto(
     val password: String,
-    val repeatPassword: String,
+    val passwordRepeat: String,
     val email: String,
 )
