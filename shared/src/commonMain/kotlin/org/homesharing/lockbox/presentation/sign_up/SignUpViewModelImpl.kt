@@ -15,8 +15,8 @@ class SignUpViewModelImpl(
     private val authRepository: AuthRepository,
 ) : SignUpViewModel() {
     override val uiState = MutableStateFlow(SignUpUiState())
-    private val emailPattern =
-        Regex.fromLiteral("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+
+    private val emailPattern = Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
 
     override fun onChangeEmail(newEmail: String) {
         uiState.update {

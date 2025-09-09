@@ -17,7 +17,7 @@ class SignInViewModelImpl(
 ) : SignInViewModel() {
     override val uiState = MutableStateFlow(SignInUiState())
 
-    private val emailPattern = Regex.fromLiteral("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+    private val emailPattern = Regex("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
 
     override fun onChangeEmail(newEmail: String) = uiState.update {
         it.copy(email = newEmail, emailError = null)
