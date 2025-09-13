@@ -13,7 +13,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 import kotlin.properties.Delegates
 
-class AccessModalSheetViewModelImpl(
+internal class AccessModalSheetViewModelImpl(
     private val repository: BoxesRepository,
 ) : AccessModalSheetViewModel() {
     override val uiState = MutableStateFlow(AccessModalSheetUiState())

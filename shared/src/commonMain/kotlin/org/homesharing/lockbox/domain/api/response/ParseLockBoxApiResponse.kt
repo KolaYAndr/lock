@@ -17,6 +17,8 @@ internal suspend fun <Dto, D> parseLockBoxApiResponse(
                 val mapped = mapper(apiResponse.data as Dto)
                 Response.Success(mapped)
             }
+            ApiResponse.NoElements -> Response.Failure("No elements")
+
         }
     } catch (e: CancellationException) {
         throw e
@@ -34,6 +36,7 @@ internal suspend fun <Dto> parseLockBoxApiResponse(
         when (apiResponse) {
             is ApiResponse.Failure -> Response.Failure(apiResponse.message)
             is ApiResponse.Success<*> -> Response.Success(apiResponse.data as Dto)
+            ApiResponse.NoElements -> Response.Failure("No elements")
         }
     } catch (e: CancellationException) {
         throw e

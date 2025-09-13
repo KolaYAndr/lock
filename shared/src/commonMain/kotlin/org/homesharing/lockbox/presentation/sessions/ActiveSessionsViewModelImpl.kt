@@ -12,7 +12,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class ActiveSessionsViewModelImpl(
+internal class ActiveSessionsViewModelImpl(
     private val accountRepository: AccountRepository,
 ) : ActiveSessionsViewModel() {
     override val uiState = MutableStateFlow(ActiveSessionsUiState())

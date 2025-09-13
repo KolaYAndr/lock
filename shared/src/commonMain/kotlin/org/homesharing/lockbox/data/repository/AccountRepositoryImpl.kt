@@ -63,8 +63,7 @@ internal class AccountRepositoryImpl(
                     val expiresIn = tokenResponse.expiresIn
 
                     with(tokenStorage) {
-                        saveAccessToken(accessToken)
-                        saveRefreshToken(refreshToken)
+                        saveTokens(accessToken, refreshToken)
                         saveNextRefreshTime(expiresIn + refreshManager.currentTime)
                     }
 
@@ -209,8 +208,7 @@ internal class AccountRepositoryImpl(
             val expiresIn = tokenResponse.expiresIn
 
             with(tokenStorage) {
-                saveAccessToken(accessToken)
-                saveRefreshToken(refreshToken)
+                saveTokens(accessToken, refreshToken)
                 saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
         }

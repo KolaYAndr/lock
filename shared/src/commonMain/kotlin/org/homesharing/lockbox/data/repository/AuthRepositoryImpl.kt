@@ -36,8 +36,7 @@ internal class AuthRepositoryImpl(
         when (val response = api.loadTokensInitially(username, password)) {
             is AuthResponse.Success -> {
                 with(tokenStorage) {
-                    saveAccessToken(response.accessToken)
-                    saveRefreshToken(response.refreshToken)
+                    saveTokens(response.accessToken, response.refreshToken)
                     saveNextRefreshTime(response.expiresIn + refreshManager.currentTime)
                 }
                 Response.Success(Unit)

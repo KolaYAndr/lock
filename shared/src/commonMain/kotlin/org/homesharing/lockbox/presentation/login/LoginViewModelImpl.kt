@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
-class LoginViewModelImpl(
+internal class LoginViewModelImpl(
     private val repository: AccountRepository
 ) : LoginViewModel() {
     override val loginType: MutableStateFlow<LoginType> = MutableStateFlow(LoginType.SignIn)

@@ -12,7 +12,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDuration
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class AddVirtualDeviceModalViewModelImpl(
+internal class AddVirtualDeviceModalViewModelImpl(
     private val boxesRepository: BoxesRepository,
 ) : AddVirtualDeviceModalViewModel() {
     override val addVirtualDeviceUiState = MutableStateFlow(AddVirtualDeviceUiState())

@@ -16,7 +16,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotLoadAccountInfo
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotRefreshAccountInfo
 
-class ContractsViewModelImpl(
+internal class ContractsViewModelImpl(
     private val accountRepository: AccountRepository,
 ) : ContractsViewModel() {
     override val avatarLink = MutableStateFlow("")

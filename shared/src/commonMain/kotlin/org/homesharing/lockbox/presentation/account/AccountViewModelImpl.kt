@@ -20,7 +20,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
 private const val UPDATE_TIME = 500L
 
-class AccountViewModelImpl(
+internal class AccountViewModelImpl(
     private val repository: AccountRepository
 ) : AccountViewModel() {
     override val uiState: MutableStateFlow<AccountUiState> = MutableStateFlow(AccountUiState())

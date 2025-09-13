@@ -10,7 +10,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotLoadAccountInfo
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDefaultEvents.couldNotRefreshAccountInfo
 
-class SettingsViewModelImpl(
+internal class SettingsViewModelImpl(
     private val repository: AccountRepository
 ) : SettingsViewModel() {
     override val uiState = MutableStateFlow(SettingsUiState())

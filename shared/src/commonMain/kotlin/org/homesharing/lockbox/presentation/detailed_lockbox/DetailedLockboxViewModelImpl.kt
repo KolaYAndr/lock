@@ -13,7 +13,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDuration
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 import kotlin.properties.Delegates
 
-class DetailedLockboxViewModelImpl(
+internal class DetailedLockboxViewModelImpl(
     private val boxesRepository: BoxesRepository,
 ) : DetailedLockboxViewModel() {
     override val uiState = MutableStateFlow(DetailedLockBoxUiState())

@@ -11,7 +11,7 @@ import org.homesharing.lockbox.presentation.login.EmailError
 private const val USER_EXISTS_STRING = "{\"errorMessage\":\"User exists with same email\"}"
 private const val PASSWORDS_DONT_MATCH_STRING = "web.exchange.bind.exception"
 
-class SignUpViewModelImpl(
+internal class SignUpViewModelImpl(
     private val authRepository: AuthRepository,
 ) : SignUpViewModel() {
     override val uiState = MutableStateFlow(SignUpUiState())

@@ -10,7 +10,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDuration
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class SecurityViewModelImpl(
+internal class SecurityViewModelImpl(
     private val accountRepository: AccountRepository,
 ) : SecurityViewModel() {
     override fun sendLinkToChangePassword() {

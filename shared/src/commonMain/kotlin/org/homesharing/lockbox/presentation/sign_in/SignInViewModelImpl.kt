@@ -12,7 +12,7 @@ import org.homesharing.lockbox.presentation.login.EmailError
 
 private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
 
-class SignInViewModelImpl(
+internal class SignInViewModelImpl(
     private val authRepository: AuthRepository
 ) : SignInViewModel() {
     override val uiState = MutableStateFlow(SignInUiState())

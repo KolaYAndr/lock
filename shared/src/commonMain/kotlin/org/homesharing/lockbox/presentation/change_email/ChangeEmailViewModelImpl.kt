@@ -12,7 +12,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarAction
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class ChangeEmailViewModelImpl(
+internal class ChangeEmailViewModelImpl(
     private val repository: AuthRepository,
 ) : ChangeEmailViewModel() {
     override val uiState: MutableStateFlow<ChangeEmailUiState> =

@@ -14,7 +14,6 @@ import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.toDomain
 
 private const val STARTING_PAGE = 0
-private const val NO_BOXES_MESSAGE_CODE = "empty_boxes"
 
 @Suppress("UNCHECKED_CAST")
 internal class BoxesPagingSource(
@@ -43,22 +42,26 @@ internal class BoxesPagingSource(
                 size = size
             )
 
-            return if (apiResponse is ApiResponse.Success<*>) {
-                val response = apiResponse as ApiResponse.Success<BoxListResponseDto>
-                val endOfPagination = response.data.size < size
-                LoadResult.Page(
-                    data = response.data.boxes.map { it.toDomain() },
-                    prevKey = if (page == 0) null else page - 1,
-                    nextKey = if (endOfPagination) null else page + 1
-                )
-            } else {
-                val response = apiResponse as ApiResponse.Failure
-                if (checkIfUserHasNoBoxes(response.errorCode)) LoadResult.Page(
-                    data = emptyList(),
-                    prevKey = null,
-                    nextKey = null
-                )
-                else LoadResult.Error(Throwable(response.message))
+            return when (apiResponse) {
+                is ApiResponse.Failure -> {
+                    LoadResult.Error(Throwable(apiResponse.message))
+                }
+                ApiResponse.NoElements -> {
+                    LoadResult.Page(
+                        data = emptyList(),
+                        prevKey = null,
+                        nextKey = null
+                    )
+                }
+                is ApiResponse.Success<*> -> {
+                    val response = apiResponse as ApiResponse.Success<BoxListResponseDto>
+                    val endOfPagination = response.data.size < size
+                    LoadResult.Page(
+                        data = response.data.boxes.map { it.toDomain() },
+                        prevKey = if (page == 0) null else page - 1,
+                        nextKey = if (endOfPagination) null else page + 1
+                    )
+                }
             }
         } catch (e: CancellationException) {
             throw e
@@ -66,8 +69,6 @@ internal class BoxesPagingSource(
             return LoadResult.Error(e)
         }
     }
-
-    private fun checkIfUserHasNoBoxes(errorCode: String) = errorCode == NO_BOXES_MESSAGE_CODE
 
     private suspend fun refreshTokenIfNeed() {
         if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
@@ -88,8 +89,7 @@ internal class BoxesPagingSource(
             val expiresIn = tokenResponse.expiresIn
 
             with(tokenStorage) {
-                saveAccessToken(accessToken)
-                saveRefreshToken(refreshToken)
+                saveTokens(accessToken, refreshToken)
                 saveNextRefreshTime(expiresIn + refreshManager.currentTime)
             }
         }

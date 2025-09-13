@@ -10,7 +10,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarControll
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDuration
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 
-class ConnectDeviceModalViewModelImpl(
+internal class ConnectDeviceModalViewModelImpl(
     private val boxesRepository: BoxesRepository
 ) : ConnectDeviceModalViewModel() {
     override fun createTestDevice() {

@@ -13,4 +13,7 @@ internal sealed interface ApiResponse {
         val errorCode: String,
         val message: String,
     ): ApiResponse
+
+    @Serializable
+    data object NoElements: ApiResponse
 }
