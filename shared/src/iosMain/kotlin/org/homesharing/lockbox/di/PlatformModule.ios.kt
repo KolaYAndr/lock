@@ -8,6 +8,5 @@ import org.koin.dsl.module
 
 actual val platformModule: Module = module {
     singleOf(::TokenStorage)
-
     singleOf(::RefreshManager)
 }

@@ -4,8 +4,9 @@ import Shared
 @main
 struct iOSApp: App {
     init() {
-        SharedAppModulesKt.doInitSharedKoin()
+        DiHelper.shared.doInitSharedKoin()
     }
+    private var lockboxActivityViewModel: LockboxActivityViewModel = get()
 
     var body: some Scene {
         WindowGroup {
