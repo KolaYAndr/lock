@@ -52,11 +52,11 @@ actual class TokenStorage {
     }
 
     actual suspend fun getAccessToken(): String {
-        return getKeychainString(ACCESS_TOKEN_NAME) ?: ""
+        return getKeychainString(ACCESS_TOKEN_NAME).orEmpty()
     }
 
     actual suspend fun getRefreshToken(): String {
-        return getKeychainString(REFRESH_TOKEN_NAME) ?: ""
+        return getKeychainString(REFRESH_TOKEN_NAME).orEmpty()
     }
 
     actual suspend fun saveTokens(accessToken: String, refreshToken: String) {

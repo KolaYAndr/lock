@@ -20,6 +20,9 @@ private val Context.dataStore by preferencesDataStore(
 private fun sharedPreferencesMigration(context: Context) =
     listOf(SharedPreferencesMigration(context, TOKEN_STORAGE_NAME))
 
+private const val ACCESS_TOKEN_IV = "access_token_iv"
+private const val REFRESH_TOKEN_IV = "refresh_token_iv"
+
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class TokenStorage(context: Context) {
     private val dataStore = context.dataStore
@@ -100,9 +103,9 @@ internal actual class TokenStorage(context: Context) {
 
     private companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey(ACCESS_TOKEN_NAME)
-        private val ACCESS_TOKEN_IV_KEY = stringPreferencesKey("access_token_iv")
+        private val ACCESS_TOKEN_IV_KEY = stringPreferencesKey(ACCESS_TOKEN_IV)
         private val REFRESH_TOKEN_KEY = stringPreferencesKey(REFRESH_TOKEN_NAME)
-        private val REFRESH_TOKEN_IV_KEY = stringPreferencesKey("refresh_token_iv")
+        private val REFRESH_TOKEN_IV_KEY = stringPreferencesKey(REFRESH_TOKEN_IV)
         private val REFRESH_IN_KEY = longPreferencesKey(REFRESH_IN_NAME)
     }
 }
