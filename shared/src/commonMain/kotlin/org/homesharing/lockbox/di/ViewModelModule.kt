@@ -4,6 +4,8 @@ import org.homesharing.lockbox.presentation.account.AccountViewModel
 import org.homesharing.lockbox.presentation.account.AccountViewModelImpl
 import org.homesharing.lockbox.presentation.activity.LockboxActivityViewModel
 import org.homesharing.lockbox.presentation.activity.LockboxActivityViewModelImpl
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
+import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModelImpl
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModelImpl
 import org.homesharing.lockbox.presentation.contracts.ContractsViewModel
@@ -50,4 +52,5 @@ internal val viewModelModule = module {
     viewModelOf(::AccessModalSheetViewModelImpl) bind AccessModalSheetViewModel::class
     viewModelOf(::AddVirtualDeviceModalViewModelImpl) bind AddVirtualDeviceModalViewModel::class
     viewModelOf(::ConnectDeviceModalViewModelImpl) bind ConnectDeviceModalViewModel::class
+    viewModelOf(::AddPhoneNumberViewModelImpl) bind AddPhoneNumberViewModel::class
 }
