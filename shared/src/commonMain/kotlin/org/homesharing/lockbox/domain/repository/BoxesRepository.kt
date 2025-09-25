@@ -22,9 +22,17 @@ internal interface BoxesRepository {
 
     suspend fun unbindBox(address: String): Response<UpdateBox>
 
-    suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox>
+    suspend fun updateBoxName(
+        macAddress: String,
+        newName: String,
+        ownerSub: String,
+    ): Response<UpdateBox>
 
-    suspend fun updateBoxAddress(macAddress: String, newAddress: String): Response<UpdateBox>
+    suspend fun updateBoxAddress(
+        macAddress: String,
+        newAddress: String,
+        ownerSub: String,
+    ): Response<UpdateBox>
 
     suspend fun getListOfAccesses(macAddress: String): Response<Accesses>
 

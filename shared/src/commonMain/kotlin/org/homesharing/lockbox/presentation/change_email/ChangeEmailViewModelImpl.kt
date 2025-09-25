@@ -15,8 +15,7 @@ import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarEvent
 internal class ChangeEmailViewModelImpl(
     private val repository: AuthRepository,
 ) : ChangeEmailViewModel() {
-    override val uiState: MutableStateFlow<ChangeEmailUiState> =
-        MutableStateFlow(ChangeEmailUiState())
+    override val uiState = MutableStateFlow(ChangeEmailUiState())
     private val emailPattern =
         Regex.fromLiteral("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
 

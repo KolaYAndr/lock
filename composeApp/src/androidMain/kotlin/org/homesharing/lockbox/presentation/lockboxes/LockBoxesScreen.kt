@@ -49,9 +49,9 @@ import org.homesharing.lockbox.presentation.general.composables.screens.EmptyScr
 import org.homesharing.lockbox.presentation.general.composables.screens.ErrorScreenContent
 import org.homesharing.lockbox.presentation.general.composables.screens.LoadingScreenContent
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.lockboxes.add_virtual_device_modal.AddVirtualDeviceModalViewModel
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModal
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModalViewModel
-import org.homesharing.lockbox.presentation.lockboxes.add_virtual_device_modal.AddVirtualDeviceModalViewModel
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModal
 import org.koin.androidx.compose.koinViewModel
 
@@ -197,7 +197,7 @@ private fun LockBox(
                 Text(
                     text = statusBox.box.alias,
                     style = LockBoxTheme.typography.headlineLarge,
-                    color = LockBoxTheme.colors.white
+                    color = LockBoxTheme.colors.constantWhite
                 )
 
                 Text(
@@ -208,15 +208,17 @@ private fun LockBox(
                 )
             }
 
-            if (statusBox.status.batteryLevel <= BoxWithStatus.BATTERY_PERCENT_LOW) {
-                Icon(
-                    painter = painterResource(R.drawable.circle_alert),
-                    contentDescription = null,
-                    tint = LockBoxTheme.colors.red500,
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .size(24.dp)
-                )
+            statusBox.status.batteryLevel?.let { level ->
+                if (level <= BoxWithStatus.BATTERY_PERCENT_LOW) {
+                    Icon(
+                        painter = painterResource(R.drawable.circle_alert),
+                        contentDescription = null,
+                        tint = LockBoxTheme.colors.red500,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .size(24.dp)
+                    )
+                }
             }
 
             Icon(

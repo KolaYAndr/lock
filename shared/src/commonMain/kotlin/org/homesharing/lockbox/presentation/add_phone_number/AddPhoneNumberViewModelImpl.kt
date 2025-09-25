@@ -4,7 +4,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 internal class AddPhoneNumberViewModelImpl() : AddPhoneNumberViewModel() {
-    override val uiState = MutableStateFlow(AddPhoneNumberUiState())
+    override val uiState
+        = MutableStateFlow(AddPhoneNumberUiState())
     private val phoneNumberPattern = Regex("^\\+?\\d+$")
 
     override fun onNumberChange(newNumber: String) {

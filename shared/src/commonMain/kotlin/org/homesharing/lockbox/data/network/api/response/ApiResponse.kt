@@ -14,6 +14,6 @@ internal sealed interface ApiResponse {
         val message: String,
     ): ApiResponse
 
-    @Serializable
-    data object NoElements: ApiResponse
+//    @Serializable
+//    data object NoElements: ApiResponse
 }

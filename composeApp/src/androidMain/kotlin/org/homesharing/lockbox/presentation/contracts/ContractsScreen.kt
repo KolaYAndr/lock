@@ -210,7 +210,7 @@ private fun Contract(
             ) {
                 Text(
                     text = contract.name,
-                    color = LockBoxTheme.colors.white,
+                    color = LockBoxTheme.colors.constantWhite,
                     style = LockBoxTheme.typography.headlineLarge
                 )
 

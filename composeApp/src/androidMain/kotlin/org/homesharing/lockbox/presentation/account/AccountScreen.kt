@@ -229,7 +229,7 @@ private fun ContactInfo(
             Text(
                 text = title,
                 style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white
+                color = LockBoxTheme.colors.constantWhite
             )
 
             if (subtitle.isNotEmpty()) {

@@ -22,9 +22,6 @@ internal class AccessModalSheetViewModelImpl(
 
     override fun setMacAddress(macAddress: String) {
         mac = macAddress
-    }
-
-    init {
         loadGuestList()
     }
 

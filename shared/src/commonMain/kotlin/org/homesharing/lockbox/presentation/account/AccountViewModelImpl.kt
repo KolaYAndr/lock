@@ -23,7 +23,7 @@ private const val UPDATE_TIME = 500L
 internal class AccountViewModelImpl(
     private val repository: AccountRepository
 ) : AccountViewModel() {
-    override val uiState: MutableStateFlow<AccountUiState> = MutableStateFlow(AccountUiState())
+    override val uiState = MutableStateFlow(AccountUiState())
 
     init {
         fetchInfo()

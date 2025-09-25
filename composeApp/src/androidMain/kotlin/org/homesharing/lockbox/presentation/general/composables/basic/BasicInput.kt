@@ -51,7 +51,7 @@ fun BasicInput(
             focusedTextColor = LockBoxTheme.colors.grey100,
             unfocusedTextColor = LockBoxTheme.colors.grey100,
             disabledTextColor = LockBoxTheme.colors.grey100,
-            cursorColor = LockBoxTheme.colors.white,
+            cursorColor = LockBoxTheme.colors.constantWhite,
             focusedContainerColor = LockBoxTheme.colors.grey800,
             unfocusedContainerColor = LockBoxTheme.colors.grey800,
             disabledContainerColor = LockBoxTheme.colors.grey800,

@@ -19,8 +19,8 @@ internal data class BoxResponseDto(
 @Serializable
 internal data class StatusDto(
     val macAddress: String,
-    val opened: Boolean,
-    val batteryLevel: Double,
-    val signalStrength: Double,
-    val timeStamp: String
+    val opened: Boolean?,
+    val batteryLevel: Double?,
+    val signalStrength: Double?,
+    val timestamp: String?
 )

@@ -43,7 +43,7 @@ internal fun IconTextArrow(
         Text(
             text = text,
             style = LockBoxTheme.typography.headlineLarge,
-            color = LockBoxTheme.colors.white,
+            color = LockBoxTheme.colors.constantWhite,
             modifier = Modifier.weight(1f)
         )
 

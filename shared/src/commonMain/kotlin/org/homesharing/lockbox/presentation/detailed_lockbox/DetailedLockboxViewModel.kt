@@ -15,6 +15,7 @@ abstract class DetailedLockboxViewModel : ViewModel() {
 data class DetailedLockBoxUiState(
     val boxName: String = "",
     val address: String = "",
-    val signalStrength: Int = 0,
-    val batteryLevel: Int = 0,
+    val signalStrength: Int? = null,
+    val batteryLevel: Int? = null,
+    val ownerSub: String = "",
 )

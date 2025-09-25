@@ -30,8 +30,8 @@ data class Box(
 
 data class Status(
     val macAddress: String,
-    val opened: Boolean,
-    val batteryLevel: Double,
-    val signalStrength: Double,
-    val timeStamp: LocalDateTime
+    val opened: Boolean?,
+    val batteryLevel: Double?,
+    val signalStrength: Double?,
+    val timeStamp: LocalDateTime?,
 )

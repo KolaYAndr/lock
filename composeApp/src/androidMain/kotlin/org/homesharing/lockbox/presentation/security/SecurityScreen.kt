@@ -83,7 +83,7 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
         Text(
             text = title,
             style = LockBoxTheme.typography.headlineLarge,
-            color = LockBoxTheme.colors.white,
+            color = LockBoxTheme.colors.constantWhite,
         )
 
         Icon(

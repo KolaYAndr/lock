@@ -10,7 +10,9 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
-		2CCAB3F92E7731B100EB11CA /* KoinGet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCAB3F82E7731AD00EB11CA /* KoinGet.swift */; };
+		2C307B702E7C926400BF67DA /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = 2C307B6F2E7C926400BF67DA /* KMPNativeCoroutinesAsync */; };
+		2C307B722E7C926400BF67DA /* KMPNativeCoroutinesCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 2C307B712E7C926400BF67DA /* KMPNativeCoroutinesCombine */; };
+		2C307B742E7C926400BF67DA /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2C307B732E7C926400BF67DA /* KMPNativeCoroutinesCore */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
@@ -18,18 +20,33 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		2CCAB3F82E7731AD00EB11CA /* KoinGet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoinGet.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* LockBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LockBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB3632DC29227652001CCB65 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2C307B752E80346F00BF67DA /* theme */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = theme;
+			sourceTree = "<group>";
+		};
+		2C307B9C2E80426500BF67DA /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		B92378962B6B1156000C7307 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C307B702E7C926400BF67DA /* KMPNativeCoroutinesAsync in Frameworks */,
+				2C307B722E7C926400BF67DA /* KMPNativeCoroutinesCombine in Frameworks */,
+				2C307B742E7C926400BF67DA /* KMPNativeCoroutinesCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +71,7 @@
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
+				2C307B9C2E80426500BF67DA /* Resources */,
 				AB1DB47929225F7C00F7AF9C /* Configuration */,
 				7555FF7D242A565900829871 /* iosApp */,
 				7555FF7C242A565900829871 /* Products */,
@@ -72,7 +90,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				2CCAB3F82E7731AD00EB11CA /* KoinGet.swift */,
+				2C307B752E80346F00BF67DA /* theme */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF82242A565900829871 /* ContentView.swift */,
 				7555FF8C242A565B00829871 /* Info.plist */,
@@ -107,8 +125,15 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				2C307B752E80346F00BF67DA /* theme */,
+				2C307B9C2E80426500BF67DA /* Resources */,
+			);
 			name = iosApp;
 			packageProductDependencies = (
+				2C307B6F2E7C926400BF67DA /* KMPNativeCoroutinesAsync */,
+				2C307B712E7C926400BF67DA /* KMPNativeCoroutinesCombine */,
+				2C307B732E7C926400BF67DA /* KMPNativeCoroutinesCore */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* LockBox.app */;
@@ -122,7 +147,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = LockBox;
 				TargetAttributes = {
 					7555FF7A242A565900829871 = {
@@ -139,6 +164,7 @@
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
+				2C307B6E2E7C926400BF67DA /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
@@ -206,7 +232,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CCAB3F92E7731B100EB11CA /* KoinGet.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);
@@ -252,6 +277,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 123;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -316,6 +342,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 123;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -345,7 +372,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -376,7 +402,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -421,6 +446,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2C307B6E2E7C926400BF67DA /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rickclephas/KMP-NativeCoroutines.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2C307B6F2E7C926400BF67DA /* KMPNativeCoroutinesAsync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C307B6E2E7C926400BF67DA /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesAsync;
+		};
+		2C307B712E7C926400BF67DA /* KMPNativeCoroutinesCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C307B6E2E7C926400BF67DA /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesCombine;
+		};
+		2C307B732E7C926400BF67DA /* KMPNativeCoroutinesCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C307B6E2E7C926400BF67DA /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7555FF73242A565900829871 /* Project object */;
 }

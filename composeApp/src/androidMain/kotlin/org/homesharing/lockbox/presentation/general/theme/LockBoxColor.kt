@@ -5,8 +5,8 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 @Immutable
-data class LockBoxColors(
-    val white: Color,
+data class LockBoxColor(
+    val constantWhite: Color,
     val grey50: Color,
     val grey100: Color,
     val grey200: Color,
@@ -51,8 +51,8 @@ data class LockBoxColors(
     val green900: Color,
 )
 
-val LocalLockBoxColors = staticCompositionLocalOf {
-    LockBoxColors(
+val LocalLockBoxColor = staticCompositionLocalOf {
+    LockBoxColor(
         White,
         Grey50,
         Grey100,

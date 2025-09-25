@@ -7,7 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 fun LockBoxTheme(
     content: @Composable () -> Unit,
 ) {
-    val lockBoxColors = LockBoxColors(
+    val lockBoxColor = LockBoxColor(
         White,
         Grey50,
         Grey100,
@@ -80,7 +80,7 @@ fun LockBoxTheme(
     )
 
     CompositionLocalProvider(
-        LocalLockBoxColors provides lockBoxColors,
+        LocalLockBoxColor provides lockBoxColor,
         LocalLockBoxTypography provides lockBoxTypography,
         LocalLockBoxShape provides lockBoxShape,
         content = content
@@ -88,8 +88,8 @@ fun LockBoxTheme(
 }
 
 object LockBoxTheme {
-    val colors: LockBoxColors
-        @Composable get() = LocalLockBoxColors.current
+    val colors: LockBoxColor
+        @Composable get() = LocalLockBoxColor.current
 
     val typography: LockBoxTypography
         @Composable get() = LocalLockBoxTypography.current

@@ -50,7 +50,7 @@ class StatusDtoToDomainTest {
             opened = opened,
             batteryLevel = battery,
             signalStrength = signal,
-            timeStamp = ts
+            timestamp = ts
         )
 
         val domain = dto.toDomain()
@@ -71,7 +71,7 @@ class StatusDtoToDomainTest {
             opened = true,
             batteryLevel = 1.0,
             signalStrength = -1.0,
-            timeStamp = "not-a-date"
+            timestamp = "not-a-date"
         )
 
         assertFailsWith<IllegalArgumentException> {
@@ -96,7 +96,7 @@ class BoxWithStatusResponseDtoToDomainTest {
             opened = true,
             batteryLevel = 10.0,
             signalStrength = -10.0,
-            timeStamp = "2025-06-10T10:00:00"
+            timestamp = "2025-06-10T10:00:00"
         )
 
         val dto = BoxWithStatusResponseDto(box = boxDto, status = statusDto)

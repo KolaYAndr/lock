@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.presentation.about
 
-import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +51,7 @@ internal fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = null,
-                tint = LockBoxTheme.colors.white,
+                tint = LockBoxTheme.colors.constantWhite,
                 modifier = Modifier
                     .size(80.dp)
             )
@@ -114,7 +113,7 @@ private fun Agreement(onClick: () -> Unit, text: String, modifier: Modifier = Mo
         Text(
             text = text,
             style = LockBoxTheme.typography.headlineLarge,
-            color = LockBoxTheme.colors.white,
+            color = LockBoxTheme.colors.constantWhite,
             modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
         )
 

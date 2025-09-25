@@ -184,33 +184,37 @@ internal fun DetailedLockBoxScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    StatusInfo(
-                        statusImage = getSignalImage(uiState.signalStrength),
-                        statusCategory = stringResource(R.string.signal_level),
-                        status = getSignalStatus(uiState.signalStrength),
-                        alertImage = {
-                            Icon(
-                                painter = painterResource(R.drawable.circle_alert),
-                                contentDescription = null,
-                                tint = getSignalAlertColor(uiState.signalStrength)
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    uiState.signalStrength?.let { signal ->
+                        StatusInfo(
+                            statusImage = getSignalImage(signal),
+                            statusCategory = stringResource(R.string.signal_level),
+                            status = getSignalStatus(signal),
+                            alertImage = {
+                                Icon(
+                                    painter = painterResource(R.drawable.circle_alert),
+                                    contentDescription = null,
+                                    tint = getSignalAlertColor(signal)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
-                    StatusInfo(
-                        statusImage = getBatteryImage(uiState.batteryLevel),
-                        statusCategory = stringResource(R.string.battery_level),
-                        status = stringResource(R.string.battery_percent, uiState.batteryLevel),
-                        alertImage = {
-                            Icon(
-                                painter = painterResource(R.drawable.circle_alert),
-                                contentDescription = null,
-                                tint = getBatteryAlertColor(uiState.batteryLevel)
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    uiState.batteryLevel?.let { level ->
+                        StatusInfo(
+                            statusImage = getBatteryImage(level),
+                            statusCategory = stringResource(R.string.battery_level),
+                            status = stringResource(R.string.battery_percent, level),
+                            alertImage = {
+                                Icon(
+                                    painter = painterResource(R.drawable.circle_alert),
+                                    contentDescription = null,
+                                    tint = getBatteryAlertColor(level)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
 
@@ -404,9 +408,18 @@ private fun getBatteryAlertColor(batteryLevel: Int): Color =
 @Composable
 private fun getBatteryImage(batteryLevel: Int): Painter =
     when (batteryLevel) {
-        in BoxWithStatus.BATTERY_PERCENT_LOW..<BoxWithStatus.BATTERY_PERCENT_MEDIUM -> painterResource(R.drawable.battery_low)
-        in BoxWithStatus.BATTERY_PERCENT_MEDIUM..<BoxWithStatus.BATTERY_PERCENT_HIGH -> painterResource(R.drawable.battery_medium)
-        in BoxWithStatus.BATTERY_PERCENT_HIGH..BoxWithStatus.BATTERY_PERCENT_FULL -> painterResource(R.drawable.battery_full)
+        in BoxWithStatus.BATTERY_PERCENT_LOW..<BoxWithStatus.BATTERY_PERCENT_MEDIUM -> painterResource(
+            R.drawable.battery_low
+        )
+
+        in BoxWithStatus.BATTERY_PERCENT_MEDIUM..<BoxWithStatus.BATTERY_PERCENT_HIGH -> painterResource(
+            R.drawable.battery_medium
+        )
+
+        in BoxWithStatus.BATTERY_PERCENT_HIGH..BoxWithStatus.BATTERY_PERCENT_FULL -> painterResource(
+            R.drawable.battery_full
+        )
+
         else -> painterResource(R.drawable.battery_empty)
     }
 
@@ -416,8 +429,14 @@ private fun getSignalImage(signalStrength: Int): Painter =
         in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
             painterResource(R.drawable.signal_low)
 
-        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(R.drawable.signal_medium)
-        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(R.drawable.signal_high)
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH -> painterResource(
+            R.drawable.signal_medium
+        )
+
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL -> painterResource(
+            R.drawable.signal_high
+        )
+
         in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL..BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
             painterResource(R.drawable.signal_full)
 
@@ -430,10 +449,18 @@ private fun getSignalStatus(signalStrength: Int): String =
     when (signalStrength) {
         in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_LOWER_BOUND..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM ->
             stringResource(R.string.signa_low)
-        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(R.string.signal_medium)
-        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(R.string.signal_high)
+
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_MEDIUM..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH -> stringResource(
+            R.string.signal_medium
+        )
+
+        in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGH..<BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL -> stringResource(
+            R.string.signal_high
+        )
+
         in BoxWithStatus.SIGNAL_STRENGTH_LEVEL_FULL..BoxWithStatus.SIGNAL_STRENGTH_LEVEL_HIGHER_BOUND ->
             stringResource(R.string.signal_full)
+
         else -> stringResource(R.string.signal_zero)
     }
 
@@ -502,7 +529,7 @@ private fun AboutDeviceModalSheet(
             Text(
                 text = stringResource(R.string.lockbox),
                 style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white,
+                color = LockBoxTheme.colors.constantWhite,
                 modifier = Modifier.padding(top = 2.dp)
             )
 
@@ -521,7 +548,7 @@ private fun AboutDeviceModalSheet(
             Text(
                 text = stringResource(R.string.lockbox_type),
                 style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white,
+                color = LockBoxTheme.colors.constantWhite,
                 modifier = Modifier.padding(top = 2.dp)
             )
 
@@ -540,7 +567,7 @@ private fun AboutDeviceModalSheet(
             Text(
                 text = stringResource(R.string.original_naming_lockbox),
                 style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white,
+                color = LockBoxTheme.colors.constantWhite,
                 modifier = Modifier.padding(top = 2.dp)
             )
 
@@ -724,7 +751,7 @@ private fun ActionableProperty(
             Text(
                 text = title,
                 style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white
+                color = LockBoxTheme.colors.constantWhite
             )
 
             subtitle?.let { subtitleText ->
@@ -782,7 +809,7 @@ private fun StatusInfo(
                 Text(
                     text = status,
                     style = LockBoxTheme.typography.headlineLarge,
-                    color = LockBoxTheme.colors.white
+                    color = LockBoxTheme.colors.constantWhite
                 )
 
                 alertImage?.invoke()

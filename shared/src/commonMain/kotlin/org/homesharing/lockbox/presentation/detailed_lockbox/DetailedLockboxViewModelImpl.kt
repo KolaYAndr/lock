@@ -39,7 +39,8 @@ internal class DetailedLockboxViewModelImpl(
             when (
                 val response = boxesRepository.updateBoxAddress(
                     macAddress = mac,
-                    newAddress = newAddress
+                    newAddress = newAddress,
+                    ownerSub = uiState.value.ownerSub
                 )
             ) {
                 is Response.Success -> uiState.update {
@@ -60,14 +61,14 @@ internal class DetailedLockboxViewModelImpl(
             when (
                 val response = boxesRepository.updateBoxName(
                     macAddress = mac,
-                    newName = newName
+                    newName = newName,
+                    ownerSub = uiState.value.ownerSub
                 )
             ) {
                 is Response.Success -> uiState.update { it.copy(boxName = response.data.alias) }
 
                 is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotUpdateBoxName { saveName(newName) })
-
             }
         }
     }
@@ -90,8 +91,9 @@ internal class DetailedLockboxViewModelImpl(
                     it.copy(
                         boxName = response.data.box.alias,
                         address = response.data.box.address,
-                        signalStrength = response.data.status.signalStrength.toInt(),
-                        batteryLevel = response.data.status.batteryLevel.toInt()
+                        signalStrength = response.data.status.signalStrength?.toInt(),
+                        batteryLevel = response.data.status.batteryLevel?.toInt(),
+                        ownerSub = response.data.box.ownerSub,
                     )
                 }
 

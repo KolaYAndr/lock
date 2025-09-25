@@ -686,7 +686,7 @@ private fun Access(
         ) {
             Text(
                 text = access.name,
-                color = LockBoxTheme.colors.white,
+                color = LockBoxTheme.colors.constantWhite,
                 style = LockBoxTheme.typography.headlineLarge
             )
 

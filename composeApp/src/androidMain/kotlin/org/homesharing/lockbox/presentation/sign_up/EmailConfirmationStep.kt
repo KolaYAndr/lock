@@ -48,7 +48,7 @@ internal fun EmailConfirmationStep(
     Text(
         text = stringResource(R.string.check_your_email),
         style = LockBoxTheme.typography.titleMedium,
-        color = LockBoxTheme.colors.white,
+        color = LockBoxTheme.colors.constantWhite,
         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
     Text(
@@ -72,7 +72,7 @@ internal fun EmailConfirmationStep(
         )
         Text(
             style = LockBoxTheme.typography.subHeadlineLarge,
-            color = LockBoxTheme.colors.white,
+            color = LockBoxTheme.colors.constantWhite,
             text = stringResource(R.string.change_short),
             modifier = Modifier
                 .minimumInteractiveComponentSize()

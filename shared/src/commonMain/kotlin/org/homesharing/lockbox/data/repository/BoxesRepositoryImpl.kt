@@ -112,7 +112,11 @@ internal class BoxesRepositoryImpl(
             Response.Failure(e.message ?: "")
         }
 
-    override suspend fun updateBoxName(macAddress: String, newName: String): Response<UpdateBox> =
+    override suspend fun updateBoxName(
+        macAddress: String,
+        newName: String,
+        ownerSub: String,
+    ): Response<UpdateBox> =
         try {
             refreshTokenIfNeed()
             parseLockBoxApiResponse(
@@ -121,6 +125,7 @@ internal class BoxesRepositoryImpl(
                         macAddress = macAddress,
                         alias = newName,
                         accessToken = tokenStorage.getAccessToken(),
+                        ownerSub = ownerSub
                     )
                 },
                 mapper = UpdateBoxResponseDto::toDomain
@@ -132,6 +137,7 @@ internal class BoxesRepositoryImpl(
     override suspend fun updateBoxAddress(
         macAddress: String,
         newAddress: String,
+        ownerSub: String,
     ): Response<UpdateBox> =
         try {
             refreshTokenIfNeed()
@@ -140,7 +146,8 @@ internal class BoxesRepositoryImpl(
                     boxesApi.updateBoxByMac(
                         accessToken = tokenStorage.getAccessToken(),
                         macAddress = macAddress,
-                        address = newAddress
+                        address = newAddress,
+                        ownerSub = ownerSub
                     )
                 },
                 mapper = UpdateBoxResponseDto::toDomain
@@ -171,7 +178,7 @@ internal class BoxesRepositoryImpl(
         startTime: Long,
         endDate: Long,
         endTime: Long,
-        alias: String
+        alias: String,
     ): Response<Access> =
         try {
             refreshTokenIfNeed()

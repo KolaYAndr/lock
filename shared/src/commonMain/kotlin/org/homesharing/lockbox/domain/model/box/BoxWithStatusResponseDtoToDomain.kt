@@ -20,5 +20,5 @@ internal fun StatusDto.toDomain(): Status = Status(
     opened = opened,
     batteryLevel = batteryLevel,
     signalStrength = signalStrength,
-    timeStamp = LocalDateTime.parse(timeStamp)
+    timeStamp = timestamp?.let { it -> LocalDateTime.parse(it) }
 )

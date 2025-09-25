@@ -43,7 +43,7 @@ internal fun DockedDatePicker(
                 focusedTextColor = LockBoxTheme.colors.grey100,
                 unfocusedTextColor = LockBoxTheme.colors.grey100,
                 errorTextColor = LockBoxTheme.colors.red600,
-                cursorColor = LockBoxTheme.colors.white,
+                cursorColor = LockBoxTheme.colors.constantWhite,
                 errorCursorColor = LockBoxTheme.colors.red600,
                 focusedContainerColor = LockBoxTheme.colors.grey800,
                 unfocusedContainerColor = LockBoxTheme.colors.grey800,

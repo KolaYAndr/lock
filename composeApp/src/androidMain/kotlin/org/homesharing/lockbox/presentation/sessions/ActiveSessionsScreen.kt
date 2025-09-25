@@ -257,7 +257,7 @@ private fun Device(
             Text(
                 text = name,
                 style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.white
+                color = LockBoxTheme.colors.constantWhite
             )
 
             Text(

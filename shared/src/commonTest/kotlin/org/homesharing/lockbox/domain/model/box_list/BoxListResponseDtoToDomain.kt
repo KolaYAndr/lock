@@ -25,7 +25,7 @@ class BoxListResponseDtoToDomainTest {
             opened = true,
             batteryLevel = 50.0,
             signalStrength = -50.0,
-            timeStamp = "2025-06-10T10:00:00"
+            timestamp = "2025-06-10T10:00:00"
         )
         val boxWithStatusDto1 = BoxWithStatusResponseDto(box = boxDto1, status = statusDto1)
 
@@ -40,7 +40,7 @@ class BoxListResponseDtoToDomainTest {
             opened = false,
             batteryLevel = 10.0,
             signalStrength = -70.0,
-            timeStamp = "2025-06-11T11:30:00"
+            timestamp = "2025-06-11T11:30:00"
         )
         val boxWithStatusDto2 = BoxWithStatusResponseDto(box = boxDto2, status = statusDto2)
 

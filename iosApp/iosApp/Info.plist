@@ -22,6 +22,22 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>inter.ttf</string>
+		<string>inter_black.ttf</string>
+		<string>inter_black_italic.ttf</string>
+		<string>inter_bold.ttf</string>
+		<string>inter_bold_italic.ttf</string>
+		<string>inter_extra_bold.ttf</string>
+		<string>inter_extra_bold_italic.ttf</string>
+		<string>inter_extra_light_italic.ttf</string>
+		<string>inter_italic.ttf</string>
+		<string>inter_light_italic.ttf</string>
+		<string>inter_medium_italic.ttf</string>
+		<string>inter_semi_bold_italic.ttf</string>
+		<string>inter_thin_italic.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

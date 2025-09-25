@@ -50,7 +50,7 @@ internal fun PasswordInputStep(
     Text(
         text = stringResource(R.string.create_password),
         style = LockBoxTheme.typography.titleMedium,
-        color = LockBoxTheme.colors.white,
+        color = LockBoxTheme.colors.constantWhite,
         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
 

@@ -77,7 +77,7 @@ internal fun SignInCard(
             Icon(
                 painter = painterResource(R.drawable.logo_horizontal),
                 contentDescription = null,
-                tint = LockBoxTheme.colors.white,
+                tint = LockBoxTheme.colors.constantWhite,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 12.dp)
@@ -94,7 +94,7 @@ internal fun SignInCard(
         Text(
             text = stringResource(R.string.log_in_your_profile),
             style = LockBoxTheme.typography.titleMedium,
-            color = LockBoxTheme.colors.white,
+            color = LockBoxTheme.colors.constantWhite,
             modifier = Modifier.padding(top = 12.dp, start = 16.dp)
         )
 

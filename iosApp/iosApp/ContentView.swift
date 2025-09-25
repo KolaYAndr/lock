@@ -1,16 +1,17 @@
 import SwiftUI
-import Shared
 
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("SwiftUI")
-
-            HStack {
-                Text("From Android Studio")
-
-                Text("It's lit").padding()
-            }
+            Text("Large title")
+                .font(.titleLarge)
+                .lineSpacing(.spacingLarge)
+                .foregroundColor(.red100)
+            
+            Text("Footnote")
+                .font(.footnote)
+                .lineSpacing(.spacingSmall)
+                .foregroundColor(.grey900)
         }
     }
 }

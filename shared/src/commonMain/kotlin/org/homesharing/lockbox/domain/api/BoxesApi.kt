@@ -22,6 +22,7 @@ internal interface BoxesApi {
     suspend fun updateBoxByMac(
         accessToken: String,
         macAddress: String,
+        ownerSub: String,
         alias: String? = null,
         address: String? = null,
     ): ApiResponse
