@@ -19,6 +19,7 @@ import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.api.response.toAuthResponse
 import org.homesharing.lockbox.data.network.client.BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.client.INGRESS_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.bearerToken
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequestDto
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
@@ -28,14 +29,11 @@ import org.homesharing.lockbox.data.network.dto.post_image.PostImageResponseDto
 import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
-import org.homesharing.lockbox.data.network.dto.sign_up.SignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.domain.api.AccountApi
 
-private const val INGRESS_BASE = "http://ingress.lockboxes.ru:30088/api/v1"
-private const val API_VERSION = "api/v1"
 private const val REALM = "realms/lockbox"
 private const val PROTOCOL = "protocol"
 private const val OPENID_CONNECT_TOKEN = "openid-connect/token"
@@ -62,7 +60,7 @@ private const val REFRESH_TOKEN = "refresh_token"
 
 //TODO потом, когда переедем на безпортовые, надо убрать их из урлов
 internal const val TOKEN_URL = "$BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
-internal const val SIGN_UP_URL = "$INGRESS_BASE/$API_VERSION/$USERS/$SIGN_UP"
+internal const val SIGN_UP_URL = "$INGRESS_BASE_ENDPOINT/$USERS/$SIGN_UP"
 internal const val SESSIONS_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
 internal const val RESET_PASSWORD_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$RESET_PASSWORD"
 internal const val AVATARS_POST_URL = "$BASE_ENDPOINT:8445/$USER/$AVATAR/$UPLOAD"
@@ -88,7 +86,7 @@ internal class LockBoxAccountApi(
         return client.post {
             url(SIGN_UP_URL)
             setBody(request)
-        }.toApiResponse<SignUpResponseDto>(json)
+        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun getImageLink(sub: String): String = "$AVATARS_URL/$sub"

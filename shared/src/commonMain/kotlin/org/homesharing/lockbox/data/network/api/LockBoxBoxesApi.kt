@@ -14,6 +14,7 @@ import io.ktor.http.parameters
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
+import org.homesharing.lockbox.data.network.client.INGRESS_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.bearerToken
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
@@ -30,7 +31,6 @@ import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkin
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
 
-internal const val BOXES_URL = "http://ingress.lockboxes.ru:30088/api/v1"
 internal const val DEVICES = "devices"
 internal const val BOXES = "boxes"
 internal const val STATUS = "status"
@@ -53,7 +53,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES")
             parameters {
                 parameter(PAGE_PARAMETER, page)
                 parameter(SIZE_PARAMETER, size)
@@ -66,7 +66,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<BoxWithStatusResponseDto>(json)
 
     override suspend fun getBoxStatusByMac(
@@ -75,7 +75,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress/$STATUS")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$STATUS")
         }.toApiResponse<StatusDto>(json)
 
     override suspend fun updateBoxByMac(
@@ -93,7 +93,7 @@ internal class LockBoxBoxesApi(
         )
         return client.patch {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
             setBody(request)
         }.toApiResponse<UpdateBoxResponseDto>(json)
     }
@@ -104,7 +104,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.post {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<OpenBoxResponseDto>(json)
 
     override suspend fun deleteBox(
@@ -113,8 +113,8 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.delete {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress")
-        }.toApiResponse<UpdateBoxResponseDto>(json)
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
+        }.toApiResponse<Unit>(json)
 
     override suspend fun getAccessedList(
         accessToken: String,
@@ -122,7 +122,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.get {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress/$ACCESSES")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
         }.toApiResponse<AccessResponseDto>(json)
 
     override suspend fun createAccess(
@@ -135,7 +135,7 @@ internal class LockBoxBoxesApi(
         val request = AccessCreateRequestDto(startTime, endTime, alias)
         return client.post {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress/$ACCESSES")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
             setBody(request)
         }.toApiResponse<AccessDto>(json)
     }
@@ -147,12 +147,12 @@ internal class LockBoxBoxesApi(
     ): ApiResponse =
         client.delete {
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$BOXES_URL/$BOXES/$macAddress/$ACCESSES/$tokenId")
+            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES/$tokenId")
         }.toApiResponse<AccessRevokeResponseDto>(json)
 
     override suspend fun createLinkingCode(accessToken: String): ApiResponse =
         client.post {
-            url("$BOXES_URL/$SIGNUP")
+            url("$INGRESS_BASE_ENDPOINT/$SIGNUP")
             header(HttpHeaders.Authorization, bearerToken(accessToken))
         }.toApiResponse<CreateLinkingCodeDto>(json)
 
@@ -163,7 +163,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse {
         val request = PhysicalSignUpRequestDto(code, macAddress)
         return client.post {
-            url("$BOXES_URL/$DEVICES/$BOXES/$SIGNUP")
+            url("$INGRESS_BASE_ENDPOINT/$DEVICES/$BOXES/$SIGNUP")
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             setBody(request)
         }.toApiResponse<PhysicalSignUpResponseDto>(json)
@@ -171,7 +171,7 @@ internal class LockBoxBoxesApi(
 
     override suspend fun createTestDevice(accessToken: String): ApiResponse =
         client.post {
-            url("$BOXES_URL/$DEVICES/$BOXES/$TEST")
+            url("$INGRESS_BASE_ENDPOINT/$DEVICES/$BOXES/$TEST")
             header(HttpHeaders.Authorization, bearerToken(accessToken))
-        }.toApiResponse<BoxWithStatusResponseDto>(json)
+        }.toApiResponse<Unit>(json)
 }

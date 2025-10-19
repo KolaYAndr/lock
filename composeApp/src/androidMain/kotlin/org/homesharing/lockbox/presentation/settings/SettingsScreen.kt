@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +64,8 @@ internal fun SettingsScreen(
         LockBoxPullToRefresh(
             modifier = Modifier.fillMaxSize(),
             onRefresh = onRefresh,
-            isRefreshing = settingsUiState.isRefreshing
+            isRefreshing = settingsUiState.isRefreshing,
+            state = rememberPullToRefreshState()
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),

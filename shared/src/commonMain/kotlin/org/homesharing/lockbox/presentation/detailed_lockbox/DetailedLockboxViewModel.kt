@@ -10,6 +10,7 @@ abstract class DetailedLockboxViewModel : ViewModel() {
     abstract fun saveAddress(newAddress: String)
     abstract fun saveName(newName: String)
     abstract fun unbindDevice(onSuccess: () -> Unit)
+    abstract suspend fun getBoxStatus()
 }
 
 data class DetailedLockBoxUiState(
@@ -18,4 +19,5 @@ data class DetailedLockBoxUiState(
     val signalStrength: Int? = null,
     val batteryLevel: Int? = null,
     val ownerSub: String = "",
+    val isBoxOpen: Boolean = false,
 )

@@ -14,6 +14,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 internal const val BASE_ENDPOINT = "https://api.lockboxes.ru"
+private const val API_VERSION = "api/v1"
+internal const val INGRESS_BASE_ENDPOINT = "http://ingress.lockboxes.ru:30088/$API_VERSION"
 private const val CLIENT_TIMEOUT = 5_000L
 private const val BEARER = "Bearer"
 

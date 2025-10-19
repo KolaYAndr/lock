@@ -13,7 +13,6 @@ private inline fun <reified T> String.toApiResponse(json: Json): ApiResponse = t
 }
 
 internal suspend inline fun <reified T> HttpResponse.toApiResponse(json: Json): ApiResponse {
-//    return if (this.status.value == 204) ApiResponse.NoElements
-//    else
-        return this.bodyAsText().toApiResponse<T>(json)
+    return if (this.status.value in 201 until 300) ApiResponse.Success(Unit)
+    else this.bodyAsText().toApiResponse<T>(json)
 }

@@ -2,6 +2,7 @@ package org.homesharing.lockbox.presentation.detailed_lockbox
 
 import android.annotation.SuppressLint
 import android.content.ClipData
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +16,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -138,12 +137,25 @@ internal fun DetailedLockBoxScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = LockBoxTheme.colors.grey500
-                    )
+                    AnimatedContent(
+                        targetState = uiState.isBoxOpen,
+                    ) { opened ->
+                        when (opened) {
+                            true -> Icon(
+                                painter = painterResource(R.drawable.lock_open),
+                                contentDescription = null,
+                                tint = LockBoxTheme.colors.grey500,
+                                modifier = Modifier.size(64.dp),
+                            )
+
+                            false -> Icon(
+                                painter = painterResource(R.drawable.lock),
+                                contentDescription = null,
+                                tint = LockBoxTheme.colors.grey500,
+                                modifier = Modifier.size(64.dp),
+                            )
+                        }
+                    }
 
                     Text(
                         text = uiState.boxName,
