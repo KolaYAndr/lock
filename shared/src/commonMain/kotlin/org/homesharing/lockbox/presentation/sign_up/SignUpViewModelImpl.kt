@@ -68,7 +68,6 @@ internal class SignUpViewModelImpl(
                     )
                 }
 
-
                 is Response.Success -> toStep(SignUpStep.EmailConfirmation)
             }
         }

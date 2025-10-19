@@ -81,10 +81,9 @@ internal fun Navigation(
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
-                val lifecycleOwner = LocalLifecycleOwner.current
                 ActionOnSharedFlow(
                     flow = loginViewModel.loggedIn,
-                    lifecycleOwner = lifecycleOwner
+                    lifecycleOwner = LocalLifecycleOwner.current
                 ) {
                     navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
                 }
@@ -128,6 +127,13 @@ internal fun Navigation(
                 val state by detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
                 val mac = backStack.toRoute<MainRoutes.DetailedBox>().macAddress
 
+                ActionOnSharedFlow(
+                    lifecycleOwner = LocalLifecycleOwner.current,
+                    flow = detailedLockBoxViewModel.unbindSuccess,
+                ) {
+                    navController.navigateUp()
+                }
+
                 LaunchedEffect(mac) { detailedLockBoxViewModel.setMacAddress(mac) }
 
                 DetailedLockBoxScreen(
@@ -135,11 +141,7 @@ internal fun Navigation(
                     macAddress = mac,
                     onNavBack = navController::navigateUp,
                     onOpenBox = detailedLockBoxViewModel::openBox,
-                    onUnbindDevice = {
-                        detailedLockBoxViewModel.unbindDevice(
-                            onSuccess = navController::navigateUp
-                        )
-                    },
+                    onUnbindDevice = detailedLockBoxViewModel::unbindDevice,
                     onSaveAddress = detailedLockBoxViewModel::saveAddress,
                     onSaveName = detailedLockBoxViewModel::saveName,
                     modifier = Modifier.fillMaxSize()
@@ -156,10 +158,9 @@ internal fun Navigation(
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
-                val lifecycleOwner = LocalLifecycleOwner.current
                 ActionOnSharedFlow(
                     flow = loginViewModel.loggedIn,
-                    lifecycleOwner = lifecycleOwner
+                    lifecycleOwner = LocalLifecycleOwner.current
                 ) {
                     navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
                 }
@@ -330,10 +331,9 @@ internal fun Navigation(
                 popEnterTransition = null,
                 popExitTransition = globalExitAnimation
             ) {
-                val lifecycleOwner = LocalLifecycleOwner.current
                 ActionOnSharedFlow(
                     flow = loginViewModel.loggedIn,
-                    lifecycleOwner = lifecycleOwner
+                    lifecycleOwner = LocalLifecycleOwner.current
                 ) {
                     navController.navigateToDestinationWithNoBackstack(ContractRoutes.Contracts)
                 }

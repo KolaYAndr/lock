@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,6 +18,8 @@ internal class DetailedLockboxViewModelImpl(
     private val boxesRepository: BoxesRepository,
 ) : DetailedLockboxViewModel() {
     override val uiState = MutableStateFlow(DetailedLockBoxUiState())
+
+    override val unbindSuccess = MutableSharedFlow<Unit>()
     private var mac by Delegates.notNull<String>()
 
     override fun setMacAddress(macAddress: String) {
@@ -30,6 +33,16 @@ internal class DetailedLockboxViewModelImpl(
                 is Response.Failure -> SnackbarController.receiveEvent(couldNotOpenBox { openBox() })
 
                 is Response.Success -> SnackbarController.receiveEvent(boxOpenedSuccessfully)
+            }
+            getBoxStatus()
+        }
+    }
+
+    override suspend fun getBoxStatus() {
+        when (val status = boxesRepository.getBoxStatusByMac(mac)) {
+            is Response.Failure -> SnackbarController.receiveEvent( couldNotUpdateBoxStatus { getBoxStatus() } )
+            is Response.Success -> uiState.update {
+                it.copy(isBoxOpen = status.data.opened ?: false)
             }
         }
     }
@@ -73,13 +86,13 @@ internal class DetailedLockboxViewModelImpl(
         }
     }
 
-    override fun unbindDevice(onSuccess: () -> Unit) {
+    override fun unbindDevice() {
         viewModelScope.launch {
             when (boxesRepository.unbindBox(mac)) {
-                is Response.Success -> onSuccess()
+                is Response.Success -> unbindSuccess.emit(Unit)
 
                 is Response.Failure ->
-                    SnackbarController.receiveEvent(couldNotUnbindBox { unbindDevice(onSuccess) })
+                    SnackbarController.receiveEvent(couldNotUnbindBox { unbindDevice() })
             }
         }
     }
@@ -94,6 +107,7 @@ internal class DetailedLockboxViewModelImpl(
                         signalStrength = response.data.status.signalStrength?.toInt(),
                         batteryLevel = response.data.status.batteryLevel?.toInt(),
                         ownerSub = response.data.box.ownerSub,
+                        isBoxOpen = response.data.status.opened ?: false,
                     )
                 }
 
@@ -139,6 +153,15 @@ internal class DetailedLockboxViewModelImpl(
 
         fun couldNotOpenBox(onRetry: () -> Unit) = SnackbarEvent(
             messageKey = CommonStringKeys.CouldNotOpenBox,
+            action = SnackbarAction(
+                nameKey = CommonStringKeys.Retry,
+                effect = onRetry
+            )
+        )
+
+        fun couldNotUpdateBoxStatus(onRetry: suspend () -> Unit) = SnackbarEvent(
+            messageKey = CommonStringKeys.CouldNotUpdateBoxStatus,
+            duration = SnackbarDuration.Long,
             action = SnackbarAction(
                 nameKey = CommonStringKeys.Retry,
                 effect = onRetry

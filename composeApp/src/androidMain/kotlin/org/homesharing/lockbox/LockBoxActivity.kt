@@ -173,6 +173,7 @@ class LockBoxActivity : ComponentActivity() {
                 CommonStringKeys.LinkSentToChangePassword -> R.string.link_sent_to_change_password
                 CommonStringKeys.CouldNotLoadActiveSessions -> R.string.could_not_load_active_sessions
                 CommonStringKeys.CouldNotCloseOtherSessions -> R.string.could_not_close_other_sessions
+                CommonStringKeys.CouldNotUpdateBoxStatus -> R.string.could_not_update_box_status
             }
         )
     }

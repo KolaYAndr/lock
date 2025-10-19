@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
-import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
-import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
+import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.box.StatusDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
@@ -23,7 +23,6 @@ import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
-import org.homesharing.lockbox.domain.model.physical_sign_up.PhysicalSignUp
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access.toDomain
@@ -31,11 +30,13 @@ import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.access_revoke.toDomain
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
+import org.homesharing.lockbox.domain.model.box.Status
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.create_linking_code.toDomain
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.open_box.toDomain
+import org.homesharing.lockbox.domain.model.physical_sign_up.PhysicalSignUp
 import org.homesharing.lockbox.domain.model.physical_sign_up.toDomain
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 import org.homesharing.lockbox.domain.model.update_box.toDomain
@@ -80,6 +81,22 @@ internal class BoxesRepositoryImpl(
             Response.Failure(e.message ?: "")
         }
 
+    override suspend fun getBoxStatusByMac(macAddress: String): Response<Status> =
+        try {
+            refreshTokenIfNeed()
+            parseLockBoxApiResponse(
+                apiCall = {
+                    boxesApi.getBoxStatusByMac(
+                        accessToken = tokenStorage.getAccessToken(),
+                        macAddress = macAddress
+                    )
+                },
+                mapper = StatusDto::toDomain
+            )
+        } catch (e: Exception) {
+            Response.Failure(e.message ?: "")
+        }
+
     override suspend fun openBoxByMac(address: String): Response<OpenBox> =
         try {
             refreshTokenIfNeed()
@@ -96,18 +113,15 @@ internal class BoxesRepositoryImpl(
             Response.Failure(e.message ?: "")
         }
 
-    override suspend fun unbindBox(address: String): Response<UpdateBox> =
+    override suspend fun unbindBox(address: String): Response<Unit> =
         try {
             refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.deleteBox(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = address
-                    )
-                },
-                mapper = UpdateBoxResponseDto::toDomain
-            )
+            parseLockBoxApiResponse {
+                boxesApi.deleteBox(
+                    accessToken = tokenStorage.getAccessToken(),
+                    macAddress = address
+                )
+            }
         } catch (e: Exception) {
             Response.Failure(e.message ?: "")
         }
@@ -244,10 +258,7 @@ internal class BoxesRepositoryImpl(
 
     override suspend fun createTestDevice(): Response<Box> = try {
         refreshTokenIfNeed()
-        parseLockBoxApiResponse(
-            apiCall = { boxesApi.createTestDevice(accessToken = tokenStorage.getAccessToken()) },
-            mapper = BoxResponseDto::toDomain
-        )
+        parseLockBoxApiResponse { boxesApi.createTestDevice(accessToken = tokenStorage.getAccessToken()) }
     } catch (e: Exception) {
         Response.Failure(e.message ?: "")
     }

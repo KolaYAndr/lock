@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -78,6 +79,7 @@ internal fun ActiveSessionScreen(
         LockBoxPullToRefresh(
             onRefresh = onRefresh,
             isRefreshing = activeSessionsUiState.isRefreshing,
+            state = rememberPullToRefreshState(),
         ) {
             LazyColumn(
                 modifier = Modifier
