@@ -3,8 +3,12 @@ package org.homesharing.lockbox.presentation.general.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -15,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
 import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
@@ -25,7 +30,10 @@ internal fun TitledTopBar(
     onNavigate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    val displayCutout = WindowInsets.displayCutout.asPaddingValues()
+    val systemBar = WindowInsets.statusBars.asPaddingValues()
+    val topPadding = max(displayCutout.calculateTopPadding(), systemBar.calculateTopPadding())
+    Column(modifier = modifier.padding(top = topPadding)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,

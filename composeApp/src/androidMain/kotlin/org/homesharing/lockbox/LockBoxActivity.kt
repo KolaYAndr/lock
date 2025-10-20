@@ -1,5 +1,6 @@
 package org.homesharing.lockbox
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -7,9 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -20,7 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -50,13 +49,14 @@ import androidx.compose.material3.SnackbarDuration as AndroidSnackbarDuration
 private const val SPLASH_SCREEN_TIME = 1000L
 
 class LockBoxActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         var keepSplash = true
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition { keepSplash }
 
-        val systemBarStyle = SystemBarStyle.dark(ContextCompat.getColor(this, R.color.Grey950))
+        val systemBarStyle = SystemBarStyle.dark(Color.Transparent.toArgb())
 
         enableEdgeToEdge(
             statusBarStyle = systemBarStyle,
@@ -82,9 +82,7 @@ class LockBoxActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(LockBoxTheme.colors.grey950)
-                        .systemBarsPadding()
-                        .navigationBarsPadding(),
+                        .background(LockBoxTheme.colors.grey950),
                     bottomBar = {
                         BottomNavigation(
                             topLevelRoutes = topLevelRoutes,
@@ -108,11 +106,10 @@ class LockBoxActivity : ComponentActivity() {
                             )
                         }
                     }
-                ) { paddingValues ->
+                ) { _ ->
                     Navigation(
                         navController = navController,
                         startFromLogin = !isLoggedIn,
-                        modifier = Modifier.padding(paddingValues)
                     )
                 }
             }
