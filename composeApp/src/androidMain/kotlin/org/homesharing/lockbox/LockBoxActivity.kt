@@ -105,8 +105,8 @@ class LockBoxActivity : ComponentActivity() {
                                 snackbarData = data
                             )
                         }
-                    }
-                ) { _ ->
+                    },
+                ) { padding ->
                     Navigation(
                         navController = navController,
                         startFromLogin = !isLoggedIn,
@@ -175,8 +175,9 @@ class LockBoxActivity : ComponentActivity() {
         )
     }
 
-    private fun resolveDuration(duration: SnackbarDuration): AndroidSnackbarDuration = when(duration) {
-        SnackbarDuration.Short -> AndroidSnackbarDuration.Short
-        SnackbarDuration.Long -> AndroidSnackbarDuration.Long
-    }
+    private fun resolveDuration(duration: SnackbarDuration): AndroidSnackbarDuration =
+        when (duration) {
+            SnackbarDuration.Short -> AndroidSnackbarDuration.Short
+            SnackbarDuration.Long -> AndroidSnackbarDuration.Long
+        }
 }
