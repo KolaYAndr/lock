@@ -31,6 +31,7 @@ import org.homesharing.lockbox.navigation.rememberNavigationState
 import org.homesharing.lockbox.navigation.routes.Route
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
 import org.homesharing.lockbox.presentation.activity.LockboxActivityViewModel
+import org.homesharing.lockbox.presentation.activity.LoginState
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.snackbar_controller.CommonStringKeys
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
@@ -39,19 +40,20 @@ import org.homesharing.lockbox.presentation.uikit.animation.loginAnimation
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.compose.material3.SnackbarDuration as AndroidSnackbarDuration
 
-class LockBoxActivity : ComponentActivity() {
+class LockBoxActivity: ComponentActivity() {
+    private val lockboxActivityViewModel: LockboxActivityViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splash = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        splash.setKeepOnScreenCondition { lockboxActivityViewModel.loginState.value != LoginState.Loading }
 
         setContent {
-            val lockboxActivityViewModel = koinViewModel<LockboxActivityViewModel>()
-            val isLoggedIn by
-            lockboxActivityViewModel.isLoggedIn.collectAsStateWithLifecycle(false, this)
+            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 
             val snackbarHostState = remember { SnackbarHostState() }
             CollectSnackbarEvents(snackbarHostState)
@@ -69,7 +71,7 @@ class LockBoxActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.background(LockBoxTheme.colors.grey950),
                     bottomBar = {
-                        if (isLoggedIn) {
+                        if (isLoggedIn == LoginState.LoggedIn) {
                             LockboxNavBar(
                                 selectedKey = navigationState.topLevelRoute,
                                 onSelectKey = navigator::navigate
@@ -91,7 +93,7 @@ class LockBoxActivity : ComponentActivity() {
                         label = "authentication $isLoggedIn",
                         transitionSpec = loginAnimation,
                     ) { isLoggedIn ->
-                        if (isLoggedIn) {
+                        if (isLoggedIn == LoginState.LoggedIn) {
                             AuthenticatedNavigation(
                                 navigator = navigator,
                                 state = navigationState,
@@ -162,7 +164,6 @@ class LockBoxActivity : ComponentActivity() {
                 CommonStringKeys.CouldNotLoadActiveSessions -> R.string.could_not_load_active_sessions
                 CommonStringKeys.CouldNotCloseOtherSessions -> R.string.could_not_close_other_sessions
                 CommonStringKeys.CouldNotDeleteAccount -> R.string.could_not_delete_account
-
             }
         )
     }
