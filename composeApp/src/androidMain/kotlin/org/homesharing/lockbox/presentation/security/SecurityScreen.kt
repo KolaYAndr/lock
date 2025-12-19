@@ -19,11 +19,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SecurityScreen(
+    onNavBack: () -> Unit,
+    navigateToActiveSessions: () -> Unit,
+    securityViewModel: SecurityViewModel = koinViewModel(),
+) {
+    SecurityScreen(
+        onNavBack = onNavBack,
+        onToActiveSessions = navigateToActiveSessions,
+        onChangePassword = securityViewModel::sendLinkToChangePassword,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun SecurityScreen(
     onNavBack: () -> Unit,
     onToActiveSessions: () -> Unit,
     onChangePassword: () -> Unit,

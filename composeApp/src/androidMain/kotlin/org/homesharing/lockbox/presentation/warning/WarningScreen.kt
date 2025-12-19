@@ -20,14 +20,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier) {
-    BackHandler(enabled = false) {  }
+internal fun WarningScreen(
+    warningViewModel: WarningViewModel = koinViewModel(),
+) {
+    BackHandler(enabled = false) { }
     Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950).padding(horizontal = 32.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(LockBoxTheme.colors.grey950)
+            .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -54,8 +60,8 @@ internal fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        BasicButton(
-            onClick = onNavigate::invoke,
+        LockboxButton(
+            onClick = warningViewModel::logOut,
             text = stringResource(R.string.ready),
             paddingValues = PaddingValues(10.dp),
             style = ButtonDefaults.buttonColors(
@@ -71,6 +77,6 @@ internal fun WarningScreen(onNavigate: () -> Unit, modifier: Modifier = Modifier
 @Composable
 private fun PreviewWarning() {
     LockBoxTheme {
-        WarningScreen({}, Modifier.fillMaxSize())
+        WarningScreen()
     }
 }

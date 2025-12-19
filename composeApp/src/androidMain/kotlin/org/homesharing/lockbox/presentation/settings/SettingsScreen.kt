@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.presentation.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -25,30 +23,51 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.navigation.routes.SettingsRoutes
-import org.homesharing.lockbox.presentation.general.composables.HelpModalSheet
-import org.homesharing.lockbox.presentation.general.composables.IconTextArrow
-import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.NetworkImage
-import org.homesharing.lockbox.presentation.general.composables.RoundText
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.SettingsTopRowText
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.navigation.routes.Route
+import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
+import org.homesharing.lockbox.presentation.uikit.composables.IconTextArrow
+import org.homesharing.lockbox.presentation.uikit.composables.NetworkImage
+import org.homesharing.lockbox.presentation.uikit.composables.RoundText
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxTextIconButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxDialog
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
+import org.homesharing.lockbox.presentation.uikit.composables.top_rows.SettingsTopRowText
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+internal fun SettingsScreen(
+    onNavigate: (Route) -> Unit,
+    settingsViewModel: SettingsViewModel = koinViewModel(),
+
+    ) {
+    val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
+    SettingsScreen(
+        settingsUiState = settingsState,
+        onLogOut = settingsViewModel::logOut,
+        onRefresh = settingsViewModel::refreshAccountInfo,
+        onNavigate = onNavigate,
+        modifier = Modifier.fillMaxSize()
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SettingsScreen(
+private fun SettingsScreen(
     settingsUiState: SettingsUiState,
-    onNavigate: (SettingsRoutes) -> Unit,
+    onNavigate: (Route) -> Unit,
     onLogOut: () -> Unit,
     onRefresh: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
-    Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
+    Column(
+        modifier = modifier.background(LockBoxTheme.colors.grey950)
+    ) {
         var showExitDialog by remember { mutableStateOf(false) }
         var showHelpModal by remember { mutableStateOf(false) }
         Row(
@@ -96,7 +115,7 @@ internal fun SettingsScreen(
                 }
 
                 item {
-                    BasicGroup(
+                    LockboxGroup(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 24.dp, start = 16.dp, end = 16.dp)
@@ -109,14 +128,14 @@ internal fun SettingsScreen(
                                 modifier = Modifier.fillMaxWidth()
                             )
                             if (index != accountProperties.lastIndex) {
-                                BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                                LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }
                 }
 
                 item {
-                    BasicGroup(
+                    LockboxGroup(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 24.dp, start = 16.dp, end = 16.dp)
@@ -128,7 +147,7 @@ internal fun SettingsScreen(
                             modifier = Modifier.fillMaxWidth()
 
                         )
-                        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
                         IconTextArrow(
                             text = stringResource(R.string.help),
@@ -140,29 +159,14 @@ internal fun SettingsScreen(
                 }
 
                 item {
-                    Row(
+                    LockboxTextIconButton(
+                        text = stringResource(R.string.log_out),
+                        icon = painterResource(R.drawable.log_out),
+                        onClick = { showExitDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 24.dp)
-                            .clickable { showExitDialog = true },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(
-                            12.dp,
-                            Alignment.CenterHorizontally
-                        )
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.log_out),
-                            tint = LockBoxTheme.colors.red600,
-                            contentDescription = null
-                        )
-                        Text(
-                            text = stringResource(R.string.log_out),
-                            color = LockBoxTheme.colors.red600,
-                            style = LockBoxTheme.typography.headlineLarge,
-                            modifier = Modifier.padding(vertical = 10.dp)
-                        )
-                    }
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                    )
                 }
             }
         }
@@ -170,7 +174,7 @@ internal fun SettingsScreen(
         if (showExitDialog) {
             ExitDialog(
                 onDismiss = { showExitDialog = false },
-                onLogOut = onLogOut
+                onLogOut = onLogOut,
             )
         }
 
@@ -184,8 +188,12 @@ internal fun SettingsScreen(
 }
 
 @Composable
-private fun ExitDialog(onDismiss: () -> Unit, onLogOut: () -> Unit, modifier: Modifier = Modifier) {
-    BasicDialog(
+private fun ExitDialog(
+    onDismiss: () -> Unit,
+    onLogOut: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LockboxDialog(
         onDismiss = onDismiss,
         modifier = modifier
     ) {

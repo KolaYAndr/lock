@@ -3,23 +3,20 @@ package org.homesharing.lockbox.domain.repository
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.model.physical_sign_up.PhysicalSignUp
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
-import org.homesharing.lockbox.domain.model.box.Status
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
+import org.homesharing.lockbox.domain.model.physical_sign_up.PhysicalSignUp
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 
 internal interface BoxesRepository {
     fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>>
 
     suspend fun getBoxByMac(address: String): Response<BoxWithStatus>
-    suspend fun getBoxStatusByMac(macAddress: String) : Response<Status>
-
     suspend fun openBoxByMac(address: String): Response<OpenBox>
 
     suspend fun unbindBox(address: String): Response<Unit>

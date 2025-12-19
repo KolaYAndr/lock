@@ -14,11 +14,6 @@ internal interface BoxesApi {
         macAddress: String,
     ): ApiResponse
 
-    suspend fun getBoxStatusByMac(
-        accessToken: String,
-        macAddress: String,
-    ): ApiResponse
-
     suspend fun updateBoxByMac(
         accessToken: String,
         macAddress: String,

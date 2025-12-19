@@ -3,29 +3,29 @@ package org.homesharing.lockbox.presentation.settings
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.navigation.routes.SettingsRoutes
+import org.homesharing.lockbox.navigation.routes.Route
 
 internal data class SettingsProperty(
-    @DrawableRes val icon: Int,
-    @StringRes val title: Int,
-    val route: SettingsRoutes
+    @field:DrawableRes val icon: Int,
+    @field:StringRes val title: Int,
+    val route: Route
 )
 
 internal val accountProperties = listOf(
     SettingsProperty(
         R.drawable.user,
         R.string.account,
-        SettingsRoutes.Account
+        Route.Account
     ),
     SettingsProperty(
         R.drawable.shield,
         R.string.security,
-        SettingsRoutes.Security
+        Route.Security
     )
 )
 
 internal val aboutProperty = SettingsProperty(
         R.drawable.circle_alert,
         R.string.about_app,
-        SettingsRoutes.AboutApp
+        Route.AboutApp
     )

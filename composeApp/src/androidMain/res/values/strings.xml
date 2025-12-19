@@ -154,7 +154,6 @@
     <string name="could_not_load_active_sessions">Не удалось загрузить сессии</string>
     <string name="could_not_load_box_info">Не удалось загрузить информацию о боксе</string>
     <string name="could_not_update_box_name">Не удалось обновить имя бокса</string>
-    <string name="could_not_update_box_status">Не удалось обновить статус бокса</string>
     <string name="could_not_update_box_address">Не удалось обновить адрес</string>
     <string name="could_not_unbind_box">Не удалось отвязать бокс</string>
     <string name="box_opened_successfully">Бокс открыт успешно</string>
@@ -168,6 +167,7 @@
     <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
     <string name="email_doesnt_match_pattern">Введите действительную почту</string>
     <string name="could_not_close_other_sessions">Не удалось завершить другие сессии</string>
+    <string name="could_not_delete_account">Не удалось деактивировать аккаунт</string>
     <string name="invalid_credentials">Данные введены неправильно</string>
     <string name="timeout">Истекло время выполнения запроса. Проверьте соединение с интернетом</string>
     <string name="check_internet_connection">Проверьте соединение с интернетом</string>
@@ -216,4 +216,5 @@
         <item quantity="many">%d дней назад</item>
         <item quantity="other">%d дня назад</item>
     </plurals>
+    <string name="pick_a_lockbox">Выберите локбокс</string>
 </resources>

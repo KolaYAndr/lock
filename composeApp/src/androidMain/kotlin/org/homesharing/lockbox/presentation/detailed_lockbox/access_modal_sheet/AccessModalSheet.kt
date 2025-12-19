@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet
 
+import android.content.ClipData
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -33,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -40,24 +43,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.access.Access
-import org.homesharing.lockbox.presentation.general.composables.AddRow
-import org.homesharing.lockbox.presentation.general.composables.DockedDatePicker
-import org.homesharing.lockbox.presentation.general.composables.DockedTimePicker
-import org.homesharing.lockbox.presentation.general.composables.LockBoxCircularProgress
-import org.homesharing.lockbox.presentation.general.composables.RoundText
-import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
-import org.homesharing.lockbox.presentation.general.composables.inputs.DateInput
-import org.homesharing.lockbox.presentation.general.composables.inputs.LockBoxPropertyInput
-import org.homesharing.lockbox.presentation.general.composables.inputs.TimeInput
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
+import org.homesharing.lockbox.presentation.uikit.composables.AddRow
+import org.homesharing.lockbox.presentation.uikit.composables.RoundText
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxCircularProgress
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockBoxPropertyInput
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxDateInput
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxTimeInput
+import org.homesharing.lockbox.presentation.uikit.composables.core.pickers.LockboxDatePicker
+import org.homesharing.lockbox.presentation.uikit.composables.core.pickers.LockboxTimePicker
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -65,8 +72,52 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 
+private const val URL_PREFIX = "https://lockboxes.ru/open"
+
 @Composable
 internal fun AccessModalSheet(
+    macAddress: String,
+    onDismiss: () -> Unit,
+    boxName: String,
+    address: String,
+    accessModalSheetViewModel: AccessModalSheetViewModel = koinViewModel(),
+) {
+    LaunchedEffect(macAddress) { accessModalSheetViewModel.setMacAddress(macAddress) }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val clipboard = LocalClipboard.current
+    val label = stringResource(R.string.link_copied)
+    ActionOnSharedFlow(
+        lifecycleOwner = lifecycleOwner,
+        flow = accessModalSheetViewModel.tokenData
+    ) { token ->
+        clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(label, "$URL_PREFIX/$token")))
+    }
+
+    val accessModalSheetState by accessModalSheetViewModel.uiState.collectAsStateWithLifecycle()
+    AccessModalSheet(
+        onDismiss = onDismiss,
+        lockboxName = boxName,
+        lockboxAddress = address,
+        accessList = accessModalSheetState.accesses,
+        step = accessModalSheetState.step,
+        changeStep = accessModalSheetViewModel::toStep,
+        isLoading = accessModalSheetState.loading,
+        guestName = accessModalSheetState.guestName,
+        onChangeGuestName = accessModalSheetViewModel::onChangeGuestName,
+        onChangeStartDate = accessModalSheetViewModel::onChangeStartDate,
+        onChangeStartTime = accessModalSheetViewModel::onChangeStartTime,
+        onChangeEndDate = accessModalSheetViewModel::onChangeEndDate,
+        onChangeEndTime = accessModalSheetViewModel::onChangeEndTime,
+        addGuest = accessModalSheetViewModel::addGuest,
+        onCopyLink = accessModalSheetViewModel::emitLink,
+        onRevokeToken = accessModalSheetViewModel::revokeToken,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun AccessModalSheet(
     onDismiss: () -> Unit,
     lockboxName: String,
     lockboxAddress: String,
@@ -86,7 +137,7 @@ internal fun AccessModalSheet(
     modifier: Modifier = Modifier,
 ) {
     val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
-    BasicModal(
+    LockboxModal(
         onDismiss = onDismiss,
         modifier = modifier
     ) {
@@ -100,7 +151,7 @@ internal fun AccessModalSheet(
             modifier = Modifier.fillMaxWidth()
         )
 
-        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
         AnimatedContent(
             targetState = step
@@ -203,7 +254,7 @@ private fun GuestInfoContent(
                 style = LockBoxTheme.typography.subHeadlineLarge,
             )
 
-            DateInput(
+            LockboxDateInput(
                 date = selectedStartDate,
                 onFieldClick = {},
                 modifier = Modifier.fillMaxWidth()
@@ -224,7 +275,7 @@ private fun GuestInfoContent(
                 style = LockBoxTheme.typography.subHeadlineLarge,
             )
 
-            DateInput(
+            LockboxDateInput(
                 date = selectedEndDate,
                 onFieldClick = {},
                 modifier = Modifier.fillMaxWidth()
@@ -262,7 +313,7 @@ private fun GuestInfoContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            BasicButton(
+            LockboxButton(
                 onClick = {
                     onUnbindUser(access.id)
                     onNavBack()
@@ -273,7 +324,7 @@ private fun GuestInfoContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            BasicButton(
+            LockboxButton(
                 onClick = onNavBack,
                 text = stringResource(R.string.back),
                 style = BasicButtonStyle.grey(),
@@ -396,7 +447,7 @@ private fun AddGuestContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
             ) {
-                DateInput(
+                LockboxDateInput(
                     date = selectedStartDate.orEmpty(),
                     onFieldClick = {
                         showStartDatePicker = !showStartDatePicker
@@ -404,7 +455,7 @@ private fun AddGuestContent(
                     }
                 )
 
-                TimeInput(
+                LockboxTimeInput(
                     time = selectedStartTime,
                     onFieldClick = {
                         showStartTimePicker = !showStartTimePicker
@@ -414,11 +465,11 @@ private fun AddGuestContent(
             }
 
             AnimatedVisibility(showStartDatePicker) {
-                DockedDatePicker(datePickerState = startDatePickerState)
+                LockboxDatePicker(datePickerState = startDatePickerState)
             }
 
             AnimatedVisibility(showStartTimePicker) {
-                DockedTimePicker(
+                LockboxTimePicker(
                     timePickerState = startTimePickerState,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -496,7 +547,7 @@ private fun AddGuestContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
             ) {
-                DateInput(
+                LockboxDateInput(
                     date = selectedEndDate.orEmpty(),
                     onFieldClick = {
                         showEndDatePicker = !showEndDatePicker
@@ -504,7 +555,7 @@ private fun AddGuestContent(
                     }
                 )
 
-                TimeInput(
+                LockboxTimeInput(
                     time = selectedEndTime,
                     onFieldClick = {
                         showEndTimePicker = !showEndTimePicker
@@ -514,11 +565,11 @@ private fun AddGuestContent(
             }
 
             AnimatedVisibility(showEndDatePicker) {
-                DockedDatePicker(datePickerState = endDatePickerState)
+                LockboxDatePicker(datePickerState = endDatePickerState)
             }
 
             AnimatedVisibility(showEndTimePicker) {
-                DockedTimePicker(
+                LockboxTimePicker(
                     timePickerState = endTimePickerState,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -563,7 +614,7 @@ private fun AddGuestContent(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            BasicButton(
+            LockboxButton(
                 onClick = onNavBack,
                 text = stringResource(R.string.cancel),
                 style = BasicButtonStyle.grey(),
@@ -640,7 +691,7 @@ private fun GuestListContent(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        BasicHorizontalDivider()
+                        LockboxHorizontalDivider()
                     }
 
                     item {

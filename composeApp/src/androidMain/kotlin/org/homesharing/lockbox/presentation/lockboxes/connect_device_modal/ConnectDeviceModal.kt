@@ -20,22 +20,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ConnectDeviceModal(
+    modifier: Modifier,
+    onDismiss: () -> Unit,
+    connectDeviceViewModel: ConnectDeviceModalViewModel = koinViewModel(),
+) {
+    ConnectDeviceModal(
+        onDismiss = onDismiss,
+        onCreateTestDevice = {
+            connectDeviceViewModel.createTestDevice()
+            onDismiss()
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ConnectDeviceModal(
     onDismiss: () -> Unit,
     onCreateTestDevice: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
     val settingsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-    BasicModal(
+    LockboxModal(
         modifier = modifier,
         onDismiss = onDismiss,
     ) {
@@ -45,10 +62,11 @@ internal fun ConnectDeviceModal(
             modifier = Modifier.fillMaxWidth()
         )
 
-        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,14 +95,14 @@ internal fun ConnectDeviceModal(
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            BasicButton(
+            LockboxButton(
                 onClick = { settingsLauncher.launch(Intent(Settings.ACTION_WIFI_SETTINGS)) },
                 text = stringResource(R.string.open_wifi_settings),
                 paddingValues = PaddingValues(10.dp),
                 modifier = Modifier.padding(top = 16.dp)
             )
 
-            BasicButton(
+            LockboxButton(
                 onClick = onDismiss,
                 text = stringResource(R.string.cancel),
                 modifier = Modifier.padding(top = 12.dp),
@@ -93,7 +111,7 @@ internal fun ConnectDeviceModal(
             )
         }
 
-        BasicButton(
+        LockboxButton(
             onClick = onCreateTestDevice,
             text = stringResource(R.string.add_virtual_device),
             modifier = Modifier

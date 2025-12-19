@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,32 +35,54 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
-import org.homesharing.lockbox.presentation.general.downloadUserAgreement
-import org.homesharing.lockbox.presentation.login.LoginType
-import org.homesharing.lockbox.presentation.general.composables.CloseRoundButton
-import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput
-import org.homesharing.lockbox.presentation.general.composables.inputs.PasswordInput
-import org.homesharing.lockbox.presentation.general.composables.PolicyAndConditions
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.PolicyAndConditions
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxCloseButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxCard
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxEmailInput
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPasswordInput
+import org.homesharing.lockbox.presentation.uikit.downloadPrivacyPolicy
+import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
+
+private const val FORGOT_PASSWORD_URL =
+    "https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client"
 
 @Composable
 internal fun SignInCard(
+    toSignUp: () -> Unit,
+    onDismiss: () -> Unit,
+    signInViewModel: SignInViewModel = koinViewModel(),
+) {
+    val signInState by signInViewModel.uiState.collectAsStateWithLifecycle()
+    SignInCard(
+        signInUiState = signInState,
+        onDismiss = onDismiss,
+        onEmailChange = signInViewModel::onChangeEmail,
+        onPasswordChange = signInViewModel::onChangePassword,
+        passwordErrorText = getErrorText(signInState.passwordError),
+        emailError = signInState.emailError != null,
+        toSignUp = toSignUp,
+        onSignIn = signInViewModel::signIn
+    )
+}
+
+@Composable
+private fun SignInCard(
     signInUiState: SignInUiState,
     onDismiss: () -> Unit,
     onPasswordChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    passwordError: Boolean,
-    passwordErrorText: String,
+    passwordErrorText: String?,
     emailError: Boolean,
-    onToTypeAuth: (LoginType) -> Unit,
+    toSignUp: () -> Unit,
     onSignIn: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    BasicCard(
+    LockboxCard(
         modifier = modifier
     ) {
         val emailInteractionSource = remember { MutableInteractionSource() }
@@ -67,11 +90,11 @@ internal fun SignInCard(
         val passwordFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
+        val emailFocusRequester = remember { FocusRequester() }
 
         var isPasswordSeen by remember { mutableStateOf(false) }
 
-        LaunchedEffect(Unit) { focusRequester.requestFocus() }
+        LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
 
         Box(modifier = Modifier.fillMaxWidth()) {
             Icon(
@@ -83,7 +106,7 @@ internal fun SignInCard(
                     .padding(top = 12.dp)
             )
 
-            CloseRoundButton(
+            LockboxCloseButton(
                 onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -106,13 +129,12 @@ internal fun SignInCard(
                 .padding(top = 24.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
         )
-        EmailInput(
+        LockboxEmailInput(
             email = signInUiState.email,
             onValueChange = { onEmailChange(it) },
             onClearText = { onEmailChange("") },
             interactionSource = emailInteractionSource,
-            isError = emailError,
-            errorText = stringResource(R.string.email_doesnt_match_pattern),
+            errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else null,
             keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
                 autoCorrectEnabled = false,
@@ -122,7 +144,7 @@ internal fun SignInCard(
             ),
             modifier = Modifier
                 .padding(top = 6.dp, start = 16.dp, end = 16.dp)
-                .focusRequester(focusRequester)
+                .focusRequester(emailFocusRequester)
         )
 
         Text(
@@ -133,12 +155,11 @@ internal fun SignInCard(
                 .padding(top = 24.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
         )
-        PasswordInput(
+        LockboxPasswordInput(
             password = signInUiState.password,
             onValueChange = { onPasswordChange(it) },
             onClearText = { onPasswordChange("") },
             interactionSource = passwordInteractionSource,
-            isError = passwordError,
             errorText = passwordErrorText,
             isSeen = isPasswordSeen,
             onSeenChange = { isPasswordSeen = !isPasswordSeen },
@@ -168,11 +189,11 @@ internal fun SignInCard(
             modifier = Modifier
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .align(Alignment.Start)
-                .clickable { uriHandler.openUri("https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client") },
+                .clickable { uriHandler.openUri(FORGOT_PASSWORD_URL) },
             textDecoration = TextDecoration.Underline
         )
 
-        BasicButton(
+        LockboxButton(
             onClick = { onSignIn() },
             text = stringResource(R.string.sing_in),
             paddingValues = PaddingValues(14.dp),
@@ -213,11 +234,22 @@ internal fun SignInCard(
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
                     .minimumInteractiveComponentSize()
-                    .clickable { onToTypeAuth(LoginType.SignUp) }
+                    .clickable { toSignUp() }
             )
         }
     }
 }
+
+@Composable
+@ReadOnlyComposable
+private fun getErrorText(passwordError: SignInPasswordError?) =
+    when (passwordError) {
+        SignInPasswordError.InvalidUserCredentials -> stringResource(R.string.invalid_credentials)
+        SignInPasswordError.Unexpected -> stringResource(R.string.unknown_error)
+        SignInPasswordError.Timeout -> stringResource(R.string.timeout)
+        SignInPasswordError.UnknownHost -> stringResource(R.string.check_internet_connection)
+        null -> null
+    }
 
 @Preview
 @Composable
@@ -229,10 +261,9 @@ private fun PreviewSignIn() {
             onDismiss = {},
             onPasswordChange = {},
             onEmailChange = {},
-            passwordError = false,
             emailError = false,
             passwordErrorText = "",
-            onToTypeAuth = {},
+            toSignUp = {},
             onSignIn = {}
         )
     }

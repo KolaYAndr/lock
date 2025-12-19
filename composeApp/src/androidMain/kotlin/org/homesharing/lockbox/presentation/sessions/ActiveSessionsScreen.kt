@@ -36,17 +36,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.sessions.Session
-import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialog
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicDialogContent
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxDialog
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -55,9 +57,24 @@ private val hourMillis = TimeUnit.HOURS.toMillis(1)
 private val dayMillis = TimeUnit.DAYS.toMillis(1)
 private val fourteenDaysMillis = TimeUnit.DAYS.toMillis(14)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ActiveSessionScreen(
+    onNavBack: () -> Unit,
+    activeSessionsViewModel: ActiveSessionsViewModel = koinViewModel(),
+) {
+    val uiState by activeSessionsViewModel.uiState.collectAsStateWithLifecycle()
+    ActiveSessionScreen(
+        activeSessionsUiState = uiState,
+        onNavBack = onNavBack,
+        onFinishSessions = activeSessionsViewModel::finishOtherSessions,
+        onRefresh = activeSessionsViewModel::refreshSessions,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ActiveSessionScreen(
     activeSessionsUiState: ActiveSessionsUiState,
     onNavBack: () -> Unit,
     onFinishSessions: () -> Unit,
@@ -106,7 +123,7 @@ internal fun ActiveSessionScreen(
                             ?.map { it.address.hostAddress }
                             ?.firstOrNull { it != null && !it.contains(":") }
                     }
-                    BasicGroup(
+                    LockboxGroup(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 6.dp, bottom = 12.dp),
@@ -119,9 +136,9 @@ internal fun ActiveSessionScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-                        BasicButton(
+                        LockboxButton(
                             onClick = { showCloseSessionsDialog = true },
                             text = stringResource(R.string.finish_all_other_sessions),
                             style = BasicButtonStyle.red(),
@@ -143,7 +160,7 @@ internal fun ActiveSessionScreen(
                 }
 
                 item {
-                    BasicGroup(
+                    LockboxGroup(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 6.dp),
@@ -158,7 +175,7 @@ internal fun ActiveSessionScreen(
                             )
 
                             if (index != activeSessionsUiState.sessions.lastIndex) {
-                                BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                                LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }
@@ -181,7 +198,7 @@ private fun CloseSessionsDialog(
     onFinishSessions: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    BasicDialog(
+    LockboxDialog(
         onDismiss = onDismiss,
         modifier = modifier
     ) {

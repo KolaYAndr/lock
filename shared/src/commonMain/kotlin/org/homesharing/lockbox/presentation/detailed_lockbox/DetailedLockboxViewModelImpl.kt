@@ -34,16 +34,6 @@ internal class DetailedLockboxViewModelImpl(
 
                 is Response.Success -> SnackbarController.receiveEvent(boxOpenedSuccessfully)
             }
-            getBoxStatus()
-        }
-    }
-
-    override suspend fun getBoxStatus() {
-        when (val status = boxesRepository.getBoxStatusByMac(mac)) {
-            is Response.Failure -> SnackbarController.receiveEvent( couldNotUpdateBoxStatus { getBoxStatus() } )
-            is Response.Success -> uiState.update {
-                it.copy(isBoxOpen = status.data.opened ?: false)
-            }
         }
     }
 
@@ -153,15 +143,6 @@ internal class DetailedLockboxViewModelImpl(
 
         fun couldNotOpenBox(onRetry: () -> Unit) = SnackbarEvent(
             messageKey = CommonStringKeys.CouldNotOpenBox,
-            action = SnackbarAction(
-                nameKey = CommonStringKeys.Retry,
-                effect = onRetry
-            )
-        )
-
-        fun couldNotUpdateBoxStatus(onRetry: suspend () -> Unit) = SnackbarEvent(
-            messageKey = CommonStringKeys.CouldNotUpdateBoxStatus,
-            duration = SnackbarDuration.Long,
             action = SnackbarAction(
                 nameKey = CommonStringKeys.Retry,
                 effect = onRetry

@@ -6,11 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,34 +39,51 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.Status
-import org.homesharing.lockbox.presentation.general.composables.AddRow
-import org.homesharing.lockbox.presentation.general.composables.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.general.composables.TopRowWithAddButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
-import org.homesharing.lockbox.presentation.general.composables.screens.EmptyScreenContent
-import org.homesharing.lockbox.presentation.general.composables.screens.ErrorScreenContent
-import org.homesharing.lockbox.presentation.general.composables.screens.LoadingScreenContent
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation.lockboxes.add_virtual_device_modal.AddVirtualDeviceModalViewModel
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModal
-import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModalViewModel
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModal
+import org.homesharing.lockbox.presentation.uikit.composables.AddRow
+import org.homesharing.lockbox.presentation.uikit.composables.TopRowWithAddButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.templates.EmptyScreenContent
+import org.homesharing.lockbox.presentation.uikit.composables.templates.ErrorScreenContent
+import org.homesharing.lockbox.presentation.uikit.composables.templates.LoadingScreenContent
+import org.homesharing.lockbox.presentation.uikit.composables.top_rows.BoxesTopRow
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun LockBoxesScreen(
+internal fun LockboxesScreen(
+    navigateToDetails: (String) -> Unit,
+    lockBoxesViewModel: LockboxesViewModel = koinViewModel(),
+) {
+    val link by lockBoxesViewModel.avatarLink.collectAsStateWithLifecycle()
+    LockboxesScreen(
+        avatarLink = link,
+        boxes = lockBoxesViewModel.boxes,
+        onNavigateToBox = navigateToDetails,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun LockboxesScreen(
     avatarLink: String,
     boxes: Flow<PagingData<BoxWithStatus>>,
     onNavigateToBox: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
     var showConnectModal by remember { mutableStateOf(false) }
 //    var showAddVirtualDeviceModal by remember { mutableStateOf(false) }
     val lazyBoxes = boxes.collectAsLazyPagingItems()
 
-    Column(modifier = modifier.background(LockBoxTheme.colors.grey950)) {
-        TopRow(avatar = avatarLink, onAddDevice = { showConnectModal = true })
+    Column(
+        modifier = modifier.background(LockBoxTheme.colors.grey950)
+    ) {
+        TopRow(
+            avatar = avatarLink,
+            onAddDevice = { showConnectModal = true }
+        )
 
         when (lazyBoxes.loadState.refresh) {
             is LoadState.NotLoading -> {
@@ -95,7 +106,6 @@ internal fun LockBoxesScreen(
 
     if (showConnectModal) {
         ConnectModalSheet(
-            modifier = Modifier.fillMaxSize(),
             onDismiss = { showConnectModal = false },
         )
     }
@@ -135,10 +145,6 @@ private fun LockBoxScreen(
     onBoxClick: (String) -> Unit,
     onAddDevice: () -> Unit,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-    val displayCutout = WindowInsets.displayCutout.asPaddingValues()
-    val startPadding = displayCutout.calculateStartPadding(layoutDirection)
-    val endPadding = displayCutout.calculateEndPadding(layoutDirection)
     LockBoxPullToRefresh(
         modifier = Modifier.fillMaxSize(),
         isRefreshing = boxes.loadState.refresh is LoadState.Loading,
@@ -149,8 +155,8 @@ private fun LockBoxScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
                 top = 12.dp,
-                start = 16.dp + startPadding,
-                end = 16.dp + endPadding,
+                start = 16.dp,
+                end = 16.dp,
                 bottom = 48.dp
             ),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -195,7 +201,8 @@ private fun LockBox(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable { onClick(statusBox.box.macAddress) }) {
+        modifier = modifier.clickable { onClick(statusBox.box.macAddress) }
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -249,14 +256,17 @@ private fun LockBox(
             )
         }
 
-        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
     }
 }
 
 @Composable
-private fun TopRow(avatar: String, onAddDevice: () -> Unit) {
+private fun TopRow(
+    avatar: String,
+    onAddDevice: () -> Unit,
+) {
     TopRowWithAddButton(
-        rowContent = { LockBoxesTopRow(avatarLink = avatar) },
+        rowContent = { BoxesTopRow(avatarLink = avatar) },
         onAdd = onAddDevice,
         modifier = Modifier
             .fillMaxWidth()
@@ -266,43 +276,23 @@ private fun TopRow(avatar: String, onAddDevice: () -> Unit) {
 
 @Composable
 private fun VirtualDeviceModal(
-    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
     onFinish: () -> Unit,
 ) {
-    val addVirtualDeviceViewModel = koinViewModel<AddVirtualDeviceModalViewModel>()
-    val addVirtualDeviceUiState by addVirtualDeviceViewModel.addVirtualDeviceUiState.collectAsStateWithLifecycle()
-
     AddVirtualDeviceModal(
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
         onDismiss = onDismiss,
-        deviceName = addVirtualDeviceUiState.deviceName,
-        onChangeDeviceName = addVirtualDeviceViewModel::onChangeDeviceName,
-        deviceAddress = addVirtualDeviceUiState.macAddress,
-        onChangeMacAddress = addVirtualDeviceViewModel::onChangeMacAddress,
-        onChangeDeviceAddress = addVirtualDeviceViewModel::onChangeDeviceAddress,
-        onCreateVirtualDevice = {
-            addVirtualDeviceViewModel.onCreateVirtualDevice()
-            onFinish()
-            onDismiss()
-        }
+        onFinish = onFinish,
     )
 }
 
 @Composable
 private fun ConnectModalSheet(
-    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
-    val connectDeviceViewModel = koinViewModel<ConnectDeviceModalViewModel>()
-
     ConnectDeviceModal(
         onDismiss = onDismiss,
-        onCreateTestDevice = {
-            connectDeviceViewModel.createTestDevice()
-            onDismiss()
-        },
-        modifier = modifier
+        modifier = Modifier.fillMaxSize()
     )
 }
 
@@ -407,7 +397,7 @@ private fun PreviewLockBoxesScreen() {
                 )
             )
         )
-        LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
+        LockboxesScreen("", pagingData, {}, Modifier.fillMaxSize())
     }
 }
 
@@ -416,7 +406,7 @@ private fun PreviewLockBoxesScreen() {
 private fun PreviewLoading() {
     LockBoxTheme {
         val pagingData = flowOf(PagingData.empty<BoxWithStatus>())
-        LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
+        LockboxesScreen("", pagingData, {}, Modifier.fillMaxSize())
     }
 }
 
@@ -433,6 +423,6 @@ private fun PreviewEmptyScreen() {
                 )
             )
         )
-        LockBoxesScreen("", pagingData, {}, Modifier.fillMaxSize())
+        LockboxesScreen("", pagingData, {}, Modifier.fillMaxSize())
     }
 }

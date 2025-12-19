@@ -3,22 +3,49 @@ package org.homesharing.lockbox.presentation.sign_up
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
-import org.homesharing.lockbox.presentation.general.downloadUserAgreement
-import org.homesharing.lockbox.presentation.general.animation.backwardAnimation
-import org.homesharing.lockbox.presentation.general.animation.forwardAnimation
-import org.homesharing.lockbox.presentation.general.composables.CardTopRow
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicCard
+import org.homesharing.lockbox.presentation.sign_up.steps.EmailConfirmationStep
+import org.homesharing.lockbox.presentation.sign_up.steps.EmailInputStep
+import org.homesharing.lockbox.presentation.sign_up.steps.PasswordInputStep
+import org.homesharing.lockbox.presentation.uikit.animation.backwardAnimation
+import org.homesharing.lockbox.presentation.uikit.animation.forwardAnimation
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxCard
+import org.homesharing.lockbox.presentation.uikit.composables.top_rows.CardTopRow
+import org.homesharing.lockbox.presentation.uikit.downloadPrivacyPolicy
+import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
+import org.koin.androidx.compose.koinViewModel
 
 private const val TOTAL_STEPS = 3
 
 @Composable
 internal fun SignUpCard(
+    onSignIn: () -> Unit,
+    onDismiss: () -> Unit,
+    signUpViewModel: SignUpViewModel = koinViewModel(),
+) {
+    val signUpState by signUpViewModel.uiState.collectAsStateWithLifecycle()
+    SignUpCard(
+        signUpUiState = signUpState,
+        onSignIn = onSignIn,
+        onDismiss = onDismiss,
+        onEmailChange = signUpViewModel::onChangeEmail,
+        onConfirmEmail = signUpViewModel::sendEmailConfirmation,
+        onToStep = signUpViewModel::toStep,
+        onPasswordChange = signUpViewModel::onChangePassword,
+        onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
+        onCheckConfirmation = signUpViewModel::checkIfConfirmed,
+        onCreate = signUpViewModel::signUp
+    )
+}
+
+@Composable
+private fun SignUpCard(
     signUpUiState: SignUpUiState,
     onSignIn: () -> Unit,
     onDismiss: () -> Unit,
@@ -41,7 +68,9 @@ internal fun SignUpCard(
             }
         }
     ) { step ->
-        BasicCard(modifier = modifier) {
+        LockboxCard(
+            modifier = modifier
+        ) {
             val context = LocalContext.current
             CardTopRow(
                 onBackPressed = {
