@@ -32,6 +32,8 @@ import org.homesharing.lockbox.presentation.sign_in.SignInViewModel
 import org.homesharing.lockbox.presentation.sign_in.SignInViewModelImpl
 import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
 import org.homesharing.lockbox.presentation.sign_up.SignUpViewModelImpl
+import org.homesharing.lockbox.presentation.warning.WarningViewModel
+import org.homesharing.lockbox.presentation.warning.WarningViewModelImpl
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -53,4 +55,5 @@ internal val viewModelModule = module {
     viewModelOf(::AddVirtualDeviceModalViewModelImpl) bind AddVirtualDeviceModalViewModel::class
     viewModelOf(::ConnectDeviceModalViewModelImpl) bind ConnectDeviceModalViewModel::class
     viewModelOf(::AddPhoneNumberViewModelImpl) bind AddPhoneNumberViewModel::class
+    viewModelOf(::WarningViewModelImpl) bind WarningViewModel::class
 }

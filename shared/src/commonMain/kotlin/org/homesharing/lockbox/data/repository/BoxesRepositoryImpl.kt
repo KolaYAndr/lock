@@ -11,7 +11,6 @@ import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
-import org.homesharing.lockbox.data.network.dto.box.StatusDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
@@ -30,7 +29,6 @@ import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.access_revoke.toDomain
 import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
-import org.homesharing.lockbox.domain.model.box.Status
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.create_linking_code.toDomain
@@ -76,22 +74,6 @@ internal class BoxesRepositoryImpl(
                     )
                 },
                 mapper = BoxWithStatusResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
-
-    override suspend fun getBoxStatusByMac(macAddress: String): Response<Status> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.getBoxStatusByMac(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = macAddress
-                    )
-                },
-                mapper = StatusDto::toDomain
             )
         } catch (e: Exception) {
             Response.Failure(e.message ?: "")

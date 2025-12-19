@@ -1,13 +1,11 @@
 package org.homesharing.lockbox
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -18,55 +16,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.homesharing.lockbox.navigation.BottomNavigation
-import org.homesharing.lockbox.navigation.Navigation
+import org.homesharing.lockbox.navigation.AuthenticatedNavigation
+import org.homesharing.lockbox.navigation.Navigator
+import org.homesharing.lockbox.navigation.rememberNavigationState
+import org.homesharing.lockbox.navigation.routes.Route
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
 import org.homesharing.lockbox.presentation.activity.LockboxActivityViewModel
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation.snackbar.LockBoxSnackbar
+import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.snackbar_controller.CommonStringKeys
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar_controller.SnackbarDuration
+import org.homesharing.lockbox.presentation.uikit.animation.loginAnimation
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackbar
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.material3.SnackbarDuration as AndroidSnackbarDuration
 
-private const val SPLASH_SCREEN_TIME = 1000L
-
 class LockBoxActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
-        var keepSplash = true
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-        splashScreen.setKeepOnScreenCondition { keepSplash }
-
-        val systemBarStyle = SystemBarStyle.dark(Color.Transparent.toArgb())
-
-        enableEdgeToEdge(
-            statusBarStyle = systemBarStyle,
-            navigationBarStyle = systemBarStyle
-        )
-
-        lifecycleScope.launch {
-            delay(SPLASH_SCREEN_TIME)
-            keepSplash = false
-        }
+        enableEdgeToEdge()
 
         setContent {
             val lockboxActivityViewModel = koinViewModel<LockboxActivityViewModel>()
@@ -76,25 +56,24 @@ class LockBoxActivity : ComponentActivity() {
             val snackbarHostState = remember { SnackbarHostState() }
             CollectSnackbarEvents(snackbarHostState)
 
-            val navController = rememberNavController()
+            val navigationState = rememberNavigationState(
+                startRoute = Route.Boxes,
+                topLevelRoutes = topLevelRoutes.keys,
+            )
+
+            val navigator = remember {
+                Navigator(navigationState)
+            }
+
             LockBoxTheme {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
                 Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(LockBoxTheme.colors.grey950),
+                    modifier = Modifier.background(LockBoxTheme.colors.grey950),
                     bottomBar = {
-                        BottomNavigation(
-                            topLevelRoutes = topLevelRoutes,
-                            navBackStackEntry = navBackStackEntry
-                        ) { route ->
-                            navController.navigate(route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                        if (isLoggedIn) {
+                            LockboxNavBar(
+                                selectedKey = navigationState.topLevelRoute,
+                                onSelectKey = navigator::navigate
+                            )
                         }
                     },
                     snackbarHost = {
@@ -106,11 +85,22 @@ class LockBoxActivity : ComponentActivity() {
                             )
                         }
                     },
-                ) { padding ->
-                    Navigation(
-                        navController = navController,
-                        startFromLogin = !isLoggedIn,
-                    )
+                ) { innerPadding ->
+                    AnimatedContent(
+                        targetState = isLoggedIn,
+                        label = "authentication $isLoggedIn",
+                        transitionSpec = loginAnimation,
+                    ) { isLoggedIn ->
+                        if (isLoggedIn) {
+                            AuthenticatedNavigation(
+                                navigator = navigator,
+                                state = navigationState,
+                                padding = innerPadding,
+                            )
+                        } else {
+                            LoginScreen()
+                        }
+                    }
                 }
             }
         }
@@ -124,22 +114,23 @@ class LockBoxActivity : ComponentActivity() {
         LaunchedEffect(lifecycleOwner.lifecycle) {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.Main.immediate) {
-                    SnackbarController.events.flowOn(Dispatchers.Main.immediate).collect { event ->
-                        scope.launch {
-                            snackbarHostState.currentSnackbarData?.dismiss()
+                    SnackbarController.events.flowOn(Dispatchers.Main.immediate)
+                        .collect { event ->
+                            scope.launch {
+                                snackbarHostState.currentSnackbarData?.dismiss()
 
-                            val result = snackbarHostState.showSnackbar(
-                                message = resolveKey(event.messageKey),
-                                actionLabel = event.action?.nameKey?.let { resolveKey(it) },
-                                withDismissAction = true,
-                                duration = resolveDuration(event.duration)
-                            )
+                                val result = snackbarHostState.showSnackbar(
+                                    message = resolveKey(event.messageKey),
+                                    actionLabel = event.action?.nameKey?.let { resolveKey(it) },
+                                    withDismissAction = true,
+                                    duration = resolveDuration(event.duration)
+                                )
 
-                            if (result == SnackbarResult.ActionPerformed) {
-                                event.action?.effect?.invoke()
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    event.action?.effect?.invoke()
+                                }
                             }
                         }
-                    }
                 }
             }
         }
@@ -170,7 +161,8 @@ class LockBoxActivity : ComponentActivity() {
                 CommonStringKeys.LinkSentToChangePassword -> R.string.link_sent_to_change_password
                 CommonStringKeys.CouldNotLoadActiveSessions -> R.string.could_not_load_active_sessions
                 CommonStringKeys.CouldNotCloseOtherSessions -> R.string.could_not_close_other_sessions
-                CommonStringKeys.CouldNotUpdateBoxStatus -> R.string.could_not_update_box_status
+                CommonStringKeys.CouldNotDeleteAccount -> R.string.could_not_delete_account
+
             }
         )
     }

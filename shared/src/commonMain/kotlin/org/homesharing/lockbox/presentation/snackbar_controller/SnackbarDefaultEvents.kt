@@ -23,7 +23,7 @@ enum class CommonStringKeys {
     LinkSentToChangePassword,
     CouldNotLoadActiveSessions,
     CouldNotCloseOtherSessions,
-    CouldNotUpdateBoxStatus,
+    CouldNotDeleteAccount,
 }
 
 internal object SnackbarDefaultEvents {

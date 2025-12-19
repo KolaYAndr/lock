@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,16 +27,43 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.TitledTopWithCloseAndBackButtons
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicModal
-import org.homesharing.lockbox.presentation.general.composables.inputs.LockBoxPropertyInput
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.lockboxes.add_virtual_device_modal.AddVirtualDeviceModalViewModel
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockBoxPropertyInput
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun AddVirtualDeviceModal(
+    modifier: Modifier,
+    onDismiss: () -> Unit,
+    onFinish: () -> Unit,
+    addVirtualDeviceViewModel: AddVirtualDeviceModalViewModel = koinViewModel(),
+) {
+    val addVirtualDeviceUiState by addVirtualDeviceViewModel.addVirtualDeviceUiState.collectAsStateWithLifecycle()
+    AddVirtualDeviceModal(
+        modifier = modifier,
+        onDismiss = onDismiss,
+        deviceName = addVirtualDeviceUiState.deviceName,
+        onChangeDeviceName = addVirtualDeviceViewModel::onChangeDeviceName,
+        deviceAddress = addVirtualDeviceUiState.macAddress,
+        onChangeMacAddress = addVirtualDeviceViewModel::onChangeMacAddress,
+        onChangeDeviceAddress = addVirtualDeviceViewModel::onChangeDeviceAddress,
+        onCreateVirtualDevice = {
+            addVirtualDeviceViewModel.onCreateVirtualDevice()
+            onFinish()
+            onDismiss()
+        }
+    )
+}
+
+@Composable
+private fun AddVirtualDeviceModal(
     onDismiss: () -> Unit,
     deviceName: String,
     onChangeDeviceName: (String) -> Unit,
@@ -50,7 +78,7 @@ internal fun AddVirtualDeviceModal(
     val addressFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { nameFocusRequester.requestFocus() }
 
-    BasicModal(
+    LockboxModal(
         onDismiss = onDismiss,
         modifier = modifier
     ) {
@@ -60,7 +88,7 @@ internal fun AddVirtualDeviceModal(
             modifier = Modifier.fillMaxWidth()
         )
 
-        BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
         Column(
             modifier = modifier.verticalScroll(rememberScrollState())
@@ -191,7 +219,7 @@ internal fun AddVirtualDeviceModal(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            BasicButton(
+            LockboxButton(
                 onClick = {
                     onCreateVirtualDevice()
                     onDismiss()

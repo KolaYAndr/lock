@@ -1,12 +1,10 @@
 package org.homesharing.lockbox.presentation.login
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 abstract class LoginViewModel : ViewModel() {
     abstract val loginType: StateFlow<LoginType>
-    abstract val loggedIn: SharedFlow<Unit>
     abstract fun toTypeAuth(authType: LoginType)
 
 }

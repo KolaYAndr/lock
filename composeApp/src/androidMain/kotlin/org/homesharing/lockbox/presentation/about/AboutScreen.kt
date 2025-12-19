@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,17 +21,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.downloadPrivacyPolicy
-import org.homesharing.lockbox.presentation.general.downloadUserAgreement
-import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicGroup
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicHorizontalDivider
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.downloadPrivacyPolicy
+import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
-internal fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AboutScreen(
+    onNavBack: () -> Unit,
+) {
     Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -80,7 +85,7 @@ internal fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
         }
 
         val context = LocalContext.current
-        BasicGroup(
+        LockboxGroup(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -91,7 +96,7 @@ internal fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            BasicHorizontalDivider(modifier = Modifier.fillMaxWidth())
+            LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
             Agreement(
                 onClick = { downloadPrivacyPolicy(context) },
@@ -103,7 +108,11 @@ internal fun AboutScreen(onNavBack: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Agreement(onClick: () -> Unit, text: String, modifier: Modifier = Modifier) {
+private fun Agreement(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = modifier
             .clickable { onClick() },

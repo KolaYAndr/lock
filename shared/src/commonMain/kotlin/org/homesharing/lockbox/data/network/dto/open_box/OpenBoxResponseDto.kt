@@ -9,5 +9,5 @@ internal data class OpenBoxResponseDto(
     val issuerSub: String,
     val issuerToken: String?,
     val macAddress: String,
-    val timestamp: String
+    val timestamp: Double,
 )

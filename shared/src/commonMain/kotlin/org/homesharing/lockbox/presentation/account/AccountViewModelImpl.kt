@@ -107,13 +107,25 @@ internal class AccountViewModelImpl(
 
     override fun deleteAccount() {
         viewModelScope.launch {
-            repository.deactivateUser()
+            if (repository.deactivateUser() is Response.Success) {
+                repository.logOut()
+            } else {
+                SnackbarController.receiveEvent(couldNotDeleteAccountEvent { deleteAccount() })
+            }
         }
     }
 
     private companion object {
         fun couldNotUpdateUserInfoEvent(onRetry: suspend () -> Unit) = SnackbarEvent(
             messageKey = CommonStringKeys.CouldNotUpdateUserInfo,
+            action = SnackbarAction(
+                nameKey = CommonStringKeys.Retry,
+                effect = { onRetry() }
+            )
+        )
+
+        fun couldNotDeleteAccountEvent(onRetry: () -> Unit) = SnackbarEvent(
+            messageKey = CommonStringKeys.CouldNotDeleteAccount,
             action = SnackbarAction(
                 nameKey = CommonStringKeys.Retry,
                 effect = { onRetry() }

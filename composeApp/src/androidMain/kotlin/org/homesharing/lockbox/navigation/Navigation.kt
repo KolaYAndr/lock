@@ -1,378 +1,118 @@
 package org.homesharing.lockbox.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import androidx.navigation.navDeepLink
-import androidx.navigation.toRoute
-import org.homesharing.lockbox.navigation.routes.AccountRoutes
-import org.homesharing.lockbox.navigation.routes.ChangeEmailRoutes
-import org.homesharing.lockbox.navigation.routes.ContractRoutes
-import org.homesharing.lockbox.navigation.routes.MainRoutes
-import org.homesharing.lockbox.navigation.routes.Routes
-import org.homesharing.lockbox.navigation.routes.SecurityRoutes
-import org.homesharing.lockbox.navigation.routes.SettingsRoutes
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import org.homesharing.lockbox.navigation.routes.Route
 import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
-import org.homesharing.lockbox.presentation.account.AccountViewModel
 import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScreen
-import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
-import org.homesharing.lockbox.presentation.change_email.ChangeEmailViewModel
-import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
 import org.homesharing.lockbox.presentation.contracts.ContractsScreen
-import org.homesharing.lockbox.presentation.contracts.ContractsViewModel
-import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockBoxScreen
-import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockboxViewModel
-import org.homesharing.lockbox.presentation.general.ActionOnSharedFlow
-import org.homesharing.lockbox.presentation.general.animation.enterAnimation
-import org.homesharing.lockbox.presentation.general.animation.exitAnimation
-import org.homesharing.lockbox.presentation.general.animation.globalEnterAnimation
-import org.homesharing.lockbox.presentation.general.animation.globalExitAnimation
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.ContractsTopRow
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.LockBoxesTopRow
-import org.homesharing.lockbox.presentation.general.composables.login_top_rows.SettingsTopRowText
-import org.homesharing.lockbox.presentation.lockboxes.LockBoxesScreen
-import org.homesharing.lockbox.presentation.lockboxes.LockboxesViewModel
-import org.homesharing.lockbox.presentation.login.LoginScreen
-import org.homesharing.lockbox.presentation.login.LoginViewModel
+import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockboxScreen
+import org.homesharing.lockbox.presentation.lockboxes.LockboxesScreen
 import org.homesharing.lockbox.presentation.security.SecurityScreen
-import org.homesharing.lockbox.presentation.security.SecurityViewModel
 import org.homesharing.lockbox.presentation.sessions.ActiveSessionScreen
-import org.homesharing.lockbox.presentation.sessions.ActiveSessionsViewModel
 import org.homesharing.lockbox.presentation.settings.SettingsScreen
-import org.homesharing.lockbox.presentation.settings.SettingsViewModel
+import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
+import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
+import org.homesharing.lockbox.presentation.uikit.animation.popExitTransition
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.warning.WarningScreen
-import org.koin.androidx.compose.koinViewModel
 
 private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
 
 @Composable
-internal fun Navigation(
-    navController: NavHostController,
-    startFromLogin: Boolean,
+internal fun AuthenticatedNavigation(
+    navigator: Navigator,
+    state: NavigationState,
     modifier: Modifier = Modifier,
+    padding: PaddingValues,
 ) {
-    val loginViewModel = koinViewModel<LoginViewModel>()
-    val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
-    NavHost(
-        navController = navController,
-        startDestination = Routes.Main,
-        modifier = modifier,
-        exitTransition = { ExitTransition.None },
-        enterTransition = { EnterTransition.None }
-    ) {
-        navigation<Routes.Main>(
-            startDestination = if (startFromLogin) MainRoutes.Login else MainRoutes.Boxes,
-        ) {
-            composable<MainRoutes.Login>(
-                enterTransition = globalEnterAnimation,
-                exitTransition = null,
-                popEnterTransition = null,
-                popExitTransition = globalExitAnimation
-            ) {
-                ActionOnSharedFlow(
-                    flow = loginViewModel.loggedIn,
-                    lifecycleOwner = LocalLifecycleOwner.current
-                ) {
-                    navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
-                }
-
-                LoginScreen(
-                    loginType = loginType,
-                    onToTypeAuth = loginViewModel::toTypeAuth,
-                    topRowContent = { LockBoxesTopRow() },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable<MainRoutes.Boxes>(
-                enterTransition = globalEnterAnimation,
-                exitTransition = null,
-                popEnterTransition = null,
-                popExitTransition = globalExitAnimation
-            ) {
-                val lockBoxesViewModel = koinViewModel<LockboxesViewModel>()
-                val link by lockBoxesViewModel.avatarLink.collectAsStateWithLifecycle()
-
-                LockBoxesScreen(
-                    avatarLink = link,
-                    boxes = lockBoxesViewModel.boxes,
-                    onNavigateToBox = { macAddress ->
-                        navController.navigate(
-                            MainRoutes.DetailedBox(macAddress = macAddress)
-                        )
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable<MainRoutes.DetailedBox>(
-                exitTransition = null,
-                enterTransition = enterAnimation,
-                popExitTransition = exitAnimation,
-                popEnterTransition = null,
-            ) { backStack ->
-                val detailedLockBoxViewModel = koinViewModel<DetailedLockboxViewModel>()
-                val state by detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
-                val mac = backStack.toRoute<MainRoutes.DetailedBox>().macAddress
-
-                ActionOnSharedFlow(
-                    lifecycleOwner = LocalLifecycleOwner.current,
-                    flow = detailedLockBoxViewModel.unbindSuccess,
-                ) {
-                    navController.navigateUp()
-                }
-
-                LaunchedEffect(mac) { detailedLockBoxViewModel.setMacAddress(mac) }
-
-                DetailedLockBoxScreen(
-                    uiState = state,
-                    macAddress = mac,
-                    onNavBack = navController::navigateUp,
-                    onOpenBox = detailedLockBoxViewModel::openBox,
-                    onUnbindDevice = detailedLockBoxViewModel::unbindDevice,
-                    onSaveAddress = detailedLockBoxViewModel::saveAddress,
-                    onSaveName = detailedLockBoxViewModel::saveName,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-
-        navigation<Routes.Settings>(
-            startDestination = if (startFromLogin) SettingsRoutes.Login else SettingsRoutes.Settings,
-        ) {
-            composable<SettingsRoutes.Login>(
-                enterTransition = globalEnterAnimation,
-                exitTransition = null,
-                popEnterTransition = null,
-                popExitTransition = globalExitAnimation
-            ) {
-                ActionOnSharedFlow(
-                    flow = loginViewModel.loggedIn,
-                    lifecycleOwner = LocalLifecycleOwner.current
-                ) {
-                    navController.navigateToDestinationWithNoBackstack(SettingsRoutes.Settings)
-                }
-
-                LoginScreen(
-                    loginType = loginType,
-                    onToTypeAuth = loginViewModel::toTypeAuth,
-                    topRowContent = { SettingsTopRowText() },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable<SettingsRoutes.Settings>(
-                enterTransition = globalEnterAnimation,
-                exitTransition = null,
-                popEnterTransition = null,
-                popExitTransition = globalExitAnimation
-            ) {
-                val settingsViewModel = koinViewModel<SettingsViewModel>()
-                val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
-
-                SettingsScreen(
-                    settingsUiState = settingsState,
-                    onLogOut = {
-                        settingsViewModel.logOut()
-                        navController.navigateToDestinationWithNoBackstack(MainRoutes.Login)
-                    },
-                    onRefresh = settingsViewModel::refreshAccountInfo,
-                    onNavigate = { route -> navController.navigate(route) },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable<SettingsRoutes.AboutApp>(
-                popExitTransition = exitAnimation,
-                enterTransition = enterAnimation,
-                exitTransition = null,
-                popEnterTransition = null
-            ) {
-                AboutScreen(
-                    onNavBack = navController::navigateUp,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            navigation<SettingsRoutes.Security>(
-                startDestination = SecurityRoutes.Security,
-                exitTransition = null,
-                enterTransition = enterAnimation,
-                popExitTransition = exitAnimation,
-                popEnterTransition = null
-            ) {
-                composable<SecurityRoutes.Security> {
-                    val securityViewModel = koinViewModel<SecurityViewModel>()
-
-                    SecurityScreen(
-                        onNavBack = navController::navigateUp,
-                        onToActiveSessions = { navController.navigate(SecurityRoutes.ActiveSessions) },
-                        onChangePassword = securityViewModel::sendLinkToChangePassword,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                composable<SecurityRoutes.ActiveSessions> {
-                    val activeSessionsViewModel = koinViewModel<ActiveSessionsViewModel>()
-                    val uiState by activeSessionsViewModel.uiState.collectAsStateWithLifecycle()
-
-                    ActiveSessionScreen(
-                        activeSessionsUiState = uiState,
-                        onNavBack = navController::navigateUp,
-                        onFinishSessions = activeSessionsViewModel::finishOtherSessions,
-                        onRefresh = activeSessionsViewModel::refreshSessions,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-
-            navigation<SettingsRoutes.Account>(
-                startDestination = AccountRoutes.Account,
-                exitTransition = null,
-                enterTransition = enterAnimation,
-                popExitTransition = exitAnimation,
-                popEnterTransition = null
-            ) {
-                composable<AccountRoutes.Account> {
-                    val accountViewModel = koinViewModel<AccountViewModel>()
-                    val accountUiState by accountViewModel.uiState.collectAsStateWithLifecycle()
-
-                    AccountScreen(
-                        accountUiState = accountUiState,
-                        onNavigateBack = navController::navigateUp,
-                        onDelete = {
-                            accountViewModel.deleteAccount()
-                            navController.navigateToDestinationWithNoBackstack(AccountRoutes.Warning)
+    NavDisplay(
+        modifier = modifier
+            .fillMaxSize()
+            .background(LockBoxTheme.colors.grey950)
+            .padding(padding),
+        onBack = navigator::navBack,
+        transitionSpec = enterTransition,
+        popTransitionSpec = exitTransition,
+        predictivePopTransitionSpec = popExitTransition,
+        entries = state.toEntries(
+            entryProvider {
+                entry<Route.Boxes> {
+                    LockboxesScreen(
+                        navigateToDetails = { mac ->
+                            navigator.navigate(Route.DetailedBox(mac))
                         },
-                        onNavigate = { route -> navController.navigate(route) },
-                        onChangeName = accountViewModel::onNameChange,
-                        onChangeSurname = accountViewModel::onSurnameChange,
-                        onSendImage = accountViewModel::sendImage,
-                        modifier = Modifier.fillMaxSize()
                     )
                 }
 
-                composable<AccountRoutes.Warning> {
-                    WarningScreen(
-                        onNavigate = { navController.navigateToDestinationWithNoBackstack(MainRoutes.Login) },
-                        modifier = Modifier.fillMaxSize()
+                entry<Route.DetailedBox> { key ->
+                    DetailedLockboxScreen(
+                        mac = key.macAddress,
+                        onNavBack = navigator::navBack,
                     )
                 }
 
-                navigation<AccountRoutes.ChangeEmail>(
-                    startDestination = ChangeEmailRoutes.Main,
-                ) {
-                    composable<ChangeEmailRoutes.Main> {
-                        val changeEmailViewModel = koinViewModel<ChangeEmailViewModel>()
-                        val changeEmailUiState by changeEmailViewModel.uiState.collectAsStateWithLifecycle()
-
-                        ChangeEmailScreen(
-                            uiState = changeEmailUiState,
-                            onNavBack = navController::navigateUp,
-                            onToStep = changeEmailViewModel::toStep,
-                            onEmailChange = changeEmailViewModel::onEmailChange,
-                            changeEmail = changeEmailViewModel::changeEmail,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-
-                    composable<ChangeEmailRoutes.Successfully>(
-                        deepLinks = listOf(
-                            navDeepLink<ChangeEmailRoutes.Successfully>(basePath = EMAIL_CHANGE_DEEPLINK)
-                        )
-                    ) {
-                        EmailChangedSuccessfullyScreen(
-                            modifier = Modifier.fillMaxSize(),
-                            onDone = {
-                                navController.navigateToDestinationWithNoBackstack(Routes.Settings)
-                            }
-                        )
-                    }
+                entry<Route.Contracts> {
+                    ContractsScreen()
                 }
 
-                composable<AccountRoutes.ChangePhoneNumber> {
-                    val addPhoneNumberViewModel = koinViewModel<AddPhoneNumberViewModel>()
-                    val addPhoneUiState by
-                    addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
+                entry<Route.Settings> {
+                    SettingsScreen(
+                        onNavigate = navigator::navigate
+                    )
+                }
+                
+                entry<Route.Account> {
+                    AccountScreen(
+                        onNavBack = navigator::navBack
+                    )
+                }
 
+                entry<Route.AddPhoneNumber> {
                     AddPhoneNumberScreen(
-                        uiState = addPhoneUiState,
-                        onNavBack = navController::navigateUp,
-                        onToStep = addPhoneNumberViewModel::toStep,
-                        onNumberChange = addPhoneNumberViewModel::onNumberChange,
-                        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
-                        onDone = { navController.navigate(SettingsRoutes.Account) },
-                        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
-                        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
-                        modifier = Modifier.fillMaxSize()
+                        onNavBack = navigator::navBack
+                    )
+                }
+
+                entry<Route.ChangeEmail> {
+                    ChangeEmailScreen(
+                        onNavBack = navigator::navBack,
+                    )
+                }
+
+                entry<Route.Warning> {
+                    WarningScreen()
+                }
+
+                entry<Route.Security> {
+                    SecurityScreen(
+                        onNavBack = navigator::navBack,
+                        navigateToActiveSessions = {
+                            navigator.navigate(Route.ActiveSessions)
+                        }
+                    )
+                }
+
+                entry<Route.ActiveSessions> {
+                    ActiveSessionScreen(
+                        onNavBack = navigator::navBack,
+                    )
+                }
+
+                entry<Route.AboutApp> {
+                    AboutScreen(
+                        onNavBack = navigator::navBack,
                     )
                 }
             }
-        }
-
-        navigation<Routes.Contracts>(
-            startDestination = if (startFromLogin) ContractRoutes.Login else ContractRoutes.Contracts,
-        ) {
-            composable<ContractRoutes.Login>(
-                enterTransition = globalEnterAnimation,
-                exitTransition = null,
-                popEnterTransition = null,
-                popExitTransition = globalExitAnimation
-            ) {
-                ActionOnSharedFlow(
-                    flow = loginViewModel.loggedIn,
-                    lifecycleOwner = LocalLifecycleOwner.current
-                ) {
-                    navController.navigateToDestinationWithNoBackstack(ContractRoutes.Contracts)
-                }
-
-                LoginScreen(
-                    loginType = loginType,
-                    onToTypeAuth = loginViewModel::toTypeAuth,
-                    topRowContent = { ContractsTopRow() },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable<ContractRoutes.Contracts>(
-                enterTransition = globalEnterAnimation,
-                exitTransition = null,
-                popEnterTransition = null,
-                popExitTransition = globalExitAnimation
-            ) {
-                val contractsViewModel = koinViewModel<ContractsViewModel>()
-                val avatar by contractsViewModel.avatarLink.collectAsStateWithLifecycle()
-                val selectedContract by contractsViewModel.contractSelected.collectAsStateWithLifecycle()
-
-                ContractsScreen(
-                    avatarLink = avatar,
-                    contracts = contractsViewModel.contracts,
-                    selectedContract = selectedContract,
-                    updateSelectedContract = contractsViewModel::updateContractSelected,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-    }
-}
-
-private fun <T : Any> NavHostController.navigateToDestinationWithNoBackstack(destination: T) {
-    this.navigate(destination) {
-        popUpTo(destination) {
-            inclusive = true
-        }
-        launchSingleTop = true
-    }
+        )
+    )
 }

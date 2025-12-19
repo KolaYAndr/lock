@@ -12,7 +12,6 @@ abstract class DetailedLockboxViewModel : ViewModel() {
     abstract fun saveAddress(newAddress: String)
     abstract fun saveName(newName: String)
     abstract fun unbindDevice()
-    abstract suspend fun getBoxStatus()
 }
 
 data class DetailedLockBoxUiState(

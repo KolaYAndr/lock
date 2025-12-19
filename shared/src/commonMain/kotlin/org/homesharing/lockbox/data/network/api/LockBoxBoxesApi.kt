@@ -16,24 +16,22 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.INGRESS_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.bearerToken
-import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
+import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
+import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
 import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
+import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
+import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpRequestDto
+import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequestDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.domain.api.BoxesApi
-import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
-import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
-import org.homesharing.lockbox.data.network.dto.box.StatusDto
-import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
-import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpRequestDto
-import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
 
 internal const val DEVICES = "devices"
 internal const val BOXES = "boxes"
-internal const val STATUS = "status"
 internal const val ACCESSES = "accesses"
 internal const val SIGNUP = "signup"
 internal const val TEST = "test"
@@ -68,15 +66,6 @@ internal class LockBoxBoxesApi(
             header(HttpHeaders.Authorization, bearerToken(accessToken))
             url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<BoxWithStatusResponseDto>(json)
-
-    override suspend fun getBoxStatusByMac(
-        accessToken: String,
-        macAddress: String,
-    ): ApiResponse =
-        client.get {
-            header(HttpHeaders.Authorization, bearerToken(accessToken))
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$STATUS")
-        }.toApiResponse<StatusDto>(json)
 
     override suspend fun updateBoxByMac(
         accessToken: String,

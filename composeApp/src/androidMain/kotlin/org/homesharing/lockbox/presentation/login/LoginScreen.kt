@@ -5,20 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,130 +22,99 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.animation.backwardAnimation
-import org.homesharing.lockbox.presentation.general.animation.forwardAnimation
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicBottomSheet
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.sign_in.SignInCard
-import org.homesharing.lockbox.presentation.sign_in.SignInPasswordError
-import org.homesharing.lockbox.presentation.sign_in.SignInViewModel
 import org.homesharing.lockbox.presentation.sign_up.SignUpCard
-import org.homesharing.lockbox.presentation.sign_up.SignUpViewModel
+import org.homesharing.lockbox.presentation.uikit.animation.backwardAnimation
+import org.homesharing.lockbox.presentation.uikit.animation.forwardAnimation
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxBottomSheet
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun LoginScreen(
+    loginViewModel: LoginViewModel = koinViewModel(),
+) {
+    val loginType by loginViewModel.loginType.collectAsStateWithLifecycle()
+    LoginScreen(
+        loginType = loginType,
+        toTypeAuth = loginViewModel::toTypeAuth,
+        modifier = Modifier.fillMaxSize(),
+    )
+}
+
+@Composable
+private fun LoginScreen(
     loginType: LoginType,
-    onToTypeAuth: (LoginType) -> Unit,
-    topRowContent: @Composable RowScope.() -> Unit,
+    toTypeAuth: (LoginType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val displayCutout = WindowInsets.displayCutout.asPaddingValues()
-    val systemBar = WindowInsets.statusBars.asPaddingValues()
-    val topPadding = max(displayCutout.calculateTopPadding(), systemBar.calculateTopPadding())
     var showModal by remember { mutableStateOf(false) }
     Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950),
-        verticalArrangement = Arrangement.SpaceBetween
+        modifier = modifier
+            .background(LockBoxTheme.colors.grey950)
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = topPadding)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            topRowContent()
-        }
+        Icon(
+            painter = painterResource(R.drawable.log_in),
+            contentDescription = null,
+            tint = LockBoxTheme.colors.grey500,
+            modifier = Modifier.size(48.dp)
+        )
+        Text(
+            text = stringResource(R.string.log_in_your_profile),
+            style = LockBoxTheme.typography.titleMedium,
+            modifier = Modifier.padding(top = 12.dp),
+            color = LockBoxTheme.colors.grey100,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = stringResource(R.string.start_using_today),
+            style = LockBoxTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 8.dp),
+            color = LockBoxTheme.colors.grey500,
+            textAlign = TextAlign.Center
+        )
+        LockboxButton(
+            onClick = { showModal = true },
+            text = stringResource(R.string.sing_in),
+            paddingValues = PaddingValues(10.dp),
+            modifier = Modifier.padding(top = 16.dp)
+        )
+    }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    if (showModal) {
+        LockboxBottomSheet(
+            onDismissRequest = { showModal = false },
         ) {
-            Icon(
-                painter = painterResource(R.drawable.log_in),
-                contentDescription = null,
-                tint = LockBoxTheme.colors.grey500,
-                modifier = Modifier.size(48.dp)
-            )
-            Text(
-                text = stringResource(R.string.log_in_your_profile),
-                style = LockBoxTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 12.dp),
-                color = LockBoxTheme.colors.grey100,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = stringResource(R.string.start_using_today),
-                style = LockBoxTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 8.dp),
-                color = LockBoxTheme.colors.grey500,
-                textAlign = TextAlign.Center
-            )
-            BasicButton(
-                onClick = { showModal = true },
-                text = stringResource(R.string.sing_in),
-                paddingValues = PaddingValues(10.dp),
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
-
-        if (showModal) {
-            BasicBottomSheet(
-                onDismissRequest = { showModal = false },
-            ) {
-                AnimatedContent(
-                    targetState = loginType,
-                    transitionSpec = {
-                        if (targetState.hierarchyIndex > initialState.hierarchyIndex) {
-                            forwardAnimation
-                        } else {
-                            backwardAnimation
-                        }
+            AnimatedContent(
+                targetState = loginType,
+                transitionSpec = {
+                    if (targetState.hierarchyIndex > initialState.hierarchyIndex) {
+                        forwardAnimation
+                    } else {
+                        backwardAnimation
                     }
-                ) { targetState ->
-                    when (targetState) {
-                        LoginType.SignIn -> {
-                            val signInViewModel = koinViewModel<SignInViewModel>()
-                            val signInState by signInViewModel.uiState.collectAsStateWithLifecycle()
+                }
+            ) { targetState ->
+                when (targetState) {
+                    LoginType.SignIn -> {
+                        SignInCard(
+                            onDismiss = { showModal = false },
+                            toSignUp = { toTypeAuth(LoginType.SignUp) }
+                        )
+                    }
 
-                            SignInCard(
-                                signInUiState = signInState,
-                                onDismiss = { showModal = false },
-                                onEmailChange = signInViewModel::onChangeEmail,
-                                onPasswordChange = signInViewModel::onChangePassword,
-                                passwordError = signInState.passwordError != null,
-                                passwordErrorText = getErrorText(signInState.passwordError),
-                                emailError = signInState.emailError != null,
-                                onToTypeAuth = onToTypeAuth,
-                                onSignIn = signInViewModel::signIn
-                            )
-                        }
-
-                        LoginType.SignUp -> {
-                            val signUpViewModel = koinViewModel<SignUpViewModel>()
-                            val signUpState by signUpViewModel.uiState.collectAsStateWithLifecycle()
-                            SignUpCard(
-                                signUpUiState = signUpState,
-                                onSignIn = { onToTypeAuth(LoginType.SignIn) },
-                                onDismiss = { showModal = false },
-                                onEmailChange = signUpViewModel::onChangeEmail,
-                                onConfirmEmail = signUpViewModel::sendEmailConfirmation,
-                                onToStep = signUpViewModel::toStep,
-                                onPasswordChange = signUpViewModel::onChangePassword,
-                                onPasswordRepeatedChange = signUpViewModel::onChangePasswordRepeat,
-                                onCheckConfirmation = signUpViewModel::checkIfConfirmed,
-                                onCreate = signUpViewModel::signUp
-                            )
-                        }
+                    LoginType.SignUp -> {
+                        SignUpCard(
+                            onSignIn = { toTypeAuth(LoginType.SignIn) },
+                            onDismiss = { showModal = false }
+                        )
                     }
                 }
             }
@@ -161,25 +122,13 @@ internal fun LoginScreen(
     }
 }
 
-@Composable
-@ReadOnlyComposable
-private fun getErrorText(passwordError: SignInPasswordError?) =
-    when (passwordError) {
-        SignInPasswordError.InvalidUserCredentials -> stringResource(R.string.invalid_credentials)
-        SignInPasswordError.Unexpected -> stringResource(R.string.unknown_error)
-        SignInPasswordError.Timeout -> stringResource(R.string.timeout)
-        SignInPasswordError.UnknownHost -> stringResource(R.string.check_internet_connection)
-        null -> ""
-    }
-
 @Preview
 @Composable
 private fun PreviewLoginScreen() {
     LockBoxTheme {
-        val loginType = LoginType.SignIn
         LoginScreen(
-            loginType = loginType,
-            {}, {},
+            loginType = LoginType.SignIn,
+            toTypeAuth = {},
             modifier = Modifier.fillMaxSize()
         )
     }

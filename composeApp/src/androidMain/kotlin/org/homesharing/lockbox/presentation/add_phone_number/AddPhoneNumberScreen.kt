@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +31,38 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.inputs.PhoneNumberInput
-import org.homesharing.lockbox.presentation.general.composables.inputs.Pin
-import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPhoneNumberInput
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPin
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 internal fun AddPhoneNumberScreen(
+    onNavBack: () -> Unit,
+    addPhoneNumberViewModel: AddPhoneNumberViewModel = koinViewModel(),
+) {
+    val addPhoneUiState by addPhoneNumberViewModel.uiState.collectAsStateWithLifecycle()
+    AddPhoneNumberScreen(
+        uiState = addPhoneUiState,
+        onNavBack = onNavBack,
+        onToStep = addPhoneNumberViewModel::toStep,
+        onNumberChange = addPhoneNumberViewModel::onNumberChange,
+        onSendCode = addPhoneNumberViewModel::sendConfirmationCode,
+        onConfirmationCodeChanged = addPhoneNumberViewModel::onConfirmationCodeChanged,
+        onConfirm = { /*addPhoneNumberViewModel::confirmCode*/ },
+        modifier = Modifier.fillMaxSize()
+    )
+
+}
+
+@Composable
+private fun AddPhoneNumberScreen(
     uiState: AddPhoneNumberUiState,
     onNavBack: () -> Unit,
     onToStep: (AddPhoneNumberStep) -> Unit,
@@ -47,8 +70,7 @@ internal fun AddPhoneNumberScreen(
     onConfirmationCodeChanged: (String) -> Unit,
     onConfirm: () -> Unit,
     onSendCode: () -> Unit,
-    onDone: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier,
 ) {
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950)
@@ -64,7 +86,7 @@ internal fun AddPhoneNumberScreen(
                 ConfirmNumberStep(
                     value = uiState.confirmationCode,
                     onCodeChange = onConfirmationCodeChanged,
-                    onConfirm = {},
+                    onConfirm = onConfirm,
                     onToStep = onToStep,
                     onSendAgain = onSendCode
                 )
@@ -81,7 +103,7 @@ internal fun AddPhoneNumberScreen(
             }
 
             AddPhoneNumberStep.PhoneNumberChangedSuccessfully -> {
-                PhoneNumberChangedSuccessfullyStep(onDone = onDone)
+                PhoneNumberChangedSuccessfullyStep(onDone = onNavBack)
             }
 
             AddPhoneNumberStep.WantToChange -> {
@@ -137,7 +159,7 @@ private fun ConfirmNumberStep(
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        Pin(
+        LockboxPin(
             value = value,
             pinLength = 6,
             onPinChange = onCodeChange,
@@ -151,7 +173,7 @@ private fun ConfirmNumberStep(
                 .focusRequester(focusRequester)
         )
 
-        BasicButton(
+        LockboxButton(
             onClick = {
                 onConfirm()
                 onToStep(AddPhoneNumberStep.PhoneNumberChangedSuccessfully)
@@ -161,7 +183,7 @@ private fun ConfirmNumberStep(
             modifier = Modifier.padding(top = 42.dp)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.send_again),
             paddingValues = PaddingValues(10.dp),
             onClick = onSendAgain,
@@ -203,7 +225,7 @@ fun PhoneNumberChangedSuccessfullyStep(onDone: () -> Unit) {
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.ready),
             modifier = Modifier.padding(top = 12.dp),
             onClick = onDone,
@@ -218,7 +240,7 @@ private fun NewNumberInputStep(
     numberError: Boolean,
     onNumberChange: (String) -> Unit,
     onToStep: (AddPhoneNumberStep) -> Unit,
-    changePhoneNumber: () -> Unit
+    changePhoneNumber: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -265,12 +287,11 @@ private fun NewNumberInputStep(
                 .fillMaxWidth()
         )
 
-        PhoneNumberInput(
+        LockboxPhoneNumberInput(
             number = number,
             onValueChange = onNumberChange,
             onClearText = { onNumberChange("") },
-            isError = numberError,
-            errorText = stringResource(R.string.phone_number_doesnt_match_pattern),
+            errorText = if (numberError) stringResource(R.string.phone_number_doesnt_match_pattern) else null,
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -291,7 +312,7 @@ private fun NewNumberInputStep(
                 .focusRequester(focusRequester)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.add_phone_number),
             paddingValues = PaddingValues(14.dp),
             onClick = changePhoneNumber,
@@ -300,7 +321,7 @@ private fun NewNumberInputStep(
                 .fillMaxWidth()
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.cancel),
             paddingValues = PaddingValues(14.dp),
             onClick = {
@@ -346,7 +367,7 @@ private fun WantToChangeStep(onNavBack: () -> Unit, onToStep: (AddPhoneNumberSte
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.change_full),
             modifier = Modifier.padding(top = 12.dp),
             onClick = { onToStep(AddPhoneNumberStep.NewNumberInput) },
@@ -372,7 +393,7 @@ private fun PreviewConfirmNumberStep() {
     LockBoxTheme {
         val uiState =
             AddPhoneNumberUiState(step = AddPhoneNumberStep.ConfirmPhoneNumber)
-        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
+        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
     }
 }
 
@@ -383,7 +404,7 @@ private fun PreviewSuccessfullyChangedStep() {
     LockBoxTheme {
         val uiState =
             AddPhoneNumberUiState(step = AddPhoneNumberStep.PhoneNumberChangedSuccessfully)
-        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
+        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
     }
 }
 
@@ -393,7 +414,7 @@ private fun PreviewSuccessfullyChangedStep() {
 private fun PreviewWantToChangeStep() {
     LockBoxTheme {
         val uiState = AddPhoneNumberUiState()
-        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
+        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
     }
 }
 
@@ -402,6 +423,6 @@ private fun PreviewWantToChangeStep() {
 private fun PreviewInputStep() {
     LockBoxTheme {
         val uiState = AddPhoneNumberUiState(step = AddPhoneNumberStep.NewNumberInput)
-        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
+        AddPhoneNumberScreen(uiState, {}, {}, {}, {}, {}, {}, Modifier.fillMaxSize())
     }
 }

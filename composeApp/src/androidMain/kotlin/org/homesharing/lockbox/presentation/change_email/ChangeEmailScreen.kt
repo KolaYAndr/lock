@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,21 +34,39 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.inputs.EmailInput
-import org.homesharing.lockbox.presentation.general.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButtonStyle
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxEmailInput
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ChangeEmailScreen(
+    onNavBack: () -> Unit,
+    changeEmailViewModel: ChangeEmailViewModel = koinViewModel(),
+) {
+    val changeEmailUiState by changeEmailViewModel.uiState.collectAsStateWithLifecycle()
+    ChangeEmailScreen(
+        uiState = changeEmailUiState,
+        onNavBack = onNavBack,
+        onToStep = changeEmailViewModel::toStep,
+        onEmailChange = changeEmailViewModel::onEmailChange,
+        changeEmail = changeEmailViewModel::changeEmail,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun ChangeEmailScreen(
     uiState: ChangeEmailUiState,
     onNavBack: () -> Unit,
     onToStep: (ChangeEmailStep) -> Unit,
     onEmailChange: (String) -> Unit,
     changeEmail: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950)
@@ -82,7 +101,7 @@ internal fun ChangeEmailScreen(
 
 @Composable
 private fun ConfirmNewEmailStep(
-    changeEmail: () -> Unit
+    changeEmail: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -119,7 +138,7 @@ private fun ConfirmNewEmailStep(
             onResult = {}
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.open_mail),
             modifier = Modifier.padding(top = 12.dp),
             onClick = {
@@ -150,7 +169,7 @@ private fun NewEmailInputStep(
     emailError: Boolean,
     onEmailChange: (String) -> Unit,
     changeEmail: () -> Unit,
-    onToStep: (ChangeEmailStep) -> Unit
+    onToStep: (ChangeEmailStep) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -197,12 +216,11 @@ private fun NewEmailInputStep(
                 .fillMaxWidth()
         )
 
-        EmailInput(
+        LockboxEmailInput(
             email = email,
-            onValueChange = onEmailChange::invoke,
+            onValueChange = onEmailChange,
             onClearText = { onEmailChange("") },
-            isError = emailError,
-            errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else "",
+            errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else null,
             interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -223,7 +241,7 @@ private fun NewEmailInputStep(
                 .focusRequester(focusRequester)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.change_mail),
             paddingValues = PaddingValues(14.dp),
             onClick = changeEmail,
@@ -232,7 +250,7 @@ private fun NewEmailInputStep(
                 .fillMaxWidth()
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.cancel),
             paddingValues = PaddingValues(14.dp),
             onClick = {
@@ -249,7 +267,7 @@ private fun NewEmailInputStep(
 @Composable
 private fun WantToChangeStep(
     onToStep: (ChangeEmailStep) -> Unit,
-    onNavBack: () -> Unit
+    onNavBack: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -281,7 +299,7 @@ private fun WantToChangeStep(
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.change_full),
             modifier = Modifier.padding(top = 12.dp),
             onClick = { onToStep(ChangeEmailStep.NewEmailInput) },

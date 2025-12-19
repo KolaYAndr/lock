@@ -2,28 +2,15 @@ package org.homesharing.lockbox.navigation.routes
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import kotlinx.serialization.Serializable
 import org.homesharing.lockbox.R
 
-internal sealed interface Routes {
-    @Serializable
-    data object Main : Routes
-
-    @Serializable
-    data object Contracts: Routes
-
-    @Serializable
-    data object Settings : Routes
-}
-
-internal data class TopLevelRoute<T : Routes>(
+internal data class TopLevelRouteInfo(
     @field:StringRes val name: Int,
-    val route: T,
     @field:DrawableRes val icon: Int,
 )
 
-internal val topLevelRoutes = listOf(
-    TopLevelRoute(R.string.main, Routes.Main, R.drawable.house),
-    TopLevelRoute(R.string.contracts, Routes.Contracts, R.drawable.document),
-    TopLevelRoute(R.string.settings, Routes.Settings, R.drawable.settings)
+internal val topLevelRoutes = mapOf(
+    Route.Boxes to TopLevelRouteInfo(R.string.main, R.drawable.house),
+    Route.Contracts to TopLevelRouteInfo(R.string.contracts, R.drawable.document),
+    Route.Settings to TopLevelRouteInfo(R.string.settings, R.drawable.settings),
 )

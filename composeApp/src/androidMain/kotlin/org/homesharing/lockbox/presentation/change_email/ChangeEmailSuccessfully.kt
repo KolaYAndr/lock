@@ -19,14 +19,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.general.composables.basic.BasicButton
-import org.homesharing.lockbox.presentation.general.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
-internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifier = Modifier) {
+internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit) {
     BackHandler(enabled = false) {}
     Column(
-        modifier = modifier
+        modifier = Modifier
+            .fillMaxSize()
             .background(LockBoxTheme.colors.grey950)
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
@@ -55,7 +56,7 @@ internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifi
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        BasicButton(
+        LockboxButton(
             text = stringResource(R.string.ready),
             modifier = Modifier.padding(top = 12.dp),
             onClick = onDone,
@@ -68,6 +69,6 @@ internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit, modifier: Modifi
 @Preview
 private fun PreviewChangeSuccess() {
     LockBoxTheme {
-        EmailChangedSuccessfullyScreen({}, Modifier.fillMaxSize())
+        EmailChangedSuccessfullyScreen { }
     }
 }
