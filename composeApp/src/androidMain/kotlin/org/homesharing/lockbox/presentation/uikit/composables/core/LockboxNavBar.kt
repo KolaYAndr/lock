@@ -16,11 +16,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import org.homesharing.lockbox.navigation.routes.topLevelRoutes
+import org.homesharing.lockbox.navigation.routes.TopLevelRouteInfo
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
 internal fun LockboxNavBar(
+    topLevelRoutes: Map<out NavKey, TopLevelRouteInfo>,
     selectedKey: NavKey,
     onSelectKey: (NavKey) -> Unit,
 ) {

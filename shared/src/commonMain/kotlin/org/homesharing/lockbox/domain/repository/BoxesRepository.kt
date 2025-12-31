@@ -13,7 +13,7 @@ import org.homesharing.lockbox.domain.model.open_box.OpenBox
 import org.homesharing.lockbox.domain.model.physical_sign_up.PhysicalSignUp
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 
-internal interface BoxesRepository {
+interface BoxesRepository {
     fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>>
 
     suspend fun getBoxByMac(address: String): Response<BoxWithStatus>

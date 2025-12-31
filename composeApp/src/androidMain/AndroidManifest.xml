@@ -7,7 +7,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name=".LockBoxApp"
+        android:name=".LockboxApp"
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeSharing.SplashScreen">
         <activity
-            android:name=".LockBoxActivity"
+            android:name=".LockboxActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
             android:exported="true"
             android:launchMode="standard"
@@ -53,6 +53,4 @@
                 android:value="" />
         </service>
     </application>
-
-
 </manifest>

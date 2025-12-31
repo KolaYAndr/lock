@@ -33,6 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.add_phone_number.viewmodel.AddPhoneNumberStep
+import org.homesharing.lockbox.presentation.add_phone_number.viewmodel.AddPhoneNumberUiState
+import org.homesharing.lockbox.presentation.add_phone_number.viewmodel.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton

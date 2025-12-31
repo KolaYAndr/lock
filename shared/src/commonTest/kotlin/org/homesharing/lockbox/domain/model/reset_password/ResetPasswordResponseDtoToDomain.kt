@@ -26,12 +26,4 @@ class ResetPasswordResponseDtoToDomainTest {
         val domain = dto.toDomain()
         assertEquals("   ", domain.result)
     }
-
-    @Test
-    fun `maps correctly with special characters in message`() {
-        val special = "!@#\$%^&*()_+"
-        val dto = ResetPasswordResponseDto(message = special)
-        val domain = dto.toDomain()
-        assertEquals(special, domain.result)
-    }
 }

@@ -31,10 +31,16 @@ internal class BoxesPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BoxWithStatus> {
-        refreshTokenIfNeed()
+        try {
+            refreshTokenIfNeed()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            return LoadResult.Error(e)
+        }
+
         val page = params.key ?: STARTING_PAGE
         val size = params.loadSize
-
         try {
             val apiResponse = boxesApi.getBoxes(
                 accessToken = tokenStorage.getAccessToken(),
@@ -47,13 +53,7 @@ internal class BoxesPagingSource(
                     if (apiResponse.errorCode == "empty_boxes") LoadResult.Page(emptyList(), null, null)
                     else LoadResult.Error(Throwable(apiResponse.message))
                 }
-//                ApiResponse.NoElements -> {
-//                    LoadResult.Page(
-//                        data = emptyList(),
-//                        prevKey = null,
-//                        nextKey = null
-//                    )
-//                }
+
                 is ApiResponse.Success<*> -> {
                     val response = apiResponse as ApiResponse.Success<BoxListResponseDto>
                     val endOfPagination = response.data.size < size

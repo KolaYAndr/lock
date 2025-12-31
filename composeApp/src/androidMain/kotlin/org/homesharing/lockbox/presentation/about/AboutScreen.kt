@@ -139,6 +139,6 @@ private fun Agreement(
 @Composable
 private fun PreviewAboutApp() {
     LockBoxTheme {
-        AboutScreen({})
+        AboutScreen { }
     }
 }

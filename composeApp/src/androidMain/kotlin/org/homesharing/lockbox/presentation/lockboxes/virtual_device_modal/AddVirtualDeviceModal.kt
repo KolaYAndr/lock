@@ -29,10 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.lockboxes.add_virtual_device_modal.AddVirtualDeviceModalViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockBoxPropertyInput
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme

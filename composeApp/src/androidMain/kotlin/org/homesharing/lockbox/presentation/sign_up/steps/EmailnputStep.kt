@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,16 +24,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxEmailInput
 import org.homesharing.lockbox.presentation.uikit.composables.PolicyAndConditions
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxEmailInput
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation.login.EmailError
 
 @Composable
 internal  fun EmailInputStep(
     email: String,
-    emailError: EmailError?,
+    emailError: Boolean,
     onEmailChange: (String) -> Unit,
     toNextStep: () -> Unit,
     onSignIn: () -> Unit,
@@ -75,7 +74,7 @@ internal  fun EmailInputStep(
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(onDone = { toNextStep() }),
-        errorText = if (emailError != null) stringResource(R.string.email_doesnt_match_pattern) else null,
+        errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else null,
         modifier = Modifier
             .focusRequester(emailFocusRequester)
             .padding(

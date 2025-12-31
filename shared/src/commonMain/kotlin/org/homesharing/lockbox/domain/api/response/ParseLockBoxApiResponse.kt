@@ -9,9 +9,7 @@ internal suspend fun <Dto, D> parseLockBoxApiResponse(
     mapper: (Dto) -> D,
 ): Response<D> =
     try {
-        val apiResponse = apiCall()
-
-        when (apiResponse) {
+        when (val apiResponse = apiCall()) {
             is ApiResponse.Failure -> Response.Failure(apiResponse.message)
             is ApiResponse.Success<*> -> {
                 val mapped = mapper(apiResponse.data as Dto)
@@ -29,9 +27,7 @@ internal suspend fun <Dto> parseLockBoxApiResponse(
     apiCall: suspend () -> ApiResponse,
 ): Response<Dto> =
     try {
-        val apiResponse = apiCall()
-
-        when (apiResponse) {
+        when (val apiResponse = apiCall()) {
             is ApiResponse.Failure -> Response.Failure(apiResponse.message)
             is ApiResponse.Success<*> -> Response.Success(apiResponse.data as Dto)
         }

@@ -3,8 +3,13 @@ package org.homesharing.lockbox.presentation.uikit.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -25,8 +30,10 @@ internal fun TitledTopBar(
     onNavigate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+        .calculateTopPadding()
     Column(
-        modifier = modifier
+        modifier = modifier.padding(top = topPadding)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

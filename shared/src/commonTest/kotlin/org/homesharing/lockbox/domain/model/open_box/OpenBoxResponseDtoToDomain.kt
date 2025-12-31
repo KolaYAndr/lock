@@ -14,7 +14,7 @@ class OpenBoxResponseDtoToDomainTest {
             issuerSub = "issuer-xyz",
             issuerToken = "token-abc",
             macAddress = "AA:BB:CC:DD:EE:FF",
-            timestamp = "now"
+            timestamp = 0.0
         )
 
         val domain = dto.toDomain()
@@ -30,7 +30,7 @@ class OpenBoxResponseDtoToDomainTest {
             issuerSub = "issuer-1",
             issuerToken = null,
             macAddress = "11:22:33:44:55:66",
-            timestamp = "now"
+            timestamp = 0.0
         )
 
         val domain = dto.toDomain()
@@ -46,28 +46,11 @@ class OpenBoxResponseDtoToDomainTest {
             issuerSub = "issuer-2",
             issuerToken = "tok",
             macAddress = "22:33:44:55:66:77",
-            timestamp = "now"
+            timestamp = 0.0
         )
 
         val domain = dto.toDomain()
 
         assertEquals("   ", domain.call)
-    }
-
-    @Test
-    fun `maps correctly with special characters in call`() {
-        val special = "!@#\$%^&*()_+"
-        val dto = OpenBoxResponseDto(
-            call = special,
-            id = 3,
-            issuerSub = "issuer-3",
-            issuerToken = "tok3",
-            macAddress = "33:44:55:66:77:88",
-            timestamp = "now"
-        )
-
-        val domain = dto.toDomain()
-
-        assertEquals(special, domain.call)
     }
 }

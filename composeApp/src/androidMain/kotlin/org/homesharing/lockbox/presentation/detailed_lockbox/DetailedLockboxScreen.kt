@@ -9,18 +9,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -57,6 +61,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.groups.Lockbo
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockBoxPropertyInput
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 private const val SIGNAL_STRENGTH_COLOR_HIGHER_BOUND = -60
 private const val SIGNAL_STRENGTH_COLOR_MIDDLE_BOUND = -90
@@ -66,7 +71,7 @@ private const val SIGNAL_STRENGTH_COLOR_LOWER_BOUND = -100
 internal fun DetailedLockboxScreen(
     mac: String,
     onNavBack: () -> Unit,
-    detailedLockBoxViewModel: DetailedLockboxViewModel = koinViewModel(),
+    detailedLockBoxViewModel: DetailedLockboxViewModel = koinViewModel { parametersOf(mac) },
 ) {
     val uiState by detailedLockBoxViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -76,11 +81,6 @@ internal fun DetailedLockboxScreen(
     ) {
         onNavBack()
     }
-
-    LaunchedEffect(mac) {
-        detailedLockBoxViewModel.setMacAddress(mac)
-    }
-
     DetailedLockboxScreen(
         uiState = uiState,
         macAddress = mac,
@@ -112,8 +112,12 @@ private fun DetailedLockboxScreen(
     var showChangeAddressBottomSheet by remember { mutableStateOf(false) }
     var showHelpModal by remember { mutableStateOf(false) }
 
+    val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+        .calculateTopPadding()
     Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950),
+        modifier = modifier
+            .background(LockBoxTheme.colors.grey950)
+            .padding(top = topPadding),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {

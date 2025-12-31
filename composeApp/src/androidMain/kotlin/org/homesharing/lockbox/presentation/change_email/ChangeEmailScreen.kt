@@ -36,6 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailStep
+import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailUiState
+import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
@@ -85,7 +88,7 @@ private fun ChangeEmailScreen(
             ChangeEmailStep.NewEmailInput -> {
                 NewEmailInputStep(
                     email = uiState.newEmail,
-                    emailError = uiState.emailError != null,
+                    emailError = uiState.emailError,
                     onEmailChange = onEmailChange,
                     changeEmail = changeEmail,
                     onToStep = onToStep

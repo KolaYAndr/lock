@@ -2,10 +2,13 @@ package org.homesharing.lockbox.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import org.homesharing.lockbox.navigation.routes.Route
@@ -13,6 +16,7 @@ import org.homesharing.lockbox.presentation.about.AboutScreen
 import org.homesharing.lockbox.presentation.account.AccountScreen
 import org.homesharing.lockbox.presentation.add_phone_number.AddPhoneNumberScreen
 import org.homesharing.lockbox.presentation.change_email.ChangeEmailScreen
+import org.homesharing.lockbox.presentation.change_email.EmailChangedSuccessfullyScreen
 import org.homesharing.lockbox.presentation.contracts.ContractsScreen
 import org.homesharing.lockbox.presentation.detailed_lockbox.DetailedLockboxScreen
 import org.homesharing.lockbox.presentation.lockboxes.LockboxesScreen
@@ -25,8 +29,6 @@ import org.homesharing.lockbox.presentation.uikit.animation.popExitTransition
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation.warning.WarningScreen
 
-private const val EMAIL_CHANGE_DEEPLINK = "https://lockboxes.ru/redirect/email-change"
-
 @Composable
 internal fun AuthenticatedNavigation(
     navigator: Navigator,
@@ -34,11 +36,16 @@ internal fun AuthenticatedNavigation(
     modifier: Modifier = Modifier,
     padding: PaddingValues,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     NavDisplay(
         modifier = modifier
             .fillMaxSize()
             .background(LockBoxTheme.colors.grey950)
-            .padding(padding),
+            .padding(
+                bottom = padding.calculateBottomPadding(),
+                start = padding.calculateStartPadding(layoutDirection),
+                end = padding.calculateEndPadding(layoutDirection)
+            ),
         onBack = navigator::navBack,
         transitionSpec = enterTransition,
         popTransitionSpec = exitTransition,
@@ -69,7 +76,7 @@ internal fun AuthenticatedNavigation(
                         onNavigate = navigator::navigate
                     )
                 }
-                
+
                 entry<Route.Account> {
                     AccountScreen(
                         onNavBack = navigator::navBack
@@ -85,6 +92,12 @@ internal fun AuthenticatedNavigation(
                 entry<Route.ChangeEmail> {
                     ChangeEmailScreen(
                         onNavBack = navigator::navBack,
+                    )
+                }
+
+                entry<Route.EmailChangedSuccessfully> {
+                    EmailChangedSuccessfullyScreen(
+                        onDone = { navigator.navigate(Route.Settings) },
                     )
                 }
 

@@ -3,7 +3,6 @@ package org.homesharing.lockbox.navigation.routes
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-@Serializable
 internal sealed interface Route : NavKey {
 
     @Serializable
@@ -26,6 +25,9 @@ internal sealed interface Route : NavKey {
 
     @Serializable
     data object ChangeEmail : Route
+
+    @Serializable
+    data object EmailChangedSuccessfully : Route
 
     @Serializable
     data object Warning : Route

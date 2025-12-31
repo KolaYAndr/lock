@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.account.viewmodel.AccountUiState
+import org.homesharing.lockbox.presentation.account.viewmodel.AccountViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.NetworkImage
 import org.homesharing.lockbox.presentation.uikit.composables.RoundText
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
@@ -195,7 +197,7 @@ private fun AccountScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(top = 24.dp)
+                .padding(top = 24.dp, bottom = 16.dp)
         )
     }
 

@@ -65,6 +65,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.pickers.Lockb
 import org.homesharing.lockbox.presentation.uikit.composables.core.pickers.LockboxTimePicker
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -77,13 +78,11 @@ private const val URL_PREFIX = "https://lockboxes.ru/open"
 @Composable
 internal fun AccessModalSheet(
     macAddress: String,
-    onDismiss: () -> Unit,
     boxName: String,
     address: String,
-    accessModalSheetViewModel: AccessModalSheetViewModel = koinViewModel(),
+    onDismiss: () -> Unit,
+    accessModalSheetViewModel: AccessModalSheetViewModel = koinViewModel { parametersOf(macAddress) },
 ) {
-    LaunchedEffect(macAddress) { accessModalSheetViewModel.setMacAddress(macAddress) }
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val clipboard = LocalClipboard.current
     val label = stringResource(R.string.link_copied)

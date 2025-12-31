@@ -3,7 +3,7 @@ package org.homesharing.lockbox.domain.repository
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
 
-internal interface AuthRepository {
+interface AuthRepository {
     suspend fun signUp(
         username: String,
         password: String,

@@ -18,7 +18,6 @@
     <string name="type_in_email">Введите электронную почту</string>
     <string name="step_of">Шаг %1$d из %2$d</string>
     <string name="promise_to_text_only_important_info">Будем писать только по важным вопросам</string>
-    <string name="Register">Регистрация</string>
     <string name="confirm_email">Подтвердить почту</string>
     <string name="have_an_account">Есть аккаунт?</string>
     <string name="log_in">Войдите</string>
@@ -34,7 +33,6 @@
     <string name="we_will_send_recovery_link">Мы отправим на нее ссылку для восстановления пароля</string>
     <string name="create_new_password">Придумайте новый пароль</string>
     <string name="main">Главная</string>
-    <string name="menu">Меню</string>
     <string name="settings">Настройки</string>
     <string name="contracts">Договоры</string>
     <string name="account">Аккаунт</string>
@@ -103,8 +101,6 @@
     <string name="connect_to_lockbox_network">Подключитесь к сети:  LockBox-Network</string>
     <string name="go_to_wifi_settings_to_connect">Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети LockBox-Network</string>
     <string name="open_wifi_settings">Открыть настройки Wi-Fi</string>
-    <string name="search_with_device_properties">Название устройства, адрес и т.д.</string>
-    <string name="device_search">Поиск устройсва</string>
     <string name="open">Открыть</string>
     <string name="wifi_network">Wi-Fi cеть</string>
     <string name="signal_level">Уровень сигнала</string>

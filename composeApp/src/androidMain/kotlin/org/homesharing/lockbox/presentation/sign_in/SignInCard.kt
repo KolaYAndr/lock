@@ -64,7 +64,7 @@ internal fun SignInCard(
         onEmailChange = signInViewModel::onChangeEmail,
         onPasswordChange = signInViewModel::onChangePassword,
         passwordErrorText = getErrorText(signInState.passwordError),
-        emailError = signInState.emailError != null,
+        emailError = signInState.emailError,
         toSignUp = toSignUp,
         onSignIn = signInViewModel::signIn
     )

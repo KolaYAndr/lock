@@ -24,7 +24,7 @@ import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
 internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit) {
-    BackHandler(enabled = false) {}
+    BackHandler { onDone() }
     Column(
         modifier = Modifier
             .fillMaxSize()

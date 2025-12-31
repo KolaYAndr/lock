@@ -4,5 +4,4 @@ val sharedAppModules = listOf(
     platformModule,
     repositoryModule,
     networkModule,
-    viewModelModule,
 )

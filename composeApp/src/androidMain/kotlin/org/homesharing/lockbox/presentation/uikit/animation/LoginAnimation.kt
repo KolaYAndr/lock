@@ -9,12 +9,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import org.homesharing.lockbox.presentation.activity.LoginState
+import org.homesharing.lockbox.LoginState
 
 private const val ANIMATION_DURATION = 300
 private const val ENTER_ANIMATION_DURATION = 400
-private const val INITIAL_ALPHA = .9f
-private const val TARGET_ALPHA = .1f
+private const val INITIAL_ALPHA = .95f
+private const val TARGET_ALPHA = .05f
 
 internal val loginAnimation: AnimatedContentTransitionScope<LoginState>.() -> ContentTransform = {
     if (initialState == LoginState.Loading) enterAnimation

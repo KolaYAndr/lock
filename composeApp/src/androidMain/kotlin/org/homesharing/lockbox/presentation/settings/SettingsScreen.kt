@@ -1,12 +1,15 @@
 package org.homesharing.lockbox.presentation.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -36,7 +39,6 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.Lockb
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxDialog
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
-import org.homesharing.lockbox.presentation.uikit.composables.top_rows.SettingsTopRowText
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -65,125 +67,118 @@ private fun SettingsScreen(
     onRefresh: () -> Unit,
     modifier: Modifier,
 ) {
-    Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950)
+    var showExitDialog by remember { mutableStateOf(false) }
+    var showHelpModal by remember { mutableStateOf(false) }
+
+    LockBoxPullToRefresh(
+        modifier = modifier,
+        onRefresh = onRefresh,
+        isRefreshing = settingsUiState.isRefreshing,
+        state = rememberPullToRefreshState()
     ) {
-        var showExitDialog by remember { mutableStateOf(false) }
-        var showHelpModal by remember { mutableStateOf(false) }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SettingsTopRowText()
-        }
-
-        LockBoxPullToRefresh(
+        val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+            .calculateTopPadding()
+        LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            onRefresh = onRefresh,
-            isRefreshing = settingsUiState.isRefreshing,
-            state = rememberPullToRefreshState()
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(
+                bottom = 16.dp,
+                top = 16.dp + topPadding
+            )
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item {
-                    if (settingsUiState.imageLink.isNotEmpty()) {
-                        NetworkImage(url = settingsUiState.imageLink)
-                    } else RoundText(text = settingsUiState.fullName)
+            item {
+                if (settingsUiState.imageLink.isNotEmpty()) {
+                    NetworkImage(url = settingsUiState.imageLink)
+                } else RoundText(text = settingsUiState.fullName)
 
-                    if (settingsUiState.fullName.isNotEmpty())
-                        Text(
-                            text = settingsUiState.fullName,
-                            style = LockBoxTheme.typography.titleMedium,
-                            color = LockBoxTheme.colors.grey50,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp)
-                        )
-                }
-
-                item {
+                if (settingsUiState.fullName.isNotEmpty())
                     Text(
-                        text = settingsUiState.email,
-                        style = LockBoxTheme.typography.subHeadlineMedium,
-                        color = LockBoxTheme.colors.grey500
+                        text = settingsUiState.fullName,
+                        style = LockBoxTheme.typography.titleMedium,
+                        color = LockBoxTheme.colors.grey50,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp)
                     )
-                }
+            }
 
-                item {
-                    LockboxGroup(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
-                    ) {
-                        accountProperties.forEachIndexed { index, property ->
-                            IconTextArrow(
-                                text = stringResource(property.title),
-                                painter = painterResource(property.icon),
-                                onClick = { onNavigate(property.route) },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            if (index != accountProperties.lastIndex) {
-                                LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-                            }
+            item {
+                Text(
+                    text = settingsUiState.email,
+                    style = LockBoxTheme.typography.subHeadlineMedium,
+                    color = LockBoxTheme.colors.grey500
+                )
+            }
+
+            item {
+                LockboxGroup(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    accountProperties.forEachIndexed { index, property ->
+                        IconTextArrow(
+                            text = stringResource(property.title),
+                            painter = painterResource(property.icon),
+                            onClick = { onNavigate(property.route) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (index != accountProperties.lastIndex) {
+                            LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
                         }
                     }
                 }
+            }
 
-                item {
-                    LockboxGroup(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
-                    ) {
-                        IconTextArrow(
-                            text = stringResource(aboutProperty.title),
-                            painter = painterResource(aboutProperty.icon),
-                            onClick = { onNavigate(aboutProperty.route) },
-                            modifier = Modifier.fillMaxWidth()
+            item {
+                LockboxGroup(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    IconTextArrow(
+                        text = stringResource(aboutProperty.title),
+                        painter = painterResource(aboutProperty.icon),
+                        onClick = { onNavigate(aboutProperty.route) },
+                        modifier = Modifier.fillMaxWidth()
 
-                        )
-                        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                    )
+                    LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-                        IconTextArrow(
-                            text = stringResource(R.string.help),
-                            painter = painterResource(R.drawable.headset),
-                            onClick = { showHelpModal = true },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-
-                item {
-                    LockboxTextIconButton(
-                        text = stringResource(R.string.log_out),
-                        icon = painterResource(R.drawable.log_out),
-                        onClick = { showExitDialog = true },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                    IconTextArrow(
+                        text = stringResource(R.string.help),
+                        painter = painterResource(R.drawable.headset),
+                        onClick = { showHelpModal = true },
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
-        }
 
-        if (showExitDialog) {
-            ExitDialog(
-                onDismiss = { showExitDialog = false },
-                onLogOut = onLogOut,
-            )
+            item {
+                LockboxTextIconButton(
+                    text = stringResource(R.string.log_out),
+                    icon = painterResource(R.drawable.log_out),
+                    onClick = { showExitDialog = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                )
+            }
         }
+    }
 
-        if (showHelpModal) {
-            HelpModalSheet(
-                onDismiss = { showHelpModal = false },
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+    if (showExitDialog) {
+        ExitDialog(
+            onDismiss = { showExitDialog = false },
+            onLogOut = onLogOut,
+        )
+    }
+
+    if (showHelpModal) {
+        HelpModalSheet(
+            onDismiss = { showHelpModal = false },
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 

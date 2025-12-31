@@ -1,15 +1,19 @@
 package org.homesharing.lockbox.presentation.contracts
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -41,14 +44,13 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.contract.Contract
+import org.homesharing.lockbox.presentation.contracts.viewmodel.ContractsViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.AddRow
-import org.homesharing.lockbox.presentation.uikit.composables.TopRowWithAddButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.templates.EmptyScreenContent
 import org.homesharing.lockbox.presentation.uikit.composables.templates.ErrorScreenContent
 import org.homesharing.lockbox.presentation.uikit.composables.templates.LoadingScreenContent
-import org.homesharing.lockbox.presentation.uikit.composables.top_rows.ContractsTopRow
 import org.homesharing.lockbox.presentation.uikit.downloadDocument
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
@@ -58,9 +60,7 @@ import java.time.format.DateTimeFormatter
 internal fun ContractsScreen(
     contractsViewModel: ContractsViewModel = koinViewModel(),
 ) {
-    val avatar by contractsViewModel.avatarLink.collectAsStateWithLifecycle()
     ContractsScreen(
-        avatarLink = avatar,
         contracts = contractsViewModel.contracts,
         modifier = Modifier.fillMaxSize(),
     )
@@ -68,35 +68,28 @@ internal fun ContractsScreen(
 
 @Composable
 private fun ContractsScreen(
-    avatarLink: String,
     contracts: Flow<PagingData<Contract>>,
     modifier: Modifier = Modifier,
 ) {
     val lazyContracts = contracts.collectAsLazyPagingItems()
+    when (lazyContracts.loadState.refresh) {
+        is LoadState.NotLoading -> {
+            LockBoxContractScreen(
+                contracts = lazyContracts,
+                onAddDocument = { },
+                modifier = modifier,
+            )
+        }
 
-    Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950)
-    ) {
-        TopRow(
-            avatar = avatarLink,
-            onAddDocument = { }
-        )
+        is LoadState.Loading -> {
+            LoadingScreenContent(modifier = modifier)
+        }
 
-        when (lazyContracts.loadState.refresh) {
-            is LoadState.NotLoading -> {
-                LockBoxContractScreen(
-                    contracts = lazyContracts,
-                    onAddDocument = {  }
-                )
-            }
-
-            is LoadState.Loading -> {
-                LoadingScreenContent(modifier = Modifier.fillMaxSize())
-            }
-
-            is LoadState.Error -> {
-                ErrorScreen(onRefresh = lazyContracts::refresh)
-            }
+        is LoadState.Error -> {
+            ErrorScreen(
+                onRefresh = lazyContracts::refresh,
+                modifier = modifier
+            )
         }
     }
 }
@@ -106,19 +99,22 @@ private fun ContractsScreen(
 private fun LockBoxContractScreen(
     contracts: LazyPagingItems<Contract>,
     onAddDocument: () -> Unit,
+    modifier: Modifier,
 ) {
     val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
     val context = LocalContext.current
     LockBoxPullToRefresh(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         isRefreshing = contracts.loadState.refresh is LoadState.Loading,
         state = rememberPullToRefreshState(),
         onRefresh = contracts::refresh,
     ) {
+        val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+            .calculateTopPadding()
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
-                top = 12.dp,
+                top = 12.dp + topPadding,
                 start = 16.dp,
                 end = 16.dp,
                 bottom = 48.dp
@@ -172,6 +168,7 @@ private fun LockBoxContractScreen(
 @Composable
 private fun ErrorScreen(
     onRefresh: () -> Unit,
+    modifier: Modifier,
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
     ErrorScreenContent(
@@ -182,18 +179,7 @@ private fun ErrorScreen(
             isRefreshing = false
         },
         message = stringResource(R.string.something_went_wrong_try_refreshing),
-        modifier = Modifier.fillMaxSize()
-    )
-}
-
-@Composable
-private fun TopRow(avatar: String, onAddDocument: () -> Unit) {
-    TopRowWithAddButton(
-        rowContent = { ContractsTopRow(avatarLink = avatar) },
-        onAdd = onAddDocument,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+        modifier = modifier
     )
 }
 
@@ -318,7 +304,7 @@ private fun PreviewContractsScreen() {
                 )
             )
         )
-        ContractsScreen("", pagingData, Modifier.fillMaxSize())
+        ContractsScreen(pagingData, Modifier.fillMaxSize())
     }
 }
 
@@ -327,7 +313,7 @@ private fun PreviewContractsScreen() {
 private fun PreviewLoading() {
     LockBoxTheme {
         val pagingData = flowOf(PagingData.empty<Contract>())
-        ContractsScreen("", pagingData, Modifier.fillMaxSize())
+        ContractsScreen(pagingData, Modifier.fillMaxSize())
     }
 }
 
@@ -344,6 +330,6 @@ private fun PreviewEmptyScreen() {
                 )
             )
         )
-        ContractsScreen("", pagingData, Modifier.fillMaxSize())
+        ContractsScreen(pagingData, Modifier.fillMaxSize())
     }
 }
