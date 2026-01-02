@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +39,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
@@ -140,10 +143,17 @@ private fun LockBoxScreen(
     onAddDevice: () -> Unit,
     modifier: Modifier,
 ) {
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     LockBoxPullToRefresh(
         modifier = modifier,
         isRefreshing = boxes.loadState.refresh is LoadState.Loading,
-        onRefresh = boxes::refresh,
+        onRefresh = {
+            boxes.refresh()
+            coroutineScope.launch {
+                listState.scrollToItem(0)
+            }
+        },
         state = rememberPullToRefreshState(),
     ) {
         val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
@@ -156,7 +166,8 @@ private fun LockBoxScreen(
                 end = 16.dp,
                 bottom = 48.dp
             ),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            state = listState
         ) {
             if (boxes.itemCount == 0) {
                 item {

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +42,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import org.homesharing.lockbox.R
@@ -101,13 +104,20 @@ private fun LockBoxContractScreen(
     onAddDocument: () -> Unit,
     modifier: Modifier,
 ) {
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
     val context = LocalContext.current
     LockBoxPullToRefresh(
         modifier = modifier,
         isRefreshing = contracts.loadState.refresh is LoadState.Loading,
         state = rememberPullToRefreshState(),
-        onRefresh = contracts::refresh,
+        onRefresh = {
+            contracts.refresh()
+            coroutineScope.launch {
+                listState.scrollToItem(0)
+            }
+        },
     ) {
         val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
             .calculateTopPadding()
@@ -119,7 +129,8 @@ private fun LockBoxContractScreen(
                 end = 16.dp,
                 bottom = 48.dp
             ),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            state = listState,
         ) {
             if (contracts.itemCount == 0) {
                 item {
