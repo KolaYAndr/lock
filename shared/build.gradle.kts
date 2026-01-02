@@ -1,18 +1,23 @@
+import com.android.build.api.dsl.androidLibrary
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    id("com.android.kotlin.multiplatform.library")
     alias(libs.plugins.kotlin.serialization)
 }
 
+
 kotlin {
-    androidTarget {
+    androidLibrary {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        namespace = "org.homesharing.lockbox.shared"
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -35,6 +40,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.core)
             implementation(libs.datastore)
+
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -44,17 +50,5 @@ kotlin {
             implementation(libs.dateTime)
             implementation(libs.ktor.mock)
         }
-    }
-}
-
-android {
-    namespace = "org.homesharing.lockbox.shared"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }

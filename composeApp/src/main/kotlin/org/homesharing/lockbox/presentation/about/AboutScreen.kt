@@ -21,11 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
 import org.homesharing.lockbox.presentation.uikit.downloadPrivacyPolicy
 import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
-import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
-import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable

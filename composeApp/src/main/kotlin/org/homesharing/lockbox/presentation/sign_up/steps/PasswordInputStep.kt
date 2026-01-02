@@ -23,8 +23,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.sign_up.PasswordRepeatedError
-import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPasswordInput
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
+import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPasswordInput
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable

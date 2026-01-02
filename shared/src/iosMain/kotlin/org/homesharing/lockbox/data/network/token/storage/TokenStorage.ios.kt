@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalForeignApi::class)
-
 package org.homesharing.lockbox.data.network.token.storage
 
-import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

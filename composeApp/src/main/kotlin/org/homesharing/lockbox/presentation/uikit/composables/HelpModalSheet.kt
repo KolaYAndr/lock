@@ -17,11 +17,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import androidx.core.net.toUri
 
 @Composable
 internal fun HelpModalSheet(onDismiss: () -> Unit, modifier: Modifier = Modifier) {

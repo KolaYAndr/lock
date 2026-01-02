@@ -15,8 +15,8 @@ import org.homesharing.lockbox.presentation.sign_up.steps.EmailInputStep
 import org.homesharing.lockbox.presentation.sign_up.steps.PasswordInputStep
 import org.homesharing.lockbox.presentation.uikit.animation.backwardAnimation
 import org.homesharing.lockbox.presentation.uikit.animation.forwardAnimation
-import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxCard
 import org.homesharing.lockbox.presentation.uikit.composables.CardTopRow
+import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxCard
 import org.homesharing.lockbox.presentation.uikit.downloadPrivacyPolicy
 import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
 import org.koin.androidx.compose.koinViewModel

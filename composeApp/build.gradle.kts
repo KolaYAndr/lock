@@ -1,42 +1,18 @@
 import com.android.build.api.variant.impl.VariantOutputImpl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.gradle.api.JavaVersion.VERSION_21
 
 plugins {
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.composeCompiler)
-}
-
-kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.dateTime)
-        }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(projects.shared)
-        }
-    }
 }
 
 android {
     namespace = "org.homesharing.lockbox"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk {
+        version = release(libs.versions.android.compileSdk.get().toInt())
+    }
 
     defaultConfig {
         applicationId = "org.homesharing.lockbox"
@@ -51,16 +27,19 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
         }
-        getByName("debug") {
+        debug {
             isMinifyEnabled = false
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = VERSION_21
+        targetCompatibility = VERSION_21
+    }
+    buildFeatures {
+        compose = true
     }
 }
 
@@ -78,10 +57,13 @@ androidComponents {
 dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.core.splashscreen)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.compose.viewmodel)
-    debugImplementation(compose.uiTooling)
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
     implementation(libs.paging.compose)
@@ -90,4 +72,8 @@ dependencies {
     implementation(libs.navigation3.runtime)
     implementation(libs.navigation3.viewmodel.lifecycle)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.dateTime)
+    implementation(projects.shared)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
