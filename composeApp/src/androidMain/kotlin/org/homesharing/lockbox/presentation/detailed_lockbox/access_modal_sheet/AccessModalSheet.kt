@@ -55,7 +55,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.RoundText
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxCircularProgress
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockBoxPropertyInput
@@ -318,7 +318,7 @@ private fun GuestInfoContent(
                     onNavBack()
                 },
                 text = stringResource(R.string.unbind_user),
-                style = BasicButtonStyle.red(),
+                style = LockboxButtonStyle.red(),
                 paddingValues = PaddingValues(14.dp),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -326,7 +326,7 @@ private fun GuestInfoContent(
             LockboxButton(
                 onClick = onNavBack,
                 text = stringResource(R.string.back),
-                style = BasicButtonStyle.grey(),
+                style = LockboxButtonStyle.grey(),
                 paddingValues = PaddingValues(14.dp),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -616,7 +616,7 @@ private fun AddGuestContent(
             LockboxButton(
                 onClick = onNavBack,
                 text = stringResource(R.string.cancel),
-                style = BasicButtonStyle.grey(),
+                style = LockboxButtonStyle.grey(),
                 paddingValues = PaddingValues(14.dp),
                 modifier = Modifier.fillMaxWidth()
             )

@@ -37,7 +37,7 @@ import org.homesharing.lockbox.presentation.add_phone_number.viewmodel.AddPhoneN
 import org.homesharing.lockbox.presentation.add_phone_number.viewmodel.AddPhoneNumberUiState
 import org.homesharing.lockbox.presentation.add_phone_number.viewmodel.AddPhoneNumberViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPhoneNumberInput
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxPin
@@ -190,7 +190,7 @@ private fun ConfirmNumberStep(
             text = stringResource(R.string.send_again),
             paddingValues = PaddingValues(10.dp),
             onClick = onSendAgain,
-            style = BasicButtonStyle.darkerGrey(),
+            style = LockboxButtonStyle.darkerGrey(),
             modifier = Modifier.padding(top = 12.dp)
         )
     }
@@ -330,7 +330,7 @@ private fun NewNumberInputStep(
             onClick = {
                 onToStep(AddPhoneNumberStep.WantToChange)
             },
-            style = BasicButtonStyle.darkerGrey(),
+            style = LockboxButtonStyle.darkerGrey(),
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth()

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxModal
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
@@ -107,7 +107,7 @@ private fun ConnectDeviceModal(
                 text = stringResource(R.string.cancel),
                 modifier = Modifier.padding(top = 12.dp),
                 paddingValues = PaddingValues(horizontal = 12.dp),
-                style = BasicButtonStyle.grey()
+                style = LockboxButtonStyle.grey()
             )
         }
 
@@ -118,7 +118,7 @@ private fun ConnectDeviceModal(
                 .padding(bottom = 12.dp)
                 .align(Alignment.CenterHorizontally),
             paddingValues = PaddingValues(horizontal = 12.dp),
-            style = BasicButtonStyle.grey()
+            style = LockboxButtonStyle.grey()
         )
     }
 }

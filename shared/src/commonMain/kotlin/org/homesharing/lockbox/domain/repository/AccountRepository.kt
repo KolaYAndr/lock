@@ -15,7 +15,7 @@ interface AccountRepository {
 
     suspend fun logOut()
 
-    fun loggedIn(): Flow<Boolean>
+    val loggedIn: Flow<Boolean>
 
     suspend fun getImageLink(sub: String): String
 

@@ -9,32 +9,10 @@ import org.homesharing.lockbox.R
 
 val inter = Font(R.font.inter)
 val interBlack = Font(R.font.inter_black)
-val interBlackItalic = Font(R.font.inter_black_italic)
-val interBold = Font(R.font.inter_bold)
-val interBoldItalic = Font(R.font.inter_bold_italic)
-val interExtraBold = Font(R.font.inter_extra_bold)
-val interExtraBoldItalic = Font(R.font.inter_extra_bold_italic)
-val interExtraLightItalic = Font(R.font.inter_extra_light_italic)
-val interItalic = Font(R.font.inter_italic)
-val interLightItalic = Font(R.font.inter_light_italic)
-val interMediumItalic = Font(R.font.inter_medium_italic)
-val interSemiBoldItalic = Font(R.font.inter_semi_bold_italic)
-val interThinItalic = Font(R.font.inter_thin_italic)
 
 val interFamily = FontFamily(
     inter,
     interBlack,
-    interBlackItalic,
-    interBold,
-    interBoldItalic,
-    interExtraBold,
-    interExtraBoldItalic,
-    interExtraLightItalic,
-    interItalic,
-    interLightItalic,
-    interMediumItalic,
-    interSemiBoldItalic,
-    interThinItalic,
 )
 
 val TitleLarge = TextStyle(

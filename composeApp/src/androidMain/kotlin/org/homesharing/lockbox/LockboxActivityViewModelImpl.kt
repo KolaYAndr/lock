@@ -12,7 +12,7 @@ internal class LockboxActivityViewModelImpl(
     accountRepository: AccountRepository,
 ) : LockboxActivityViewModel() {
 
-    override val loginState = accountRepository.loggedIn().map { loggedIn ->
+    override val loginState = accountRepository.loggedIn.map { loggedIn ->
         if (loggedIn) {
             LoginState.LoggedIn
         } else {

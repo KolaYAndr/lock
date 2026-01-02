@@ -54,15 +54,7 @@ cd mobile
 open iosApp/iosApp.xcworkspace
 ```
 
-2. Добавьте скрипт сборки:
-   - В Xcode: `Project Navigator → iosApp → Build Phases`
-   - **New Run Script Phase** (перед "Compile Kotlin Framework"):
-```bash
-cd "$SRCROOT/.."
-./gradlew :shared:embedAndSignAppleFrameworkForXcode --warning-mode all
-```
-
-3. Выберите симулятор → нажмите ▶️
+2. Выберите симулятор → нажмите ▶️
 
 ---
 

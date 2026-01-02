@@ -89,7 +89,7 @@ internal class AccountRepositoryImpl(
 
     override suspend fun logOut() = tokenStorage.clearInfo()
 
-    override fun loggedIn(): Flow<Boolean> = tokenStorage.loggedIn()
+    override val loggedIn: Flow<Boolean> = tokenStorage.loggedIn
 
     override suspend fun getImageLink(sub: String): String = api.getImageLink(sub)
 

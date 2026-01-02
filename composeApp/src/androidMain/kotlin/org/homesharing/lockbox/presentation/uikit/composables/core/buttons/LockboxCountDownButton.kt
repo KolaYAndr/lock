@@ -59,7 +59,7 @@ internal fun LockboxCountDownButton(
         },
         paddingValues = PaddingValues(vertical = 12.dp),
         enabled = isEnabled,
-        style = BasicButtonStyle.lighterGrey(),
+        style = LockboxButtonStyle.lighterGrey(),
         modifier = modifier
     )
 }

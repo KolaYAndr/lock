@@ -50,7 +50,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.uikit.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxTextIconButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
@@ -721,7 +721,7 @@ private fun OpenDeviceDialog(
                 onDismiss()
             },
             dangerButtonText = stringResource(R.string.open),
-            dangerButtonStyle = BasicButtonStyle.greenBackground()
+            dangerButtonStyle = LockboxButtonStyle.greenBackground()
         )
     }
 }

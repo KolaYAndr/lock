@@ -40,7 +40,7 @@ import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailSt
 import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailUiState
 import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxEmailInput
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
@@ -259,7 +259,7 @@ private fun NewEmailInputStep(
             onClick = {
                 onToStep(ChangeEmailStep.WantToChange)
             },
-            style = BasicButtonStyle.darkerGrey(),
+            style = LockboxButtonStyle.darkerGrey(),
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth()

@@ -24,8 +24,14 @@ private const val ACCESS_TOKEN_IV = "access_token_iv"
 private const val REFRESH_TOKEN_IV = "refresh_token_iv"
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-internal actual class TokenStorage(context: Context) {
+internal actual class TokenStorage(
+    context: Context
+) {
     private val dataStore = context.dataStore
+
+    actual val loggedIn: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences.contains(ACCESS_TOKEN_KEY) && preferences.contains(REFRESH_TOKEN_KEY)
+    }
 
     actual suspend fun getAccessToken(): String = withContext(Dispatchers.IO) {
         val prefs = dataStore.data.first()
@@ -68,10 +74,6 @@ internal actual class TokenStorage(context: Context) {
         dataStore.edit { preferences ->
             preferences.clear()
         }
-    }
-
-    actual fun loggedIn(): Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences.contains(ACCESS_TOKEN_KEY) && preferences.contains(REFRESH_TOKEN_KEY)
     }
 
     actual suspend fun getNextRefreshTime(): Long = dataStore.data.map { preferences ->

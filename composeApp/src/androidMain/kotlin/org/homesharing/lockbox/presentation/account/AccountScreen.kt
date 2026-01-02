@@ -42,7 +42,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.NetworkImage
 import org.homesharing.lockbox.presentation.uikit.composables.RoundText
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxDialog
@@ -193,7 +193,7 @@ private fun AccountScreen(
             onClick = { showDeleteAccountDialog = true },
             text = stringResource(R.string.delete_account),
             paddingValues = PaddingValues(14.dp),
-            style = BasicButtonStyle.red(),
+            style = LockboxButtonStyle.red(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

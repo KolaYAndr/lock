@@ -2,10 +2,10 @@ import SwiftUI
 
 
 @main
-struct iOSApp: App {
+struct LockboxApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginScreen()
         }
     }
 }

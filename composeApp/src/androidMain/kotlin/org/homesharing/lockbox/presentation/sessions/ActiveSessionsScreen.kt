@@ -42,7 +42,7 @@ import org.homesharing.lockbox.domain.model.sessions.Session
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxDialog
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
@@ -141,7 +141,7 @@ private fun ActiveSessionScreen(
                         LockboxButton(
                             onClick = { showCloseSessionsDialog = true },
                             text = stringResource(R.string.finish_all_other_sessions),
-                            style = BasicButtonStyle.red(),
+                            style = LockboxButtonStyle.red(),
                             paddingValues = PaddingValues(0.dp),
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)

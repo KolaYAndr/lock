@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.homesharing.lockbox.R
-import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.BasicButtonStyle
+import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
@@ -66,7 +66,7 @@ internal fun BasicDialogContent(
     onDismiss: () -> Unit,
     onDangerButtonAction: () -> Unit,
     dangerButtonText: String,
-    dangerButtonStyle: ButtonColors = BasicButtonStyle.redBackGround()
+    dangerButtonStyle: ButtonColors = LockboxButtonStyle.redBackGround()
 ) {
     Text(
         text = title,
@@ -93,7 +93,7 @@ internal fun BasicDialogContent(
             onClick = onDismiss,
             text = stringResource(R.string.cancel),
             paddingValues = PaddingValues(10.dp),
-            style = BasicButtonStyle.grey()
+            style = LockboxButtonStyle.grey()
         )
 
         LockboxButton(

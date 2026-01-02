@@ -9,15 +9,15 @@ internal const val TOKEN_STORAGE_NAME = "token_storage"
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal expect class TokenStorage {
+    val loggedIn: Flow<Boolean>
     suspend fun getAccessToken(): String
+
     suspend fun getRefreshToken(): String
 
     suspend fun saveTokens(accessToken: String, refreshToken: String)
-
     suspend fun getNextRefreshTime(): Long
+
     suspend fun saveNextRefreshTime(time: Long)
 
     suspend fun clearInfo()
-
-    fun loggedIn(): Flow<Boolean>
 }

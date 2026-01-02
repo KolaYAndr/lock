@@ -20,7 +20,7 @@ internal fun LockboxButton(
     onClick: () -> Unit,
     text: String,
     paddingValues: PaddingValues = PaddingValues(8.dp),
-    style: ButtonColors = BasicButtonStyle.greenBackground(),
+    style: ButtonColors = LockboxButtonStyle.greenBackground(),
     enabled: Boolean = true,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
@@ -40,7 +40,7 @@ internal fun LockboxButton(
     }
 }
 
-internal object BasicButtonStyle {
+internal object LockboxButtonStyle {
     @Composable
     fun greenBackground(): ButtonColors = ButtonDefaults.buttonColors(
         containerColor = LockBoxTheme.colors.green500,
@@ -111,7 +111,7 @@ private fun PreviewOuterRedButton() {
         LockboxButton(
             onClick = { },
             text = "Voyti",
-            style = BasicButtonStyle.redBackGround(),
+            style = LockboxButtonStyle.redBackGround(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -126,7 +126,7 @@ private fun PreviewRedButton() {
         LockboxButton(
             onClick = { },
             text = "Voyti",
-            style = BasicButtonStyle.red(),
+            style = LockboxButtonStyle.red(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -141,7 +141,7 @@ private fun PreviewLighterGreyButton() {
         LockboxButton(
             onClick = { },
             text = "Voyti",
-            style = BasicButtonStyle.lighterGrey(),
+            style = LockboxButtonStyle.lighterGrey(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -156,7 +156,7 @@ private fun PreviewGreyButton() {
         LockboxButton(
             onClick = { },
             text = "Voyti",
-            style = BasicButtonStyle.grey(),
+            style = LockboxButtonStyle.grey(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
@@ -171,7 +171,7 @@ private fun PreviewDarkerGreyButton() {
         LockboxButton(
             onClick = { },
             text = "Voyti",
-            style = BasicButtonStyle.darkerGrey(),
+            style = LockboxButtonStyle.darkerGrey(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
