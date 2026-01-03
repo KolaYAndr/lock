@@ -37,6 +37,7 @@ struct LoginScreen : View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.green500)
+                .buttonBorderShape(.roundedRectangle(radius: 8))
                 .padding(.top, 16)
             }
             .padding(.horizontal, 32)

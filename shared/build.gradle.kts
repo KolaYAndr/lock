@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-
 kotlin {
     androidLibrary {
         compilerOptions {
@@ -28,7 +27,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.ktor)
