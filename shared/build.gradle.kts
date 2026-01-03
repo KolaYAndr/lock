@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    id("com.android.kotlin.multiplatform.library")
+    id(libs.plugins.kotlinMultiplatformLibrary.get().pluginId)
     alias(libs.plugins.kotlin.serialization)
 }
 
