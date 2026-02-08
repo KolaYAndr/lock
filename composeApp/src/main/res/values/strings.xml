@@ -1,7 +1,11 @@
 <resources>
-    <string name="app_name">LockBox</string>
+    <string name="app_name" translatable="false">Lockbox</string>
     <string name="email_placeholder" translatable="false">ivan.ivanov@email.ru</string>
     <string name="password_placeholder" translatable="false">••••••••</string>
+    <string name="lockbox_email" translatable="false">help@lockbox.ru</string>
+    <string name="telegram" translatable="false">Telegram</string>
+    <string name="whatsapp" translatable="false">WhatsApp</string>
+    <string name="location_dot_access_time" translatable="false">%1$s • %2$s</string>
     <string name="sing_in">Войти</string>
     <string name="log_in_your_profile">Войдите в профиль</string>
     <string name="start_using_today">Начните использовать наши локбоксы уже сегодня!</string>
@@ -132,15 +136,11 @@
     <string name="original_naming">Оригинальное название</string>
     <string name="original_naming_lockbox">LockBox</string>
     <string name="this_device">Это устройство</string>
-    <string name="location_dot_access_time" translatable="false">%1$s • %2$s</string>
     <string name="right_now">Сейчас</string>
     <string name="finish_all_other_sessions">Завершить все другие сеансы</string>
     <string name="unknown_device">Неизвестное устройство</string>
     <string name="contact_us">Связаться с нами</string>
     <string name="we_will_try_to_solve_your_issue">Мы постараемся решить Ваш вопрос. Выберите удобный способ связи ниже</string>
-    <string name="lockbox_email" translatable="false">help@lockbox.ru</string>
-    <string name="telegram" translatable="false">Telegram</string>
-    <string name="whatsapp" translatable="false">WhatsApp</string>
     <string name="could_not_update_user_info">Не удалолсь обновить данные</string>
     <string name="retry">Повторить</string>
     <string name="could_not_load_user_info">Не удалось загрузить информацию об аккаунте</string>

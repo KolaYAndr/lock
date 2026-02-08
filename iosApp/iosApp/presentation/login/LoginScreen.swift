@@ -16,13 +16,19 @@ struct LoginScreen : View {
             Color.grey950.ignoresSafeArea()
 
             VStack(alignment: .center) {
-                Text("Log in your profile")
+                Image(.logIn)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 48, height: 48)
+                    .tint(.grey500)
+
+                Text(String(localized: "log_in_your_profile"))
                     .titleMedium()
                     .foregroundStyle(.grey100)
                     .multilineTextAlignment(.center)
                     .padding(.top, 12)
 
-                Text("Start using today")
+                Text(String(localized: "start_using_today"))
                     .bodyLarge()
                     .foregroundStyle(.grey500)
                     .multilineTextAlignment(.center)
@@ -31,13 +37,11 @@ struct LoginScreen : View {
                 Button {
                     showModal = true
                 } label: {
-                    Text("Sign in")
+                    Text(String(localized: "sing_in"))
                         .bodyMedium()
                         .foregroundStyle(.grey900)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.green500)
-                .buttonBorderShape(.roundedRectangle(radius: 8))
+                .buttonStyle(.greenBackground)
                 .padding(.top, 16)
             }
             .padding(.horizontal, 32)

@@ -373,6 +373,7 @@ private fun DetailedLockboxScreen(
     if (showAboutDeviceModal) {
         AboutDeviceModalSheet(
             onDismiss = { showAboutDeviceModal = false },
+            onHelpClick = { showHelpModal = true },
             boxName = uiState.boxName,
             modifier = Modifier.fillMaxSize()
         )
@@ -496,6 +497,7 @@ private fun UnbindDeviceDialog(
 @Composable
 private fun AboutDeviceModalSheet(
     onDismiss: () -> Unit,
+    onHelpClick: () -> Unit,
     boxName: String,
     modifier: Modifier = Modifier,
 ) {
@@ -580,8 +582,11 @@ private fun AboutDeviceModalSheet(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             modifier = Modifier
-                .fillMaxWidth()
                 .navigationBarsPadding()
+                .clickable {
+                    onHelpClick()
+                    onDismiss()
+                }
         ) {
             Icon(
                 painter = painterResource(R.drawable.headset),

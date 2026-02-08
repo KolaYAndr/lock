@@ -33,7 +33,10 @@ internal class DetailedLockboxViewModelImpl(
             when (boxesRepository.openBoxByMac(mac)) {
                 is Response.Failure -> SnackbarController.receiveEvent(couldNotOpenBox { openBox() })
 
-                is Response.Success -> SnackbarController.receiveEvent(boxOpenedSuccessfully)
+                is Response.Success -> {
+                    uiState.update { it.copy(isBoxOpen = true) }
+                    SnackbarController.receiveEvent(boxOpenedSuccessfully)
+                }
             }
         }
     }
@@ -54,7 +57,11 @@ internal class DetailedLockboxViewModelImpl(
                 }
 
                 is Response.Failure ->
-                    SnackbarController.receiveEvent(couldNotUpdateBoxAddress { saveAddress(newAddress) })
+                    SnackbarController.receiveEvent(couldNotUpdateBoxAddress {
+                        saveAddress(
+                            newAddress
+                        )
+                    })
 
             }
         }
