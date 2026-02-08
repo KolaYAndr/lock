@@ -6,9 +6,9 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="by_pressing_you_agree">By pressing the button, you agree with&nbsp;</string>
+    <string name="by_pressing_you_agree">By pressing the button, you agree with</string>
     <string name="with_service_conditions">service terms</string>
-    <string name="and">&nbsp;and&nbsp;</string>
+    <string name="and"> and </string>
     <string name="with_privacy_policy">privacy policy</string>
     <string name="no_account_question">No account?</string>
     <string name="register">Register</string>
@@ -97,7 +97,7 @@
     <string name="add_contract">Create contract</string>
     <string name="device_connection">Device connection</string>
     <string name="connect_to_lockbox_network">Connect to network: LockBox-Network</string>
-    <string name="go_to_wifi_settings_to_connect">Go to your device&apos;s Wi-Fi settings and connect to the LockBox-Network</string>
+    <string name="go_to_wifi_settings_to_connect">Go to your device\'s Wi-Fi settings and connect to the LockBox-Network</string>
     <string name="open_wifi_settings">Open Wi-Fi settings</string>
     <string name="open">Open</string>
     <string name="wifi_network">Wi-Fi network</string>

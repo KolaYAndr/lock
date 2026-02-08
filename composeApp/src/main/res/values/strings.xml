@@ -12,9 +12,9 @@
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
-    <string name="by_pressing_you_agree">Нажимая на кнопку Вы соглашаетесь с&#160;</string>
+    <string name="by_pressing_you_agree">Нажимая на кнопку Вы соглашаетесь с </string>
     <string name="with_service_conditions">условиями сервиса</string>
-    <string name="and">"&#160;и&#160;"</string>
+    <string name="and">" и "</string>
     <string name="with_privacy_policy">политикой конфиденциальности</string>
     <string name="no_account_question">Нет аккаунта?</string>
     <string name="register">Зарегистрируйтесь</string>
