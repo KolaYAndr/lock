@@ -82,7 +82,7 @@ private fun LoginScreen(
         )
         LockboxButton(
             onClick = { showModal = true },
-            text = stringResource(R.string.sing_in),
+            text = stringResource(R.string.sign_in),
             paddingValues = PaddingValues(10.dp),
             modifier = Modifier.padding(top = 16.dp)
         )

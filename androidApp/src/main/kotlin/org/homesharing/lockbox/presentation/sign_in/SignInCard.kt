@@ -197,7 +197,7 @@ private fun SignInCard(
 
         LockboxButton(
             onClick = { onSignIn() },
-            text = stringResource(R.string.sing_in),
+            text = stringResource(R.string.sign_in),
             paddingValues = PaddingValues(14.dp),
             modifier = Modifier
                 .fillMaxWidth()
