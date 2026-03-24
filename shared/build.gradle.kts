@@ -1,9 +1,8 @@
-import com.android.build.api.dsl.androidLibrary
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    id(libs.plugins.kotlinMultiplatformLibrary.get().pluginId)
+    alias(libs.plugins.kotlinMultiplatformLibrary)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -18,7 +17,6 @@ kotlin {
     }
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
