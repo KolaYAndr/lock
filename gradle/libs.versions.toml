@@ -1,21 +1,21 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.1"
 android-compileSdk = "36"
 android-minSdk = "26"
 android-targetSdk = "36"
-androidx-activityCompose = "1.12.4"
+androidx-activityCompose = "1.13.0"
 androidx-core = "1.2.0"
 androidx-lifecycle = "2.10.0"
-kotlin = "2.3.10"
-ktor = "3.4.0"
-koin = "4.1.1"
-navigation3 = "1.0.1"
+kotlin = "2.3.20"
+ktor = "3.4.1"
+koin = "4.2.0"
+navigation3 = "2.10.0"
 material3Android = "1.4.0"
-coil = "3.3.0"
-paging = "3.4.1"
-datastore = "1.2.0"
+coil = "3.4.0"
+paging = "3.4.2"
+datastore = "1.2.1"
 dateTime = "0.7.1"
-composeBom = "2026.02.00"
+composeBom = "2026.03.00"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -51,7 +51,7 @@ dateTime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
-kotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library" }
+kotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
