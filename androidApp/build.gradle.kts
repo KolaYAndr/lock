@@ -1,17 +1,16 @@
+import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.impl.VariantOutputImpl
 import org.gradle.api.JavaVersion.VERSION_21
 
 plugins {
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.composeCompiler)
 }
 
-android {
+configure<ApplicationExtension> {
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
     namespace = "org.homesharing.lockbox"
-    compileSdk {
-        version = release(libs.versions.android.compileSdk.get().toInt())
-    }
 
     defaultConfig {
         applicationId = "org.homesharing.lockbox"
