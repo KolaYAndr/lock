@@ -23,18 +23,14 @@ struct PolicyAndConditions: View {
     }
     
     private func makeAttributedText() -> AttributedString {
-        // 1. Готовим чистые строки для названий
         let serviceTitle = String(localized: "with_service_conditions")
         let privacyTitle = String(localized: "with_privacy_policy")
         
-        // 2. Создаем ресурс, ГДЕ КЛЮЧ — это ровно "by_pressing_you_agree"
-        // Аргументы передаются ВНУТРИ defaultValue в нужном порядке
         let resource = LocalizedStringResource(
             "by_pressing_you_agree",
             defaultValue: "\(serviceTitle) \(userAgreementUrl.absoluteString) \(privacyTitle) \(privacyPolicyUrl.absoluteString)"
         )
         
-        // 3. Создаем AttributedString. SwiftUI сам распарсит Markdown из каталога ([текст](ссылка))
         return AttributedString(localized: resource)
     }
 }
