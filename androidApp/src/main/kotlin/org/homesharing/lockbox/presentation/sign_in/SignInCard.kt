@@ -118,7 +118,9 @@ private fun SignInCard(
             text = stringResource(R.string.log_in_your_profile),
             style = LockBoxTheme.typography.titleMedium,
             color = LockBoxTheme.colors.constantWhite,
-            modifier = Modifier.padding(top = 12.dp, start = 16.dp)
+            modifier = Modifier
+                .padding(top = 12.dp, start = 16.dp)
+                .align(Alignment.CenterHorizontally)
         )
 
         Text(

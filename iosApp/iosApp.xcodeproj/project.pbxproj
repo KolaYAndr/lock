@@ -29,6 +29,11 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		2C9258A42F71CA3C00C05924 /* extensions */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = extensions;
+			sourceTree = "<group>";
+		};
 		2CC381B62F08194700784D19 /* presentation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = presentation;
@@ -85,11 +90,12 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				2CC381B62F08194700784D19 /* presentation */,
+				2C9258A42F71CA3C00C05924 /* extensions */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* LockboxApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				2CC381B62F08194700784D19 /* presentation */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -120,6 +126,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2C307B9C2E80426500BF67DA /* Resources */,
+				2C9258A42F71CA3C00C05924 /* extensions */,
 				2CC381B62F08194700784D19 /* presentation */,
 			);
 			name = iosApp;

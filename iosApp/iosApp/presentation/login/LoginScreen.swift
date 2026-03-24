@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct LoginScreen : View {
+internal struct LoginScreen: View {
     @State private var showModal = false
 
     var body: some View {
@@ -37,7 +37,7 @@ struct LoginScreen : View {
                 Button {
                     showModal = true
                 } label: {
-                    Text(String(localized: "sing_in"))
+                    Text(String(localized: "sign_in"))
                         .bodyMedium()
                         .foregroundStyle(.grey900)
                 }
@@ -46,7 +46,43 @@ struct LoginScreen : View {
             }
             .padding(.horizontal, 32)
             .sheet(isPresented: $showModal) {
-                
+                if #available(iOS 16.0, *) {
+                    LoginBottomSheet()
+                        .presentationDetents([.medium])
+                } else {
+                    LoginBottomSheet()
+                }
+            }
+        }
+    }
+}
+
+internal struct LoginBottomSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var viewModel : LoginViewModel = LoginViewModel()
+    @State private var previousType: LoginType = .signIn
+
+    private func currentTransition(for target: LoginType) -> AnyTransition {
+        return if target.rawValue > previousType.rawValue {
+            forwardTransition
+        } else {
+            backwardTransition
+        }
+    }
+    
+    var body : some View {
+        ZStack {
+            Color.grey900.ignoresSafeArea()
+
+            switch viewModel.loginType {
+            case .signIn: SignInCard(
+                onDismiss: { dismiss() },
+                toSignUp: { viewModel.toTypeAuth(.signUp) },
+                ).transition(currentTransition(for: .signUp))
+
+            case .signUp: SignUpCard(
+                toSignIn: { viewModel.toTypeAuth(.signIn) }
+            ).transition(currentTransition(for: .signIn))
             }
         }
     }
