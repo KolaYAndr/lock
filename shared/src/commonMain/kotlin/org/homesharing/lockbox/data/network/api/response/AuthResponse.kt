@@ -16,6 +16,8 @@ internal sealed interface AuthResponse {
         val refreshToken: String,
         @SerialName("token_type")
         val tokenType: String,
+        @SerialName("id_token")
+        val idToken: String,
         @SerialName("not-before-policy")
         val notBeforePolicy: Int,
         @SerialName("session_state")

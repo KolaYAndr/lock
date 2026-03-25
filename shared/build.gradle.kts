@@ -29,6 +29,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.ktor)
+            implementation(libs.ktor.client.auth)
             implementation(libs.koin.core)
             implementation(libs.paging)
             implementation(libs.dateTime)

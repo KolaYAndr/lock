@@ -15,24 +15,17 @@ internal interface AccountApi {
         password: String
     ): AuthResponse
 
-    suspend fun refreshTokens(
-        accessToken: String,
-        refreshToken: String
-    ): AuthResponse
-
     suspend fun getImageLink(sub: String): String
 
     suspend fun sendImage(
-        accessToken: String,
         data: ByteArray
     ): ApiResponse
 
-    suspend fun getSessions(accessToken: String): ApiResponse
+    suspend fun getSessions(): ApiResponse
 
     suspend fun confirmEmail(email: String): ApiResponse
 
     suspend fun updateUserInfo(
-        accessToken: String,
         email: String? = null,
         enabled: Boolean? = null,
         firstName: String? = null,
@@ -40,11 +33,8 @@ internal interface AccountApi {
     ): ApiResponse
 
     suspend fun closeOtherSessions(
-        accessToken: String,
         id: String
     ): ApiResponse
 
-    suspend fun sendLinkToChangePassword(
-        accessToken: String,
-    ): ApiResponse
+    suspend fun sendLinkToChangePassword(): ApiResponse
 }

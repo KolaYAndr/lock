@@ -27,16 +27,18 @@ val networkModule = module {
     factory<() -> BoxesPagingSource> {
         {
             BoxesPagingSource(
-                get<BoxesApi>(),
-                get<AccountApi>(),
-                get<TokenStorage>(),
-                get<RefreshManager>()
+                boxesApi = get(),
             )
         }
     }
 
     single<HttpClient> {
-        createNetworkClient(networkEngine, get<Json>())
+        createNetworkClient(
+            engine = networkEngine,
+            json = get<Json>(),
+            tokenStorage = get<TokenStorage>(),
+            refreshManager = get<RefreshManager>(),
+        )
     }
 
     single<Json> {

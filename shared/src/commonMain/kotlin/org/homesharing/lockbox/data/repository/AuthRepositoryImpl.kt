@@ -20,7 +20,7 @@ internal class AuthRepositoryImpl(
         username: String,
         password: String,
         passwordRepeated: String,
-    ): Response<Unit> = parseLockBoxApiResponse{ api.signUp(username, password, passwordRepeated) }
+    ): Response<Unit> = parseLockBoxApiResponse { api.signUp(username, password, passwordRepeated) }
 
     override suspend fun loadTokensInitially(
         username: String,
@@ -34,6 +34,7 @@ internal class AuthRepositoryImpl(
                 }
                 Response.Success(Unit)
             }
+
             is AuthResponse.Error -> Response.Failure(response.errorDescription)
         }
 

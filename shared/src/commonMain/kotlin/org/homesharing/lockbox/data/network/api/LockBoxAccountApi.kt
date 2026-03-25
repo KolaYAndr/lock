@@ -20,7 +20,6 @@ import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.api.response.toAuthResponse
 import org.homesharing.lockbox.data.network.client.BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.INGRESS_BASE_ENDPOINT
-import org.homesharing.lockbox.data.network.client.bearerToken
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequestDto
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
@@ -31,7 +30,6 @@ import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
-import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.domain.api.AccountApi
 
 private const val REALM = "realms/lockbox"
@@ -47,7 +45,6 @@ private const val RESET_PASSWORD = "reset-password"
 private const val UPLOAD = "upload"
 private const val MAIL = "mail"
 private const val SEND = "send"
-
 private const val ME = "me"
 private const val PASSWORD = "password"
 private const val USERNAME = "username"
@@ -56,9 +53,6 @@ private const val CLIENT_ID = "client_id"
 private const val WEB_FRONT = "web-front"
 private const val GRANT_TYPE = "grant_type"
 private const val SCOPE = "scope"
-private const val REFRESH_TOKEN = "refresh_token"
-
-//TODO потом, когда переедем на безпортовые, надо убрать их из урлов
 internal const val TOKEN_URL = "$BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 internal const val SIGN_UP_URL = "$INGRESS_BASE_ENDPOINT/$USERS/$SIGN_UP"
 internal const val SESSIONS_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
@@ -94,38 +88,20 @@ internal class LockBoxAccountApi(
     override suspend fun loadTokensInitially(
         username: String,
         password: String,
-    ): AuthResponse =
-        client.submitForm(
-            url = TOKEN_URL,
-            formParameters = parameters {
-                append(GRANT_TYPE, PASSWORD)
-                append(CLIENT_ID, WEB_FRONT)
-                append(USERNAME, username)
-                append(PASSWORD, password)
-                append(SCOPE, OFFLINE_ACCESS_SCOPE)
-            }
-        ).toAuthResponse(json)
+    ): AuthResponse = client.submitForm(
+        url = TOKEN_URL,
+        formParameters = parameters {
+            append(GRANT_TYPE, PASSWORD)
+            append(CLIENT_ID, WEB_FRONT)
+            append(USERNAME, username)
+            append(PASSWORD, password)
+            append(SCOPE, OFFLINE_ACCESS_SCOPE)
+        }
+    ).toAuthResponse(json)
 
-    override suspend fun refreshTokens(
-        accessToken: String,
-        refreshToken: String,
-    ): AuthResponse =
-        client.submitForm(
-            url = TOKEN_URL,
-            formParameters = parameters {
-                append(GRANT_TYPE, REFRESH_TOKEN)
-                append(CLIENT_ID, WEB_FRONT)
-                append(REFRESH_TOKEN_NAME, refreshToken)
-            },
-            block = {
-                header(HttpHeaders.Authorization, bearerToken(accessToken))
-            }
-        ).toAuthResponse(json)
-
-    override suspend fun sendImage(accessToken: String, data: ByteArray): ApiResponse {
+    override suspend fun sendImage(data: ByteArray): ApiResponse {
         val response = client.post {
             url(AVATARS_POST_URL)
-            header(HttpHeaders.Authorization, bearerToken(accessToken))
         }.toApiResponse<PostImageResponseDto>(json)
 
         return if (response is ApiResponse.Success<*>) {
@@ -136,17 +112,12 @@ internal class LockBoxAccountApi(
                 setBody(data)
             }.toApiResponse<Unit>(json)
         } else {
-            val result = response as ApiResponse.Failure
-            ApiResponse.Failure(
-                errorCode = result.errorCode,
-                message = result.message
-            )
+            response as ApiResponse.Failure
         }
     }
 
-    override suspend fun getSessions(accessToken: String): ApiResponse =
+    override suspend fun getSessions(): ApiResponse =
         client.get {
-            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(SESSIONS_URL)
         }.toApiResponse<SessionsResponseDto>(json)
 
@@ -159,7 +130,6 @@ internal class LockBoxAccountApi(
     }
 
     override suspend fun updateUserInfo(
-        accessToken: String,
         email: String?,
         enabled: Boolean?,
         firstName: String?,
@@ -167,27 +137,23 @@ internal class LockBoxAccountApi(
     ): ApiResponse {
         val request = UpdateAccountRequestDto(email, enabled, firstName, lastName)
         return client.patch {
-            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(UPDATE_ACCOUNT_URL)
             setBody(request)
         }.toApiResponse<UpdateAccountResponseDto>(json)
     }
 
     override suspend fun closeOtherSessions(
-        accessToken: String,
         id: String,
     ): ApiResponse {
         val request = CloseSessionsRequestDto(id)
         return client.delete {
-            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(SESSIONS_URL)
             setBody(request)
         }.toApiResponse<CloseSessionsResponseDto>(json)
     }
 
-    override suspend fun sendLinkToChangePassword(accessToken: String): ApiResponse =
+    override suspend fun sendLinkToChangePassword(): ApiResponse =
         client.post {
-            header(HttpHeaders.Authorization, bearerToken(accessToken))
             url(RESET_PASSWORD_URL)
         }.toApiResponse<ResetPasswordResponseDto>(json)
 }

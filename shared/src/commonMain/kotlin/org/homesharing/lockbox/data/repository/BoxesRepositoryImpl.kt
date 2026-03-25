@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
@@ -16,9 +15,6 @@ import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
-import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
-import org.homesharing.lockbox.data.network.token.storage.TokenStorage
-import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
@@ -47,9 +43,6 @@ private const val PAD_ZERO = '0'
 
 internal class BoxesRepositoryImpl(
     private val boxesApi: BoxesApi,
-    private val accountApi: AccountApi,
-    private val refreshManager: RefreshManager,
-    private val tokenStorage: TokenStorage,
     private val pagingSourceFactory: () -> BoxesPagingSource,
 ) : BoxesRepository {
     override fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>> =
@@ -64,48 +57,30 @@ internal class BoxesRepositoryImpl(
 
 
     override suspend fun getBoxByMac(address: String): Response<BoxWithStatus> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.getBoxByMac(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = address
-                    )
-                },
-                mapper = BoxWithStatusResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
-
-    override suspend fun openBoxByMac(address: String): Response<OpenBox> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.openBox(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = address
-                    )
-                },
-                mapper = OpenBoxResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
-
-    override suspend fun unbindBox(address: String): Response<Unit> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse {
-                boxesApi.deleteBox(
-                    accessToken = tokenStorage.getAccessToken(),
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.getBoxByMac(
                     macAddress = address
                 )
-            }
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
+            },
+            mapper = BoxWithStatusResponseDto::toDomain
+        )
+
+    override suspend fun openBoxByMac(address: String): Response<OpenBox> =
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.openBox(
+                    macAddress = address
+                )
+            },
+            mapper = OpenBoxResponseDto::toDomain
+        )
+
+    override suspend fun unbindBox(address: String): Response<Unit> =
+        parseLockBoxApiResponse {
+            boxesApi.deleteBox(
+                macAddress = address
+            )
         }
 
     override suspend fun updateBoxName(
@@ -113,60 +88,42 @@ internal class BoxesRepositoryImpl(
         newName: String,
         ownerSub: String,
     ): Response<UpdateBox> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.updateBoxByMac(
-                        macAddress = macAddress,
-                        alias = newName,
-                        accessToken = tokenStorage.getAccessToken(),
-                        ownerSub = ownerSub
-                    )
-                },
-                mapper = UpdateBoxResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.updateBoxByMac(
+                    macAddress = macAddress,
+                    alias = newName,
+                    ownerSub = ownerSub
+                )
+            },
+            mapper = UpdateBoxResponseDto::toDomain
+        )
 
     override suspend fun updateBoxAddress(
         macAddress: String,
         newAddress: String,
         ownerSub: String,
     ): Response<UpdateBox> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.updateBoxByMac(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = macAddress,
-                        address = newAddress,
-                        ownerSub = ownerSub
-                    )
-                },
-                mapper = UpdateBoxResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.updateBoxByMac(
+                    macAddress = macAddress,
+                    address = newAddress,
+                    ownerSub = ownerSub
+                )
+            },
+            mapper = UpdateBoxResponseDto::toDomain
+        )
 
     override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.getAccessedList(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = macAddress
-                    )
-                },
-                mapper = AccessResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.getAccessedList(
+                    macAddress = macAddress
+                )
+            },
+            mapper = AccessResponseDto::toDomain
+        )
 
     override suspend fun createAccess(
         macAddress: String,
@@ -176,74 +133,48 @@ internal class BoxesRepositoryImpl(
         endTime: Long,
         alias: String,
     ): Response<Access> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.createAccess(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = macAddress,
-                        alias = alias,
-                        startTime = formatToBackendTimestamp(startDate + startTime),
-                        endTime = formatToBackendTimestamp(endDate + endTime)
-                    )
-                },
-                mapper = AccessDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.createAccess(
+                    macAddress = macAddress,
+                    alias = alias,
+                    startTime = formatToBackendTimestamp(startDate + startTime),
+                    endTime = formatToBackendTimestamp(endDate + endTime)
+                )
+            },
+            mapper = AccessDto::toDomain
+        )
 
     override suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.revokeAccess(
-                        accessToken = tokenStorage.getAccessToken(),
-                        macAddress = macAddress,
-                        tokenId = tokenId
-                    )
-                },
-                mapper = AccessRevokeResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
-
-    override suspend fun createLinkingCode(): Response<CreateLinkingCode> = try {
-        refreshTokenIfNeed()
         parseLockBoxApiResponse(
-            apiCall = { boxesApi.createLinkingCode(accessToken = tokenStorage.getAccessToken()) },
+            apiCall = {
+                boxesApi.revokeAccess(
+                    macAddress = macAddress,
+                    tokenId = tokenId
+                )
+            },
+            mapper = AccessRevokeResponseDto::toDomain
+        )
+
+    override suspend fun createLinkingCode(): Response<CreateLinkingCode> =
+        parseLockBoxApiResponse(
+            apiCall = { boxesApi.createLinkingCode() },
             mapper = CreateLinkingCodeDto::toDomain
         )
-    } catch (e: Exception) {
-        Response.Failure(e.message ?: "")
-    }
 
     override suspend fun physicalSignUp(code: Int, macAddress: String): Response<PhysicalSignUp> =
-        try {
-            refreshTokenIfNeed()
-            parseLockBoxApiResponse(
-                apiCall = {
-                    boxesApi.physicalSignUp(
-                        accessToken = tokenStorage.getAccessToken(),
-                        code = code,
-                        macAddress = macAddress
-                    )
-                },
-                mapper = PhysicalSignUpResponseDto::toDomain
-            )
-        } catch (e: Exception) {
-            Response.Failure(e.message ?: "")
-        }
+        parseLockBoxApiResponse(
+            apiCall = {
+                boxesApi.physicalSignUp(
+                    code = code,
+                    macAddress = macAddress
+                )
+            },
+            mapper = PhysicalSignUpResponseDto::toDomain
+        )
 
-    override suspend fun createTestDevice(): Response<Box> = try {
-        refreshTokenIfNeed()
-        parseLockBoxApiResponse { boxesApi.createTestDevice(accessToken = tokenStorage.getAccessToken()) }
-    } catch (e: Exception) {
-        Response.Failure(e.message ?: "")
-    }
+    override suspend fun createTestDevice(): Response<Box> =
+        parseLockBoxApiResponse { boxesApi.createTestDevice() }
 
     @OptIn(ExperimentalTime::class)
     private fun formatToBackendTimestamp(epochMillis: Long): String {
@@ -252,36 +183,12 @@ internal class BoxesRepositoryImpl(
             .toLocalDateTime(TimeZone.UTC)
 
         val year = ldt.year.toString().padStart(4, PAD_ZERO)
-        val month = ldt.month.toString().padStart(2, PAD_ZERO)
-        val day = ldt.day.toString().padStart(2, PAD_ZERO)
+        val month = ldt.month.toString().padStart(2, PAD_ZERO) // Fixed
+        val day = ldt.dayOfMonth.toString().padStart(2, PAD_ZERO) // Fixed
         val hour = ldt.hour.toString().padStart(2, PAD_ZERO)
         val minute = ldt.minute.toString().padStart(2, PAD_ZERO)
         val second = ldt.second.toString().padStart(2, PAD_ZERO)
 
         return "$year-$month-${day}T$hour:$minute:$second"
-    }
-
-    private suspend fun refreshTokenIfNeed() {
-        if (refreshManager.needsRefresh(tokenStorage.getNextRefreshTime())) {
-            refreshToken()
-        }
-    }
-
-    private suspend fun refreshToken() {
-        val tokenResponse = accountApi.refreshTokens(
-            accessToken = tokenStorage.getAccessToken(),
-            refreshToken = tokenStorage.getRefreshToken()
-        )
-
-        if (tokenResponse is AuthResponse.Success) {
-            val accessToken = tokenResponse.accessToken
-            val refreshToken = tokenResponse.refreshToken
-            val expiresIn = tokenResponse.expiresIn
-
-            with(tokenStorage) {
-                saveTokens(accessToken, refreshToken)
-                saveNextRefreshTime(expiresIn + refreshManager.currentTime)
-            }
-        }
     }
 }
