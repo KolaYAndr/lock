@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Combine
+import Shared
 
 @MainActor
 final class SignInViewModel: ObservableObject {
@@ -15,46 +17,83 @@ final class SignInViewModel: ObservableObject {
     @Published var emailError: Bool = false
     @Published var passwordError: SignInPasswordError? = nil
     @Published var isPasswordVisible: Bool = false
-    @Published var isLoading: Bool = false
-
+    
+    private let authRepository: AuthRepository
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init(authRepository: AuthRepository) {
+        self.authRepository = authRepository
+        
+        $email
+            .dropFirst()
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .sink { [weak self] _ in
+                self?.emailError = false
+            }
+            .store(in: &cancellables)
+        
+        $password
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.passwordError = nil
+            }
+            .store(in: &cancellables)
+    }
+    
     var isSignInButtonEnabled: Bool {
         !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-            !password.isEmpty &&
-            !emailError &&
-            passwordError == nil &&
-            !isLoading
+        !password.isEmpty &&
+        !emailError &&
+        passwordError == nil
     }
-
+    
     func clearEmail() {
         email = ""
         emailError = false
     }
-
+    
     func clearPassword() {
         password = ""
         passwordError = nil
     }
-
-    func updateEmail(_ newValue: String) {
-        email = newValue
-        emailError = false
-    }
-
-    func updatePassword(_ newValue: String) {
-        password = newValue
-        passwordError = nil
-    }
-
+    
     func signIn() {
         let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
-
+        
         guard trimmedEmail.isValidEmail else {
             emailError = true
             return
         }
-
-        emailError = false
-        passwordError = nil
+        
+        Task {
+            do {
+                let response = try await authRepository.loadTokensInitially(
+                    username: trimmedEmail,
+                    password: password
+                )
+                
+                switch response {
+                case let success as ResponseSuccess<KotlinUnit>:
+                    print(success)
+                case let failure as ResponseFailure:
+                    print(failure)
+                    self.passwordError = parsePasswordError(message: failure.message)
+                default:
+                    self.passwordError = .unexpected
+                }
+            } catch {
+                self.passwordError = .unexpected
+            }
+        }
+    }
+    
+    private func parsePasswordError(message: String) -> SignInPasswordError {
+        switch message {
+        case "INVALID_USER_CREDENTIALS":
+            return .invalidUserCredentials
+        default:
+            return .unexpected
+        }
     }
 }
 

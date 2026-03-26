@@ -47,7 +47,7 @@ internal struct LoginScreen: View {
             .padding(.horizontal, 32)
             .sheet(isPresented: $showModal) {
                 LoginBottomSheet()
-                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.fraction(0.6), .large])
                     .presentationDragIndicator(.visible)
             }
         }

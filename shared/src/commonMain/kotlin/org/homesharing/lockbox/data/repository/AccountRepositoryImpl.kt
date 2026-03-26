@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.data.repository
 
-import io.ktor.util.decodeBase64String
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +25,7 @@ import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 import org.homesharing.lockbox.domain.model.update_account.toDomain
 import org.homesharing.lockbox.domain.repository.AccountRepository
+import kotlin.io.encoding.Base64
 
 internal class AccountRepositoryImpl(
     private val api: AccountApi,
@@ -52,7 +52,7 @@ internal class AccountRepositoryImpl(
     private suspend fun decodeJWT(jwt: String): AccountInfoResponseDto =
         withContext(Dispatchers.Default) {
             val parts = jwt.split(".")
-            val accountInfoDto = parts[1].decodeBase64String()
+            val accountInfoDto = Base64.decode(parts[1]).decodeToString()
             json.decodeFromString<AccountInfoResponseDto>(accountInfoDto)
         }
 
