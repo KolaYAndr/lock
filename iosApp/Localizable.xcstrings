@@ -2935,13 +2935,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Start using our lockboxes today!"
+            "value" : "Start using our app today!"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Начните использовать наши локбоксы уже сегодня!"
+            "value" : "Начните использовать наше приложение уже сегодня!"
           }
         }
       }

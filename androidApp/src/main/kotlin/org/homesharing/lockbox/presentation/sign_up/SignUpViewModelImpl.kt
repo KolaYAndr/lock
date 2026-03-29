@@ -54,7 +54,10 @@ internal class SignUpViewModelImpl(
         viewModelScope.launch {
             if (uiState.value.password != uiState.value.passwordRepeated) {
                 uiState.update { it.copy(passwordRepeatedError = PasswordRepeatedError.PasswordsDontMatch) }
-            } else when (
+                return@launch
+            }
+
+            when (
                 val response = authRepository.signUp(
                     uiState.value.email,
                     uiState.value.password,
