@@ -8,6 +8,7 @@ on:
       - 'androidApp/**'
       - 'gradle/**'
       - 'build.gradle.kts'
+      - '.github/android.yaml'
   pull_request:
     branches: [ "master" ]
     paths:
@@ -15,6 +16,7 @@ on:
       - 'androidApp/**'
       - 'gradle/**'
       - 'build.gradle.kts'
+      - '.github/android.yaml'
 
 jobs:
   build:
