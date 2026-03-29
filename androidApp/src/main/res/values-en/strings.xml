@@ -49,7 +49,6 @@
     <string name="delete">Delete</string>
     <string name="app_version">App version %s</string>
     <string name="legal_info">LLC “LockBox: smart devices for comfortable living”</string>
-    <string name="year_lockbox">©2025, LockBox</string>
     <string name="user_agreement">User agreement</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="ready">Done</string>
@@ -74,13 +73,11 @@
     <string name="change_phone_number">Change phone number</string>
     <string name="want_to_change_phone_number_question">Want to change phone?</string>
     <string name="new_phone_number_will_be_used_for">The new phone number will be used for access recovery and notifications</string>
-    <string name="phone_number_placeholder">+7 (xxx) xxx-xx-xx</string>
     <string name="add_new_phone_number_suggestion">Add phone number</string>
     <string name="indicate_phone_number_for_use">Specify the number to be used for access recovery and notifications</string>
     <string name="add_phone_number">Add phone number</string>
     <string name="phone_number_successfully_changed">Phone successfully added</string>
     <string name="now_you_can_use_new_phone_number">Now you can use the new phone for access recovery and notifications</string>
-    <string name="pin_hint">_</string>
     <string name="confirm_phone_number">Confirm phone number</string>
     <string name="we_sent_message_to_indicated_number">We sent a confirmation code to the specified number</string>
     <string name="confirm">Confirm</string>
@@ -102,7 +99,6 @@
     <string name="open">Open</string>
     <string name="wifi_network">Wi-Fi network</string>
     <string name="signal_level">Signal level</string>
-    <string name="battery_percent">%d%%</string>
     <string name="access_device">Device access</string>
     <string name="device_address">Device address</string>
     <string name="device_mac_address">Device MAC address</string>

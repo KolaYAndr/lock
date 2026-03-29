@@ -55,7 +55,7 @@
     <string name="delete">Удалить</string>
     <string name="app_version">Версия приложения %s</string>
     <string name="legal_info">ООО “Локбокс: умные устройства для комфортной жизни”</string>
-    <string name="year_lockbox">©2025, LockBox</string>
+    <string name="year_lockbox" translatable="false">©2025, LockBox</string>
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="ready">Готово</string>
@@ -80,13 +80,13 @@
     <string name="change_phone_number">Изменить номер телефона</string>
     <string name="want_to_change_phone_number_question">Хотите изменить телефон?</string>
     <string name="new_phone_number_will_be_used_for">Новый телефон будет использоваться для восстановления доступа и получения уведомлений</string>
-    <string name="phone_number_placeholder">+7 (ххх) ххх-хх-хх</string>
+    <string name="phone_number_placeholder" translatable="false">+7 (ххх) ххх-хх-хх</string>
     <string name="add_new_phone_number_suggestion">Добавьте номер телефона</string>
-    <string name="indicate_phone_number_for_use">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений</string>
+    <string name="indicate_phone_number_for_use" translatable="false">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений</string>
     <string name="add_phone_number">Добавить номер телефона</string>
     <string name="phone_number_successfully_changed">Телефон успешно добавлен</string>
     <string name="now_you_can_use_new_phone_number">Теперь Вы можете использовать новый телефон для восстановления доступа и получения уведомлений</string>
-    <string name="pin_hint">_</string>
+    <string name="pin_hint" translatable="false">_</string>
     <string name="confirm_phone_number">Подтвердите номер телефона</string>
     <string name="we_sent_message_to_indicated_number">Мы отправили код подтверждения на указанный номер</string>
     <string name="confirm">Подтвердить</string>
@@ -108,7 +108,7 @@
     <string name="open">Открыть</string>
     <string name="wifi_network">Wi-Fi cеть</string>
     <string name="signal_level">Уровень сигнала</string>
-    <string name="battery_percent">%d%%</string>
+    <string name="battery_percent" translatable="false">%d%%</string>
     <string name="access_device">Доступ к устройству</string>
     <string name="device_address">Адрес устройства</string>
     <string name="device_mac_address">Мак-адрес устройства</string>
