@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import org.homesharing.lockbox.navigation.routes.Route
@@ -42,7 +44,6 @@ internal fun AuthenticatedNavigation(
             .fillMaxSize()
             .background(LockBoxTheme.colors.grey950)
             .padding(
-                bottom = padding.calculateBottomPadding(),
                 start = padding.calculateStartPadding(layoutDirection),
                 end = padding.calculateEndPadding(layoutDirection)
             ),
@@ -50,7 +51,7 @@ internal fun AuthenticatedNavigation(
         transitionSpec = enterTransition,
         popTransitionSpec = exitTransition,
         predictivePopTransitionSpec = popExitTransition,
-        entries = state.toEntries(
+        entries = (state.toEntries(
             entryProvider {
                 entry<Route.Boxes> {
                     LockboxesScreen(
@@ -126,6 +127,6 @@ internal fun AuthenticatedNavigation(
                     )
                 }
             }
-        )
+        )) as List<NavEntry<NavKey>>
     )
 }

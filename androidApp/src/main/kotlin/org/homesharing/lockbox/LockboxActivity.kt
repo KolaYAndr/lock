@@ -1,12 +1,13 @@
 package org.homesharing.lockbox
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -18,14 +19,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation3.runtime.NavKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -33,7 +32,6 @@ import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.navigation.AuthenticatedNavigation
 import org.homesharing.lockbox.navigation.NavigationState
 import org.homesharing.lockbox.navigation.Navigator
-import org.homesharing.lockbox.navigation.deeplinks.deepLinkMap
 import org.homesharing.lockbox.navigation.rememberNavigationState
 import org.homesharing.lockbox.navigation.routes.Route
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
@@ -50,13 +48,7 @@ class LockboxActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreenWithCondition()
-        val style = SystemBarStyle.dark(ContextCompat.getColor(this, R.color.Grey950))
-        enableEdgeToEdge(
-            statusBarStyle = style,
-            navigationBarStyle = style
-        )
-
-        val key = parseDeepLinkOrDefaultStart(intent.data)
+        enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
         setContent {
@@ -66,7 +58,7 @@ class LockboxActivity : ComponentActivity() {
             CollectSnackbarEvents(snackbarHostState)
 
             val navigationState = rememberNavigationState(
-                startRoute = key,
+                startRoute = Route.Boxes,
                 topLevelRoutes = topLevelRoutes.keys,
             )
 
@@ -96,11 +88,17 @@ class LockboxActivity : ComponentActivity() {
             modifier = Modifier.background(LockBoxTheme.colors.grey950),
             bottomBar = {
                 if (isLoggedIn == LoginState.LoggedIn) {
-                    LockboxNavBar(
-                        selectedKey = navigationState.topLevelRoute,
-                        onSelectKey = navigator::navigate,
-                        topLevelRoutes = topLevelRoutes
-                    )
+                    AnimatedVisibility(
+                        visible = navigator.currentScreen.showBottomBar,
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        LockboxNavBar(
+                            selectedKey = navigationState.topLevelRoute,
+                            onSelectKey = navigator::navigate,
+                            topLevelRoutes = topLevelRoutes
+                        )
+                    }
                 }
             },
             snackbarHost = {
@@ -130,9 +128,6 @@ class LockboxActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun parseDeepLinkOrDefaultStart(uri: Uri?): NavKey = deepLinkMap[uri] ?: Route.Boxes
-
 
     private fun installSplashScreenWithCondition() {
         val splashScreen = installSplashScreen()

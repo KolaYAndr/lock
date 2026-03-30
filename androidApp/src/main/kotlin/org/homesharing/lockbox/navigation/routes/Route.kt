@@ -3,41 +3,68 @@ package org.homesharing.lockbox.navigation.routes
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+@Serializable
 internal sealed interface Route : NavKey {
+    val showBottomBar: Boolean
 
     @Serializable
-    data object Boxes : Route
+    data object Boxes : Route {
+        override val showBottomBar = true
+    }
 
     @Serializable
-    data class DetailedBox(val macAddress: String) : Route
+    data class DetailedBox(val macAddress: String) : Route {
+        override val showBottomBar = false
+
+    }
 
     @Serializable
-    data object Contracts : Route
+    data object Contracts : Route {
+        override val showBottomBar = true
+    }
 
     @Serializable
-    data object Settings : Route
+    data object Settings : Route {
+        override val showBottomBar = true
+    }
 
     @Serializable
-    data object Account : Route
+    data object Account : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object AddPhoneNumber : Route
+    data object AddPhoneNumber : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object ChangeEmail : Route
+    data object ChangeEmail : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object EmailChangedSuccessfully : Route
+    data object EmailChangedSuccessfully : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object Warning : Route
+    data object Warning : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object Security : Route
+    data object Security : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object ActiveSessions : Route
+    data object ActiveSessions : Route {
+        override val showBottomBar: Boolean = false
+    }
 
     @Serializable
-    data object AboutApp : Route
+    data object AboutApp : Route {
+        override val showBottomBar: Boolean = false
+    }
 }

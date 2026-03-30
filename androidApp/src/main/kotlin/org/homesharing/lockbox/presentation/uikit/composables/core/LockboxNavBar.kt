@@ -16,14 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
+import org.homesharing.lockbox.navigation.routes.Route
 import org.homesharing.lockbox.navigation.routes.TopLevelRouteInfo
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
 internal fun LockboxNavBar(
     topLevelRoutes: Map<out NavKey, TopLevelRouteInfo>,
-    selectedKey: NavKey,
-    onSelectKey: (NavKey) -> Unit,
+    selectedKey: Route,
+    onSelectKey: (Route) -> Unit,
 ) {
     val grey800 = LockBoxTheme.colors.grey800
     val width = with(LocalDensity.current) { 0.5.dp.toPx() }
@@ -44,7 +45,7 @@ internal fun LockboxNavBar(
         topLevelRoutes.forEach { (topLevelDestination, data) ->
             NavigationBarItem(
                 selected = selectedKey == topLevelDestination,
-                onClick = { onSelectKey(topLevelDestination) },
+                onClick = { onSelectKey(topLevelDestination as Route) },
                 icon = {
                     Icon(
                         painter = painterResource(data.icon),
