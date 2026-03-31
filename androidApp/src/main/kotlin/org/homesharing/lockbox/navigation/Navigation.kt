@@ -1,14 +1,11 @@
 package org.homesharing.lockbox.navigation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -36,16 +33,18 @@ internal fun AuthenticatedNavigation(
     navigator: Navigator,
     state: NavigationState,
     modifier: Modifier = Modifier,
-    padding: PaddingValues,
+    startPadding: Dp,
+    endPadding: Dp,
+    bottomPadding: Dp,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
     NavDisplay(
         modifier = modifier
             .fillMaxSize()
             .background(LockBoxTheme.colors.grey950)
             .padding(
-                start = padding.calculateStartPadding(layoutDirection),
-                end = padding.calculateEndPadding(layoutDirection)
+                start = startPadding,
+                end = endPadding,
+                bottom = bottomPadding,
             ),
         onBack = navigator::navBack,
         transitionSpec = enterTransition,

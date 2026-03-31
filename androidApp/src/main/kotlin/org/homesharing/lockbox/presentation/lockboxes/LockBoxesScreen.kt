@@ -164,7 +164,7 @@ private fun LockBoxScreen(
                 top = 12.dp + topPadding,
                 start = 16.dp,
                 end = 16.dp,
-                bottom = 48.dp
+                bottom = 24.dp
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
             state = listState

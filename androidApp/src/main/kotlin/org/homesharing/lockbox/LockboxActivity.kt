@@ -9,6 +9,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -19,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -111,6 +115,7 @@ class LockboxActivity : ComponentActivity() {
                 }
             },
         ) { innerPadding ->
+            val layoutDirection = LocalLayoutDirection.current
             AnimatedContent(
                 targetState = isLoggedIn,
                 label = "authentication $isLoggedIn",
@@ -120,7 +125,13 @@ class LockboxActivity : ComponentActivity() {
                     AuthenticatedNavigation(
                         navigator = navigator,
                         state = navigationState,
-                        padding = innerPadding,
+                        startPadding = innerPadding.calculateStartPadding(layoutDirection),
+                        endPadding = innerPadding.calculateEndPadding(layoutDirection),
+                        bottomPadding = if (navigator.currentScreen.showBottomBar) {
+                            innerPadding.calculateBottomPadding()
+                        } else {
+                            0.dp
+                        }
                     )
                 } else {
                     LoginScreen()
