@@ -30,9 +30,7 @@ import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
-internal fun AboutScreen(
-    onNavBack: () -> Unit,
-) {
+internal fun AboutScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,12 +38,6 @@ internal fun AboutScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TitledTopBar(
-            title = stringResource(R.string.about_app),
-            onNavigate = onNavBack,
-            modifier = Modifier.fillMaxWidth()
-        )
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -110,6 +102,15 @@ internal fun AboutScreen(
 }
 
 @Composable
+internal fun AboutAppTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = stringResource(R.string.about_app),
+        onNavigate = onNavBack,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
 private fun Agreement(
     text: String,
     onClick: () -> Unit,
@@ -141,6 +142,6 @@ private fun Agreement(
 @Composable
 private fun PreviewAboutApp() {
     LockBoxTheme {
-        AboutScreen { }
+        AboutScreen()
     }
 }

@@ -25,12 +25,10 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SecurityScreen(
-    onNavBack: () -> Unit,
     navigateToActiveSessions: () -> Unit,
     securityViewModel: SecurityViewModel = koinViewModel(),
 ) {
     SecurityScreen(
-        onNavBack = onNavBack,
         onToActiveSessions = navigateToActiveSessions,
         onChangePassword = securityViewModel::sendLinkToChangePassword,
         modifier = Modifier.fillMaxSize()
@@ -39,7 +37,6 @@ internal fun SecurityScreen(
 
 @Composable
 private fun SecurityScreen(
-    onNavBack: () -> Unit,
     onToActiveSessions: () -> Unit,
     onChangePassword: () -> Unit,
     modifier: Modifier = Modifier,
@@ -49,12 +46,6 @@ private fun SecurityScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TitledTopBar(
-            title = stringResource(R.string.security),
-            onNavigate = onNavBack,
-            modifier = Modifier.fillMaxWidth()
-        )
-
         SecurityElement(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,6 +64,15 @@ private fun SecurityScreen(
             onClick = onToActiveSessions
         )
     }
+}
+
+@Composable
+internal fun SecurityTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = stringResource(R.string.security),
+        onNavigate = onNavBack,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -114,7 +114,7 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
 private fun PreviewSecurityScreenChangePassword() {
     LockBoxTheme {
         SecurityScreen(
-            {}, {}, {},
+            {}, {},
             modifier = Modifier.fillMaxSize(),
         )
     }

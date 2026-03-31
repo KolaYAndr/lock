@@ -53,7 +53,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun AccountScreen(
-    onNavBack: () -> Unit,
     accountViewModel: AccountViewModel = koinViewModel(),
 ) {
     val accountUiState by accountViewModel.uiState.collectAsStateWithLifecycle()
@@ -62,7 +61,6 @@ internal fun AccountScreen(
         onChangeName = accountViewModel::onNameChange,
         onChangeSurname = accountViewModel::onSurnameChange,
         onSendImage = accountViewModel::sendImage,
-        onNavigateBack = onNavBack,
         onDelete = accountViewModel::deleteAccount,
         modifier = Modifier.fillMaxSize(),
     )
@@ -74,7 +72,6 @@ private fun AccountScreen(
     onChangeName: (String) -> Unit,
     onChangeSurname: (String) -> Unit,
     onSendImage: (ByteArray) -> Unit,
-    onNavigateBack: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -101,11 +98,6 @@ private fun AccountScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TitledTopBar(
-            title = stringResource(R.string.account),
-            onNavigate = { onNavigateBack() },
-            modifier = Modifier.fillMaxWidth()
-        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -210,6 +202,15 @@ private fun AccountScreen(
 }
 
 @Composable
+internal fun AccountTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = stringResource(R.string.account),
+        onNavigate = { onNavBack() },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
 private fun DeleteAccountDialog(
     onHideDialog: () -> Unit,
     onDelete: () -> Unit,
@@ -289,7 +290,6 @@ private fun PreviewAccount() {
         val accountUiState = AccountUiState()
         AccountScreen(
             accountUiState,
-            {},
             {},
             {},
             {},

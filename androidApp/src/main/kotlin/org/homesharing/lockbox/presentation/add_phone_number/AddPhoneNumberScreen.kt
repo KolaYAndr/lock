@@ -78,12 +78,6 @@ private fun AddPhoneNumberScreen(
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950)
     ) {
-        TitledTopBar(
-            title = stringResource(R.string.change_phone_number),
-            onNavigate = onNavBack,
-            modifier = Modifier.fillMaxWidth()
-        )
-
         when (uiState.step) {
             AddPhoneNumberStep.ConfirmPhoneNumber -> {
                 ConfirmNumberStep(
@@ -114,6 +108,15 @@ private fun AddPhoneNumberScreen(
             }
         }
     }
+}
+
+@Composable
+internal fun AddPhoneNumberTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = stringResource(R.string.change_phone_number),
+        onNavigate = onNavBack,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable

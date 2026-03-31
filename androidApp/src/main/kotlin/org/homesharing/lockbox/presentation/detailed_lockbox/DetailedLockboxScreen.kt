@@ -1,24 +1,17 @@
 package org.homesharing.lockbox.presentation.detailed_lockbox
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +42,7 @@ import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.uikit.composables.HelpTextWithIcon
 import org.homesharing.lockbox.presentation.uikit.composables.IconTextArrow
+import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
@@ -85,7 +79,6 @@ internal fun DetailedLockboxScreen(
     DetailedLockboxScreen(
         uiState = uiState,
         macAddress = mac,
-        onNavBack = onNavBack,
         onOpenBox = detailedLockBoxViewModel::openBox,
         onUnbindDevice = detailedLockBoxViewModel::unbindDevice,
         onSaveAddress = detailedLockBoxViewModel::saveAddress,
@@ -98,7 +91,6 @@ internal fun DetailedLockboxScreen(
 private fun DetailedLockboxScreen(
     uiState: DetailedLockBoxUiState,
     macAddress: String,
-    onNavBack: () -> Unit,
     onOpenBox: () -> Unit,
     onUnbindDevice: () -> Unit,
     onSaveAddress: (String) -> Unit,
@@ -112,230 +104,186 @@ private fun DetailedLockboxScreen(
     var showChangeNameBottomSheet by remember { mutableStateOf(false) }
     var showChangeAddressBottomSheet by remember { mutableStateOf(false) }
     var showHelpModal by remember { mutableStateOf(false) }
-
-    val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
-        .calculateTopPadding()
-    Column(
-        modifier = modifier
-            .background(LockBoxTheme.colors.grey950)
-            .padding(top = topPadding),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+    LazyColumn(
+        modifier = modifier.background(LockBoxTheme.colors.grey950),
+        contentPadding = PaddingValues(bottom = 12.dp, start = 16.dp, end = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-        ) {
-            IconButton(
-                onClick = onNavBack,
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 48.dp, horizontal = 32.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
-                    tint = LockBoxTheme.colors.grey500,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterStart)
+                AnimatedContent(
+                    targetState = uiState.isBoxOpen,
+                ) { opened ->
+                    when (opened) {
+                        true -> Icon(
+                            painter = painterResource(R.drawable.lock_open),
+                            contentDescription = null,
+                            tint = LockBoxTheme.colors.grey500,
+                            modifier = Modifier.size(64.dp),
+                        )
+
+                        false -> Icon(
+                            painter = painterResource(R.drawable.lock),
+                            contentDescription = null,
+                            tint = LockBoxTheme.colors.grey500,
+                            modifier = Modifier.size(64.dp),
+                        )
+                    }
+                }
+
+                Text(
+                    text = uiState.boxName,
+                    style = LockBoxTheme.typography.titleMedium,
+                    color = LockBoxTheme.colors.grey100,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+
+                Text(
+                    text = uiState.address,
+                    style = LockBoxTheme.typography.bodyMedium,
+                    color = LockBoxTheme.colors.grey500,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                LockboxButton(
+                    onClick = { showOpenDeviceDialog = true },
+                    text = stringResource(R.string.open),
+                    paddingValues = PaddingValues(10.dp),
+                    modifier = Modifier.padding(top = 16.dp)
                 )
             }
-
-            Text(
-                text = uiState.boxName,
-                style = LockBoxTheme.typography.titleSmall,
-                color = LockBoxTheme.colors.grey100,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.align(Alignment.Center)
-            )
         }
 
-        LockboxHorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        )
+        item {
+            LockboxGroup(
+                shape = LockBoxTheme.shape.roundedCornerShape12,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
+            ) {
+                StatusInfo(
+                    statusImage = painterResource(R.drawable.wifi_zero),
+                    statusCategory = stringResource(R.string.wifi_network),
+                    status = "Network Name", // todo переделать всё,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(bottom = 12.dp, start = 16.dp, end = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 48.dp, horizontal = 32.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AnimatedContent(
-                        targetState = uiState.isBoxOpen,
-                    ) { opened ->
-                        when (opened) {
-                            true -> Icon(
-                                painter = painterResource(R.drawable.lock_open),
-                                contentDescription = null,
-                                tint = LockBoxTheme.colors.grey500,
-                                modifier = Modifier.size(64.dp),
-                            )
-
-                            false -> Icon(
-                                painter = painterResource(R.drawable.lock),
-                                contentDescription = null,
-                                tint = LockBoxTheme.colors.grey500,
-                                modifier = Modifier.size(64.dp),
-                            )
-                        }
-                    }
-
-                    Text(
-                        text = uiState.boxName,
-                        style = LockBoxTheme.typography.titleMedium,
-                        color = LockBoxTheme.colors.grey100,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 12.dp)
-                    )
-
-                    Text(
-                        text = uiState.address,
-                        style = LockBoxTheme.typography.bodyMedium,
-                        color = LockBoxTheme.colors.grey500,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-
-                    LockboxButton(
-                        onClick = { showOpenDeviceDialog = true },
-                        text = stringResource(R.string.open),
-                        paddingValues = PaddingValues(10.dp),
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
-            }
-
-            item {
-                LockboxGroup(
-                    shape = LockBoxTheme.shape.roundedCornerShape12,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                ) {
+                uiState.signalStrength?.let { signal ->
                     StatusInfo(
-                        statusImage = painterResource(R.drawable.wifi_zero),
-                        statusCategory = stringResource(R.string.wifi_network),
-                        status = "Network Name", // todo переделать всё,
+                        statusImage = getSignalImage(signal),
+                        statusCategory = stringResource(R.string.signal_level),
+                        status = getSignalStatus(signal),
+                        alertImage = {
+                            Icon(
+                                painter = painterResource(R.drawable.circle_alert),
+                                contentDescription = null,
+                                tint = getSignalAlertColor(signal)
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
-
-                    uiState.signalStrength?.let { signal ->
-                        StatusInfo(
-                            statusImage = getSignalImage(signal),
-                            statusCategory = stringResource(R.string.signal_level),
-                            status = getSignalStatus(signal),
-                            alertImage = {
-                                Icon(
-                                    painter = painterResource(R.drawable.circle_alert),
-                                    contentDescription = null,
-                                    tint = getSignalAlertColor(signal)
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    uiState.batteryLevel?.let { level ->
-                        StatusInfo(
-                            statusImage = getBatteryImage(level),
-                            statusCategory = stringResource(R.string.battery_level),
-                            status = stringResource(R.string.battery_percent, level),
-                            alertImage = {
-                                Icon(
-                                    painter = painterResource(R.drawable.circle_alert),
-                                    contentDescription = null,
-                                    tint = getBatteryAlertColor(level)
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
                 }
-            }
 
-            item {
-                LockboxGroup(
-                    shape = LockBoxTheme.shape.roundedCornerShape12,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                ) {
-                    ActionableProperty(
-                        title = stringResource(R.string.access_device),
-                        onClick = { showAccessModal = true },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    )
-                }
-            }
-
-            item {
-                LockboxGroup(
-                    shape = LockBoxTheme.shape.roundedCornerShape12,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                ) {
-                    ActionableProperty(
-                        title = stringResource(R.string.device_address),
-                        subtitle = uiState.address,
-                        onClick = { showChangeAddressBottomSheet = true },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    ActionableProperty(
-                        title = stringResource(R.string.device_name),
-                        subtitle = uiState.boxName,
-                        onClick = { showChangeNameBottomSheet = true },
+                uiState.batteryLevel?.let { level ->
+                    StatusInfo(
+                        statusImage = getBatteryImage(level),
+                        statusCategory = stringResource(R.string.battery_level),
+                        status = stringResource(R.string.battery_percent, level),
+                        alertImage = {
+                            Icon(
+                                painter = painterResource(R.drawable.circle_alert),
+                                contentDescription = null,
+                                tint = getBatteryAlertColor(level)
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
+        }
 
-            item {
-                LockboxGroup(
+        item {
+            LockboxGroup(
+                shape = LockBoxTheme.shape.roundedCornerShape12,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
+            ) {
+                ActionableProperty(
+                    title = stringResource(R.string.access_device),
+                    onClick = { showAccessModal = true },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                ) {
-                    IconTextArrow(
-                        painter = painterResource(R.drawable.circle_alert),
-                        text = stringResource(R.string.about_device),
-                        onClick = { showAboutDeviceModal = true },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                    IconTextArrow(
-                        painter = painterResource(R.drawable.headset),
-                        text = stringResource(R.string.help),
-                        onClick = { showHelpModal = true },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-
-            item {
-                LockboxTextIconButton(
-                    text = stringResource(R.string.unbind_device),
-                    icon = painterResource(R.drawable.trash),
-                    onClick = { showUnbindDeviceDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding(),
+                        .padding(vertical = 4.dp)
                 )
             }
+        }
+
+        item {
+            LockboxGroup(
+                shape = LockBoxTheme.shape.roundedCornerShape12,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
+            ) {
+                ActionableProperty(
+                    title = stringResource(R.string.device_address),
+                    subtitle = uiState.address,
+                    onClick = { showChangeAddressBottomSheet = true },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                ActionableProperty(
+                    title = stringResource(R.string.device_name),
+                    subtitle = uiState.boxName,
+                    onClick = { showChangeNameBottomSheet = true },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        item {
+            LockboxGroup(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
+            ) {
+                IconTextArrow(
+                    painter = painterResource(R.drawable.circle_alert),
+                    text = stringResource(R.string.about_device),
+                    onClick = { showAboutDeviceModal = true },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+
+                IconTextArrow(
+                    painter = painterResource(R.drawable.headset),
+                    text = stringResource(R.string.help),
+                    onClick = { showHelpModal = true },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        item {
+            LockboxTextIconButton(
+                text = stringResource(R.string.unbind_device),
+                icon = painterResource(R.drawable.trash),
+                onClick = { showUnbindDeviceDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding(),
+            )
         }
     }
 
@@ -397,6 +345,15 @@ private fun DetailedLockboxScreen(
             address = uiState.address,
         )
     }
+}
+
+@Composable
+internal fun DetailLockboxTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = "",
+        onNavigate = onNavBack,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -582,7 +539,11 @@ private fun AboutDeviceModalSheet(
         }
 
         HelpTextWithIcon(
-            onClick = onHelpClick
+            onClick = onHelpClick,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .navigationBarsPadding()
+                .padding(bottom = 8.dp)
         )
     }
 }
@@ -720,7 +681,7 @@ private fun ActionableProperty(
     title: String,
     subtitle: String? = null,
     onClick: () -> Unit,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = Modifier
@@ -764,7 +725,7 @@ private fun StatusInfo(
     statusCategory: String,
     status: String,
     alertImage: (@Composable () -> Unit)? = null,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.padding(vertical = 10.dp, horizontal = 16.dp),
@@ -813,7 +774,7 @@ private fun PreviewDetailScreen() {
         DetailedLockboxScreen(
             state,
             "",
-            {}, {}, {}, {}, {},
+            {}, {}, {}, {},
             Modifier.fillMaxSize()
         )
     }

@@ -74,12 +74,6 @@ private fun ChangeEmailScreen(
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950)
     ) {
-        TitledTopBar(
-            title = stringResource(R.string.change_email),
-            onNavigate = onNavBack,
-            modifier = Modifier.fillMaxWidth()
-        )
-
         when (uiState.changeEmailStep) {
             ChangeEmailStep.ConfirmNewEmail -> {
                 ConfirmNewEmailStep(changeEmail = changeEmail)
@@ -100,6 +94,15 @@ private fun ChangeEmailScreen(
             }
         }
     }
+}
+
+@Composable
+internal fun ChangeEmailTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = stringResource(R.string.change_email),
+        onNavigate = onNavBack,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable

@@ -37,9 +37,13 @@ internal fun AuthenticatedNavigation(
     startPadding: Dp,
     endPadding: Dp,
     bottomPaddingPx: Float,
+    topPaddingPx: Float,
 ) {
     val bottomPadding = with(LocalDensity.current) {
         bottomPaddingPx.toDp()
+    }
+    val topPadding = with(LocalDensity.current) {
+        topPaddingPx.toDp()
     }
     NavDisplay(
         modifier = modifier
@@ -49,6 +53,7 @@ internal fun AuthenticatedNavigation(
                 start = startPadding,
                 end = endPadding,
                 bottom = bottomPadding,
+                top = topPadding,
             ),
         onBack = navigator::navBack,
         transitionSpec = enterTransition,
@@ -82,9 +87,7 @@ internal fun AuthenticatedNavigation(
                 }
 
                 entry<Route.Account> {
-                    AccountScreen(
-                        onNavBack = navigator::navBack
-                    )
+                    AccountScreen()
                 }
 
                 entry<Route.AddPhoneNumber> {
@@ -111,7 +114,6 @@ internal fun AuthenticatedNavigation(
 
                 entry<Route.Security> {
                     SecurityScreen(
-                        onNavBack = navigator::navBack,
                         navigateToActiveSessions = {
                             navigator.navigate(Route.ActiveSessions)
                         }
@@ -119,15 +121,11 @@ internal fun AuthenticatedNavigation(
                 }
 
                 entry<Route.ActiveSessions> {
-                    ActiveSessionScreen(
-                        onNavBack = navigator::navBack,
-                    )
+                    ActiveSessionScreen()
                 }
 
                 entry<Route.AboutApp> {
-                    AboutScreen(
-                        onNavBack = navigator::navBack,
-                    )
+                    AboutScreen()
                 }
             }
         )) as List<NavEntry<NavKey>>

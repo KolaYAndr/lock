@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -79,7 +80,9 @@ private fun SettingsScreen(
         val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
             .calculateTopPadding()
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(LockBoxTheme.colors.grey950),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(

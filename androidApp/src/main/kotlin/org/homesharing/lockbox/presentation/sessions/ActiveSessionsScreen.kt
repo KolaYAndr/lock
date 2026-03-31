@@ -59,13 +59,11 @@ private val fourteenDaysMillis = TimeUnit.DAYS.toMillis(14)
 
 @Composable
 internal fun ActiveSessionScreen(
-    onNavBack: () -> Unit,
     activeSessionsViewModel: ActiveSessionsViewModel = koinViewModel(),
 ) {
     val uiState by activeSessionsViewModel.uiState.collectAsStateWithLifecycle()
     ActiveSessionScreen(
         activeSessionsUiState = uiState,
-        onNavBack = onNavBack,
         onFinishSessions = activeSessionsViewModel::finishOtherSessions,
         onRefresh = activeSessionsViewModel::refreshSessions,
         modifier = Modifier.fillMaxSize()
@@ -76,107 +74,96 @@ internal fun ActiveSessionScreen(
 @Composable
 private fun ActiveSessionScreen(
     activeSessionsUiState: ActiveSessionsUiState,
-    onNavBack: () -> Unit,
     onFinishSessions: () -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showCloseSessionsDialog by remember { mutableStateOf(false) }
-    Column(
-        modifier = modifier.background(LockBoxTheme.colors.grey950),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+    LockBoxPullToRefresh(
+        onRefresh = onRefresh,
+        isRefreshing = activeSessionsUiState.isRefreshing,
+        state = rememberPullToRefreshState(),
+        modifier = modifier,
     ) {
-        TitledTopBar(
-            title = stringResource(R.string.active_sessions),
-            onNavigate = onNavBack,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        LockBoxPullToRefresh(
-            onRefresh = onRefresh,
-            isRefreshing = activeSessionsUiState.isRefreshing,
-            state = rememberPullToRefreshState(),
+        LazyColumn(
+            modifier = Modifier
+                .background(LockBoxTheme.colors.grey950)
+                .fillMaxSize()
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
-            ) {
-                item {
-                    Text(
-                        text = stringResource(R.string.this_device),
-                        style = LockBoxTheme.typography.subHeadlineLarge,
-                        color = LockBoxTheme.colors.grey500,
-                        modifier = Modifier.padding(top = 12.dp)
+            item {
+                Text(
+                    text = stringResource(R.string.this_device),
+                    style = LockBoxTheme.typography.subHeadlineLarge,
+                    color = LockBoxTheme.colors.grey500,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+            }
+
+            item {
+                val context = LocalContext.current
+                val connectivityManager =
+                    remember { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
+                val ip = remember {
+                    connectivityManager.getLinkProperties(connectivityManager.activeNetwork)?.linkAddresses
+                        ?.map { it.address.hostAddress }
+                        ?.firstOrNull { it != null && !it.contains(":") }
+                }
+                LockboxGroup(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp, bottom = 12.dp),
+                ) {
+                    Device(
+                        painter = painterResource(R.drawable.smartphone),
+                        name = "${Build.MANUFACTURER} ${Build.DEVICE}".uppercase(),
+                        location = ip.orEmpty(),
+                        accessTime = stringResource(R.string.right_now),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+
+                    LockboxButton(
+                        onClick = { showCloseSessionsDialog = true },
+                        text = stringResource(R.string.finish_all_other_sessions),
+                        style = LockboxButtonStyle.red(),
+                        paddingValues = PaddingValues(0.dp),
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
                     )
                 }
+            }
 
-                item {
-                    val context = LocalContext.current
-                    val connectivityManager =
-                        remember { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
-                    val ip = remember {
-                        connectivityManager.getLinkProperties(connectivityManager.activeNetwork)?.linkAddresses
-                            ?.map { it.address.hostAddress }
-                            ?.firstOrNull { it != null && !it.contains(":") }
-                    }
-                    LockboxGroup(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 6.dp, bottom = 12.dp),
-                    ) {
+            item {
+                Text(
+                    text = stringResource(R.string.active_sessions),
+                    style = LockBoxTheme.typography.subHeadlineLarge,
+                    color = LockBoxTheme.colors.grey500,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+            }
+
+            item {
+                LockboxGroup(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp),
+                ) {
+                    activeSessionsUiState.sessions.forEachIndexed { index, session ->
                         Device(
-                            painter = painterResource(R.drawable.smartphone),
-                            name = "${Build.MANUFACTURER} ${Build.DEVICE}".uppercase(),
-                            location = ip.orEmpty(),
-                            accessTime = stringResource(R.string.right_now),
+                            painter = painterResource(R.drawable.monitor_smartphone),
+                            name = stringResource(R.string.unknown_device),
+                            location = session.ipAddress,
+                            accessTime = lastAccessedString(session.lastAccessed),
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                        LockboxButton(
-                            onClick = { showCloseSessionsDialog = true },
-                            text = stringResource(R.string.finish_all_other_sessions),
-                            style = LockboxButtonStyle.red(),
-                            paddingValues = PaddingValues(0.dp),
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .fillMaxWidth()
-                        )
-                    }
-                }
-
-                item {
-                    Text(
-                        text = stringResource(R.string.active_sessions),
-                        style = LockBoxTheme.typography.subHeadlineLarge,
-                        color = LockBoxTheme.colors.grey500,
-                        modifier = Modifier.padding(top = 12.dp)
-                    )
-                }
-
-                item {
-                    LockboxGroup(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 6.dp),
-                    ) {
-                        activeSessionsUiState.sessions.forEachIndexed { index, session ->
-                            Device(
-                                painter = painterResource(R.drawable.monitor_smartphone),
-                                name = stringResource(R.string.unknown_device),
-                                location = session.ipAddress,
-                                accessTime = lastAccessedString(session.lastAccessed),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            if (index != activeSessionsUiState.sessions.lastIndex) {
-                                LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-                            }
+                        if (index != activeSessionsUiState.sessions.lastIndex) {
+                            LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
                         }
                     }
                 }
@@ -190,6 +177,15 @@ private fun ActiveSessionScreen(
             )
         }
     }
+}
+
+@Composable
+internal fun ActiveSessionsTopBar(onNavBack: () -> Unit) {
+    TitledTopBar(
+        title = stringResource(R.string.active_sessions),
+        onNavigate = onNavBack,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -293,6 +289,6 @@ private fun Device(
 private fun PreviewActiveSessions() {
     LockBoxTheme {
         val state = ActiveSessionsUiState(listOf(Session("", System.currentTimeMillis(), "")))
-        ActiveSessionScreen(state, {}, {}, {}, Modifier.fillMaxSize())
+        ActiveSessionScreen(state, {}, {}, Modifier.fillMaxSize())
     }
 }

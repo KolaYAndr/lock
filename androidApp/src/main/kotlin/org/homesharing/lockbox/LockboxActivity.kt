@@ -24,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -107,6 +106,19 @@ class LockboxActivity : ComponentActivity() {
                     }
                 }
             },
+            topBar = {
+                if (isLoggedIn == LoginState.LoggedIn) {
+                    AnimatedVisibility(
+                        visible = navigator.currentScreen.topBar != null,
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        navigator.currentScreen.topBar?.let { topbar ->
+                            topbar { navigator.navBack() }
+                        }
+                    }
+                }
+            },
             snackbarHost = {
                 SnackbarHost(
                     hostState = snackbarHostState
@@ -128,7 +140,16 @@ class LockboxActivity : ComponentActivity() {
                         if (navigator.currentScreen.showBottomBar) {
                             innerPadding.calculateBottomPadding().toPx()
                         } else {
-                            0.dp.toPx()
+                            0f
+                        }
+                    }
+                )
+                val topPadding by animateFloatAsState(
+                    targetValue = with(LocalDensity.current) {
+                        if (navigator.currentScreen.topBar != null) {
+                            innerPadding.calculateTopPadding().toPx()
+                        } else {
+                            0f
                         }
                     }
                 )
@@ -138,7 +159,8 @@ class LockboxActivity : ComponentActivity() {
                         state = navigationState,
                         startPadding = innerPadding.calculateStartPadding(layoutDirection),
                         endPadding = innerPadding.calculateEndPadding(layoutDirection),
-                        bottomPaddingPx = bottomPadding
+                        bottomPaddingPx = bottomPadding,
+                        topPaddingPx = topPadding
                     )
                 } else {
                     LoginScreen()
