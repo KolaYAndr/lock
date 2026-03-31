@@ -47,6 +47,7 @@ import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
 import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
+import org.homesharing.lockbox.presentation.uikit.composables.HelpTextWithIcon
 import org.homesharing.lockbox.presentation.uikit.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopWithCloseAndBackButtons
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
@@ -330,7 +331,9 @@ private fun DetailedLockboxScreen(
                     text = stringResource(R.string.unbind_device),
                     icon = painterResource(R.drawable.trash),
                     onClick = { showUnbindDeviceDialog = true },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding(),
                 )
             }
         }
@@ -578,28 +581,9 @@ private fun AboutDeviceModalSheet(
             )
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            modifier = Modifier
-                .navigationBarsPadding()
-                .clickable {
-                    onHelpClick()
-                    onDismiss()
-                }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.headset),
-                contentDescription = null,
-                tint = LockBoxTheme.colors.grey100
-            )
-
-            Text(
-                text = stringResource(R.string.help),
-                style = LockBoxTheme.typography.headlineMedium,
-                color = LockBoxTheme.colors.grey100
-            )
-        }
+        HelpTextWithIcon(
+            onClick = onHelpClick
+        )
     }
 }
 

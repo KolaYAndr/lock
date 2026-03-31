@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -21,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -121,17 +123,22 @@ class LockboxActivity : ComponentActivity() {
                 label = "authentication $isLoggedIn",
                 transitionSpec = loginAnimation,
             ) { isLoggedIn ->
+                val bottomPadding by animateFloatAsState(
+                    targetValue = with(LocalDensity.current) {
+                        if (navigator.currentScreen.showBottomBar) {
+                            innerPadding.calculateBottomPadding().toPx()
+                        } else {
+                            0.dp.toPx()
+                        }
+                    }
+                )
                 if (isLoggedIn == LoginState.LoggedIn) {
                     AuthenticatedNavigation(
                         navigator = navigator,
                         state = navigationState,
                         startPadding = innerPadding.calculateStartPadding(layoutDirection),
                         endPadding = innerPadding.calculateEndPadding(layoutDirection),
-                        bottomPadding = if (navigator.currentScreen.showBottomBar) {
-                            innerPadding.calculateBottomPadding()
-                        } else {
-                            0.dp
-                        }
+                        bottomPaddingPx = bottomPadding
                     )
                 } else {
                     LoginScreen()
