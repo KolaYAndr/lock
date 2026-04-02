@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -22,8 +22,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -135,22 +135,18 @@ class LockboxActivity : ComponentActivity() {
                 label = "authentication $isLoggedIn",
                 transitionSpec = loginAnimation,
             ) { isLoggedIn ->
-                val bottomPadding by animateFloatAsState(
-                    targetValue = with(LocalDensity.current) {
-                        if (navigator.currentScreen.showBottomBar) {
-                            innerPadding.calculateBottomPadding().toPx()
-                        } else {
-                            0f
-                        }
+                val bottomPadding by animateDpAsState(
+                    targetValue = if (navigator.currentScreen.showBottomBar) {
+                        innerPadding.calculateBottomPadding()
+                    } else {
+                        0.dp
                     }
                 )
-                val topPadding by animateFloatAsState(
-                    targetValue = with(LocalDensity.current) {
-                        if (navigator.currentScreen.topBar != null) {
-                            innerPadding.calculateTopPadding().toPx()
-                        } else {
-                            0f
-                        }
+                val topPadding by animateDpAsState(
+                    targetValue = if (navigator.currentScreen.topBar != null) {
+                        innerPadding.calculateTopPadding()
+                    } else {
+                        0.dp
                     }
                 )
                 if (isLoggedIn == LoginState.LoggedIn) {
@@ -159,8 +155,8 @@ class LockboxActivity : ComponentActivity() {
                         state = navigationState,
                         startPadding = innerPadding.calculateStartPadding(layoutDirection),
                         endPadding = innerPadding.calculateEndPadding(layoutDirection),
-                        bottomPaddingPx = bottomPadding,
-                        topPaddingPx = topPadding
+                        bottomPadding = bottomPadding,
+                        topPadding = topPadding
                     )
                 } else {
                     LoginScreen()

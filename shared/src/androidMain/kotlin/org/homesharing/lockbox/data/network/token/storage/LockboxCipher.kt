@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.data.network.token.storage
 
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
@@ -45,10 +46,10 @@ internal class LockboxCipher {
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
             .setKeySize(256)
             .setRandomizedEncryptionRequired(true)
-//
-//        if (useStrongBox && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            builder.setIsStrongBoxBacked(true)
-//        }
+
+        if (useStrongBox && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            builder.setIsStrongBoxBacked(true)
+        }
 
         keyGenerator.init(builder.build())
         return keyGenerator.generateKey()
