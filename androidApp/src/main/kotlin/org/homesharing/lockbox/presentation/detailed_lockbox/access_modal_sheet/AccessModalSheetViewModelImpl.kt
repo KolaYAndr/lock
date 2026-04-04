@@ -16,6 +16,11 @@ internal class AccessModalSheetViewModelImpl(
 ) : AccessModalSheetViewModel() {
     override val uiState = MutableStateFlow(AccessModalSheetUiState())
     override val tokenData = MutableSharedFlow<String>()
+
+    init {
+        loadGuestList()
+    }
+
     private fun loadGuestList() {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch {

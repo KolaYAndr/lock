@@ -63,7 +63,7 @@ internal fun createNetworkClient(
 
         install(Auth) {
             bearer {
-                cacheTokens = true
+                cacheTokens = false
                 loadTokens {
                     val accessToken = tokenStorage.getAccessToken()
                     val refreshToken = tokenStorage.getRefreshToken()

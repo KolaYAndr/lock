@@ -134,6 +134,7 @@ class LockboxActivity : ComponentActivity() {
                 targetState = isLoggedIn,
                 label = "authentication $isLoggedIn",
                 transitionSpec = loginAnimation,
+                contentKey = { it }
             ) { isLoggedIn ->
                 val bottomPadding by animateDpAsState(
                     targetValue = if (navigator.currentScreen.showBottomBar) {
