@@ -8,9 +8,9 @@ import androidx.core.net.toUri
 import org.homesharing.lockbox.R
 
 private const val USER_AGREEMENT_URL =
-    "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf"
+    "https://legal.s3.lockboxes.ru/terms-of-service-black.pdf"
 private const val PRIVACY_POLICY_URL =
-    "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf"
+    "https://legal.s3.lockboxes.ru/privacy-policy-black.pdf"
 
 internal fun downloadUserAgreement(context: Context) =
     downloadDocument(
