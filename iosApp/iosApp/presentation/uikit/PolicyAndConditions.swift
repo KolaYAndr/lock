@@ -9,11 +9,10 @@
 import SwiftUI
 
 struct PolicyAndConditions: View {
-    private let privacyPolicyUrl = URL(string: "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf")!
-    private let userAgreementUrl = URL(string: "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf")!
+    private let privacyPolicyUrl = URL(string: "https://legal.s3.lockboxes.ru/privacy-policy-black.pdf")!
+    private let userAgreementUrl = URL(string: "https://legal.s3.lockboxes.ru/terms-of-service-black.pdf")!
     
     var body: some View {
-        
         Text(makeAttributedText())
             .footnote()
             .foregroundStyle(.grey700)

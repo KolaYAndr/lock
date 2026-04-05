@@ -80,10 +80,12 @@ struct LockboxInput<TrailingContent: View>: View {
             .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
 
             if let errorText, !errorText.isEmpty {
-                Text(errorText)
-                    .footnote()
-                    .foregroundStyle(.red600)
-                    .transition(.opacity)
+                withAnimation {
+                    Text(errorText)
+                        .footnote()
+                        .foregroundStyle(.red600)
+                        .transition(.opacity)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.18), value: isFocused)

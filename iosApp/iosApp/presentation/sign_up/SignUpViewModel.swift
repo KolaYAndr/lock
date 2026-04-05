@@ -8,6 +8,7 @@
 
 import Foundation
 import Shared
+import Combine
 
 internal final class SignUpViewModel: ObservableObject {
     @Published var email: String = ""
@@ -17,11 +18,26 @@ internal final class SignUpViewModel: ObservableObject {
     @Published var passwordRepeatedError: PasswordRepeatedError? = nil
     @Published var signUpStep: SignUpStep = .emailInput
     static let totalSteps: Int = 3
+    
+    private var cancellables: Set<AnyCancellable> = []
 
     private let authRepository: AuthRepository
 
     init(authRepository: AuthRepository) {
         self.authRepository = authRepository
+        
+        $email
+            .dropFirst()
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .sink { [weak self] _ in
+                self?.emailError = false
+            }
+            .store(in: &cancellables)
+    }
+    
+    func clearEmail() {
+        email = ""
+        emailError = false
     }
 
     func sendEmailConfirmation() {
@@ -53,7 +69,7 @@ internal final class SignUpViewModel: ObservableObject {
                 case let failure as ResponseFailure:
                     self.passwordRepeatedError = parsePasswordRepeatedError(message: failure.message)
                 case let success as ResponseSuccess<KotlinUnit>:
-                    toStep(nextStep: .emailConfirmation)
+                    toStep(.emailConfirmation)
                 default:
                     self.passwordRepeatedError = .unexpected
                 }
@@ -63,7 +79,7 @@ internal final class SignUpViewModel: ObservableObject {
         }
     }
 
-    private func toStep(nextStep: SignUpStep) {
+    func toStep(_ nextStep: SignUpStep) {
         switch (nextStep) {
         case .passwordInput:
             if email.isValidEmail {

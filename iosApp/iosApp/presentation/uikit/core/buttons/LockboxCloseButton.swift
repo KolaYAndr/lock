@@ -25,6 +25,5 @@ internal struct LockboxCloseButton: View {
 }
 
 #Preview {
-    LockboxCloseButton {
-    }
+    LockboxCloseButton {}
 }

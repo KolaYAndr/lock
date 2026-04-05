@@ -38,3 +38,8 @@ struct LockboxEmailInput: View {
         )
     }
 }
+
+#Preview {
+    @State var email = "ivan@zolo"
+    return LockboxEmailInput(email: $email, errorText: nil, onClearText: { })
+}

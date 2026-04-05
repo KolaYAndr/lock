@@ -47,7 +47,8 @@ internal struct LoginScreen: View {
             .padding(.horizontal, 32)
             .sheet(isPresented: $showModal) {
                 LoginBottomSheet()
-                    .presentationDetents([.fraction(0.6)])
+                    .presentationDetents([.fraction(0.7), .large])
+                    .presentationDragIndicator(.visible)
             }
         }
     }
@@ -56,10 +57,9 @@ internal struct LoginScreen: View {
 internal struct LoginBottomSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel : LoginViewModel = LoginViewModel()
-    @State private var previousType: LoginType = .signIn
     
     private func currentTransition(for target: LoginType) -> AnyTransition {
-        return if target.rawValue > previousType.rawValue {
+        return if target.rawValue > LoginType.signIn.rawValue {
             forwardTransition
         } else {
             backwardTransition
@@ -71,16 +71,15 @@ internal struct LoginBottomSheet: View {
             Color.grey900.ignoresSafeArea()
             
             switch viewModel.loginType {
-                
             case .signIn: SignInCard(
                 onDismiss: { dismiss() },
                 toSignUp: { viewModel.toTypeAuth(.signUp) },
             ).transition(currentTransition(for: .signUp))
                 
             case .signUp: SignUpCard(
-                toSignIn: { viewModel.toTypeAuth(.signIn) }
+                toSignIn: { viewModel.toTypeAuth(.signIn) },
+                onClose: { dismiss() }
             ).transition(currentTransition(for: .signIn))
-                
             }
         }
     }

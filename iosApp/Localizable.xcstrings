@@ -551,7 +551,6 @@
       }
     },
     "confirm_email" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1298,6 +1297,9 @@
           }
         }
       }
+    },
+    "email_confirmation" : {
+
     },
     "email_doesnt_match_pattern" : {
       "localizations" : {
@@ -2536,7 +2538,6 @@
       }
     },
     "promise_to_text_only_important_info" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2910,9 +2911,6 @@
         }
       }
     },
-    "Sing up" : {
-
-    },
     "something_went_wrong_try_refreshing" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2947,7 +2945,6 @@
       }
     },
     "step_of" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3025,7 +3022,6 @@
       }
     },
     "type_in_email" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
