@@ -25,7 +25,6 @@ import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResp
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
 import org.homesharing.lockbox.data.network.dto.post_image.PostImageResponseDto
-import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
@@ -41,7 +40,6 @@ private const val USERS = "users"
 private const val AVATAR = "avatar"
 private const val SIGN_UP = "signup"
 private const val SESSIONS = "sessions"
-private const val RESET_PASSWORD = "reset-password"
 private const val UPLOAD = "upload"
 private const val MAIL = "mail"
 private const val SEND = "send"
@@ -56,7 +54,6 @@ private const val SCOPE = "scope"
 internal const val TOKEN_URL = "$BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 internal const val SIGN_UP_URL = "$INGRESS_BASE_ENDPOINT/$USERS/$SIGN_UP"
 internal const val SESSIONS_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
-internal const val RESET_PASSWORD_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$RESET_PASSWORD"
 internal const val AVATARS_POST_URL = "$BASE_ENDPOINT:8445/$USER/$AVATAR/$UPLOAD"
 internal const val CONFIRM_EMAIL_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
 internal const val UPDATE_ACCOUNT_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$ME"
@@ -151,9 +148,4 @@ internal class LockBoxAccountApi(
             setBody(request)
         }.toApiResponse<CloseSessionsResponseDto>(json)
     }
-
-    override suspend fun sendLinkToChangePassword(): ApiResponse =
-        client.post {
-            url(RESET_PASSWORD_URL)
-        }.toApiResponse<ResetPasswordResponseDto>(json)
 }

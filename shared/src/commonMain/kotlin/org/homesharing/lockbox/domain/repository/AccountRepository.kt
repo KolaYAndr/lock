@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
-import org.homesharing.lockbox.domain.model.reset_password.ResetPassword
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
@@ -32,6 +31,4 @@ interface AccountRepository {
     suspend fun deactivateUser(): Response<UpdateAccount>
 
     suspend fun closeOtherSessions(currentSessionId: String): Response<CloseSessions>
-
-    suspend fun sendLinkToChangeEmail(): Response<ResetPassword>
 }

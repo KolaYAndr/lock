@@ -7,7 +7,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoResponseDto
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
-import org.homesharing.lockbox.data.network.dto.reset_password.ResetPasswordResponseDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
@@ -18,8 +17,6 @@ import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.model.account_info.toDomain
 import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
 import org.homesharing.lockbox.domain.model.close_sessions.toDomain
-import org.homesharing.lockbox.domain.model.reset_password.ResetPassword
-import org.homesharing.lockbox.domain.model.reset_password.toDomain
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -103,13 +100,5 @@ internal class AccountRepositoryImpl(
                 api.closeOtherSessions(id = currentSessionId)
             },
             mapper = CloseSessionsResponseDto::toDomain
-        )
-
-    override suspend fun sendLinkToChangeEmail(): Response<ResetPassword> =
-        parseLockBoxApiResponse(
-            apiCall = {
-                api.sendLinkToChangePassword()
-            },
-            mapper = ResetPasswordResponseDto::toDomain
         )
 }

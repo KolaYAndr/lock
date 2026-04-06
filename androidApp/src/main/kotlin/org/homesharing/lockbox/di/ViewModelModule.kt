@@ -22,8 +22,6 @@ import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVi
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModalViewModelImpl
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.login.LoginViewModelImpl
-import org.homesharing.lockbox.presentation.security.SecurityViewModel
-import org.homesharing.lockbox.presentation.security.SecurityViewModelImpl
 import org.homesharing.lockbox.presentation.sessions.ActiveSessionsViewModel
 import org.homesharing.lockbox.presentation.sessions.ActiveSessionsViewModelImpl
 import org.homesharing.lockbox.presentation.settings.SettingsViewModel
@@ -47,7 +45,6 @@ internal val viewModelModule = module {
     viewModelOf(::ContractsViewModelImpl) bind ContractsViewModel::class
     viewModelOf(::LockboxesViewModelImpl) bind LockboxesViewModel::class
     viewModelOf(::LoginViewModelImpl) bind LoginViewModel::class
-    viewModelOf(::SecurityViewModelImpl) bind SecurityViewModel::class
     viewModelOf(::ActiveSessionsViewModelImpl) bind ActiveSessionsViewModel::class
     viewModelOf(::SettingsViewModelImpl) bind SettingsViewModel::class
     viewModelOf(::SignInViewModelImpl) bind SignInViewModel::class

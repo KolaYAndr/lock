@@ -35,6 +35,4 @@ internal interface AccountApi {
     suspend fun closeOtherSessions(
         id: String
     ): ApiResponse
-
-    suspend fun sendLinkToChangePassword(): ApiResponse
 }

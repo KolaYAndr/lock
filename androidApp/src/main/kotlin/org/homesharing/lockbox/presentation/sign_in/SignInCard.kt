@@ -48,7 +48,7 @@ import org.homesharing.lockbox.presentation.uikit.downloadUserAgreement
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 
-private const val FORGOT_PASSWORD_URL =
+internal const val FORGOT_PASSWORD_URL =
     "https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client"
 
 @Composable

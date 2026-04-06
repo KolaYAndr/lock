@@ -14,23 +14,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.sign_in.FORGOT_PASSWORD_URL
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SecurityScreen(
     navigateToActiveSessions: () -> Unit,
-    securityViewModel: SecurityViewModel = koinViewModel(),
 ) {
     SecurityScreen(
         onToActiveSessions = navigateToActiveSessions,
-        onChangePassword = securityViewModel::sendLinkToChangePassword,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -38,7 +37,6 @@ internal fun SecurityScreen(
 @Composable
 private fun SecurityScreen(
     onToActiveSessions: () -> Unit,
-    onChangePassword: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -46,12 +44,13 @@ private fun SecurityScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val uriHandler = LocalUriHandler.current
         SecurityElement(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
                 .padding(horizontal = 16.dp),
-            onClick = onChangePassword,
+            onClick = { uriHandler.openUri(FORGOT_PASSWORD_URL) },
             title = stringResource(R.string.change_password)
         )
 
@@ -88,9 +87,7 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
                 color = LockBoxTheme.colors.grey800,
                 shape = LockBoxTheme.shape.roundedCornerShape8
             )
-            .clickable {
-                onClick()
-            }
+            .clickable { onClick() }
             .padding(vertical = 14.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -114,7 +111,7 @@ private fun SecurityElement(title: String, onClick: () -> Unit, modifier: Modifi
 private fun PreviewSecurityScreenChangePassword() {
     LockBoxTheme {
         SecurityScreen(
-            {}, {},
+            {},
             modifier = Modifier.fillMaxSize(),
         )
     }
