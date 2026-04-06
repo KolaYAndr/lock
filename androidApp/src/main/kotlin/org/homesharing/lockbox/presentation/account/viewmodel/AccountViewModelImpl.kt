@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,6 +36,9 @@ internal class AccountViewModelImpl(
     private fun sendUpdates() {
         viewModelScope.launch {
             uiState.map { it.name to it.surname }
+                .dropWhile { (name, surname) ->
+                    name.isEmpty() && surname.isEmpty()
+                }
                 .distinctUntilChanged()
                 .debounce(UPDATE_TIME)
                 .collectLatest { (name, surname) ->
@@ -83,10 +87,10 @@ internal class AccountViewModelImpl(
 
     override fun deleteAccount() {
         viewModelScope.launch {
-            if (repository.deactivateUser() is Response.Success) {
-                repository.logOut()
-            } else {
-                SnackbarController.receiveEvent(couldNotDeleteAccountEvent { deleteAccount() })
+            when (repository.deactivateUser()) {
+                is Response.Success -> repository.logOut()
+                is Response.Failure ->
+                    SnackbarController.receiveEvent(couldNotDeleteAccountEvent { deleteAccount() })
             }
         }
     }
@@ -107,7 +111,9 @@ internal class AccountViewModelImpl(
                 }
 
                 is Response.Failure ->
-                    SnackbarController.receiveEvent(SnackbarDefaultEvents.couldNotRefreshAccountInfo { retryUpdatingInfo() })
+                    SnackbarController.receiveEvent(
+                        SnackbarDefaultEvents.couldNotRefreshAccountInfo { retryUpdatingInfo() }
+                    )
             }
         }
     }
