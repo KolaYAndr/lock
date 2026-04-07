@@ -79,7 +79,7 @@ extension ButtonStyle where Self == LockboxProminentButtonStyle {
         )
     }
 
-    static var red: Self {
+    static var darkRed: Self {
         .init(
             containerColor: .grey900,
             contentColor: .red600
@@ -91,5 +91,16 @@ extension ButtonStyle where Self == LockboxProminentButtonStyle {
             containerColor: .red600,
             contentColor: .grey100
         )
+    }
+}
+
+#Preview {
+    VStack (spacing: 4){
+        Button {} label : { Text("TEXT") }.buttonStyle(.greenBackground)
+        Button {} label : { Text("TEXT") }.buttonStyle(.lighterGrey)
+        Button {} label : { Text("TEXT") }.buttonStyle(.grey)
+        Button {} label : { Text("TEXT") }.buttonStyle(.darkerGrey)
+        Button {} label : { Text("TEXT") }.buttonStyle(.darkRed)
+        Button {} label : { Text("TEXT") }.buttonStyle(.redBackground)
     }
 }
