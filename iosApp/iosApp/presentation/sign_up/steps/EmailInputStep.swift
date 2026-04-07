@@ -9,11 +9,11 @@
 import SwiftUI
 
 internal struct EmailInputStep : View {
-    @Binding var email: String
-    let emailError: Bool
-    let onClearText: () -> Void
-    let onNextStep: () -> Void
-    let toSignIn: () -> Void
+    @Binding private var email: String
+    private let emailError: Bool
+    private let onClearText: () -> Void
+    private let onNextStep: () -> Void
+    private let toSignIn: () -> Void
     
     init(email: Binding<String>, emailError: Bool, onClearText: @escaping () -> Void, onNextStep: @escaping () -> Void, toSignIn: @escaping () -> Void) {
         self._email = email
@@ -84,3 +84,7 @@ internal struct EmailInputStep : View {
     }
 }
 
+#Preview {
+    @Previewable @State var email = "ivan@zolo"
+    EmailInputStep(email: $email, emailError: false, onClearText: {}, onNextStep: {}, toSignIn: {})
+}

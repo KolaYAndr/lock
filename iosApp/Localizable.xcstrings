@@ -283,18 +283,17 @@
       }
     },
     "before_sending_one_more_time" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resend (%1$s:%2$s)"
+            "value" : "Resend (%1$d:%2$d)"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Отправить ещё раз (%1$s:%2$s)"
+            "value" : "Отправить ещё раз (%1$d:%2$d)"
           }
         }
       }
@@ -435,7 +434,6 @@
       }
     },
     "change_short" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -468,7 +466,6 @@
       }
     },
     "check_your_email" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -975,7 +972,6 @@
       }
     },
     "create_password" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1297,9 +1293,6 @@
           }
         }
       }
-    },
-    "email_confirmation" : {
-
     },
     "email_doesnt_match_pattern" : {
       "localizations" : {
@@ -2330,7 +2323,6 @@
       }
     },
     "password_confirmation" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2374,7 +2366,6 @@
       }
     },
     "passwords_dont_match" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2689,7 +2680,6 @@
       }
     },
     "send_one_more_time" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2740,7 +2730,6 @@
       }
     },
     "set_password" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3173,7 +3162,6 @@
       }
     },
     "user_already_exists" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3241,7 +3229,6 @@
       }
     },
     "we_sent_message_to_indicated_email" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

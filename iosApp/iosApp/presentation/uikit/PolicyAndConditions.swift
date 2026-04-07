@@ -33,3 +33,7 @@ struct PolicyAndConditions: View {
         return AttributedString(localized: resource)
     }
 }
+
+#Preview {
+    PolicyAndConditions()
+}

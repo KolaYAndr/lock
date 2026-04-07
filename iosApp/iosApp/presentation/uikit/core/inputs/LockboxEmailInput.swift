@@ -9,10 +9,16 @@
 import SwiftUI
 
 struct LockboxEmailInput: View {
-    @Binding var email: String
-    let errorText: String?
-    let onClearText: () -> Void
-    let onSubmit: (() -> Void)? = nil
+    @Binding private var email: String
+    private let errorText: String?
+    private let onClearText: () -> Void
+    private let onSubmit: (() -> Void)? = nil
+    
+    init(email: Binding<String>, errorText: String?, onClearText: @escaping () -> Void) {
+        self._email = email
+        self.errorText = errorText
+        self.onClearText = onClearText
+    }
 
     var body: some View {
         LockboxInput(
@@ -40,6 +46,6 @@ struct LockboxEmailInput: View {
 }
 
 #Preview {
-    @State var email = "ivan@zolo"
+    @Previewable @State var email = "ivan@zolo"
     return LockboxEmailInput(email: $email, errorText: nil, onClearText: { })
 }

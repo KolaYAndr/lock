@@ -9,16 +9,16 @@
 import SwiftUI
 
 struct LockboxInput<TrailingContent: View>: View {
-    @Binding var value: String
+    @Binding private var value: String
 
-    let placeholder: String
-    let errorText: String?
-    let keyboardType: UIKeyboardType
-    let textContentType: UITextContentType?
-    let autocapitalization: TextInputAutocapitalization
-    let autocorrectionDisabled: Bool
-    let onSubmit: (() -> Void)?
-    @ViewBuilder let trailingContent: () -> TrailingContent
+    private let placeholder: String
+    private let errorText: String?
+    private let keyboardType: UIKeyboardType
+    private let textContentType: UITextContentType?
+    private let autocapitalization: TextInputAutocapitalization
+    private let autocorrectionDisabled: Bool
+    private let onSubmit: (() -> Void)?
+    @ViewBuilder private let trailingContent: () -> TrailingContent
 
     @FocusState private var isFocused: Bool
 
@@ -102,4 +102,9 @@ struct LockboxInput<TrailingContent: View>: View {
         }
         return .clear
     }
+}
+
+#Preview {
+    @Previewable @State var email = "ivan@zolo"
+    LockboxInput(value: $email, placeholder: "placeholder", errorText: nil, keyboardType: .default, onSubmit: {}, trailingContent: {})
 }

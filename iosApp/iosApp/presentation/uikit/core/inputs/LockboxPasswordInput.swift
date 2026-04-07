@@ -9,14 +9,21 @@
 import SwiftUI
 
 struct LockboxPasswordInput: View {
-    @Binding var password: String
-    @Binding var isSeen: Bool
+    @Binding private var password: String
+    @Binding private var isSeen: Bool
 
-    let errorText: String?
-    let onClearText: () -> Void
-
+    private let errorText: String?
+    private let onClearText: () -> Void
+    
     @FocusState private var isFocused: Bool
 
+    init(password: Binding<String>, isSeen: Binding<Bool>, errorText: String?, onClearText: @escaping () -> Void) {
+        self._password = password
+        self._isSeen = isSeen
+        self.onClearText = onClearText
+        self.errorText = errorText
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 12) {
@@ -94,4 +101,10 @@ struct LockboxPasswordInput: View {
         }
         return .clear
     }
+}
+
+#Preview {
+    @Previewable @State var password = "Password"
+    @Previewable @State var isSeen = true
+    LockboxPasswordInput(password: $password, isSeen: $isSeen, errorText: nil, onClearText: {})
 }
