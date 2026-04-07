@@ -16,6 +16,8 @@ internal struct ConfirmEmailStep : View {
     private let stopPollingEmailConfirmation: () -> Void
     private let email: String
     
+    @State private var showHelpModalSheet = false
+    
     init(onChangeEmail: @escaping () -> Void, sendEmailConfirmation: @escaping () -> Void, startPollingEmailConfirmation: @escaping () -> Void, stopPollingEmailConfirmation: @escaping () -> Void, email: String) {
         self.onChangeEmail = onChangeEmail
         self.email = email
@@ -60,5 +62,11 @@ internal struct ConfirmEmailStep : View {
         LockboxCountDownButton(startTime: 60, onSendAgain: sendEmailConfirmation)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .center)
+        
+        HelpButton(action: { showHelpModalSheet.toggle() })
+            .frame(maxWidth: .infinity, alignment: .center)
+            .sheet(isPresented: $showHelpModalSheet) {
+                HelpModalSheet()
+            }
     }
 }

@@ -615,7 +615,6 @@
       }
     },
     "contact_us" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1526,7 +1525,6 @@
       }
     },
     "help" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1853,7 +1851,6 @@
       }
     },
     "lockbox_email" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
@@ -2950,7 +2947,6 @@
       }
     },
     "telegram" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
@@ -3279,7 +3275,6 @@
       }
     },
     "we_will_try_to_solve_your_issue" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3291,6 +3286,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Мы постараемся решить Ваш вопрос. Выберите удобный способ связи ниже"
+          }
+        }
+      }
+    },
+    "whats_app" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whats app"
           }
         }
       }

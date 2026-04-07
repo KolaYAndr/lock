@@ -66,14 +66,14 @@ internal struct EmailInputStep : View {
             .padding(.top, 2)
         
         HStack(spacing: 8) {
-            Text(String(localized: "no_account_question"))
+            Text(String(localized: "have_an_account"))
                 .subHeadlineMedium()
                 .foregroundStyle(.grey500)
             
             Button {
                 toSignIn()
             } label: {
-                Text(String(localized: "register"))
+                Text(String(localized: "log_in"))
                     .subHeadlineLarge()
                     .foregroundStyle(.grey100)
                     .underline()
