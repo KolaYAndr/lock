@@ -631,7 +631,6 @@
       }
     },
     "contracts" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1508,7 +1507,6 @@
       }
     },
     "have_an_account" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1879,7 +1877,6 @@
       }
     },
     "log_in" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1946,7 +1943,6 @@
       }
     },
     "main" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2760,7 +2756,6 @@
       }
     },
     "settings" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

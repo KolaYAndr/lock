@@ -7,9 +7,15 @@ struct LockboxApp: App {
         KoinHelperKt.doInitKoin()
     }
     
+    @StateObject private var viewModel = LockboxAppViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            LoginScreen()
+            switch viewModel.loginState {
+            case .loggedIn: AuthenticatedNavigation(logOut: viewModel.logOut)
+            case .loading: LockboxCircularProgressIndicator().frame(alignment: .center)
+            case .notLoggedIn: LoginScreen()
+            }
         }
     }
 }

@@ -23,52 +23,54 @@ struct SignUpCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            CardTopRow(
-                currentStep: viewModel.signUpStep.rawValue + 1,
-                totalSteps: SignUpViewModel.totalSteps,
-                onClose: onClose,
-                onBack: {
-                    switch viewModel.signUpStep {
-                    case .emailInput: toSignIn()
-                    case .passwordInput: viewModel.toStep(.emailInput)
-                    case .emailConfirmation: viewModel.toStep(.passwordInput)
+        ScrollView {
+            VStack(alignment: .leading) {
+                CardTopRow(
+                    currentStep: viewModel.signUpStep.rawValue + 1,
+                    totalSteps: SignUpViewModel.totalSteps,
+                    onClose: onClose,
+                    onBack: {
+                        switch viewModel.signUpStep {
+                        case .emailInput: toSignIn()
+                        case .passwordInput: viewModel.toStep(.emailInput)
+                        case .emailConfirmation: viewModel.toStep(.passwordInput)
+                        }
                     }
+                )
+                .padding(.top, 4)
+                
+                switch viewModel.signUpStep {
+                    
+                case .emailInput: EmailInputStep(
+                    email: $viewModel.email,
+                    emailError: viewModel.emailError,
+                    onClearText: viewModel.clearEmail,
+                    onNextStep: { viewModel.toStep(.passwordInput) },
+                    toSignIn: toSignIn
+                ).padding(.horizontal, 16)
+                    
+                case .passwordInput: PasswordInputStep(
+                    password: $viewModel.password,
+                    isPasswordVisible: $viewModel.isPasswordVisible,
+                    passwordRepeated: $viewModel.passwordRepeated,
+                    isPasswordRepeatedVisible: $viewModel.isPasswordRepeatedVisible,
+                    passwordRepeatedError: viewModel.passwordRepeatedError,
+                    toNextStep: { viewModel.toStep(.emailConfirmation) }
+                ).padding(.horizontal, 16)
+                    
+                    
+                case .emailConfirmation: ConfirmEmailStep(
+                    onChangeEmail: { viewModel.toStep(.emailInput) },
+                    sendEmailConfirmation: { viewModel.sendEmailConfirmation() },
+                    startPollingEmailConfirmation: { viewModel.startPollingEmailConfirmation() },
+                    stopPollingEmailConfirmation: { viewModel.stopPollingEmailConfirmation() },
+                    email: viewModel.email
+                ).padding(.horizontal, 16)
                 }
-            )
-            .padding(.top, 4)
-
-            switch viewModel.signUpStep {
-
-            case .emailInput: EmailInputStep(
-                email: $viewModel.email,
-                emailError: viewModel.emailError,
-                onClearText: viewModel.clearEmail,
-                onNextStep: { viewModel.toStep(.passwordInput) },
-                toSignIn: toSignIn
-            ).padding(.horizontal, 16)
-
-            case .passwordInput: PasswordInputStep(
-                password: $viewModel.password,
-                isPasswordVisible: $viewModel.isPasswordVisible,
-                passwordRepeated: $viewModel.passwordRepeated,
-                isPasswordRepeatedVisible: $viewModel.isPasswordRepeatedVisible,
-                passwordRepeatedError: viewModel.passwordRepeatedError,
-                toNextStep: { viewModel.toStep(.emailConfirmation) }
-            ).padding(.horizontal, 16)
-
-
-            case .emailConfirmation: ConfirmEmailStep(
-                onChangeEmail: { viewModel.toStep(.emailInput) },
-                sendEmailConfirmation: { viewModel.sendEmailConfirmation() },
-                startPollingEmailConfirmation: { viewModel.startPollingEmailConfirmation() },
-                stopPollingEmailConfirmation: { viewModel.stopPollingEmailConfirmation() },
-                email: viewModel.email
-            ).padding(.horizontal, 16)
             }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding(.vertical, 4)
         }
-        .frame(maxHeight: .infinity, alignment: .top)
-        .padding(.vertical, 4)
     }
 }
 
