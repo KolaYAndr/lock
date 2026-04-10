@@ -12,8 +12,9 @@
 		2152FB042600AC8F00CF470E /* LockboxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* LockboxApp.swift */; };
 		2CA0DC7D2F72B7BD002358AD /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0DC7C2F72B7BD002358AD /* Localizable.xcstrings */; };
 		2CD68C342F8843D5000EFEDC /* LockboxAppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD68C332F8843C3000EFEDC /* LockboxAppViewModel.swift */; };
-		2CD68C3B2F885336000EFEDC /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD68C3A2F885334000EFEDC /* Route.swift */; };
+		2CD68C3B2F885336000EFEDC /* SettingsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD68C3A2F885334000EFEDC /* SettingsRoute.swift */; };
 		2CD68C3D2F8854DF000EFEDC /* AuthenticatedNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD68C3C2F8854D5000EFEDC /* AuthenticatedNavigation.swift */; };
+		2CD940D12F8934870032D08B /* BoxesNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD940D02F8934830032D08B /* BoxesNavigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,8 +23,9 @@
 		2152FB032600AC8F00CF470E /* LockboxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockboxApp.swift; sourceTree = "<group>"; };
 		2CA0DC7C2F72B7BD002358AD /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		2CD68C332F8843C3000EFEDC /* LockboxAppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockboxAppViewModel.swift; sourceTree = "<group>"; };
-		2CD68C3A2F885334000EFEDC /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		2CD68C3A2F885334000EFEDC /* SettingsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRoute.swift; sourceTree = "<group>"; };
 		2CD68C3C2F8854D5000EFEDC /* AuthenticatedNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedNavigation.swift; sourceTree = "<group>"; };
+		2CD940D02F8934830032D08B /* BoxesNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxesNavigation.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* LockBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LockBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB3632DC29227652001CCB65 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
@@ -43,6 +45,11 @@
 		2CC381B62F08194700784D19 /* presentation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = presentation;
+			sourceTree = "<group>";
+		};
+		2CD940CB2F8928370032D08B /* domain */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = domain;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,8 +76,9 @@
 		2CD68C392F88532E000EFEDC /* navigation */ = {
 			isa = PBXGroup;
 			children = (
+				2CD940D02F8934830032D08B /* BoxesNavigation.swift */,
 				2CD68C3C2F8854D5000EFEDC /* AuthenticatedNavigation.swift */,
-				2CD68C3A2F885334000EFEDC /* Route.swift */,
+				2CD68C3A2F885334000EFEDC /* SettingsRoute.swift */,
 			);
 			path = navigation;
 			sourceTree = "<group>";
@@ -105,6 +113,7 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				2CD940CB2F8928370032D08B /* domain */,
 				2CD68C392F88532E000EFEDC /* navigation */,
 				2CD68C332F8843C3000EFEDC /* LockboxAppViewModel.swift */,
 				2C9258A42F71CA3C00C05924 /* extensions */,
@@ -145,6 +154,7 @@
 				2C307B9C2E80426500BF67DA /* Resources */,
 				2C9258A42F71CA3C00C05924 /* extensions */,
 				2CC381B62F08194700784D19 /* presentation */,
+				2CD940CB2F8928370032D08B /* domain */,
 			);
 			name = iosApp;
 			packageProductDependencies = (
@@ -230,7 +240,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CD68C342F8843D5000EFEDC /* LockboxAppViewModel.swift in Sources */,
-				2CD68C3B2F885336000EFEDC /* Route.swift in Sources */,
+				2CD68C3B2F885336000EFEDC /* SettingsRoute.swift in Sources */,
+				2CD940D12F8934870032D08B /* BoxesNavigation.swift in Sources */,
 				2CD68C3D2F8854DF000EFEDC /* AuthenticatedNavigation.swift in Sources */,
 				2152FB042600AC8F00CF470E /* LockboxApp.swift in Sources */,
 			);

@@ -11,15 +11,17 @@ import Shared
 internal class LockboxAppViewModel : ObservableObject {
     private let accountRepository = KoinHelper.shared.getAccountRepository()
     @Published private(set) var loginState: LoginState = .loading
-
+    
     init() {
-        let collector = LoginStateCollector { [weak self] value in
-            let isLoggedIn = (value as? Bool) ?? false
-            let state: LoginState = isLoggedIn ? .loggedIn : .notLoggedIn
-            DispatchQueue.main.async { [weak self] in
-                self?.loginState = state
-            }
-        }
+        let collector = DefaultFlowCollector(
+            onValue: { [weak self] isLoggedIn in
+                let state: LoginState = isLoggedIn ? .loggedIn : .notLoggedIn
+                DispatchQueue.main.async { [weak self] in
+                    self?.loginState = state
+                }
+            },
+            defaltValue: false
+        )
         accountRepository.loggedIn.collect(collector: collector) { error in
             self.loginState = .notLoggedIn
         }
@@ -33,19 +35,6 @@ internal class LockboxAppViewModel : ObservableObject {
                 loginState = .notLoggedIn
             }
         }
-    }
-}
-
-private final class LoginStateCollector: Kotlinx_coroutines_coreFlowCollector {
-    private let onValue: (Any?) -> Void
-
-    init(onValue: @escaping (Any?) -> Void) {
-        self.onValue = onValue
-    }
-
-    func emit(value: Any?, completionHandler: @escaping (Error?) -> Void) {
-        onValue(value)
-        completionHandler(nil)
     }
 }
 

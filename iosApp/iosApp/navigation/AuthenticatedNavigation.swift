@@ -17,14 +17,7 @@ internal struct AuthenticatedNavigation : View {
     
     var body: some View {
         TabView {
-            Text(String(localized: "main"))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                .foregroundStyle(.grey100)
-                .background(Color.grey950)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    logOut()
-                }
+            BoxesNavigation()
                 .tabItem {
                     Label(String(localized: "main"), image: .house)
                 }
