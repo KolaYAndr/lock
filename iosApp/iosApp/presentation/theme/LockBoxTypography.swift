@@ -9,19 +9,19 @@
 import SwiftUI
 
 extension Font {
-    static let titleLarge = Font.custom("inter_black", size: 24)
-    static let titleMedium = Font.custom("inter_black", size: 20)
-    static let titleSmall = Font.custom("inter_black", size: 17)
-    static let headlineLarge = Font.custom("inter_black", size: 16)
-    static let headlineMedium = Font.custom("inter_black", size: 15)
-    static let bodyLarge = Font.custom("inter", size: 16)
-    static let bodyMedium = Font.custom("inter", size: 15)
-    static let subHeadlineLarge = Font.custom("inter_black", size: 14)
-    static let subHeadlineMedium = Font.custom("inter", size: 14)
-    static let footnote = Font.custom("inter", size: 13)
-    static let captionLarge = Font.custom("inter", size: 12)
-    static let captionMedium = Font.custom("inter", size: 11)
-    static let captionSmall = Font.custom("inter", size: 9)
+    static let titleLarge = Font.custom("Inter-Black.ttf", size: 24)
+    static let titleMedium = Font.custom("Inter-Black.ttf", size: 20)
+    static let titleSmall = Font.custom("Inter-Black.ttf", size: 17)
+    static let headlineLarge = Font.custom("Inter-Black.ttf", size: 16)
+    static let headlineMedium = Font.custom("Inter-Black.ttf", size: 15)
+    static let bodyLarge = Font.custom("Inter.ttf", size: 16)
+    static let bodyMedium = Font.custom("Inter.ttf", size: 15)
+    static let subHeadlineLarge = Font.custom("Inter-Black.ttf", size: 14)
+    static let subHeadlineMedium = Font.custom("Inter.ttf", size: 14)
+    static let footnote = Font.custom("Inter.ttf", size: 13)
+    static let captionLarge = Font.custom("Inter.ttf", size: 12)
+    static let captionMedium = Font.custom("Inter.ttf", size: 11)
+    static let captionSmall = Font.custom("Inter.ttf", size: 9)
 }
 
 extension CGFloat {

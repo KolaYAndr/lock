@@ -32,6 +32,9 @@ internal struct AuthenticatedNavigation : View {
                 }
             
             Text(String(localized: "settings"))
+                .onTapGesture {
+                    logOut()
+                }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .foregroundStyle(.grey100)
                 .background(Color.grey950)

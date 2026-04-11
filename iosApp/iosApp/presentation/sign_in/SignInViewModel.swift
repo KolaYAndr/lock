@@ -72,14 +72,8 @@ final class SignInViewModel: ObservableObject {
                     password: password
                 )
                 
-                switch response {
-                case let success as ResponseSuccess<KotlinUnit>:
-                    print(success)
-                case let failure as ResponseFailure:
-                    print(failure)
+                if let failure = response as? ResponseFailure {
                     self.passwordError = parsePasswordError(message: failure.message)
-                default:
-                    self.passwordError = .unexpected
                 }
             } catch {
                 self.passwordError = .unexpected

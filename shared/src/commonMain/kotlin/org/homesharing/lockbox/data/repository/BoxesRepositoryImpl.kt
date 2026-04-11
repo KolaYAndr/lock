@@ -183,8 +183,8 @@ internal class BoxesRepositoryImpl(
             .toLocalDateTime(TimeZone.UTC)
 
         val year = ldt.year.toString().padStart(4, PAD_ZERO)
-        val month = ldt.month.toString().padStart(2, PAD_ZERO) // Fixed
-        val day = ldt.day.toString().padStart(2, PAD_ZERO) // Fixed
+        val month = ldt.month.toString().padStart(2, PAD_ZERO)
+        val day = ldt.day.toString().padStart(2, PAD_ZERO)
         val hour = ldt.hour.toString().padStart(2, PAD_ZERO)
         val minute = ldt.minute.toString().padStart(2, PAD_ZERO)
         val second = ldt.second.toString().padStart(2, PAD_ZERO)

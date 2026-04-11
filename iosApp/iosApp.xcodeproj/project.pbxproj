@@ -47,11 +47,6 @@
 			path = presentation;
 			sourceTree = "<group>";
 		};
-		2CD940CB2F8928370032D08B /* domain */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = domain;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +108,6 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				2CD940CB2F8928370032D08B /* domain */,
 				2CD68C392F88532E000EFEDC /* navigation */,
 				2CD68C332F8843C3000EFEDC /* LockboxAppViewModel.swift */,
 				2C9258A42F71CA3C00C05924 /* extensions */,
@@ -154,7 +148,6 @@
 				2C307B9C2E80426500BF67DA /* Resources */,
 				2C9258A42F71CA3C00C05924 /* extensions */,
 				2CC381B62F08194700784D19 /* presentation */,
-				2CD940CB2F8928370032D08B /* domain */,
 			);
 			name = iosApp;
 			packageProductDependencies = (

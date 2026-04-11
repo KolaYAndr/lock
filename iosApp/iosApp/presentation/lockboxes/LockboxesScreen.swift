@@ -12,13 +12,13 @@ import Shared
 internal struct LockboxesScreen: View {
     @StateObject private var viewModel = LockboxesViewModel()
     var body: some View {
-        List(viewModel.boxes) { idBox in
+        List(viewModel.boxes, id: \.box.macAddress) { boxWithStatus in
             ZStack {
-                NavigationLink(value: idBox.id) {
+                NavigationLink(value: boxWithStatus.box.macAddress) {
                     EmptyView()
                 }.opacity(0)
                 
-                Lockbox(box: idBox.box)
+                Lockbox(box: boxWithStatus.box)
             }.listRowBackground(Color.grey950)
                 .listRowSeparatorTint(Color.grey500, edges: .bottom)
         }
@@ -28,38 +28,38 @@ internal struct LockboxesScreen: View {
             Text("Details \(macAddress)")
         }
     }
-}
-
-private struct Lockbox: View {
-    private let box: Box
     
-    init(box: Box) {
-        self.box = box
-    }
-    
-    var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Image(.lock)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(box.alias)
-                    .headlineLarge()
-                    .foregroundStyle(.white)
-                
-                Text(box.address)
-                    .footnote()
-                    .foregroundStyle(.grey500)
-            }.frame(maxWidth: .infinity, alignment: .leading)
-            
-            
-            Image(.chevronRight)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
+    private struct Lockbox: View {
+        private let box: Box
+        
+        init(box: Box) {
+            self.box = box
         }
-        .padding(.horizontal, 16)
+        
+        var body: some View {
+            HStack(alignment: .center, spacing: 12) {
+                Image(.lock)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(box.alias)
+                        .headlineLarge()
+                        .foregroundStyle(.white)
+                    
+                    Text(box.address)
+                        .footnote()
+                        .foregroundStyle(.grey500)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                
+                
+                Image(.chevronRight)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+            }
+            .padding(.horizontal, 16)
+        }
     }
 }
