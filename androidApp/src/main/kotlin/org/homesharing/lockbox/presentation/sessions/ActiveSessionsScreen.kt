@@ -9,14 +9,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -85,6 +93,10 @@ private fun ActiveSessionScreen(
         state = rememberPullToRefreshState(),
         modifier = modifier,
     ) {
+        val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
+        val topInsets =
+            WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+                .calculateTopPadding()
         LazyColumn(
             modifier = Modifier
                 .background(LockBoxTheme.colors.grey950)
@@ -93,6 +105,9 @@ private fun ActiveSessionScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
+            item {
+                Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
+            }
             item {
                 Text(
                     text = stringResource(R.string.this_device),

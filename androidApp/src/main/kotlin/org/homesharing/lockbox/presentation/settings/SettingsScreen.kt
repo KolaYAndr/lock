@@ -3,17 +3,20 @@ package org.homesharing.lockbox.presentation.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -77,8 +80,10 @@ private fun SettingsScreen(
         isRefreshing = settingsUiState.isRefreshing,
         state = rememberPullToRefreshState()
     ) {
-        val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
-            .calculateTopPadding()
+        val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
+        val topInsets =
+            WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+                .calculateTopPadding()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,9 +92,12 @@ private fun SettingsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
                 bottom = 16.dp,
-                top = 16.dp + topPadding
+                top = 16.dp
             )
         ) {
+            item {
+                Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
+            }
             item {
                 if (settingsUiState.imageLink.isNotEmpty()) {
                     NetworkImage(url = settingsUiState.imageLink)

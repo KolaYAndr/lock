@@ -143,13 +143,6 @@ class LockboxActivity : ComponentActivity() {
                         0.dp
                     }
                 )
-                val topPadding by animateDpAsState(
-                    targetValue = if (navigator.currentScreen.topBar != null) {
-                        innerPadding.calculateTopPadding()
-                    } else {
-                        0.dp
-                    }
-                )
                 if (isLoggedIn == LoginState.LoggedIn) {
                     AuthenticatedNavigation(
                         navigator = navigator,
@@ -157,7 +150,6 @@ class LockboxActivity : ComponentActivity() {
                         startPadding = innerPadding.calculateStartPadding(layoutDirection),
                         endPadding = innerPadding.calculateEndPadding(layoutDirection),
                         bottomPadding = bottomPadding,
-                        topPadding = topPadding
                     )
                 } else {
                     LoginScreen()

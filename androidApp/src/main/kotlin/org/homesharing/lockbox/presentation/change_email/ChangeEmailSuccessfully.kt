@@ -5,11 +5,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +33,9 @@ import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 @Composable
 internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit) {
     BackHandler { onDone() }
+    val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
+    val topInsets =
+        WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues().calculateTopPadding()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -33,6 +44,7 @@ internal fun EmailChangedSuccessfullyScreen(onDone: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
         Icon(
             painter = painterResource(R.drawable.circle_check),
             contentDescription = null,

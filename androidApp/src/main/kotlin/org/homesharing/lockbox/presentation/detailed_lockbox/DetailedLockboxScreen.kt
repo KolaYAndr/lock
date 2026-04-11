@@ -7,16 +7,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.derivedStateOf
@@ -104,12 +112,19 @@ private fun DetailedLockboxScreen(
     var showChangeNameBottomSheet by remember { mutableStateOf(false) }
     var showChangeAddressBottomSheet by remember { mutableStateOf(false) }
     var showHelpModal by remember { mutableStateOf(false) }
+
+    val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
+    val topInsets =
+        WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues().calculateTopPadding()
     LazyColumn(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         contentPadding = PaddingValues(bottom = 12.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        item {
+            Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
+        }
         item {
             Column(
                 modifier = Modifier

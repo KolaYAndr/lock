@@ -36,7 +36,6 @@ internal fun AuthenticatedNavigation(
     startPadding: Dp,
     endPadding: Dp,
     bottomPadding: Dp,
-    topPadding: Dp,
 ) {
     NavDisplay(
         modifier = modifier
@@ -46,7 +45,6 @@ internal fun AuthenticatedNavigation(
                 start = startPadding,
                 end = endPadding,
                 bottom = bottomPadding,
-                top = topPadding,
             ),
         onBack = navigator::navBack,
         transitionSpec = enterTransition,
