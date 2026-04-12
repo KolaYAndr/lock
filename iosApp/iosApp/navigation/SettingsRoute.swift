@@ -7,11 +7,7 @@
 //
 
 internal enum SettingsRoute: Hashable {
-    case settings
     case account
-    case addPhoneNumber
-    case changeEmail
-    case emailChangedSuccessfully
     case warning
     case security
     case activeSessions

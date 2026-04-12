@@ -20,7 +20,7 @@ internal struct LoginScreen: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 48, height: 48)
-                    .tint(.grey500)
+                    .foregroundStyle(.grey500)
                 
                 Text(String(localized: "log_in_your_profile"))
                     .titleMedium()

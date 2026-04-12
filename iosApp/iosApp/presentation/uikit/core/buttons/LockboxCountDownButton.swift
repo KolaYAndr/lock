@@ -33,7 +33,6 @@ internal struct LockboxCountDownButton : View {
                     .frame(maxWidth: .infinity)
             } else {
                 Text(String(localized: "send_one_more_time"))
-                    .padding(14)
                     .frame(maxWidth: .infinity)
             }
         }

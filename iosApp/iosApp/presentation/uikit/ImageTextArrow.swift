@@ -11,12 +11,10 @@ import SwiftUI
 internal struct ImageTextArrow : View {
     private let text: String
     private let imageRes: ImageResource
-    private let onClick: () -> Void
     
-    init(text: String, imageRes: ImageResource, onClick: @escaping () -> Void) {
+    init(text: String, imageRes: ImageResource) {
         self.text = text
         self.imageRes = imageRes
-        self.onClick = onClick
     }
     
     var body: some View {
@@ -25,7 +23,7 @@ internal struct ImageTextArrow : View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .tint(.grey100)
+                .foregroundStyle(.grey100)
             
             Text(text)
                 .headlineLarge()
@@ -36,14 +34,12 @@ internal struct ImageTextArrow : View {
             Image(.chevronRight)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 24, height: 24)
-                .tint(.grey100)
-        }.onTapGesture {
-            onClick()
+                .frame(width: 20, height: 20)
+                .foregroundStyle(.grey700)
         }
     }
 }
 
 #Preview {
-    ImageTextArrow(text: "TG", imageRes: .eye, onClick: {})
+    ImageTextArrow(text: "TG", imageRes: .eye)
 }

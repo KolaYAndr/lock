@@ -24,7 +24,7 @@ internal struct TitledTopWithCloseAndBackButtons : View {
                 .scaledToFit()
                 .frame(width: 24, height: 24)
                 .padding(.trailing, 12)
-                .tint(.grey500)
+                .foregroundStyle(.grey500)
                 .onTapGesture {
                     onClose()
                 }
@@ -40,7 +40,7 @@ internal struct TitledTopWithCloseAndBackButtons : View {
                 .scaledToFit()
                 .frame(width: 24, height: 24)
                 .padding(.leading, 12)
-                .tint(.grey500)
+                .foregroundStyle(.grey500)
                 .onTapGesture {
                     onClose()
                 }

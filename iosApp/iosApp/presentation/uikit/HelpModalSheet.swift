@@ -31,7 +31,7 @@ internal struct HelpModalSheet : View {
                     .scaledToFit()
                     .frame(width: 48, height: 48, alignment: .center)
                     .padding(.top, 48)
-                    .tint(.grey500)
+                    .foregroundStyle(.grey500)
                 
                 Text(String(localized: "contact_us"))
                     .titleMedium()
@@ -42,39 +42,37 @@ internal struct HelpModalSheet : View {
                 Text(String(localized: "we_will_try_to_solve_your_issue"))
                     .bodyLarge()
                     .foregroundStyle(.grey500)
+                    .multilineTextAlignment(.center)
                     .padding(.top, 8)
                     .padding(.horizontal, 32)
                 
                 VStack {
                     ImageTextArrow(
                         text: String(localized: "lockbox_email"),
-                        imageRes: .mail,
-                        onClick: { openURL(emailUrl) }
-                    )
+                        imageRes: .mail
+                    ).onTapGesture { openURL(emailUrl) }
                     LockboxHorizontalDivider()
                     ImageTextArrow(
                         text: String(localized: "telegram"),
-                        imageRes: .send,
-                        onClick: {
-                            if UIApplication.shared.canOpenURL(tgAppUrl) {
-                                UIApplication.shared.open(tgAppUrl)
-                            } else {
-                                openURL(tgWebUrl)
-                            }
+                        imageRes: .send
+                    ).onTapGesture {
+                        if UIApplication.shared.canOpenURL(tgAppUrl) {
+                            UIApplication.shared.open(tgAppUrl)
+                        } else {
+                            openURL(tgWebUrl)
                         }
-                    )
+                    }
                     LockboxHorizontalDivider()
                     ImageTextArrow(
                         text: String(localized: "whats_app"),
-                        imageRes: .phone,
-                        onClick: {
-                            if UIApplication.shared.canOpenURL(tgAppUrl) {
-                                UIApplication.shared.open(tgAppUrl)
-                            } else {
-                                openURL(tgWebUrl)
-                            }
+                        imageRes: .phone
+                    ).onTapGesture {
+                        if UIApplication.shared.canOpenURL(tgAppUrl) {
+                            UIApplication.shared.open(tgAppUrl)
+                        } else {
+                            openURL(tgWebUrl)
                         }
-                    )
+                    }
                 }.padding(.horizontal, 16)
                     .padding(.top, 48)
             }

@@ -29,16 +29,19 @@ internal struct EmailInputStep : View {
         Text(String(localized: "type_in_email"))
             .titleMedium()
             .foregroundStyle(.white)
+            .multilineTextAlignment(.center)
             .padding(.top, 16)
         
         Text(String(localized: "promise_to_text_only_important_info"))
             .bodyMedium()
             .foregroundStyle(.grey500)
+            .multilineTextAlignment(.center)
             .padding(.top, 8)
         
         Text(String(localized: "email"))
             .subHeadlineLarge()
             .foregroundStyle(.grey100)
+            .multilineTextAlignment(.center)
             .padding(.top, 24)
         
         LockboxEmailInput(

@@ -38,11 +38,13 @@ internal struct PasswordInputStep : View {
         Text(String(localized: "create_password"))
             .foregroundStyle(.white)
             .titleMedium()
+            .multilineTextAlignment(.center)
             .padding(.top, 16)
         
         Text(String(localized: "password"))
             .subHeadlineLarge()
             .foregroundStyle(.grey100)
+            .multilineTextAlignment(.center)
             .padding(.top, 24)
         
         LockboxPasswordInput(
@@ -64,6 +66,7 @@ internal struct PasswordInputStep : View {
         Text(String(localized: "password_confirmation"))
             .subHeadlineLarge()
             .foregroundStyle(.grey100)
+            .multilineTextAlignment(.center)
             .padding(.top, 24)
         
         LockboxPasswordInput(

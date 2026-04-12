@@ -19,18 +19,19 @@ struct SignInCard: View {
         authRepository: KoinHelper.shared.getAuthRepository()
     )
     @FocusState private var focusedField: InputField?
-
-    let onDismiss: () -> Void
-    let toSignUp: () -> Void
-
+    
+    private let onDismiss: () -> Void
+    private let toSignUp: () -> Void
+    
+    init(onDismiss: @escaping () -> Void, toSignUp: @escaping () -> Void) {
+        self.onDismiss = onDismiss
+        self.toSignUp = toSignUp
+    }
+    
     @Environment(\.openURL) private var openURL
-
-    private let forgotPasswordURL = URL(
-        string: "https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client"
-    )!
-    private let userAgreementUrl = URL(string: "https://api.lockboxes.ru:9000/policies/user_agreement_black.pdf")!
-    private let privacyPolicyUrl = URL(string: "https://api.lockboxes.ru:9000/policies/privacy_policy_black.pdf")!
-
+    private let forgotPasswordURL = URL(string: String(localized: "forgot_password_url"))!
+    
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -142,7 +143,7 @@ struct SignInCard: View {
             .frame(maxHeight: .infinity, alignment: .top)
         }
     }
-
+    
     private func localizedErrorText(for error: SignInPasswordError?) -> String? {
         switch error {
         case .invalidUserCredentials:
@@ -162,6 +163,6 @@ struct SignInCard: View {
 #Preview {
     SignInCard(
         onDismiss: {},
-        toSignUp: {},
-        )
+        toSignUp: {}
+    )
 }

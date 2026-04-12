@@ -79,9 +79,16 @@ extension ButtonStyle where Self == LockboxProminentButtonStyle {
         )
     }
 
-    static var darkRed: Self {
+    static var redGreyBackground: Self {
         .init(
             containerColor: .grey900,
+            contentColor: .red600
+        )
+    }
+    
+    static var darkRed: Self {
+        .init(
+            containerColor: .grey950,
             contentColor: .red600
         )
     }

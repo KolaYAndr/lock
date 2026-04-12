@@ -17,7 +17,7 @@ internal struct AuthenticatedNavigation : View {
     
     var body: some View {
         TabView {
-            BoxesNavigation()
+            LockboxesScreen()
                 .tabItem {
                     Label(String(localized: "main"), image: .house)
                 }
@@ -31,14 +31,7 @@ internal struct AuthenticatedNavigation : View {
                     Label(String(localized: "contracts"), image: .contract)
                 }
             
-            Text(String(localized: "settings"))
-                .onTapGesture {
-                    logOut()
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .foregroundStyle(.grey100)
-                .background(Color.grey950)
-                .ignoresSafeArea()
+            SettingsScreen()
                 .tabItem {
                     Label(String(localized: "settings"), image: .settings)
                 }

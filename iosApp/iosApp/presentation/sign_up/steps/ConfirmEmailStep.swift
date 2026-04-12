@@ -30,17 +30,20 @@ internal struct ConfirmEmailStep : View {
         Text(String(localized: "check_your_email"))
             .titleMedium()
             .foregroundStyle(.white)
+            .multilineTextAlignment(.center)
             .padding(.top, 16)
         
         Text(String(localized: "we_sent_message_to_indicated_email"))
             .bodyMedium()
             .foregroundStyle(.grey500)
+            .multilineTextAlignment(.center)
             .padding(.top, 8)
         
         HStack(alignment: .center, spacing: 6) {
             Text(email)
                 .headlineMedium()
                 .foregroundStyle(.grey100)
+                .multilineTextAlignment(.center)
                 .padding(.vertical, 6)
             
             Text(String(localized: "change_short"))

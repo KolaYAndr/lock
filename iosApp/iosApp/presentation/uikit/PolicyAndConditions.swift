@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct PolicyAndConditions: View {
-    private let privacyPolicyUrl = URL(string: "https://legal.s3.lockboxes.ru/privacy-policy-black.pdf")!
-    private let userAgreementUrl = URL(string: "https://legal.s3.lockboxes.ru/terms-of-service-black.pdf")!
+    private let privacyPolicyUrl = URL(string: String(localized: "privacy_policy_url"))!
+    private let userAgreementUrl = URL(string: String(localized: "user_agreement_url"))!
     
     var body: some View {
         Text(makeAttributedText())

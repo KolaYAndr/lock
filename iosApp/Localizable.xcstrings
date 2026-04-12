@@ -5,7 +5,6 @@
 
     },
     "about_app" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -56,7 +55,6 @@
       }
     },
     "account" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -221,18 +219,17 @@
       "shouldTranslate" : false
     },
     "app_version" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App version %s"
+            "value" : "App version %@"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Версия приложения %s"
+            "value" : "Версия приложения %@"
           }
         }
       }
@@ -332,7 +329,6 @@
       }
     },
     "cancel" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1441,6 +1437,18 @@
         }
       }
     },
+    "forgot_password_url" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://api.lockboxes.ru:8443/realms/lockbox/login-actions/reset-credentials?client_id=public-client\""
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "go_to_wifi_settings_to_connect" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1750,7 +1758,6 @@
       }
     },
     "legal_info" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1912,7 +1919,6 @@
       }
     },
     "log_out" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1929,7 +1935,6 @@
       }
     },
     "log_out_question" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2508,7 +2513,6 @@
       }
     },
     "privacy_policy" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2523,6 +2527,18 @@
           }
         }
       }
+    },
+    "privacy_policy_url" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://legal.s3.lockboxes.ru/privacy-policy-black.pdf"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "promise_to_text_only_important_info" : {
       "localizations" : {
@@ -2642,7 +2658,6 @@
       }
     },
     "security" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3139,7 +3154,6 @@
       }
     },
     "user_agreement" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3154,6 +3168,18 @@
           }
         }
       }
+    },
+    "user_agreement_url" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "https://legal.s3.lockboxes.ru/terms-of-service-black.pdf"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "user_already_exists" : {
       "localizations" : {
@@ -3360,7 +3386,6 @@
       }
     },
     "year_lockbox" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
@@ -3404,6 +3429,9 @@
           }
         }
       }
+    },
+    "Навигация" : {
+
     }
   },
   "version" : "1.0"

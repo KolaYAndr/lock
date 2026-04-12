@@ -12,20 +12,23 @@ import Shared
 internal struct LockboxesScreen: View {
     @StateObject private var viewModel = LockboxesViewModel()
     var body: some View {
-        List(viewModel.boxes, id: \.box.macAddress) { boxWithStatus in
-            ZStack {
-                NavigationLink(value: boxWithStatus.box.macAddress) {
-                    EmptyView()
-                }.opacity(0)
-                
-                Lockbox(box: boxWithStatus.box)
-            }.listRowBackground(Color.grey950)
+        NavigationStack {
+            List(viewModel.boxes, id: \.box.macAddress) { boxWithStatus in
+                ZStack {
+                    NavigationLink(value: boxWithStatus.box.macAddress) {
+                        Lockbox(box: boxWithStatus.box)
+                    }
+                }
+                .listRowBackground(Color.grey950)
                 .listRowSeparatorTint(Color.grey500, edges: .bottom)
-        }
-        .scrollContentBackground(.hidden)
-        .background(.grey950)
-        .navigationDestination(for: String.self) { macAddress in
-            Text("Details \(macAddress)")
+            }
+            .scrollContentBackground(.hidden)
+            .background(.grey950)
+            .navigationTitle(Text(String(localized: "main")))
+            .navigationBarHidden(true)
+            .navigationDestination(for: String.self) { macAddress in
+                Text("Details \(macAddress)")
+            }
         }
     }
     
@@ -42,24 +45,26 @@ internal struct LockboxesScreen: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 24, height: 24)
+                    .foregroundStyle(.grey500)
+                
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(box.alias)
                         .headlineLarge()
+                        .lineLimit(1, reservesSpace: false)
                         .foregroundStyle(.white)
                     
                     Text(box.address)
                         .footnote()
                         .foregroundStyle(.grey500)
+                        .lineLimit(2, reservesSpace: false)
                 }.frame(maxWidth: .infinity, alignment: .leading)
-                
-                
-                Image(.chevronRight)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
             }
             .padding(.horizontal, 16)
         }
     }
+}
+
+#Preview {
+    LockboxesScreen()
 }

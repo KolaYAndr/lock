@@ -26,6 +26,7 @@ internal struct CardTopRow : View {
             HStack {
                 Image(.arrowBack)
                     .onTapGesture(perform: onBack)
+                    .foregroundStyle(.grey500)
                     .padding(.trailing, 12)
                 
                 VStack(alignment: .leading, spacing: 2) {
@@ -41,6 +42,7 @@ internal struct CardTopRow : View {
                 
                 Image(.close)
                     .onTapGesture(perform: onClose)
+                    .foregroundStyle(.grey500)
                     .padding(.leading, 12)
             }.padding(.horizontal, 16)
             LockboxHorizontalDivider()

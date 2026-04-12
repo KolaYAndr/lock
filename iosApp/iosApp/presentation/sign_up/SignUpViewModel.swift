@@ -22,7 +22,10 @@ internal enum PasswordRepeatedError {
     case unexpected
 }
 
+@MainActor
 internal final class SignUpViewModel: ObservableObject {
+    private let authRepository: AuthRepository
+    
     @Published var email: String = ""
     @Published var emailError: Bool = false
     @Published var password: String = ""
@@ -31,41 +34,14 @@ internal final class SignUpViewModel: ObservableObject {
     @Published var isPasswordRepeatedVisible = false
     @Published var passwordRepeatedError: PasswordRepeatedError? = nil
     @Published var signUpStep: SignUpStep = .emailInput
-    static let totalSteps: Int = 3
-
-    private var cancellables: Set<AnyCancellable> = []
-    private var pollingTask: Task<Void, Never>? = nil
-
-    func startPollingEmailConfirmation() {
-        pollingTask?.cancel()
-        pollingTask = Task { [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 1_500_000_000)
-                await self?.checkIfConfirmed()
-            }
-        }
-    }
-
-    private let authRepository: AuthRepository
     
-    func stopPollingEmailConfirmation() {
-        pollingTask?.cancel()
-        pollingTask = nil
-    }
-
+    static let totalSteps: Int = 3
+    
     private let userExistsErrorMessage = "{\"errorMessage\":\"User exists with same email\"}"
     private let passwordsDontMatchErrorCode = "web.exchange.bind.exception"
 
-    func parsePasswordRepeatedError(message: String) -> PasswordRepeatedError {
-        switch message {
-        case userExistsErrorMessage:
-            return .userExists
-        case passwordsDontMatchErrorCode:
-            return .passwordsDontMatch
-        default:
-            return .unexpected
-        }
-    }
+    private var cancellables: Set<AnyCancellable> = []
+    private var pollingTask: Task<Void, Never>? = nil
     
     init(authRepository: AuthRepository) {
         self.authRepository = authRepository
@@ -84,6 +60,21 @@ internal final class SignUpViewModel: ObservableObject {
                 self?.passwordRepeatedError = nil
             }
             .store(in: &cancellables)
+    }
+
+    func startPollingEmailConfirmation() {
+        pollingTask?.cancel()
+        pollingTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                await self?.checkIfConfirmed()
+            }
+        }
+    }
+    
+    func stopPollingEmailConfirmation() {
+        pollingTask?.cancel()
+        pollingTask = nil
     }
     
     func toStep(_ nextStep: SignUpStep) {
@@ -116,5 +107,16 @@ internal final class SignUpViewModel: ObservableObject {
         do {
             try await authRepository.loadTokensInitially(username: email, password: password)
         } catch { }
+    }
+    
+    func parsePasswordRepeatedError(message: String) -> PasswordRepeatedError {
+        switch message {
+        case userExistsErrorMessage:
+            return .userExists
+        case passwordsDontMatchErrorCode:
+            return .passwordsDontMatch
+        default:
+            return .unexpected
+        }
     }
 }

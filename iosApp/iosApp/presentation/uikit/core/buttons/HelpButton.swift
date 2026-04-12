@@ -23,7 +23,7 @@ internal struct HelpButton : View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 16, height: 16)
-                .tint(.grey100)
+                .foregroundStyle(.grey100)
             
             Text("help")
                 .subHeadlineLarge()
