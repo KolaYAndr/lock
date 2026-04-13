@@ -71,7 +71,6 @@
       }
     },
     "active_sessions" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -396,7 +395,6 @@
       }
     },
     "change_password" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

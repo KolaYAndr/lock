@@ -29,7 +29,7 @@ struct SignInCard: View {
     }
     
     @Environment(\.openURL) private var openURL
-    private let forgotPasswordURL = URL(string: String(localized: "forgot_password_url"))!
+    private let forgotPasswordUrl = URL(string: String(localized: .forgotPasswordUrl))!
     
     
     var body: some View {
@@ -90,7 +90,7 @@ struct SignInCard: View {
                 .padding(.top, 6)
                 
                 Button {
-                    openURL(forgotPasswordURL)
+                    openURL(forgotPasswordUrl)
                 } label: {
                     Text(String(localized: "forgot_password"))
                         .subHeadlineMedium()

@@ -10,7 +10,7 @@ import SwiftUI
 
 internal struct HelpModalSheet : View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) var openURL
+    @Environment(\.openURL) private var openURL
     
     private let emailUrl = URL(string: "mailto:help@lockbox.ru")!
     private let tgWebUrl = URL(string: "https://t.me/korolev_2512")!
