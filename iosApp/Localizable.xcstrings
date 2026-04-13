@@ -104,7 +104,6 @@
       }
     },
     "add_device" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1565,7 +1564,6 @@
       }
     },
     "here_will_be_devices_you_add" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1982,7 +1980,6 @@
       }
     },
     "manage_devices" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
