@@ -97,6 +97,9 @@ internal struct SettingsScreen: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top, 24)
                     }
+                    .onAppear {
+                        viewModel.fetchInfo()
+                    }
                     .sheet(isPresented: $showHelpModal) {
                         HelpModalSheet()
                     }
@@ -115,9 +118,9 @@ internal struct SettingsScreen: View {
                     }
                     .padding(.horizontal, 16)
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .refreshable {
-                        await viewModel.refreshAccountInfo()
-                    }
+                }
+                .refreshable {
+                    await viewModel.refreshAccountInfo()
                 }
                 .navigationTitle(Text(String(localized: "settings")))
                 .navigationBarHidden(true)
@@ -126,7 +129,7 @@ internal struct SettingsScreen: View {
                     case .aboutApp:
                         AboutAppScreen()
                     case .account:
-                        Text("Навигация")
+                        AccountScreen()
                     case .warning:
                         Text("Навигация")
                     case .security:

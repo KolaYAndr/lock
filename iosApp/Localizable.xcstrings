@@ -1066,7 +1066,6 @@
       }
     },
     "delete" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1083,7 +1082,6 @@
       }
     },
     "delete_account" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1100,7 +1098,6 @@
       }
     },
     "delete_account_question" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1820,7 +1817,6 @@
       }
     },
     "load_account_photo" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2131,7 +2127,6 @@
       }
     },
     "not_cancellable_delete_account" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
