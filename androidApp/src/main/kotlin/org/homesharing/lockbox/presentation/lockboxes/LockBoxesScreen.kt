@@ -46,6 +46,7 @@ import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.Status
 import org.homesharing.lockbox.presentation.lockboxes.connect_device_modal.ConnectDeviceModal
+import org.homesharing.lockbox.presentation.lockboxes.viewmodel.LockboxesViewModel
 import org.homesharing.lockbox.presentation.lockboxes.virtual_device_modal.AddVirtualDeviceModal
 import org.homesharing.lockbox.presentation.uikit.composables.AddRow
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh

@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.settings
+package org.homesharing.lockbox.presentation.settings.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.lockboxes
+package org.homesharing.lockbox.presentation.lockboxes.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData

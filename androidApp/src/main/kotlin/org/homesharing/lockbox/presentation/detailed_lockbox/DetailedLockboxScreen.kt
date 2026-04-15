@@ -46,6 +46,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.presentation.detailed_lockbox.access_modal_sheet.AccessModalSheet
+import org.homesharing.lockbox.presentation.detailed_lockbox.viewmodel.DetailedLockBoxUiState
+import org.homesharing.lockbox.presentation.detailed_lockbox.viewmodel.DetailedLockboxViewModel
 import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.uikit.composables.HelpTextWithIcon

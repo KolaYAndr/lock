@@ -18,8 +18,8 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.api.response.toAuthResponse
-import org.homesharing.lockbox.data.network.client.BASE_ENDPOINT
-import org.homesharing.lockbox.data.network.client.INGRESS_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.client.KOTLIN_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequestDto
 import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsResponseDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
@@ -51,13 +51,14 @@ private const val CLIENT_ID = "client_id"
 private const val WEB_FRONT = "web-front"
 private const val GRANT_TYPE = "grant_type"
 private const val SCOPE = "scope"
-internal const val TOKEN_URL = "$BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
-internal const val SIGN_UP_URL = "$INGRESS_BASE_ENDPOINT/$USERS/$SIGN_UP"
-internal const val SESSIONS_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
-internal const val AVATARS_POST_URL = "$BASE_ENDPOINT:8445/$USER/$AVATAR/$UPLOAD"
-internal const val CONFIRM_EMAIL_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
-internal const val UPDATE_ACCOUNT_URL = "$BASE_ENDPOINT:8445/$ACCOUNTS/$ME"
-internal const val AVATARS_URL = "$BASE_ENDPOINT:9000/$USER/$AVATAR"
+internal const val TOKEN_URL =
+    "$KEYCLOACK_BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
+internal const val SIGN_UP_URL = "$KOTLIN_BASE_ENDPOINT/$USERS/$SIGN_UP"
+internal const val SESSIONS_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
+internal const val AVATARS_POST_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$USER/$AVATAR/$UPLOAD"
+internal const val CONFIRM_EMAIL_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
+internal const val UPDATE_ACCOUNT_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$ME"
+internal const val AVATARS_URL = "$KEYCLOACK_BASE_ENDPOINT:9000/$USER/$AVATAR"
 
 internal class LockBoxAccountApi(
     private val client: HttpClient,

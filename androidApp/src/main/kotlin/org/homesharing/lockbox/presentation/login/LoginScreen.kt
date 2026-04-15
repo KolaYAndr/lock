@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.login.viewmodel.LoginType
+import org.homesharing.lockbox.presentation.login.viewmodel.LoginViewModel
 import org.homesharing.lockbox.presentation.sign_in.SignInCard
 import org.homesharing.lockbox.presentation.sign_up.SignUpCard
 import org.homesharing.lockbox.presentation.uikit.animation.backwardAnimation

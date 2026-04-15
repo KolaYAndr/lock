@@ -6,6 +6,7 @@
     <string name="telegram" translatable="false">Telegram</string>
     <string name="whatsapp" translatable="false">WhatsApp</string>
     <string name="location_dot_access_time" translatable="false">%1$s • %2$s</string>
+    <string name="selected_time" translatable="false">%1$d:%2$d</string>
     <string name="sign_in">Войти</string>
     <string name="log_in_your_profile">Войдите в профиль</string>
     <string name="start_using_today">Начните использовать наше приложение уже сегодня!</string>
@@ -65,7 +66,7 @@
     <string name="password_changed">Пароль изменён</string>
     <string name="change_email">Изменить электронную почту</string>
     <string name="want_to_change_email_question">Хотите изменить почту?</string>
-    <string name="new_email_will_be_used_for">Новый адрес электронной почты будет использоваться для входа в аккаунт и важных уведомелний</string>
+    <string name="new_email_will_be_used_for">Новый адрес электронной почты будет использоваться для входа в аккаунт и важных уведомлений</string>
     <string name="back">Назад</string>
     <string name="input_new_email">Введите новую электронную почту</string>
     <string name="indicate_email_for_use">Укажите адрес, который Вы будете использовать для входа и получения уведомлений</string>
@@ -82,7 +83,7 @@
     <string name="new_phone_number_will_be_used_for">Новый телефон будет использоваться для восстановления доступа и получения уведомлений</string>
     <string name="phone_number_placeholder" translatable="false">+7 (ххх) ххх-хх-хх</string>
     <string name="add_new_phone_number_suggestion">Добавьте номер телефона</string>
-    <string name="indicate_phone_number_for_use" translatable="false">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений</string>
+    <string name="indicate_phone_number_for_use">Укажите номер, который будет использоваться для восстановления доступа и получения уведомлений</string>
     <string name="add_phone_number">Добавить номер телефона</string>
     <string name="phone_number_successfully_changed">Телефон успешно добавлен</string>
     <string name="now_you_can_use_new_phone_number">Теперь Вы можете использовать новый телефон для восстановления доступа и получения уведомлений</string>
@@ -141,7 +142,7 @@
     <string name="unknown_device">Неизвестное устройство</string>
     <string name="contact_us">Связаться с нами</string>
     <string name="we_will_try_to_solve_your_issue">Мы постараемся решить Ваш вопрос. Выберите удобный способ связи ниже</string>
-    <string name="could_not_update_user_info">Не удалолсь обновить данные</string>
+    <string name="could_not_update_user_info">Не удалось обновить данные</string>
     <string name="retry">Повторить</string>
     <string name="could_not_load_user_info">Не удалось загрузить информацию об аккаунте</string>
     <string name="could_not_refresh_user_info">Не удалось обновить данные пользователя</string>

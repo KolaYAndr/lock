@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.sessions
+package org.homesharing.lockbox.presentation.sessions.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async

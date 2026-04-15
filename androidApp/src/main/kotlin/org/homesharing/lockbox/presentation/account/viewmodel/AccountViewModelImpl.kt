@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.repository.AccountRepository
 import org.homesharing.lockbox.presentation.snackbar.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar.SnackbarDefaultEvents
@@ -62,7 +61,24 @@ internal class AccountViewModelImpl(
 
     private fun fetchInfo() {
         viewModelScope.launch {
-            AccountUiStateMapper().map(repository.parseAccountInfo())
+            when (val accountInfo = repository.parseAccountInfo()) {
+                is Response.Success -> {
+                    uiState.update {
+                        it.copy(
+                            name = accountInfo.data.givenName.orEmpty(),
+                            surname = accountInfo.data.familyName.orEmpty(),
+                            email = accountInfo.data.email,
+                            sub = accountInfo.data.sub,
+                            imageUrl = repository.getImageLink(accountInfo.data.sub)
+                        )
+                    }
+                }
+
+                is Response.Failure ->
+                    SnackbarController.receiveEvent(
+                        SnackbarDefaultEvents.couldNotRefreshAccountInfo { retryUpdatingInfo() }
+                    )
+            }
         }
     }
 
@@ -91,29 +107,6 @@ internal class AccountViewModelImpl(
                 is Response.Success -> repository.logOut()
                 is Response.Failure ->
                     SnackbarController.receiveEvent(couldNotDeleteAccountEvent { deleteAccount() })
-            }
-        }
-    }
-
-    inner class AccountUiStateMapper {
-        suspend fun map(from: Response<AccountInfo>) {
-            when (from) {
-                is Response.Success -> {
-                    uiState.update {
-                        it.copy(
-                            name = from.data.givenName.orEmpty(),
-                            surname = from.data.familyName.orEmpty(),
-                            email = from.data.email,
-                            sub = from.data.sub,
-                            imageUrl = repository.getImageLink(from.data.sub)
-                        )
-                    }
-                }
-
-                is Response.Failure ->
-                    SnackbarController.receiveEvent(
-                        SnackbarDefaultEvents.couldNotRefreshAccountInfo { retryUpdatingInfo() }
-                    )
             }
         }
     }

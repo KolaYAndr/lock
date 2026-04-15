@@ -47,6 +47,8 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.sessions.Session
+import org.homesharing.lockbox.presentation.sessions.viewmodel.ActiveSessionsUiState
+import org.homesharing.lockbox.presentation.sessions.viewmodel.ActiveSessionsViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider

@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.navigation.routes.Route
+import org.homesharing.lockbox.presentation.settings.viewmodel.SettingsUiState
+import org.homesharing.lockbox.presentation.settings.viewmodel.SettingsViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.uikit.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.uikit.composables.NetworkImage

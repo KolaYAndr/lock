@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.login
+package org.homesharing.lockbox.presentation.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.StateFlow

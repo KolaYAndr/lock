@@ -13,6 +13,9 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.sign_up.steps.EmailConfirmationStep
 import org.homesharing.lockbox.presentation.sign_up.steps.EmailInputStep
 import org.homesharing.lockbox.presentation.sign_up.steps.PasswordInputStep
+import org.homesharing.lockbox.presentation.sign_up.viewmodel.SignUpStep
+import org.homesharing.lockbox.presentation.sign_up.viewmodel.SignUpUiState
+import org.homesharing.lockbox.presentation.sign_up.viewmodel.SignUpViewModel
 import org.homesharing.lockbox.presentation.uikit.animation.backwardAnimation
 import org.homesharing.lockbox.presentation.uikit.animation.forwardAnimation
 import org.homesharing.lockbox.presentation.uikit.composables.CardTopRow

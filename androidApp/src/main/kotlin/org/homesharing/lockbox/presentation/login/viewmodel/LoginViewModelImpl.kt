@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.login
+package org.homesharing.lockbox.presentation.login.viewmodel
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

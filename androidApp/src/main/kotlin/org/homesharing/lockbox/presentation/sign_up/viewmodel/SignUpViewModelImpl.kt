@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.sign_up
+package org.homesharing.lockbox.presentation.sign_up.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow

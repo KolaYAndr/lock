@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.detailed_lockbox
+package org.homesharing.lockbox.presentation.detailed_lockbox.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.repository.BoxesRepository
 import org.homesharing.lockbox.presentation.snackbar.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar.SnackbarDefaultEvents.boxOpenedSuccessfully
@@ -57,11 +56,13 @@ internal class DetailedLockboxViewModelImpl(
                 }
 
                 is Response.Failure ->
-                    SnackbarController.receiveEvent(couldNotUpdateBoxAddress {
-                        saveAddress(
-                            newAddress
-                        )
-                    })
+                    SnackbarController.receiveEvent(
+                        couldNotUpdateBoxAddress {
+                            saveAddress(
+                                newAddress
+                            )
+                        }
+                    )
 
             }
         }
@@ -97,21 +98,15 @@ internal class DetailedLockboxViewModelImpl(
 
     private fun findBoxByMac() {
         viewModelScope.launch {
-            DetailedLockBoxUiStateMapper().map(boxesRepository.getBoxByMac(mac))
-        }
-    }
-
-    inner class DetailedLockBoxUiStateMapper {
-        suspend fun map(from: Response<BoxWithStatus>) {
-            when (from) {
+            when (val box = boxesRepository.getBoxByMac(mac)) {
                 is Response.Success -> uiState.update {
                     it.copy(
-                        boxName = from.data.box.alias,
-                        address = from.data.box.address,
-                        signalStrength = from.data.status.signalStrength?.toInt(),
-                        batteryLevel = from.data.status.batteryLevel?.toInt(),
-                        ownerSub = from.data.box.ownerSub,
-                        isBoxOpen = from.data.status.opened ?: false,
+                        boxName = box.data.box.alias,
+                        address = box.data.box.address,
+                        signalStrength = box.data.status.signalStrength?.toInt(),
+                        batteryLevel = box.data.status.batteryLevel?.toInt(),
+                        ownerSub = box.data.box.ownerSub,
+                        isBoxOpen = box.data.status.opened ?: false,
                     )
                 }
 

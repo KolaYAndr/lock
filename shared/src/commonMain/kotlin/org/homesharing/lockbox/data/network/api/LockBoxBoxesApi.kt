@@ -11,7 +11,7 @@ import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
-import org.homesharing.lockbox.data.network.client.INGRESS_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.client.KOTLIN_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
 import org.homesharing.lockbox.data.network.dto.access_create.AccessCreateRequestDto
@@ -45,7 +45,7 @@ internal class LockBoxBoxesApi(
         size: Int,
     ): ApiResponse =
         client.get {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES")
             parameter(PAGE_PARAMETER, page)
             parameter(SIZE_PARAMETER, size)
         }.toApiResponse<BoxListResponseDto>(json)
@@ -54,7 +54,7 @@ internal class LockBoxBoxesApi(
         macAddress: String,
     ): ApiResponse =
         client.get {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<BoxWithStatusResponseDto>(json)
 
     override suspend fun updateBoxByMac(
@@ -70,7 +70,7 @@ internal class LockBoxBoxesApi(
             macAddress = macAddress,
         )
         return client.patch {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
             setBody(request)
         }.toApiResponse<UpdateBoxResponseDto>(json)
     }
@@ -79,21 +79,21 @@ internal class LockBoxBoxesApi(
         macAddress: String,
     ): ApiResponse =
         client.post {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<OpenBoxResponseDto>(json)
 
     override suspend fun deleteBox(
         macAddress: String,
     ): ApiResponse =
         client.delete {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<Unit>(json)
 
     override suspend fun getAccessedList(
         macAddress: String,
     ): ApiResponse =
         client.get {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
         }.toApiResponse<AccessResponseDto>(json)
 
     override suspend fun createAccess(
@@ -104,7 +104,7 @@ internal class LockBoxBoxesApi(
     ): ApiResponse {
         val request = AccessCreateRequestDto(startTime, endTime, alias)
         return client.post {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
             setBody(request)
         }.toApiResponse<AccessDto>(json)
     }
@@ -114,12 +114,12 @@ internal class LockBoxBoxesApi(
         tokenId: String,
     ): ApiResponse =
         client.delete {
-            url("$INGRESS_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES/$tokenId")
+            url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES/$tokenId")
         }.toApiResponse<AccessRevokeResponseDto>(json)
 
     override suspend fun createLinkingCode(): ApiResponse =
         client.post {
-            url("$INGRESS_BASE_ENDPOINT/$SIGNUP")
+            url("$KOTLIN_BASE_ENDPOINT/$SIGNUP")
         }.toApiResponse<CreateLinkingCodeDto>(json)
 
     override suspend fun physicalSignUp(
@@ -128,13 +128,13 @@ internal class LockBoxBoxesApi(
     ): ApiResponse {
         val request = PhysicalSignUpRequestDto(code, macAddress)
         return client.post {
-            url("$INGRESS_BASE_ENDPOINT/$DEVICES/$BOXES/$SIGNUP")
+            url("$KOTLIN_BASE_ENDPOINT/$DEVICES/$BOXES/$SIGNUP")
             setBody(request)
         }.toApiResponse<PhysicalSignUpResponseDto>(json)
     }
 
     override suspend fun createTestDevice(): ApiResponse =
         client.post {
-            url("$INGRESS_BASE_ENDPOINT/$DEVICES/$BOXES/$TEST")
+            url("$KOTLIN_BASE_ENDPOINT/$DEVICES/$BOXES/$TEST")
         }.toApiResponse<Unit>(json)
 }

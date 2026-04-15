@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.detailed_lockbox
+package org.homesharing.lockbox.presentation.detailed_lockbox.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.SharedFlow

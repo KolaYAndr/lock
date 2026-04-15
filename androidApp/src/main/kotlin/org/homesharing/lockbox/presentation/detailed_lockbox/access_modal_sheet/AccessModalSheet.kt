@@ -419,9 +419,11 @@ private fun AddGuestContent(
             initialMinute = calendar.get(Calendar.MINUTE),
             is24Hour = true,
         )
-        val selectedStartTime =
-            String.format("%02d:%02d", startTimePickerState.hour, startTimePickerState.minute)
-
+        val selectedStartTime = stringResource(
+            R.string.selected_time,
+            startTimePickerState.hour,
+            startTimePickerState.minute
+        )
         LaunchedEffect(startTimePickerState.hour, startTimePickerState.minute) {
             onChangeStartTime(startTimePickerState.toMillis())
         }
@@ -519,8 +521,11 @@ private fun AddGuestContent(
         }
 
         val endTimePickerState = rememberTimePickerState(is24Hour = true)
-        val selectedEndTime =
-            String.format("%02d:%02d", endTimePickerState.hour, endTimePickerState.minute)
+        val selectedEndTime = stringResource(
+            R.string.selected_time,
+            endTimePickerState.hour,
+            endTimePickerState.minute
+        )
 
         LaunchedEffect(endTimePickerState.hour, endTimePickerState.minute) {
             onChangeEndTime(endTimePickerState.toMillis())

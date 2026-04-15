@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.sessions
+package org.homesharing.lockbox.presentation.sessions.viewmodel
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel

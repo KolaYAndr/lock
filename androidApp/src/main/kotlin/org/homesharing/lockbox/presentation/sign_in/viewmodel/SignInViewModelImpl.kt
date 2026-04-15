@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.sign_in
+package org.homesharing.lockbox.presentation.sign_in.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.network.sockets.ConnectTimeoutException

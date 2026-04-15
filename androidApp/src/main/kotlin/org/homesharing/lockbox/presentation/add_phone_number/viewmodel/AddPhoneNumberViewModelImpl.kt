@@ -3,7 +3,7 @@ package org.homesharing.lockbox.presentation.add_phone_number.viewmodel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-internal class AddPhoneNumberViewModelImpl() : AddPhoneNumberViewModel() {
+internal class AddPhoneNumberViewModelImpl : AddPhoneNumberViewModel() {
     override val uiState
         = MutableStateFlow(AddPhoneNumberUiState())
     private val phoneNumberPattern = Regex("^\\+?\\d+$")
