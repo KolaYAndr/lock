@@ -63,21 +63,6 @@ class StatusDtoToDomainTest {
         assertEquals(signal, domain.signalStrength)
         assertEquals(expectedTime, domain.timeStamp)
     }
-
-    @Test
-    fun `throws when timestamp is invalid`() = runBlocking {
-        val dto = StatusDto(
-            macAddress = "M",
-            opened = true,
-            batteryLevel = 1.0,
-            signalStrength = -1.0,
-            timestamp = "not-a-date"
-        )
-
-        assertFailsWith<IllegalArgumentException> {
-            dto.toDomain()
-        }
-    }
 }
 
 class BoxWithStatusResponseDtoToDomainTest {

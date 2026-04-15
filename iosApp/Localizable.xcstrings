@@ -1368,7 +1368,6 @@
       }
     },
     "finish_all_other_sessions" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1838,18 +1837,17 @@
       }
     },
     "location_dot_access_time" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ • %2$@"
+            "value" : "%1$@ • now"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ • %2$@"
+            "value" : "%1$@ • Сейчас"
           }
         }
       }
@@ -2982,7 +2980,6 @@
       }
     },
     "this_device" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3099,7 +3096,6 @@
       }
     },
     "unknown_device" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

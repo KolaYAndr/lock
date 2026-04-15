@@ -30,5 +30,5 @@ interface AccountRepository {
 
     suspend fun deactivateUser(): Response<UpdateAccount>
 
-    suspend fun closeOtherSessions(currentSessionId: String): Response<CloseSessions>
+    suspend fun closeOtherSessions(): Response<CloseSessions>
 }

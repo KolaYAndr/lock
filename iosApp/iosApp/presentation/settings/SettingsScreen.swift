@@ -132,7 +132,7 @@ internal struct SettingsScreen: View {
                     case .security:
                         SecurityScreen()
                     case .activeSessions:
-                        Text("Навигация")
+                        ActiveSessionsScreen()
                     }
                 }
             }

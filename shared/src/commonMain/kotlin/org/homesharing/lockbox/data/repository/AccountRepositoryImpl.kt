@@ -94,11 +94,13 @@ internal class AccountRepositoryImpl(
             mapper = UpdateAccountResponseDto::toDomain
         )
 
-    override suspend fun closeOtherSessions(currentSessionId: String): Response<CloseSessions> =
-        parseLockBoxApiResponse(
+    override suspend fun closeOtherSessions(): Response<CloseSessions> {
+        val accountInfo = parseAccountInfo()
+        return parseLockBoxApiResponse(
             apiCall = {
-                api.closeOtherSessions(id = currentSessionId)
+                api.closeOtherSessions(id = (accountInfo as? Response.Success<AccountInfo>)?.data?.sessionId.orEmpty())
             },
             mapper = CloseSessionsResponseDto::toDomain
         )
+    }
 }

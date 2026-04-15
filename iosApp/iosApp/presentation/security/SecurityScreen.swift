@@ -14,7 +14,7 @@ internal struct SecurityScreen: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 12) {
                 SecurityProperty(title: String(localized: "change_password"))
                     .onTapGesture {
                         openURL(forgotPasswordUrl)
@@ -53,7 +53,7 @@ private struct SecurityProperty: View {
                 .foregroundStyle(.grey500)
         }
         .padding(.horizontal, 16)
-        .background(.grey800)
+        .background(.grey900)
         .clipShape(.roundedCornerShape8)
     }
 }
