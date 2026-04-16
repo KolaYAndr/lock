@@ -38,7 +38,7 @@ internal struct WarningScreen: View {
                     .bodyMedium()
                     .foregroundStyle(.grey900)
             }
-            .buttonStyle(.greenBackground)
+            .buttonStyle(.grey)
             .padding(.top, 16)
         }
         .padding(.horizontal, 32)
