@@ -16,7 +16,7 @@ internal enum LoginType: Int {
 
 @MainActor
 internal final class LoginViewModel: ObservableObject {
-    @Published private(set) var loginType: LoginType = .signIn
+    @Published var loginType: LoginType = .signIn
     
     func toTypeAuth(_ type: LoginType) {
         loginType = type

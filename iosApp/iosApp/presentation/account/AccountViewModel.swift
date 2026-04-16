@@ -10,11 +10,12 @@ import Foundation
 import Shared
 import Combine
 
+@MainActor
 internal class AccountViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var surname: String = ""
-    @Published var imageLink: String = ""
-    @Published var sub: String = ""
+    var imageLink: String = ""
+    private var sub: String = ""
     
     private let accountRepository: AccountRepository = KoinHelper.shared.getAccountRepository()
     private var cancellables: Set<AnyCancellable> = []
@@ -103,13 +104,15 @@ internal class AccountViewModel: ObservableObject {
         }
     }
     
-    func deleteAccount() {
+    func deleteAccount(
+        onSuccess: @escaping () -> Void
+    ) {
         Task {
             do {
                 let response = try await accountRepository.deactivateUser()
                 
-                if let _ = response as? ResponseSuccess<UpdateAccount> {
-                    try await accountRepository.logOut()
+                if let success = response as? ResponseSuccess<UpdateAccount> {
+                    onSuccess()
                 }
             }
         }

@@ -13,7 +13,7 @@ internal class SettingsViewModel: ObservableObject {
     private let accountRepository = KoinHelper.shared.getAccountRepository()
     @Published var email: String = ""
     @Published var fullName: String = ""
-    @Published var sub: String = ""
+    private var sub: String = ""
     @Published var imageLink: String = ""
     
     init() {

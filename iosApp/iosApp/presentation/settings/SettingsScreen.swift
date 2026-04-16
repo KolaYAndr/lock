@@ -9,12 +9,13 @@
 import SwiftUI
 
 internal struct SettingsScreen: View {
+    @State private var path = NavigationPath()
     @StateObject private var viewModel = SettingsViewModel()
     @State private var showHelpModal: Bool = false
     @State private var showAlert: Bool = false
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ZStack {
                 Color.grey950.ignoresSafeArea()
                 
@@ -129,9 +130,9 @@ internal struct SettingsScreen: View {
                     case .aboutApp:
                         AboutAppScreen()
                     case .account:
-                        AccountScreen()
+                        AccountScreen(path: $path)
                     case .warning:
-                        Text("Навигация")
+                        WarningScreen()
                     case .security:
                         SecurityScreen()
                     case .activeSessions:

@@ -15,9 +15,7 @@ private enum InputField: Hashable {
 }
 
 struct SignInCard: View {
-    @StateObject private var viewModel = SignInViewModel(
-        authRepository: KoinHelper.shared.getAuthRepository()
-    )
+    @StateObject private var viewModel = SignInViewModel()
     @FocusState private var focusedField: InputField?
     
     private let onDismiss: () -> Void

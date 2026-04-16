@@ -13,9 +13,7 @@ struct SignUpCard: View {
     private let toSignIn: () -> Void
     private let onClose: () -> Void
 
-    @StateObject private var viewModel = SignUpViewModel(
-        authRepository: KoinHelper.shared.getAuthRepository()
-    )
+    @StateObject private var viewModel = SignUpViewModel()
 
     init(toSignIn: @escaping () -> Void, onClose: @escaping () -> Void) {
         self.toSignIn = toSignIn

@@ -1683,7 +1683,6 @@
       }
     },
     "input_name" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1717,7 +1716,6 @@
       }
     },
     "input_surname" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

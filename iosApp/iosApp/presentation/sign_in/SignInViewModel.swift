@@ -18,12 +18,10 @@ final class SignInViewModel: ObservableObject {
     @Published var passwordError: SignInPasswordError? = nil
     @Published var isPasswordVisible: Bool = false
     
-    private let authRepository: AuthRepository
+    private let authRepository: AuthRepository = KoinHelper.shared.getAuthRepository()
     private var cancellables: Set<AnyCancellable> = []
     
-    init(authRepository: AuthRepository) {
-        self.authRepository = authRepository
-        
+    init() {
         $email
             .dropFirst()
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }

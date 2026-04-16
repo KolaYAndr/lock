@@ -10,10 +10,11 @@ import SwiftUI
 import PhotosUI
 
 internal struct AccountScreen: View {
-    private let viewModel = AccountViewModel()
+    @StateObject private var viewModel = AccountViewModel()
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var imageData: Data? = nil
     @State private var showAlert = false
+    @Binding var path: NavigationPath
     
     var body: some View {
         ScrollView {
@@ -41,13 +42,36 @@ internal struct AccountScreen: View {
                     .foregroundStyle(.grey500)
                     .padding(.top, 12)
                     
+                    VStack {
+                        LockboxCredentialsInput(
+                            text: $viewModel.name,
+                            placeholderText: String(localized: "input_name")
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.top, 4)
+                        
+                        LockboxHorizontalDivider()
+                        
+                        LockboxCredentialsInput(
+                            text: $viewModel.surname,
+                            placeholderText: String(localized: "input_surname")
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 4)
+                    }
+                    .background(.grey900)
+                    .clipShape(.roundedCornerShape8)
+                    .padding(.top, 24)
+                    .padding(.horizontal, 16)
+                    
                     Button {
                         showAlert = true
                     } label: {
                         Text(String(localized: "delete_account"))
-                            .foregroundStyle(.red600)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.redGreyBackground)
+                    .padding(.horizontal, 16)
                     .padding(.top, 24)
                 }
                 .onChange(of: selectedItem) { _, newValue in
@@ -74,7 +98,11 @@ internal struct AccountScreen: View {
                     ),
                     secondaryButton: .destructive(
                         Text(String(localized: "delete")),
-                        action: { viewModel.deleteAccount() }
+                        action: {
+                            viewModel.deleteAccount {
+                                path.append(SettingsRoute.warning)
+                            }
+                        }
                     )
                 )
             }

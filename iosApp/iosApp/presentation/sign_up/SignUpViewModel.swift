@@ -24,7 +24,7 @@ internal enum PasswordRepeatedError {
 
 @MainActor
 internal final class SignUpViewModel: ObservableObject {
-    private let authRepository: AuthRepository
+    private let authRepository: AuthRepository = KoinHelper.shared.getAuthRepository()
     
     @Published var email: String = ""
     @Published var emailError: Bool = false
@@ -43,9 +43,7 @@ internal final class SignUpViewModel: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private var pollingTask: Task<Void, Never>? = nil
     
-    init(authRepository: AuthRepository) {
-        self.authRepository = authRepository
-
+    init() {
         $email
             .dropFirst()
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
