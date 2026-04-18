@@ -178,7 +178,7 @@ internal class LockBoxAccountApi(
             contactInfo = ContactInfoRequest(
                 email = email,
                 phoneNumber = phoneNumber
-            ),
+            ).takeIf { email != null || passportNumber != null },
             legalInfo = LegalInfoRequest(
                 fullName = fullName,
                 livingAddress = livingAddress,
@@ -186,8 +186,8 @@ internal class LockBoxAccountApi(
                     issuer = passportIssuer,
                     passportNumber = passportNumber,
                     passportSeries = passportSeries
-                )
-            ).takeIf { fullName != null }
+                ).takeIf { passportSeries != null || passportNumber != null || passportIssuer != null }
+            ).takeIf { fullName != null || livingAddress != null || passportSeries != null || passportNumber != null || passportIssuer != null }
         )
         return client.post {
             url(PROFILE_INFO_URL)
