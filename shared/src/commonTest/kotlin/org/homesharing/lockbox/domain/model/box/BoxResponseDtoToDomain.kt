@@ -2,12 +2,11 @@ package org.homesharing.lockbox.domain.model.box
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
-import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
-import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.box.BoxDto
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusDto
 import org.homesharing.lockbox.data.network.dto.box.StatusDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
 class BoxResponseDtoToDomainTest {
@@ -19,7 +18,7 @@ class BoxResponseDtoToDomainTest {
         val ownerSub = "owner-xyz"
         val mac = "AA:BB:CC:DD:EE:FF"
 
-        val dto = BoxResponseDto(
+        val dto = BoxDto(
             address = address,
             alias = alias,
             ownerSub = ownerSub,
@@ -69,7 +68,7 @@ class BoxWithStatusResponseDtoToDomainTest {
 
     @Test
     fun `maps BoxWithStatusResponseDto combining box and status`() = runBlocking {
-        val boxDto = BoxResponseDto(
+        val boxDto = BoxDto(
             address = "Addr",
             alias = "Alias",
             ownerSub = "owner",
@@ -84,7 +83,7 @@ class BoxWithStatusResponseDtoToDomainTest {
             timestamp = "2025-06-10T10:00:00"
         )
 
-        val dto = BoxWithStatusResponseDto(box = boxDto, status = statusDto)
+        val dto = BoxWithStatusDto(box = boxDto, status = statusDto)
 
         val domain = dto.toDomain()
 

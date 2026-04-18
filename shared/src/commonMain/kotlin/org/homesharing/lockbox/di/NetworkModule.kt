@@ -2,8 +2,10 @@ package org.homesharing.lockbox.di
 
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.DocumentsApi
 import org.homesharing.lockbox.data.network.api.LockBoxAccountApi
 import org.homesharing.lockbox.data.network.api.LockBoxBoxesApi
+import org.homesharing.lockbox.data.network.api.LockBoxDocumentsApi
 import org.homesharing.lockbox.data.network.client.createNetworkClient
 import org.homesharing.lockbox.data.network.client.networkEngine
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
@@ -22,6 +24,10 @@ val networkModule = module {
 
     singleOf(::LockBoxBoxesApi) {
         bind<BoxesApi>()
+    }
+
+    singleOf(::LockBoxDocumentsApi) {
+        bind<DocumentsApi>()
     }
 
     factory<() -> BoxesPagingSource> {

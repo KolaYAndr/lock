@@ -240,7 +240,6 @@ private fun NewEmailInputStep(
             onValueChange = onEmailChange,
             onClearText = { onEmailChange("") },
             errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else null,
-            interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
                     changeEmail()

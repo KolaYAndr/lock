@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.repository.AccountRepository
 import org.homesharing.lockbox.presentation.snackbar.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar.SnackbarDefaultEvents.couldNotLoadAccountInfo
@@ -22,7 +21,19 @@ internal class SettingsViewModelImpl(
 
     private fun fetchInfo() {
         viewModelScope.launch {
-            SettingsUiStataMapper().map(repository.parseAccountInfo())
+            when (val response = repository.getProfileInfo()) {
+                is Response.Success -> {
+                    uiState.update {
+                        it.copy(
+                            fullName = response.data.legalInfo.fullName,
+                            email = response.data.contactInfo.email,
+                            imageLink = repository.getImageLink()
+                        )
+                    }
+                }
+
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotLoadAccountInfo { fetchInfo() })
+            }
         }
     }
 
@@ -50,27 +61,6 @@ internal class SettingsViewModelImpl(
     override fun logOut() {
         viewModelScope.launch {
             repository.logOut()
-        }
-    }
-
-    inner class SettingsUiStataMapper {
-        suspend fun map(from: Response<AccountInfo>) {
-            when (from) {
-                is Response.Success -> {
-                    uiState.update {
-                        it.copy(
-                            fullName = from.data.fullName.orEmpty(),
-                            email = from.data.email,
-                            sub = from.data.sub,
-                            imageLink = repository.getImageLink(from.data.sub)
-                        )
-                    }
-                }
-
-                is Response.Failure -> SnackbarController.receiveEvent(couldNotLoadAccountInfo { fetchInfo() })
-
-            }
-
         }
     }
 }

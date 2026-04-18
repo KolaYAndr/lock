@@ -89,7 +89,6 @@ private fun SignInCard(
         modifier = modifier
     ) {
         val emailInteractionSource = remember { MutableInteractionSource() }
-        val passwordInteractionSource = remember { MutableInteractionSource() }
         val passwordFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -138,7 +137,6 @@ private fun SignInCard(
             email = signInUiState.email,
             onValueChange = { onEmailChange(it) },
             onClearText = { onEmailChange("") },
-            interactionSource = emailInteractionSource,
             errorText = if (emailError) stringResource(R.string.email_doesnt_match_pattern) else null,
             keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
             keyboardOptions = KeyboardOptions(
@@ -164,7 +162,6 @@ private fun SignInCard(
             password = signInUiState.password,
             onValueChange = { onPasswordChange(it) },
             onClearText = { onPasswordChange("") },
-            interactionSource = passwordInteractionSource,
             errorText = passwordErrorText,
             isSeen = isPasswordSeen,
             onSeenChange = { isPasswordSeen = !isPasswordSeen },

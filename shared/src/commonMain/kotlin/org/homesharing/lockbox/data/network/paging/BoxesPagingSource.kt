@@ -3,7 +3,7 @@ package org.homesharing.lockbox.data.network.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
-import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
+import org.homesharing.lockbox.data.network.dto.box_list.BoxListDto
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.toDomain
@@ -42,7 +42,7 @@ internal class BoxesPagingSource(
                 }
 
                 is ApiResponse.Success<*> -> {
-                    val response = apiResponse as ApiResponse.Success<BoxListResponseDto>
+                    val response = apiResponse as ApiResponse.Success<BoxListDto>
                     val endOfPagination = response.data.size < size
                     LoadResult.Page(
                         data = response.data.boxes.map { it.toDomain() },

@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.presentation.sign_up.steps
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -39,7 +38,6 @@ internal  fun EmailInputStep(
     onDownloadConditions: () -> Unit,
     onDownloadPolicy: () -> Unit,
 ) {
-    val emailInteractionSource = remember { MutableInteractionSource() }
     val emailFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
@@ -67,7 +65,6 @@ internal  fun EmailInputStep(
         email = email,
         onValueChange = { onEmailChange(it) },
         onClearText = { onEmailChange("") },
-        interactionSource = emailInteractionSource,
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Email,

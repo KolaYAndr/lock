@@ -1,6 +1,6 @@
 package org.homesharing.lockbox.domain.model.update_box
 
-import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
+import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -13,7 +13,7 @@ class UpdateBoxResponseDtoToDomainTest {
         val macAddress = "AA:BB:CC:DD:EE:FF"
         val ownerSub = "123"
 
-        val dto = UpdateBoxResponseDto(
+        val dto = UpdateBoxDto(
             address = address,
             alias = alias,
             macAddress = macAddress,

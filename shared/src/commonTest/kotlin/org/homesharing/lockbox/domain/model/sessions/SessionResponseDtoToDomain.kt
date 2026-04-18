@@ -1,14 +1,14 @@
 package org.homesharing.lockbox.domain.model.sessions
 
 import org.homesharing.lockbox.data.network.dto.sessions.SessionDto
-import org.homesharing.lockbox.data.network.dto.sessions.SessionsResponseDto
+import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SessionsResponseDtoToDomainTest {
     @Test
     fun `maps correctly with empty sessions list`() {
-        val responseDto = SessionsResponseDto(
+        val responseDto = SessionsDto(
             credentials = emptyList(),
             sessions = emptyList()
         )
@@ -42,7 +42,7 @@ class SessionsResponseDtoToDomainTest {
             username = "user2",
             clients = mapOf("c2" to "v2")
         )
-        val responseDto = SessionsResponseDto(
+        val responseDto = SessionsDto(
             credentials = emptyList(),
             sessions = listOf(dto1, dto2)
         )

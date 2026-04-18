@@ -574,7 +574,7 @@ private fun ChangePropertyBottomSheet(
     placeholderText: String,
     modifier: Modifier = Modifier,
 ) {
-    var currentValue by remember { mutableStateOf(initialValue) }
+    var currentValue by remember(initialValue) { mutableStateOf(initialValue) }
     LockboxBottomSheet(
         onDismissRequest = onDismiss,
         shape = LockBoxTheme.shape.roundedCornerShape16,
@@ -588,7 +588,10 @@ private fun ChangePropertyBottomSheet(
                 .padding(top = 4.dp, start = 8.dp, end = 8.dp)
         )
 
-        val canSaveChanges by remember { derivedStateOf { initialValue != currentValue } }
+        val canSaveChanges by remember(
+            initialValue,
+            currentValue
+        ) { derivedStateOf { initialValue != currentValue } }
         Column(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally

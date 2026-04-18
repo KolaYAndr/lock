@@ -36,6 +36,7 @@ internal fun LockboxPin(
     onPinChange: (String) -> Unit,
     onConfirm: () -> Unit,
     pinLength: Int,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         imeAction = ImeAction.Done,
         keyboardType = KeyboardType.NumberPassword,
@@ -43,8 +44,7 @@ internal fun LockboxPin(
     ),
     keyboardActions: KeyboardActions = KeyboardActions(
         onDone = { onConfirm() }
-    ),
-    modifier: Modifier = Modifier
+    )
 ) {
     BasicTextField(
         value = TextFieldValue(text = value, selection = TextRange(pinLength)),

@@ -27,15 +27,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -49,7 +49,6 @@ import org.homesharing.lockbox.presentation.account.viewmodel.AccountViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.NetworkImage
 import org.homesharing.lockbox.presentation.uikit.composables.RoundText
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
-import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.BasicDialogContent
@@ -67,8 +66,8 @@ internal fun AccountScreen(
     AccountScreen(
         accountUiState = accountUiState,
         onChangeName = accountViewModel::onNameChange,
-        onChangeSurname = accountViewModel::onSurnameChange,
         onSendImage = accountViewModel::sendImage,
+        onUpdateName = accountViewModel::updateProfileName,
         onDelete = accountViewModel::deleteAccount,
         modifier = Modifier.fillMaxSize(),
     )
@@ -78,13 +77,13 @@ internal fun AccountScreen(
 private fun AccountScreen(
     accountUiState: AccountUiState,
     onChangeName: (String) -> Unit,
-    onChangeSurname: (String) -> Unit,
+    onUpdateName: () -> Unit,
     onSendImage: (ByteArray) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
     var showDeleteAccountDialog by remember { mutableStateOf(false) }
-    val surnameFocusRequester = remember { FocusRequester() }
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = PickVisualMedia(),
@@ -119,7 +118,7 @@ private fun AccountScreen(
                 .padding(top = 24.dp)
         ) {
             if (accountUiState.imageUrl.isNotEmpty()) NetworkImage(url = accountUiState.imageUrl)
-            else RoundText(text = "${accountUiState.name} ${accountUiState.surname}")
+            else RoundText(text = accountUiState.fullName)
 
             Text(
                 text = stringResource(R.string.load_account_photo),
@@ -129,6 +128,12 @@ private fun AccountScreen(
             )
         }
 
+        var currentFullName by remember(accountUiState.fullName) { mutableStateOf(accountUiState.fullName) }
+        val canSave by remember(currentFullName, accountUiState.fullName) {
+            derivedStateOf {
+                currentFullName != accountUiState.fullName
+            }
+        }
         LockboxGroup(
             modifier = Modifier
                 .fillMaxWidth()
@@ -136,34 +141,28 @@ private fun AccountScreen(
                 .padding(top = 28.dp)
         ) {
             LockboxCredentialsInput(
-                text = accountUiState.name,
-                onTextChange = onChangeName,
-                placeholderText = stringResource(R.string.input_name),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                    showKeyboardOnFocus = true
-                ),
-                keyboardActions = KeyboardActions(onNext = {
-                    surnameFocusRequester.requestFocus()
-                }),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-            LockboxCredentialsInput(
-                text = accountUiState.surname,
-                onTextChange = onChangeSurname,
-                placeholderText = stringResource(R.string.input_surname),
+                text = currentFullName,
+                onTextChange = { currentFullName = it },
+                placeholderText = stringResource(R.string.input_full_name),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done,
                     showKeyboardOnFocus = true
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(surnameFocusRequester)
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onChangeName(currentFullName)
+                        onUpdateName()
+                        focusManager.clearFocus()
+                    }
+                ),
+                onFinish = onUpdateName,
+                onCancel = {
+                    currentFullName = accountUiState.fullName
+                    focusManager.clearFocus()
+                },
+                canSave = canSave,
+                modifier = Modifier.fillMaxWidth()
             )
         }
 

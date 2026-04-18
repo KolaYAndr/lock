@@ -9,10 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,11 +25,11 @@ internal fun LockboxEmailInput(
     onValueChange: (String) -> Unit,
     onClearText: () -> Unit,
     errorText: String?,
-    interactionSource: MutableInteractionSource,
     keyboardActions: KeyboardActions,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     LockboxInput(
         value = email,
         onValueChange = onValueChange,
@@ -63,14 +60,10 @@ internal fun LockboxEmailInput(
 @Preview
 private fun PreviewLockboxEmail() {
     LockBoxTheme {
-        var value by remember { mutableStateOf("ivan@ivanov@mail.ru") }
-        val interactionSource = remember { MutableInteractionSource() }
-
         LockboxEmailInput(
-            email = value,
+            email = "ivan@ivanov@mail.ru",
             onValueChange = { },
             onClearText = { },
-            interactionSource = interactionSource,
             keyboardActions = KeyboardActions(),
             keyboardOptions = KeyboardOptions(),
             errorText = null,

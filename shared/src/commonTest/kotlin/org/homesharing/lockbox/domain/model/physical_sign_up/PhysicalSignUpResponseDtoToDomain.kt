@@ -1,7 +1,7 @@
 package org.homesharing.lockbox.domain.model.physical_sign_up
 
 import kotlinx.coroutines.runBlocking
-import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
+import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -14,7 +14,7 @@ class PhysicalSignUpResponseDtoToDomainTest {
         val address = "123 Main St"
         val alias = "Warehouse-1"
 
-        val dto = PhysicalSignUpResponseDto(
+        val dto = PhysicalSignUpDto(
             macAddress = macAddress,
             ownerSub = ownerSub,
             address = address,
@@ -36,7 +36,7 @@ class PhysicalSignUpResponseDtoToDomainTest {
         val address = ""
         val alias = ""
 
-        val dto = PhysicalSignUpResponseDto(
+        val dto = PhysicalSignUpDto(
             macAddress = macAddress,
             ownerSub = ownerSub,
             address = address,

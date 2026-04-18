@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
-import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
-import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeResponseDto
-import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.access.AccessesDto
+import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeDto
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusDto
 import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkingCodeDto
-import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
-import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpResponseDto
-import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxResponseDto
+import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxDto
+import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpDto
+import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
 import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
@@ -63,7 +63,7 @@ internal class BoxesRepositoryImpl(
                     macAddress = address
                 )
             },
-            mapper = BoxWithStatusResponseDto::toDomain
+            mapper = BoxWithStatusDto::toDomain
         )
 
     override suspend fun openBoxByMac(address: String): Response<OpenBox> =
@@ -73,7 +73,7 @@ internal class BoxesRepositoryImpl(
                     macAddress = address
                 )
             },
-            mapper = OpenBoxResponseDto::toDomain
+            mapper = OpenBoxDto::toDomain
         )
 
     override suspend fun unbindBox(address: String): Response<Unit> =
@@ -96,7 +96,7 @@ internal class BoxesRepositoryImpl(
                     ownerSub = ownerSub
                 )
             },
-            mapper = UpdateBoxResponseDto::toDomain
+            mapper = UpdateBoxDto::toDomain
         )
 
     override suspend fun updateBoxAddress(
@@ -112,7 +112,7 @@ internal class BoxesRepositoryImpl(
                     ownerSub = ownerSub
                 )
             },
-            mapper = UpdateBoxResponseDto::toDomain
+            mapper = UpdateBoxDto::toDomain
         )
 
     override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> =
@@ -122,7 +122,7 @@ internal class BoxesRepositoryImpl(
                     macAddress = macAddress
                 )
             },
-            mapper = AccessResponseDto::toDomain
+            mapper = AccessesDto::toDomain
         )
 
     override suspend fun createAccess(
@@ -153,7 +153,7 @@ internal class BoxesRepositoryImpl(
                     tokenId = tokenId
                 )
             },
-            mapper = AccessRevokeResponseDto::toDomain
+            mapper = AccessRevokeDto::toDomain
         )
 
     override suspend fun createLinkingCode(): Response<CreateLinkingCode> =
@@ -170,7 +170,7 @@ internal class BoxesRepositoryImpl(
                     macAddress = macAddress
                 )
             },
-            mapper = PhysicalSignUpResponseDto::toDomain
+            mapper = PhysicalSignUpDto::toDomain
         )
 
     override suspend fun createTestDevice(): Response<Box> =

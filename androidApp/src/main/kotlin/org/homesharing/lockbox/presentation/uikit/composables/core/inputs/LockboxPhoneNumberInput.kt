@@ -9,10 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,11 +25,11 @@ internal fun LockboxPhoneNumberInput(
     onValueChange: (String) -> Unit,
     onClearText: () -> Unit,
     errorText: String?,
-    interactionSource: MutableInteractionSource,
-    keyboardActions: KeyboardActions,
-    keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     LockboxInput(
         value = number,
         onValueChange = onValueChange,
@@ -61,14 +58,10 @@ internal fun LockboxPhoneNumberInput(
 @Preview
 private fun PreviewNumberLockbox() {
     LockBoxTheme {
-        var value by remember { mutableStateOf("7904") }
-        val interactionSource = remember { MutableInteractionSource() }
-
         LockboxPhoneNumberInput(
-            number = value,
-            onValueChange = { value = it },
-            onClearText = { value = "" },
-            interactionSource = interactionSource,
+            number = "7904",
+            onValueChange = { },
+            onClearText = { },
             keyboardActions = KeyboardActions(),
             keyboardOptions = KeyboardOptions(),
             errorText = null,

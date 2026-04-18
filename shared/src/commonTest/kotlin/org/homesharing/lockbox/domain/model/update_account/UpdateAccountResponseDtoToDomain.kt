@@ -1,6 +1,6 @@
 package org.homesharing.lockbox.domain.model.update_account
 
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountResponseDto
+import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -16,7 +16,7 @@ class UpdateAccountResponseDtoToDomainTest {
         val username = "johndoe"
         val id = "user-id-123"
 
-        val dto = UpdateAccountResponseDto(
+        val dto = UpdateAccountDto(
             email = email,
             emailVerified = emailVerified,
             enabled = enabled,
@@ -38,7 +38,7 @@ class UpdateAccountResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with nullable fields as null`() {
-        val dto = UpdateAccountResponseDto(
+        val dto = UpdateAccountDto(
             email = "another@example.com",
             emailVerified = false,
             enabled = false,

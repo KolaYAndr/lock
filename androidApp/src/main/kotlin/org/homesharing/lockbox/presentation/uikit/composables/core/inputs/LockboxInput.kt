@@ -34,6 +34,7 @@ internal fun LockboxInput(
     onValueChange: (String) -> Unit,
     enabled: Boolean,
     placeholderText: String,
+    modifier: Modifier = Modifier,
     onAny: (() -> Unit)? = null,
     leadingPainter: Painter? = null,
     onFieldClick: (() -> Unit)? = null,
@@ -43,7 +44,6 @@ internal fun LockboxInput(
         imeAction = ImeAction.Done
     ),
     singleLine: Boolean = false,
-    modifier: Modifier = Modifier,
 ) {
     val leadingIconSlot: (@Composable () -> Unit)? = leadingPainter?.let {
         {
@@ -125,10 +125,10 @@ internal fun LockboxInput(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             trailingIcon = {
-                if (isFocused) {
+                AnimatedVisibility(isFocused) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                     ) {
                         trailingContent()
                     }

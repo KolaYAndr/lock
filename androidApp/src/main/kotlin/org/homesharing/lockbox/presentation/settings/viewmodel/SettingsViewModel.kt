@@ -13,6 +13,5 @@ internal data class SettingsUiState(
     val fullName: String = "",
     val email: String = "",
     val imageLink: String = "",
-    val sub: String = "",
     val isRefreshing: Boolean = false,
 )

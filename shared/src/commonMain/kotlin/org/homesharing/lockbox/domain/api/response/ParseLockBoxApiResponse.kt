@@ -19,6 +19,7 @@ internal suspend fun <Dto, D> parseLockBoxApiResponse(
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
+        print(e)
         Response.Failure(e.cause?.message.toString())
     }
 
@@ -34,5 +35,6 @@ internal suspend fun <Dto> parseLockBoxApiResponse(
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
+        print(e)
         Response.Failure(e.cause?.message.toString())
     }

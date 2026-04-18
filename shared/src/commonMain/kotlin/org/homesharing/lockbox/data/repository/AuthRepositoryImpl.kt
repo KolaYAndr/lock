@@ -1,7 +1,7 @@
 package org.homesharing.lockbox.data.repository
 
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailResponseDto
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.AccountApi
@@ -42,6 +42,6 @@ internal class AuthRepositoryImpl(
     override suspend fun sendConfirmation(email: String): Response<ConfirmEmail> =
         parseLockBoxApiResponse(
             apiCall = { api.confirmEmail(email) },
-            mapper = ConfirmEmailResponseDto::toDomain
+            mapper = ConfirmEmailDto::toDomain
         )
 }

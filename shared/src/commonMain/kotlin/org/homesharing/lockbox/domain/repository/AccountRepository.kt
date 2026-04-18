@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
+import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
@@ -16,7 +17,7 @@ interface AccountRepository {
 
     val loggedIn: Flow<Boolean>
 
-    suspend fun getImageLink(sub: String): String
+    fun getImageLink(): String
 
     suspend fun sendImage(data: ByteArray): Response<Unit>
 
@@ -31,4 +32,16 @@ interface AccountRepository {
     suspend fun deactivateUser(): Response<UpdateAccount>
 
     suspend fun closeOtherSessions(): Response<CloseSessions>
+
+    suspend fun getProfileInfo(): Response<ProfileInfo>
+
+    suspend fun updateProfileInfo(
+        email: String? = null,
+        phoneNumber: String? = null,
+        fullName: String? = null,
+        livingAddress: String? = null,
+        passportIssuer: String? = null,
+        passportNumber: String? = null,
+        passportSeries: String? = null,
+    ): Response<Unit>
 }

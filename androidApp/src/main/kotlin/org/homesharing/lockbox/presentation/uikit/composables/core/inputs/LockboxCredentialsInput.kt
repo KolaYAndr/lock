@@ -2,13 +2,15 @@ package org.homesharing.lockbox.presentation.uikit.composables.core.inputs
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
@@ -16,56 +18,64 @@ internal fun LockboxCredentialsInput(
     text: String,
     onTextChange: (String) -> Unit,
     placeholderText: String,
+    canSave: Boolean,
+    onCancel: () -> Unit,
+    onFinish: () -> Unit,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    modifier: Modifier = Modifier,
 ) {
-    TextField(
+    LockboxInput(
         value = text,
-        onValueChange = { newValue -> onTextChange(newValue) },
-        modifier = modifier,
-        textStyle = LockBoxTheme.typography.headlineLarge,
-        keyboardActions = keyboardActions,
-        keyboardOptions = keyboardOptions,
-        shape = LockBoxTheme.shape.roundedCornerShape8,
-        placeholder = {
-            Text(
-                text = placeholderText,
-                style = LockBoxTheme.typography.headlineLarge,
-                color = LockBoxTheme.colors.grey500
-            )
+        onValueChange = onTextChange,
+        placeholderText = placeholderText,
+        trailingContent = {
+            if (canSave) {
+                IconButton(
+                    onClick = onCancel,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = LockBoxTheme.colors.grey800,
+                        contentColor = LockBoxTheme.colors.grey100
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.close),
+                        contentDescription = null
+                    )
+                }
+
+                IconButton(
+                    onClick = onFinish,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = LockBoxTheme.colors.grey800,
+                        contentColor = LockBoxTheme.colors.grey100
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.check),
+                        contentDescription = null
+                    )
+                }
+            }
         },
-        singleLine = true,
-        colors = TextFieldDefaults.colors(
-            focusedTextColor = LockBoxTheme.colors.constantWhite,
-            unfocusedTextColor = LockBoxTheme.colors.constantWhite,
-            disabledTextColor = LockBoxTheme.colors.constantWhite,
-            cursorColor = LockBoxTheme.colors.constantWhite,
-            focusedContainerColor = LockBoxTheme.colors.grey900,
-            unfocusedContainerColor = LockBoxTheme.colors.grey900,
-            disabledContainerColor = LockBoxTheme.colors.grey900,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-        )
+        visualTransformation = VisualTransformation.None,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        modifier = modifier
     )
 }
 
 @Preview
 @Composable
-private fun PreviewLighterLockboxCredentialsInput() {
+private fun PreviewLockboxCredentialsInput() {
     LockBoxTheme {
         LockboxCredentialsInput(
             text = "Aga",
             onTextChange = {},
-            placeholderText = "Vashe imya",
+            canSave = true,
+            onCancel = {},
+            onFinish = {},
+            placeholderText = "Vashe imya"
         )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewDarkerLockboxCredentialsInput() {
-    LockBoxTheme {
-        LockboxCredentialsInput(text = "Aga", onTextChange = {}, placeholderText = "Vashe imya")
     }
 }

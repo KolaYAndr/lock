@@ -82,8 +82,7 @@
     <string name="we_sent_message_to_indicated_number">We sent a confirmation code to the specified number</string>
     <string name="confirm">Confirm</string>
     <string name="active_sessions">Active sessions</string>
-    <string name="input_name">Enter name</string>
-    <string name="input_surname">Enter surname</string>
+    <string name="input_full_name">Введите полное имя</string>
     <string name="email_not_set">Email not set</string>
     <string name="add_full">Add</string>
     <string name="manage_devices">Manage devices</string>

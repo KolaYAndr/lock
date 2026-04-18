@@ -14,13 +14,13 @@ internal fun LockBoxPropertyInput(
     value: String,
     onValueChange: (String) -> Unit,
     onAny: () -> Unit,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
         showKeyboardOnFocus = true,
         imeAction = ImeAction.Done,
     ),
-    placeholderText: String,
-    modifier: Modifier = Modifier
+    placeholderText: String
 ) {
     LockboxInput(
         value = value,

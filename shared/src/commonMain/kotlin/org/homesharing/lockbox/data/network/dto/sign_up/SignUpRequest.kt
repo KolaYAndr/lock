@@ -1,0 +1,10 @@
+package org.homesharing.lockbox.data.network.dto.sign_up
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data class SignUpRequest(
+    val password: String,
+    val passwordRepeat: String,
+    val email: String,
+)

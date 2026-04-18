@@ -1,11 +1,11 @@
 package org.homesharing.lockbox.domain.model.box_list
 
-import org.homesharing.lockbox.data.network.dto.box.BoxResponseDto
-import org.homesharing.lockbox.data.network.dto.box_list.BoxListResponseDto
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
-import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusResponseDto
+import org.homesharing.lockbox.data.network.dto.box.BoxDto
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusDto
 import org.homesharing.lockbox.data.network.dto.box.StatusDto
+import org.homesharing.lockbox.data.network.dto.box_list.BoxListDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -14,7 +14,7 @@ class BoxListResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with multiple boxes`() = runBlocking {
-        val boxDto1 = BoxResponseDto(
+        val boxDto1 = BoxDto(
             address = "Addr1",
             alias = "Alias1",
             ownerSub = "owner1",
@@ -27,9 +27,9 @@ class BoxListResponseDtoToDomainTest {
             signalStrength = -50.0,
             timestamp = "2025-06-10T10:00:00"
         )
-        val boxWithStatusDto1 = BoxWithStatusResponseDto(box = boxDto1, status = statusDto1)
+        val boxWithStatusDto1 = BoxWithStatusDto(box = boxDto1, status = statusDto1)
 
-        val boxDto2 = BoxResponseDto(
+        val boxDto2 = BoxDto(
             address = "Addr2",
             alias = "Alias2",
             ownerSub = "owner2",
@@ -42,9 +42,9 @@ class BoxListResponseDtoToDomainTest {
             signalStrength = -70.0,
             timestamp = "2025-06-11T11:30:00"
         )
-        val boxWithStatusDto2 = BoxWithStatusResponseDto(box = boxDto2, status = statusDto2)
+        val boxWithStatusDto2 = BoxWithStatusDto(box = boxDto2, status = statusDto2)
 
-        val responseDto = BoxListResponseDto(
+        val responseDto = BoxListDto(
             boxes = listOf(boxWithStatusDto1, boxWithStatusDto2),
             total = 2,
             page = 0,
@@ -82,7 +82,7 @@ class BoxListResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with empty boxes list`() = runBlocking {
-        val responseDto = BoxListResponseDto(
+        val responseDto = BoxListDto(
             boxes = emptyList(),
             total = 0,
             page = 1,

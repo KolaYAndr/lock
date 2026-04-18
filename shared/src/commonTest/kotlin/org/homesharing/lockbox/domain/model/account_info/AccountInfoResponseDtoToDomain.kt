@@ -1,9 +1,9 @@
 package org.homesharing.lockbox.domain.model.account_info
 
-import org.homesharing.lockbox.data.network.dto.account_info.Account
-import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoResponseDto
-import org.homesharing.lockbox.data.network.dto.account_info.RealmAccess
-import org.homesharing.lockbox.data.network.dto.account_info.ResourceAccess
+import org.homesharing.lockbox.data.network.dto.account_info.AccountDto
+import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
+import org.homesharing.lockbox.data.network.dto.account_info.RealmAccessDto
+import org.homesharing.lockbox.data.network.dto.account_info.ResourceAccessDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -32,11 +32,11 @@ class AccountInfoResponseDtoToDomainTest {
         val sub = "subject-456"
         val typ = "typ-value"
 
-        val realmAccess = RealmAccess(roles = realmRoles)
-        val account = Account(roles = resourceRoles)
-        val resourceAccess = ResourceAccess(account = account)
+        val realmAccess = RealmAccessDto(roles = realmRoles)
+        val account = AccountDto(roles = resourceRoles)
+        val resourceAccess = ResourceAccessDto(account = account)
 
-        val dto = AccountInfoResponseDto(
+        val dto = AccountInfoDto(
             acr = acr,
             allowedOrigins = allowedOrigins,
             aud = aud,
@@ -85,14 +85,14 @@ class AccountInfoResponseDtoToDomainTest {
         val jti = "jti2"
         val name: String? = null
         val preferredUsername = "user2"
-        val realmAccess = RealmAccess(roles = emptyList())
-        val resourceAccess = ResourceAccess(account = Account(roles = emptyList()))
+        val realmAccess = RealmAccessDto(roles = emptyList())
+        val resourceAccess = ResourceAccessDto(account = AccountDto(roles = emptyList()))
         val scope = ""
         val sid = "session-456"
         val sub = "subject-789"
         val typ = "typ2"
 
-        val dto = AccountInfoResponseDto(
+        val dto = AccountInfoDto(
             acr = acr,
             allowedOrigins = allowedOrigins,
             aud = aud,

@@ -1,14 +1,14 @@
 package org.homesharing.lockbox.domain.model.open_box
 
+import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxResponseDto
 
 class OpenBoxResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with typical call value`() {
-        val dto = OpenBoxResponseDto(
+        val dto = OpenBoxDto(
             call = "CALL_123",
             id = 42,
             issuerSub = "issuer-xyz",
@@ -24,7 +24,7 @@ class OpenBoxResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with empty call`() {
-        val dto = OpenBoxResponseDto(
+        val dto = OpenBoxDto(
             call = "",
             id = 1,
             issuerSub = "issuer-1",
@@ -40,7 +40,7 @@ class OpenBoxResponseDtoToDomainTest {
 
     @Test
     fun `maps correctly with whitespace call`() {
-        val dto = OpenBoxResponseDto(
+        val dto = OpenBoxDto(
             call = "   ",
             id = 2,
             issuerSub = "issuer-2",

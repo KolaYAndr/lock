@@ -29,11 +29,11 @@ internal fun LockboxPasswordInput(
     onSeenChange: () -> Unit,
     onClearText: () -> Unit,
     errorText: String?,
-    interactionSource: MutableInteractionSource,
-    keyboardActions: KeyboardActions,
-    keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
+    keyboardActions: KeyboardActions = KeyboardActions(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     LockboxInput(
         interactionSource = interactionSource,
         value = password,
@@ -80,18 +80,15 @@ internal fun LockboxPasswordInput(
 @Preview
 private fun PreviewLockboxPasswordInput() {
     LockBoxTheme {
-        var value by remember { mutableStateOf("password") }
         var isSeen by remember { mutableStateOf(false) }
-        val interactionSource = remember { MutableInteractionSource() }
 
         LockboxPasswordInput(
-            password = value,
-            onValueChange = { value = it },
+            password = "1234",
+            onValueChange = { },
             isSeen = isSeen,
             onSeenChange = { isSeen = !isSeen },
-            onClearText = { value = "" },
+            onClearText = { },
             modifier = Modifier.fillMaxWidth(),
-            interactionSource = interactionSource,
             errorText = "error",
             keyboardActions = KeyboardActions(),
             keyboardOptions = KeyboardOptions()

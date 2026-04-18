@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.presentation.sign_up.steps
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,8 +37,6 @@ internal fun PasswordInputStep(
 ) {
     val passwordFocusRequester = remember { FocusRequester() }
     val passwordRepeatedFocusRequester = remember { FocusRequester() }
-    val passwordInteractionSource = remember { MutableInteractionSource() }
-    val passwordRepeatedInteractionSource = remember { MutableInteractionSource() }
 
     var isPasswordSeen by remember { mutableStateOf(false) }
     var isPasswordRepeatedSeen by remember { mutableStateOf(false) }
@@ -65,7 +62,6 @@ internal fun PasswordInputStep(
         password = password,
         onValueChange = { onPasswordChange(it) },
         onClearText = { onPasswordChange("") },
-        interactionSource = passwordInteractionSource,
         errorText = null,
         keyboardActions = KeyboardActions(onNext = { passwordRepeatedFocusRequester.requestFocus() }),
         keyboardOptions = KeyboardOptions(
@@ -90,8 +86,7 @@ internal fun PasswordInputStep(
         password = passwordRepeated,
         onValueChange = { onPasswordRepeatedChange(it) },
         onClearText = { onPasswordRepeatedChange("") },
-        interactionSource = passwordRepeatedInteractionSource,
-        errorText = passwordRepeatedError?.let {parsePasswordRepeatedErrorText(it) },
+        errorText = passwordRepeatedError?.let { parsePasswordRepeatedErrorText(it) },
         isSeen = isPasswordRepeatedSeen,
         onSeenChange = { isPasswordRepeatedSeen = !isPasswordRepeatedSeen },
         keyboardActions = KeyboardActions(onDone = { onCreate() }),

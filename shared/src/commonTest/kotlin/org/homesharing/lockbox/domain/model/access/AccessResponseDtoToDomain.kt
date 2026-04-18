@@ -2,7 +2,7 @@ package org.homesharing.lockbox.domain.model.access
 
 import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
-import org.homesharing.lockbox.data.network.dto.access.AccessResponseDto
+import org.homesharing.lockbox.data.network.dto.access.AccessesDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -11,7 +11,7 @@ class AccessResponseMapperTest {
 
     @Test
     fun `toDomain returns empty list when receiving empty list`() {
-        val responseDto = AccessResponseDto(listOfAccesses = emptyList())
+        val responseDto = AccessesDto(listOfAccesses = emptyList())
 
         val domain = responseDto.toDomain()
 
@@ -30,7 +30,7 @@ class AccessResponseMapperTest {
             macAddress = mac1,
             uuid = id1
         )
-        val responseDto = AccessResponseDto(listOfAccesses = listOf(dto1))
+        val responseDto = AccessesDto(listOfAccesses = listOf(dto1))
 
         val domainWrapper = responseDto.toDomain()
 
@@ -57,7 +57,7 @@ class AccessResponseMapperTest {
             macAddress = "EE:EE:EE:EE:EE:EE",
             uuid = "id-ms"
         )
-        val responseDto = AccessResponseDto(listOfAccesses = listOf(dto))
+        val responseDto = AccessesDto(listOfAccesses = listOf(dto))
 
         val domainWrapper = responseDto.toDomain()
         val item = domainWrapper.accessList.single()

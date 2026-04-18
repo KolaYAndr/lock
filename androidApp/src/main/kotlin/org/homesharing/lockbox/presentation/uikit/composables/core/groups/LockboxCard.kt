@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.presentation.uikit.composables.core.groups
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -51,34 +50,27 @@ internal fun LockboxCard(
 private fun PreviewCard() {
     LockBoxTheme {
         LockboxCard {
-            var email by remember { mutableStateOf("") }
-            val emailInteractionSource = remember { MutableInteractionSource() }
             LockboxEmailInput(
-                email = email,
-                onValueChange = { email = it },
-                onClearText = { email = "" },
-                interactionSource = emailInteractionSource,
+                email = "",
+                onValueChange = { },
+                onClearText = { },
                 keyboardActions = KeyboardActions(),
                 errorText = null,
                 keyboardOptions = KeyboardOptions(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            var value by remember { mutableStateOf("") }
             var isSeen by remember { mutableStateOf(false) }
-            val interactionSource = remember { MutableInteractionSource() }
-
             LockboxPasswordInput(
-                password = value,
-                onValueChange = { value = it },
+                password = "",
+                onValueChange = { },
                 isSeen = isSeen,
                 onSeenChange = { isSeen = !isSeen },
-                onClearText = { value = "" },
+                onClearText = { },
                 modifier = Modifier.fillMaxWidth(),
                 errorText = null,
                 keyboardActions = KeyboardActions(),
                 keyboardOptions = KeyboardOptions(),
-                interactionSource = interactionSource
             )
         }
     }

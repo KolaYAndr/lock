@@ -310,7 +310,6 @@ private fun NewNumberInputStep(
             onValueChange = onNumberChange,
             onClearText = { onNumberChange("") },
             errorText = if (numberError) stringResource(R.string.phone_number_doesnt_match_pattern) else null,
-            interactionSource = interactionSource,
             keyboardActions = KeyboardActions(
                 onDone = {
                     changePhoneNumber()
