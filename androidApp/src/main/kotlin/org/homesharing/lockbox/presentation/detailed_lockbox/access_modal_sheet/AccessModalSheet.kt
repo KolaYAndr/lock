@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -599,7 +600,9 @@ private fun AddGuestContent(
                 value = guestName,
                 onValueChange = onChangeGuestName,
                 placeholderText = stringResource(R.string.guest_name_placeholder),
-                onAny = { keyboardManager?.hide() },
+                keyboardActions = KeyboardActions(
+                    onAny = { keyboardManager?.hide() }
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
         }

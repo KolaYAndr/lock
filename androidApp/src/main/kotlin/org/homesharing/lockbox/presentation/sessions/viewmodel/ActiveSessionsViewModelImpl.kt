@@ -33,7 +33,7 @@ internal class ActiveSessionsViewModelImpl(
                     it.copy(
                         sessions = sessions.data.sessions
                             .filter { session -> session.sessionId != id.data.sessionId }
-                            .sortedByDescending { session -> session.lastAccessed }
+                            .sortedByDescending { session -> session.lastActive }
                     )
                 }
 

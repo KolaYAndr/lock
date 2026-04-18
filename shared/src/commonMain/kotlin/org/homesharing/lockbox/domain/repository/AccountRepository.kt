@@ -3,7 +3,6 @@ package org.homesharing.lockbox.domain.repository
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo
-import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -31,7 +30,7 @@ interface AccountRepository {
 
     suspend fun deactivateUser(): Response<UpdateAccount>
 
-    suspend fun closeOtherSessions(): Response<CloseSessions>
+    suspend fun closeOtherSessions(): Response<Unit>
 
     suspend fun getProfileInfo(): Response<ProfileInfo>
 

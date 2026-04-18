@@ -45,6 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.sessions.Session
 import org.homesharing.lockbox.presentation.sessions.viewmodel.ActiveSessionsUiState
@@ -59,8 +62,8 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.groups.Lockbo
 import org.homesharing.lockbox.presentation.uikit.composables.core.groups.LockboxGroup
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
-import java.util.Date
 import java.util.concurrent.TimeUnit
+import kotlin.time.Clock
 
 private val minuteMillis = TimeUnit.MINUTES.toMillis(1)
 private val hourMillis = TimeUnit.HOURS.toMillis(1)
@@ -175,7 +178,7 @@ private fun ActiveSessionScreen(
                             painter = painterResource(R.drawable.monitor_smartphone),
                             name = stringResource(R.string.unknown_device),
                             location = session.ipAddress,
-                            accessTime = lastAccessedString(session.lastAccessed),
+                            accessTime = getLastAccessedString(session.lastActive),
                             modifier = Modifier.fillMaxWidth()
                         )
 
@@ -229,9 +232,11 @@ private fun CloseSessionsDialog(
 
 @Composable
 @ReadOnlyComposable
-private fun lastAccessedString(lastAccessed: Long): String {
-    val now = System.currentTimeMillis()
-    val diff = now - lastAccessed
+private fun getLastAccessedString(lastActive: LocalDateTime): String {
+    val tz = TimeZone.currentSystemDefault()
+    val now = Clock.System.now()
+    val lastActiveInstant = lastActive.toInstant(tz)
+    val diff = (now - lastActiveInstant).inWholeMilliseconds
 
     return when {
         diff > fourteenDaysMillis -> {
@@ -241,7 +246,7 @@ private fun lastAccessedString(lastAccessed: Long): String {
                 ConfigurationCompat.getLocales(configuration).get(0)
                     ?: (LocaleListCompat.getDefault()[0]!!)
             )
-            sdf.format(Date(lastAccessed))
+            sdf.format(lastActive)
         }
 
         diff < hourMillis -> {
@@ -305,7 +310,8 @@ private fun Device(
 @Composable
 private fun PreviewActiveSessions() {
     LockBoxTheme {
-        val state = ActiveSessionsUiState(listOf(Session("", System.currentTimeMillis(), "")))
+        val state =
+            ActiveSessionsUiState(listOf(Session("", LocalDateTime.parse("2026-04-18"), "")))
         ActiveSessionScreen(state, {}, {}, Modifier.fillMaxSize())
     }
 }

@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.presentation.uikit.composables.core.inputs
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -33,9 +32,7 @@ internal fun LockboxPasswordInput(
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     LockboxInput(
-        interactionSource = interactionSource,
         value = password,
         onValueChange = onValueChange,
         visualTransformation = if (isSeen) VisualTransformation.None else PasswordVisualTransformation(),

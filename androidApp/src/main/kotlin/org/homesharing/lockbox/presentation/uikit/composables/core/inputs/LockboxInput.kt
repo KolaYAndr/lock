@@ -18,6 +18,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +36,6 @@ internal fun LockboxInput(
     enabled: Boolean,
     placeholderText: String,
     modifier: Modifier = Modifier,
-    onAny: (() -> Unit)? = null,
     leadingPainter: Painter? = null,
     onFieldClick: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
@@ -43,6 +43,7 @@ internal fun LockboxInput(
         showKeyboardOnFocus = true,
         imeAction = ImeAction.Done
     ),
+    keyboardActions: KeyboardActions = KeyboardActions(),
     singleLine: Boolean = false,
 ) {
     val leadingIconSlot: (@Composable () -> Unit)? = leadingPainter?.let {
@@ -81,9 +82,7 @@ internal fun LockboxInput(
             )
         },
         keyboardOptions = keyboardOptions,
-        keyboardActions = KeyboardActions(
-            onAny = { onAny?.invoke() }
-        ),
+        keyboardActions = keyboardActions,
         leadingIcon = leadingIconSlot,
         singleLine = singleLine
     )
@@ -97,12 +96,12 @@ internal fun LockboxInput(
     placeholderText: String,
     trailingContent: @Composable RowScope.() -> Unit,
     visualTransformation: VisualTransformation,
-    interactionSource: MutableInteractionSource,
-    errorText: String? = null,
-    keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,
+    errorText: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -128,7 +127,7 @@ internal fun LockboxInput(
                 AnimatedVisibility(isFocused) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                        horizontalArrangement = Arrangement.End
                     ) {
                         trailingContent()
                     }

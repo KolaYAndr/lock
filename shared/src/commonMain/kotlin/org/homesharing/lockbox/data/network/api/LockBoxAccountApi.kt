@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.data.network.api
 
 import io.ktor.client.HttpClient
-import io.ktor.client.request.delete
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -21,8 +20,6 @@ import org.homesharing.lockbox.data.network.api.response.toAuthResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.KOTLIN_BASE_ENDPOINT
-import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsDto
-import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsRequest
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequest
 import org.homesharing.lockbox.data.network.dto.post_image.PostImageDto
@@ -46,6 +43,7 @@ private const val USERS = "users"
 private const val AVATAR = "avatar"
 private const val SIGN_UP = "signup"
 private const val SESSIONS = "sessions"
+private const val LOGOUT = "logout"
 private const val UPLOAD = "upload"
 private const val MAIL = "mail"
 private const val SEND = "send"
@@ -62,7 +60,7 @@ private const val PROFILE_INFO = "profile-info"
 internal const val TOKEN_URL =
     "$KEYCLOACK_BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 internal const val SIGN_UP_URL = "$KOTLIN_BASE_ENDPOINT/$USERS/$SIGN_UP"
-internal const val SESSIONS_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$SESSIONS"
+internal const val SESSIONS_URL = "$GO_BASE_ENDPOINT/$SESSIONS"
 internal const val AVATARS_POST_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$USER/$AVATAR/$UPLOAD"
 internal const val CONFIRM_EMAIL_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
 internal const val UPDATE_ACCOUNT_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$ME"
@@ -149,14 +147,10 @@ internal class LockBoxAccountApi(
         }.toApiResponse<UpdateAccountDto>(json)
     }
 
-    override suspend fun closeOtherSessions(
-        id: String,
-    ): ApiResponse {
-        val request = CloseSessionsRequest(id)
-        return client.delete {
-            url(SESSIONS_URL)
-            setBody(request)
-        }.toApiResponse<CloseSessionsDto>(json)
+    override suspend fun closeOtherSessions(): ApiResponse {
+        return client.post {
+            url("$SESSIONS_URL/$LOGOUT")
+        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun getProfileInfo(): ApiResponse {

@@ -32,9 +32,7 @@ internal interface AccountApi {
         lastName: String? = null
     ): ApiResponse
 
-    suspend fun closeOtherSessions(
-        id: String
-    ): ApiResponse
+    suspend fun closeOtherSessions(): ApiResponse
 
     suspend fun getProfileInfo(): ApiResponse
 

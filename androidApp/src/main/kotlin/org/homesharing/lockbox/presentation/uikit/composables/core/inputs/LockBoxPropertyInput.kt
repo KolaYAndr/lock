@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.presentation.uikit.composables.core.inputs
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,22 +14,22 @@ import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 internal fun LockBoxPropertyInput(
     value: String,
     onValueChange: (String) -> Unit,
-    onAny: () -> Unit,
+    placeholderText: String,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.Text,
         showKeyboardOnFocus = true,
         imeAction = ImeAction.Done,
     ),
-    placeholderText: String
+    keyboardActions: KeyboardActions = KeyboardActions()
 ) {
     LockboxInput(
         value = value,
         onValueChange = onValueChange,
         enabled = true,
         placeholderText = placeholderText,
-        onAny = onAny,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         modifier = modifier
     )
 }
@@ -43,7 +44,6 @@ internal fun LockBoxPropertyInput(
         onValueChange = {},
         enabled = false,
         placeholderText = "",
-        onAny = {},
         modifier = modifier
     )
 }
@@ -55,7 +55,6 @@ private fun PreviewPropertyInput() {
         LockBoxPropertyInput(
             value = "Dom",
             onValueChange = {},
-            onAny = {},
             placeholderText = "",
             modifier = Modifier.fillMaxWidth()
         )

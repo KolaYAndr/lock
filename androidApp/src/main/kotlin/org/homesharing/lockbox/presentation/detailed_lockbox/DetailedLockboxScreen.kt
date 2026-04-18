@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -599,12 +600,14 @@ private fun ChangePropertyBottomSheet(
             LockBoxPropertyInput(
                 value = currentValue,
                 onValueChange = { newValue -> currentValue = newValue },
-                onAny = {
-                    if (canSaveChanges) {
-                        onSaveChanges(currentValue)
-                        onDismiss()
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        if (canSaveChanges) {
+                            onSaveChanges(currentValue)
+                            onDismiss()
+                        }
                     }
-                },
+                ),
                 placeholderText = placeholderText,
                 modifier = Modifier.fillMaxWidth()
             )

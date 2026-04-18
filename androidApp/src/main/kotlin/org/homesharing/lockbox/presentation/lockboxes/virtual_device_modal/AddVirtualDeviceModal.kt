@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -143,7 +144,9 @@ private fun AddVirtualDeviceModal(
                     value = deviceName,
                     placeholderText = stringResource(R.string.device_name_placeholder),
                     onValueChange = onChangeDeviceName,
-                    onAny = addressFocusRequester::requestFocus,
+                    keyboardActions = KeyboardActions(
+                        onAny = { addressFocusRequester.requestFocus() }
+                    ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         showKeyboardOnFocus = true,
@@ -172,7 +175,9 @@ private fun AddVirtualDeviceModal(
                     value = deviceAddress,
                     placeholderText = stringResource(R.string.device_address_placeholder),
                     onValueChange = onChangeDeviceAddress,
-                    onAny = macAddressFocusRequester::requestFocus,
+                    keyboardActions = KeyboardActions(
+                        onAny = { macAddressFocusRequester.requestFocus() }
+                    ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         showKeyboardOnFocus = true,
@@ -201,10 +206,12 @@ private fun AddVirtualDeviceModal(
                     value = deviceAddress,
                     placeholderText = stringResource(R.string.device_mac_address_placeholder),
                     onValueChange = onChangeMacAddress,
-                    onAny = {
-                        onCreateVirtualDevice()
-                        onDismiss()
-                    },
+                    keyboardActions = KeyboardActions(
+                        onAny = {
+                            onCreateVirtualDevice()
+                            onDismiss()
+                        }
+                    ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         showKeyboardOnFocus = true,

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
-import org.homesharing.lockbox.data.network.dto.close_sessions.CloseSessionsDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
@@ -16,8 +15,6 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo
 import org.homesharing.lockbox.domain.model.account_info.toDomain
-import org.homesharing.lockbox.domain.model.close_sessions.CloseSessions
-import org.homesharing.lockbox.domain.model.close_sessions.toDomain
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.profile_info.toDomain
 import org.homesharing.lockbox.domain.model.sessions.Sessions
@@ -100,13 +97,11 @@ internal class AccountRepositoryImpl(
             mapper = UpdateAccountDto::toDomain
         )
 
-    override suspend fun closeOtherSessions(): Response<CloseSessions> {
-        val accountInfo = parseAccountInfo()
+    override suspend fun closeOtherSessions(): Response<Unit> {
         return parseLockBoxApiResponse(
             apiCall = {
-                api.closeOtherSessions(id = (accountInfo as? Response.Success<AccountInfo>)?.data?.sessionId.orEmpty())
+                api.closeOtherSessions()
             },
-            mapper = CloseSessionsDto::toDomain
         )
     }
 

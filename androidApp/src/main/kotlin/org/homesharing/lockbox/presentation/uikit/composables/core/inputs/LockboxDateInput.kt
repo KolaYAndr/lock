@@ -20,7 +20,6 @@ internal fun LockboxDateInput(
         value = date,
         onValueChange = {},
         enabled = false,
-        onAny = null,
         placeholderText = stringResource(R.string.choose_date),
         leadingPainter = painterResource(R.drawable.calendar),
         onFieldClick = onFieldClick

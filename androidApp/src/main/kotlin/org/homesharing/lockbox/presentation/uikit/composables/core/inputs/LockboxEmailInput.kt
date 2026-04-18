@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.presentation.uikit.composables.core.inputs
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -9,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,7 +27,6 @@ internal fun LockboxEmailInput(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     LockboxInput(
         value = email,
         onValueChange = onValueChange,
@@ -51,7 +48,6 @@ internal fun LockboxEmailInput(
                 }
             }
         },
-        interactionSource = interactionSource,
         modifier = modifier
     )
 }
