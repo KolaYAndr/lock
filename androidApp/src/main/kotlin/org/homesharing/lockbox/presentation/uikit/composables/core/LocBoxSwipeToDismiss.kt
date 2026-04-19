@@ -31,7 +31,7 @@ internal fun LockBoxSwipeToDismiss(
     val state = remember {
         SwipeToDismissBoxState(
             initialValue = SwipeToDismissBoxValue.Settled,
-            positionalThreshold = { .2f }
+            positionalThreshold = { distance -> distance * 0.2f }
         )
     }
     SwipeToDismissBox(
