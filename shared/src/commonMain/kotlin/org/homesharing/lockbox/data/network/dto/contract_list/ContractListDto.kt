@@ -8,7 +8,7 @@ internal data class ContractListDto(
     @SerialName("items")
     val contracts: List<ContractDto>,
     @SerialName("next_cursor")
-    val nextCursor: String
+    val nextCursor: String?
 )
 
 @Serializable

@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation.contracts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,16 +29,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -45,8 +47,10 @@ import kotlinx.datetime.toJavaLocalDate
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.presentation.contracts.viewmodel.ContractsViewModel
+import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composables.AddRow
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
+import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSwipeToDismiss
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.templates.EmptyScreenContent
 import org.homesharing.lockbox.presentation.uikit.composables.templates.ErrorScreenContent
@@ -59,23 +63,33 @@ import java.time.format.DateTimeFormatter
 internal fun ContractsScreen(
     contractsViewModel: ContractsViewModel = koinViewModel(),
 ) {
+    val lazyContracts = contractsViewModel.contracts.collectAsLazyPagingItems()
+    ActionOnSharedFlow(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        flow = contractsViewModel.deleteSuccess
+    ) {
+        lazyContracts.refresh()
+    }
+
     ContractsScreen(
-        contracts = contractsViewModel.contracts,
+        lazyContracts = lazyContracts,
+        onDelete = contractsViewModel::deleteContract,
         modifier = Modifier.fillMaxSize(),
     )
 }
 
 @Composable
 private fun ContractsScreen(
-    contracts: Flow<PagingData<Contract>>,
+    lazyContracts: LazyPagingItems<Contract>,
+    onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val lazyContracts = contracts.collectAsLazyPagingItems()
     when (lazyContracts.loadState.refresh) {
         is LoadState.NotLoading -> {
             LockBoxContractScreen(
                 contracts = lazyContracts,
                 onAddDocument = { },
+                onDelete = onDelete,
                 modifier = modifier,
             )
         }
@@ -98,6 +112,7 @@ private fun ContractsScreen(
 private fun LockBoxContractScreen(
     contracts: LazyPagingItems<Contract>,
     onAddDocument: () -> Unit,
+    onDelete: (String) -> Unit,
     modifier: Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -141,12 +156,16 @@ private fun LockBoxContractScreen(
                 items(contracts.itemCount) { index ->
                     val contract = contracts[index]
                     contract?.let {
-                        Contract(
-                            formatter = formatter,
-                            contract = contract,
-                            onClick = {},
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        LockBoxSwipeToDismiss(
+                            onDismiss = { onDelete(contract.id) },
+                            modifier = Modifier.fillParentMaxWidth()
+                        ) {
+                            Contract(
+                                formatter = formatter,
+                                contract = contract,
+                                onClick = {},
+                            )
+                        }
                     }
                 }
 
@@ -188,7 +207,11 @@ private fun Contract(
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.clickable { onClick(contract.id) }) {
+    Column(
+        modifier = modifier
+            .clip(LockBoxTheme.shape.roundedCornerShape8)
+            .background(LockBoxTheme.colors.grey950)
+            .clickable { onClick(contract.id) }) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painterResource(R.drawable.document),
@@ -215,7 +238,7 @@ private fun Contract(
                 Text(
                     text = contract.date.toJavaLocalDate().format(formatter),
                     color = LockBoxTheme.colors.grey500,
-                    style = LockBoxTheme.typography.footnote
+                    style = LockBoxTheme.typography.footnote,
                 )
             }
 
@@ -270,8 +293,8 @@ private fun PreviewContractsScreen() {
                     LoadState.NotLoading(true)
                 )
             )
-        )
-        ContractsScreen(pagingData, Modifier.fillMaxSize())
+        ).collectAsLazyPagingItems()
+        ContractsScreen(pagingData, {}, Modifier.fillMaxSize())
     }
 }
 
@@ -280,7 +303,7 @@ private fun PreviewContractsScreen() {
 private fun PreviewLoading() {
     LockBoxTheme {
         val pagingData = flowOf(PagingData.empty<Contract>())
-        ContractsScreen(pagingData, Modifier.fillMaxSize())
+        ContractsScreen(pagingData.collectAsLazyPagingItems(), {}, Modifier.fillMaxSize())
     }
 }
 
@@ -296,7 +319,7 @@ private fun PreviewEmptyScreen() {
                     LoadState.NotLoading(false)
                 )
             )
-        )
-        ContractsScreen(pagingData, Modifier.fillMaxSize())
+        ).collectAsLazyPagingItems()
+        ContractsScreen(pagingData, {}, Modifier.fillMaxSize())
     }
 }

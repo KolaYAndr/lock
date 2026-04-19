@@ -163,6 +163,7 @@
     <string name="user_already_exists">Пользователь с такой почтой уже существует</string>
     <string name="email_doesnt_match_pattern">Введите действительную почту</string>
     <string name="could_not_close_other_sessions">Не удалось завершить другие сессии</string>
+    <string name="could_not_delete_contract">Не удалось удалить контракт</string>
     <string name="could_not_delete_account">Не удалось деактивировать аккаунт</string>
     <string name="invalid_credentials">Данные введены неправильно</string>
     <string name="timeout">Истекло время выполнения запроса. Проверьте соединение с интернетом</string>

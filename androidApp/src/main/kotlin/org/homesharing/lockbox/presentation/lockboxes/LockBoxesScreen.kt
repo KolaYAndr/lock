@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +38,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.box.Box
@@ -145,16 +143,11 @@ private fun LockBoxScreen(
     modifier: Modifier,
 ) {
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
     LockBoxPullToRefresh(
         modifier = modifier,
         isRefreshing = boxes.loadState.refresh is LoadState.Loading,
-        onRefresh = {
-            boxes.refresh()
-            coroutineScope.launch {
-                listState.scrollToItem(0)
-            }
-        },
+        onRefresh = boxes::refresh
+        ,
         state = rememberPullToRefreshState(),
     ) {
         val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
@@ -240,7 +233,6 @@ private fun LockBox(
                     text = statusBox.box.address,
                     style = LockBoxTheme.typography.footnote,
                     color = LockBoxTheme.colors.grey500,
-                    modifier = Modifier.padding(top = 2.dp)
                 )
             }
 

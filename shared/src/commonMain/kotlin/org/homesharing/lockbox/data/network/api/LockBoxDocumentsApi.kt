@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.network.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -32,6 +33,12 @@ internal class LockBoxDocumentsApi(
             parameter(LIMIT, limit)
             cursor?.let { parameter(CURSOR, it) }
         }.toApiResponse<ContractListDto>(json)
+    }
+
+    override suspend fun deleteContract(id: String): ApiResponse<Unit> {
+        return client.delete {
+            url("$CONTRACTS_URL/$id")
+        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun getFlats(cursor: String, limit: Int): ApiResponse<FlatListDto> {

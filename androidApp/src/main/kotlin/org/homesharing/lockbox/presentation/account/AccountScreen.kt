@@ -159,7 +159,11 @@ private fun AccountScreen(
                         focusManager.clearFocus()
                     }
                 ),
-                onFinish = onUpdateName,
+                onFinish = {
+                    onChangeName(currentFullName)
+                    onUpdateName()
+                    focusManager.clearFocus()
+                },
                 onCancel = {
                     currentFullName = accountUiState.fullName
                     focusManager.clearFocus()

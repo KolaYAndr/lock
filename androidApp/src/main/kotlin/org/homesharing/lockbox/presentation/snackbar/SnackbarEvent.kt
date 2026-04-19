@@ -161,4 +161,11 @@ internal object SnackbarDefaultEvents {
             effect = { onRetry() }
         )
     )
+
+    fun couldNotDeleteContract(onRetry: () -> Unit) = SnackbarEvent(
+        message = R.string.could_not_delete_contract,
+        action = SnackbarAction(
+            effect = onRetry
+        )
+    )
 }

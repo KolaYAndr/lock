@@ -152,6 +152,7 @@
     <string name="user_already_exists">User with this email already exists</string>
     <string name="email_doesnt_match_pattern">Enter a valid email</string>
     <string name="could_not_close_other_sessions">Failed to finish other sessions</string>
+    <string name="could_not_delete_contract">Failed to delete contract</string>
     <string name="could_not_delete_account">Failed to deactivate account</string>
     <string name="invalid_credentials">Invalid credentials entered</string>
     <string name="timeout">Request timeout. Check internet connection</string>

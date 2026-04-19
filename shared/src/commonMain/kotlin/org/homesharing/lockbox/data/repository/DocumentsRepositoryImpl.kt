@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.homesharing.lockbox.data.network.api.DocumentsApi
 import org.homesharing.lockbox.data.network.paging.ContractsPagingSource
+import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.domain.model.contract.toDomain
 import org.homesharing.lockbox.domain.repository.DocumentsRepository
@@ -31,4 +33,10 @@ internal class DocumentsRepositoryImpl(
                     contractDto.toDomain()
                 }
             }
+
+    override suspend fun deleteContract(id: String): Response<Unit> {
+        return parseLockBoxApiResponse {
+            documentsApi.deleteContract(id)
+        }
+    }
 }

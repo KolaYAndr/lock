@@ -11,6 +11,10 @@ internal interface DocumentsApi {
         limit: Int,
     ): ApiResponse<ContractListDto>
 
+    suspend fun deleteContract(
+        id: String
+    ): ApiResponse<Unit>
+
     suspend fun getFlats(
         cursor: String,
         limit: Int,

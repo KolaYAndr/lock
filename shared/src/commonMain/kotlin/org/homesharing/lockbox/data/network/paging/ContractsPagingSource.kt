@@ -25,7 +25,8 @@ internal class ContractsPagingSource(
             return when (apiResponse) {
                 is ApiResponse.Failure -> LoadResult.Error(Throwable(apiResponse.message))
                 is ApiResponse.Success -> {
-                    val endOfPagination = apiResponse.data.contracts.size < size
+                    val endOfPagination =
+                        apiResponse.data.contracts.size < size || apiResponse.data.nextCursor == null
                     LoadResult.Page(
                         data = apiResponse.data.contracts,
                         prevKey = cursor,
