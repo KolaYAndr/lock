@@ -2,15 +2,15 @@ package org.homesharing.lockbox.data.network.api.response
 
 import kotlinx.serialization.Serializable
 
-internal sealed interface ApiResponse {
+internal sealed interface ApiResponse<out T> {
     @Serializable
     data class Success<T>(
         val data: T
-    ) : ApiResponse
+    ) : ApiResponse<T>
 
     @Serializable
     data class Failure(
         val errorCode: String,
         val message: String,
-    ): ApiResponse
+    ) : ApiResponse<Nothing>
 }

@@ -5,12 +5,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.AccountApi
 import org.homesharing.lockbox.data.network.dto.account_info.AccountInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
-import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.account_info.AccountInfo

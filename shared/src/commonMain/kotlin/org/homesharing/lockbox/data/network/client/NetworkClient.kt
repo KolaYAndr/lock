@@ -24,10 +24,13 @@ import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 
+private const val API = "api"
+private const val V1 = "v1"
+
 internal const val KEYCLOACK_BASE_ENDPOINT = "https://api.lockboxes.ru"
-private const val API_VERSION = "api/v1"
-internal const val KOTLIN_BASE_ENDPOINT = "https://kotlin.ingress.lockboxes.ru/$API_VERSION"
-internal const val GO_BASE_ENDPOINT = "https://go.ingress.lockboxes.ru"
+internal const val KOTLIN_BASE_ENDPOINT = "https://kotlin.ingress.lockboxes.ru/$API/$V1"
+internal const val GO_BASE_ENDPOINT = "https://go.ingress.lockboxes.ru/$API"
+
 private const val CLIENT_TIMEOUT = 5_000L
 private const val CLIENT_ID = "client_id"
 private const val WEB_FRONT = "web-front"

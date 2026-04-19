@@ -2,28 +2,25 @@ package org.homesharing.lockbox.data.network.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import org.homesharing.lockbox.data.network.api.BoxesApi
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
-import org.homesharing.lockbox.data.network.dto.box_list.BoxListDto
-import org.homesharing.lockbox.domain.api.BoxesApi
-import org.homesharing.lockbox.domain.model.box.BoxWithStatus
-import org.homesharing.lockbox.domain.model.box.toDomain
+import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusDto
 import kotlin.coroutines.cancellation.CancellationException
 
 private const val STARTING_PAGE = 0
 
-@Suppress("UNCHECKED_CAST")
 internal class BoxesPagingSource(
     private val boxesApi: BoxesApi,
-) : PagingSource<Int, BoxWithStatus>() {
+) : PagingSource<Int, BoxWithStatusDto>() {
 
-    override fun getRefreshKey(state: PagingState<Int, BoxWithStatus>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, BoxWithStatusDto>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BoxWithStatus> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BoxWithStatusDto> {
         val page = params.key ?: STARTING_PAGE
         val size = params.loadSize
         try {
@@ -41,11 +38,10 @@ internal class BoxesPagingSource(
                     }
                 }
 
-                is ApiResponse.Success<*> -> {
-                    val response = apiResponse as ApiResponse.Success<BoxListDto>
-                    val endOfPagination = response.data.size < size
+                is ApiResponse.Success -> {
+                    val endOfPagination = apiResponse.data.boxes.size < size
                     LoadResult.Page(
-                        data = response.data.boxes.map { it.toDomain() },
+                        data = apiResponse.data.boxes,
                         prevKey = if (page == 0) null else page - 1,
                         nextKey = if (endOfPagination) null else page + 1
                     )

@@ -32,7 +32,6 @@ import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequest
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequest
-import org.homesharing.lockbox.domain.api.AccountApi
 
 private const val REALM = "realms/lockbox"
 private const val PROTOCOL = "protocol"
@@ -76,7 +75,7 @@ internal class LockBoxAccountApi(
         username: String,
         password: String,
         passwordRepeated: String,
-    ): ApiResponse {
+    ): ApiResponse<Unit> {
         val request = SignUpRequest(
             email = username,
             password = password,
@@ -104,7 +103,7 @@ internal class LockBoxAccountApi(
         }
     ).toAuthResponse(json)
 
-    override suspend fun sendImage(data: ByteArray): ApiResponse {
+    override suspend fun sendImage(data: ByteArray): ApiResponse<Unit> {
         val response = client.post {
             url(AVATARS_POST_URL)
         }.toApiResponse<PostImageDto>(json)
@@ -121,12 +120,12 @@ internal class LockBoxAccountApi(
         }
     }
 
-    override suspend fun getSessions(): ApiResponse =
+    override suspend fun getSessions(): ApiResponse<SessionsDto> =
         client.get {
             url(SESSIONS_URL)
         }.toApiResponse<SessionsDto>(json)
 
-    override suspend fun confirmEmail(email: String): ApiResponse {
+    override suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailDto> {
         val request = ConfirmEmailRequest(email)
         return client.post {
             url(CONFIRM_EMAIL_URL)
@@ -139,7 +138,7 @@ internal class LockBoxAccountApi(
         enabled: Boolean?,
         firstName: String?,
         lastName: String?,
-    ): ApiResponse {
+    ): ApiResponse<UpdateAccountDto> {
         val request = UpdateAccountRequest(email, enabled, firstName, lastName)
         return client.patch {
             url(UPDATE_ACCOUNT_URL)
@@ -147,13 +146,13 @@ internal class LockBoxAccountApi(
         }.toApiResponse<UpdateAccountDto>(json)
     }
 
-    override suspend fun closeOtherSessions(): ApiResponse {
+    override suspend fun closeOtherSessions(): ApiResponse<Unit> {
         return client.post {
             url("$SESSIONS_URL/$LOGOUT")
         }.toApiResponse<Unit>(json)
     }
 
-    override suspend fun getProfileInfo(): ApiResponse {
+    override suspend fun getProfileInfo(): ApiResponse<ProfileInfoDto> {
         return client.get {
             url(PROFILE_INFO_URL)
         }.toApiResponse<ProfileInfoDto>(json)
@@ -167,7 +166,7 @@ internal class LockBoxAccountApi(
         passportIssuer: String?,
         passportNumber: String?,
         passportSeries: String?
-    ): ApiResponse {
+    ): ApiResponse<Unit> {
         val request = ProfileInfoRequest(
             contactInfo = ContactInfoRequest(
                 email = email,

@@ -1,10 +1,10 @@
 package org.homesharing.lockbox.data.repository
 
+import org.homesharing.lockbox.data.network.api.AccountApi
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
-import org.homesharing.lockbox.domain.api.AccountApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail

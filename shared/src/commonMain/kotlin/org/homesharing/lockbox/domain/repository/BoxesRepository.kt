@@ -6,7 +6,6 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
-import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
 import org.homesharing.lockbox.domain.model.open_box.OpenBox
@@ -49,5 +48,5 @@ interface BoxesRepository {
     suspend fun createLinkingCode(): Response<CreateLinkingCode>
 
     suspend fun physicalSignUp(code: Int, macAddress: String): Response<PhysicalSignUp>
-    suspend fun createTestDevice(): Response<Box>
+    suspend fun createTestDevice(): Response<Unit>
 }

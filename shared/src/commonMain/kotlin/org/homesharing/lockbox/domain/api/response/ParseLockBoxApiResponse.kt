@@ -4,10 +4,10 @@ import kotlinx.coroutines.CancellationException
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 
 @Suppress("UNCHECKED_CAST")
-internal suspend fun <Dto, D> parseLockBoxApiResponse(
-    apiCall: suspend () -> ApiResponse,
-    mapper: (Dto) -> D,
-): Response<D> =
+internal suspend fun <Dto : Any, Domain : Any> parseLockBoxApiResponse(
+    apiCall: suspend () -> ApiResponse<Dto>,
+    mapper: (Dto) -> Domain,
+): Response<Domain> =
     try {
         when (val apiResponse = apiCall()) {
             is ApiResponse.Failure -> Response.Failure(apiResponse.message)
@@ -24,8 +24,8 @@ internal suspend fun <Dto, D> parseLockBoxApiResponse(
     }
 
 @Suppress("UNCHECKED_CAST")
-internal suspend fun <Dto> parseLockBoxApiResponse(
-    apiCall: suspend () -> ApiResponse,
+internal suspend fun <Dto : Any> parseLockBoxApiResponse(
+    apiCall: suspend () -> ApiResponse<Dto>,
 ): Response<Dto> =
     try {
         when (val apiResponse = apiCall()) {

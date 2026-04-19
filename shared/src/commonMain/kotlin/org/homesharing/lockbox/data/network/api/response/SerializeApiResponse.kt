@@ -2,17 +2,14 @@ package org.homesharing.lockbox.data.network.api.response
 
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
-private inline fun <reified T> String.toApiResponse(json: Json): ApiResponse = try {
-    val parsed = json.decodeFromString<T>(this)
-    ApiResponse.Success(parsed)
-} catch (_: SerializationException) {
-    json.decodeFromString<ApiResponse.Failure>(this)
-}
+internal suspend inline fun <reified T> HttpResponse.toApiResponse(json: Json): ApiResponse<T> {
+    val responseBody = bodyAsText()
 
-internal suspend inline fun <reified T> HttpResponse.toApiResponse(json: Json): ApiResponse {
-    return if (this.status.value in 201 until 300) ApiResponse.Success(Unit)
-    else this.bodyAsText().toApiResponse<T>(json)
+    return if (status.value in 200..299) {
+        ApiResponse.Success(json.decodeFromString<T>(responseBody))
+    } else {
+        json.decodeFromString<ApiResponse.Failure>(responseBody)
+    }
 }

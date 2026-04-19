@@ -24,7 +24,6 @@ import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpD
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpRequest
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequest
-import org.homesharing.lockbox.domain.api.BoxesApi
 
 internal const val DEVICES = "devices"
 internal const val BOXES = "boxes"
@@ -43,7 +42,7 @@ internal class LockBoxBoxesApi(
     override suspend fun getBoxes(
         page: Int,
         size: Int,
-    ): ApiResponse =
+    ): ApiResponse<BoxListDto> =
         client.get {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES")
             parameter(PAGE_PARAMETER, page)
@@ -52,7 +51,7 @@ internal class LockBoxBoxesApi(
 
     override suspend fun getBoxByMac(
         macAddress: String,
-    ): ApiResponse =
+    ): ApiResponse<BoxWithStatusDto> =
         client.get {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<BoxWithStatusDto>(json)
@@ -62,7 +61,7 @@ internal class LockBoxBoxesApi(
         ownerSub: String,
         alias: String?,
         address: String?,
-    ): ApiResponse {
+    ): ApiResponse<UpdateBoxDto> {
         val request = UpdateBoxRequest(
             alias = alias,
             address = address,
@@ -77,21 +76,21 @@ internal class LockBoxBoxesApi(
 
     override suspend fun openBox(
         macAddress: String,
-    ): ApiResponse =
+    ): ApiResponse<OpenBoxDto> =
         client.post {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<OpenBoxDto>(json)
 
     override suspend fun deleteBox(
         macAddress: String,
-    ): ApiResponse =
+    ): ApiResponse<Unit> =
         client.delete {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress")
         }.toApiResponse<Unit>(json)
 
     override suspend fun getAccessedList(
         macAddress: String,
-    ): ApiResponse =
+    ): ApiResponse<AccessesDto> =
         client.get {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
         }.toApiResponse<AccessesDto>(json)
@@ -101,7 +100,7 @@ internal class LockBoxBoxesApi(
         alias: String,
         startTime: String,
         endTime: String,
-    ): ApiResponse {
+    ): ApiResponse<AccessDto> {
         val request = AccessCreateRequest(startTime, endTime, alias)
         return client.post {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES")
@@ -112,12 +111,12 @@ internal class LockBoxBoxesApi(
     override suspend fun revokeAccess(
         macAddress: String,
         tokenId: String,
-    ): ApiResponse =
+    ): ApiResponse<AccessRevokeDto> =
         client.delete {
             url("$KOTLIN_BASE_ENDPOINT/$BOXES/$macAddress/$ACCESSES/$tokenId")
         }.toApiResponse<AccessRevokeDto>(json)
 
-    override suspend fun createLinkingCode(): ApiResponse =
+    override suspend fun createLinkingCode(): ApiResponse<CreateLinkingCodeDto> =
         client.post {
             url("$KOTLIN_BASE_ENDPOINT/$SIGNUP")
         }.toApiResponse<CreateLinkingCodeDto>(json)
@@ -125,7 +124,7 @@ internal class LockBoxBoxesApi(
     override suspend fun physicalSignUp(
         code: Int,
         macAddress: String,
-    ): ApiResponse {
+    ): ApiResponse<PhysicalSignUpDto> {
         val request = PhysicalSignUpRequest(code, macAddress)
         return client.post {
             url("$KOTLIN_BASE_ENDPOINT/$DEVICES/$BOXES/$SIGNUP")
@@ -133,7 +132,7 @@ internal class LockBoxBoxesApi(
         }.toApiResponse<PhysicalSignUpDto>(json)
     }
 
-    override suspend fun createTestDevice(): ApiResponse =
+    override suspend fun createTestDevice(): ApiResponse<Unit> =
         client.post {
             url("$KOTLIN_BASE_ENDPOINT/$DEVICES/$BOXES/$TEST")
         }.toApiResponse<Unit>(json)

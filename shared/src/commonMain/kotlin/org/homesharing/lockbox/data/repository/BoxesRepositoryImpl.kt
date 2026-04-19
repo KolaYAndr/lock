@@ -3,9 +3,13 @@ package org.homesharing.lockbox.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.homesharing.lockbox.data.network.api.BoxesApi
 import org.homesharing.lockbox.data.network.dto.access.AccessDto
 import org.homesharing.lockbox.data.network.dto.access.AccessesDto
 import org.homesharing.lockbox.data.network.dto.access_revoke.AccessRevokeDto
@@ -14,8 +18,6 @@ import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkin
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
-import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
-import org.homesharing.lockbox.domain.api.BoxesApi
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.access.Access
@@ -23,7 +25,6 @@ import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access.toDomain
 import org.homesharing.lockbox.domain.model.access_revoke.AccessRevoke
 import org.homesharing.lockbox.domain.model.access_revoke.toDomain
-import org.homesharing.lockbox.domain.model.box.Box
 import org.homesharing.lockbox.domain.model.box.BoxWithStatus
 import org.homesharing.lockbox.domain.model.box.toDomain
 import org.homesharing.lockbox.domain.model.create_linking_code.CreateLinkingCode
@@ -43,7 +44,7 @@ private const val PAD_ZERO = '0'
 
 internal class BoxesRepositoryImpl(
     private val boxesApi: BoxesApi,
-    private val pagingSourceFactory: () -> BoxesPagingSource,
+    private val boxesPagingSourceFactory: () -> PagingSource<Int, BoxWithStatusDto>,
 ) : BoxesRepository {
     override fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>> =
         Pager(
@@ -52,9 +53,13 @@ internal class BoxesRepositoryImpl(
                 enablePlaceholders = false,
                 initialLoadSize = PAGE_SIZE
             ),
-            pagingSourceFactory = { pagingSourceFactory() },
+            pagingSourceFactory = boxesPagingSourceFactory,
         ).flow
-
+            .map { pagingData ->
+                pagingData.map { boxDto ->
+                    boxDto.toDomain()
+                }
+            }
 
     override suspend fun getBoxByMac(address: String): Response<BoxWithStatus> =
         parseLockBoxApiResponse(
@@ -173,7 +178,7 @@ internal class BoxesRepositoryImpl(
             mapper = PhysicalSignUpDto::toDomain
         )
 
-    override suspend fun createTestDevice(): Response<Box> =
+    override suspend fun createTestDevice(): Response<Unit> =
         parseLockBoxApiResponse { boxesApi.createTestDevice() }
 
     @OptIn(ExperimentalTime::class)

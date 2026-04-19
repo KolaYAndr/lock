@@ -9,30 +9,42 @@ import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.flat.FlatDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatListDto
 
 private const val FLATS = "flats"
+private const val CONTRACTS = "contracts"
 
 private const val CURSOR = "cursor"
-
 private const val LIMIT = "limit"
+
+private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
+private const val CONTRACTS_URL = "$GO_BASE_ENDPOINT/$CONTRACTS"
 
 internal class LockBoxDocumentsApi(
     private val client: HttpClient,
     private val json: Json,
 ) : DocumentsApi {
-    override suspend fun getFlats(cursor: String, limit: Int): ApiResponse {
+    override suspend fun getContracts(cursor: String?, limit: Int): ApiResponse<ContractListDto> {
+        return client.get {
+            url(CONTRACTS_URL)
+            parameter(LIMIT, limit)
+            cursor?.let { parameter(CURSOR, it) }
+        }.toApiResponse<ContractListDto>(json)
+    }
+
+    override suspend fun getFlats(cursor: String, limit: Int): ApiResponse<FlatListDto> {
         return client.get {
             parameter(CURSOR, cursor)
             parameter(LIMIT, limit)
-            url("$GO_BASE_ENDPOINT/$FLATS")
+            url(FLATS_URL)
         }.toApiResponse<FlatListDto>(json)
     }
 
-    override suspend fun createFlat(): ApiResponse {
+    override suspend fun createFlat(): ApiResponse<FlatDto> {
         return client.post {
-            url("$GO_BASE_ENDPOINT/$FLATS")
+            url(FLATS_URL)
         }.toApiResponse<FlatDto>(json)
     }
 }

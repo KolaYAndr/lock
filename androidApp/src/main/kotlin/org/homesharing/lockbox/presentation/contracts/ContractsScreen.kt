@@ -34,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -43,8 +42,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.presentation.contracts.viewmodel.ContractsViewModel
@@ -54,7 +53,6 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizo
 import org.homesharing.lockbox.presentation.uikit.composables.templates.EmptyScreenContent
 import org.homesharing.lockbox.presentation.uikit.composables.templates.ErrorScreenContent
 import org.homesharing.lockbox.presentation.uikit.composables.templates.LoadingScreenContent
-import org.homesharing.lockbox.presentation.uikit.downloadDocument
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
@@ -151,13 +149,6 @@ private fun LockBoxContractScreen(
                             contract = contract,
                             onClick = {},
                             onDelete = {},
-                            onDownload = {
-                                downloadDocument(
-                                    context,
-                                    contract.downloadLink.toUri(),
-                                    contract.name
-                                )
-                            },
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -200,7 +191,6 @@ private fun Contract(
     contract: Contract,
     onClick: (Contract) -> Unit,
     onDelete: (Contract) -> Unit,
-    onDownload: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.clickable { onClick(contract) }) {
@@ -222,13 +212,13 @@ private fun Contract(
                 verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
             ) {
                 Text(
-                    text = contract.name,
+                    text = contract.flatAddress,
                     color = LockBoxTheme.colors.constantWhite,
                     style = LockBoxTheme.typography.headlineLarge
                 )
 
                 Text(
-                    text = contract.creationDate.toJavaLocalDateTime().format(formatter),
+                    text = contract.date.toJavaLocalDate().format(formatter),
                     color = LockBoxTheme.colors.grey500,
                     style = LockBoxTheme.typography.footnote
                 )
@@ -249,17 +239,6 @@ private fun Contract(
                     )
                 }
 
-                IconButton(
-                    onClick = { onDownload(contract.downloadLink) },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.download),
-                        contentDescription = null,
-                        tint = LockBoxTheme.colors.grey500
-                    )
-                }
-
                 Icon(
                     painter = painterResource(R.drawable.arrow_right),
                     contentDescription = null,
@@ -275,20 +254,19 @@ private fun Contract(
 
 @Preview
 @Composable
-private fun PreviewLockBox() {
+private fun PreviewContract() {
     LockBoxTheme {
         val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
         Contract(
             formatter = formatter,
             contract = Contract(
-                "0",
-                "New",
-                LocalDateTime(2025, 5, 5, 5, 5, 5, 5),
-                ""
+                city = "SPB",
+                date = LocalDate.parse("2025-04-19"),
+                flatAddress = "Alpiyskiy",
+                id = "1234"
             ),
             onClick = {},
             onDelete = {},
-            onDownload = {},
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -302,10 +280,10 @@ private fun PreviewContractsScreen() {
             PagingData.from(
                 listOf(
                     Contract(
-                        "0",
-                        "New",
-                        LocalDateTime(2025, 5, 5, 5, 5, 5, 5),
-                        ""
+                        city = "SPB",
+                        date = LocalDate.parse("2025-04-19"),
+                        flatAddress = "Alpiyskiy",
+                        id = "1234"
                     )
                 ),
                 LoadStates(
