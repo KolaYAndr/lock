@@ -17,7 +17,6 @@ import io.ktor.http.contentType
 import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.data.network.api.TOKEN_URL
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.api.response.toAuthResponse
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
@@ -30,6 +29,12 @@ private const val V1 = "v1"
 internal const val KEYCLOACK_BASE_ENDPOINT = "https://api.lockboxes.ru"
 internal const val KOTLIN_BASE_ENDPOINT = "https://kotlin.ingress.lockboxes.ru/$API/$V1"
 internal const val GO_BASE_ENDPOINT = "https://go.ingress.lockboxes.ru/$API"
+
+private const val REALM = "realms/lockbox"
+private const val PROTOCOL = "protocol"
+private const val OPENID_CONNECT_TOKEN = "openid-connect/token"
+internal const val TOKEN_URL =
+    "$KEYCLOACK_BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 
 private const val CLIENT_TIMEOUT = 5_000L
 private const val CLIENT_ID = "client_id"

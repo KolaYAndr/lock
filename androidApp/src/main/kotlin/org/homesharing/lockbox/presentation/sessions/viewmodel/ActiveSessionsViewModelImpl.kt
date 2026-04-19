@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.presentation.sessions.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,22 +21,15 @@ internal class ActiveSessionsViewModelImpl(
 
     private fun getSessions() {
         viewModelScope.launch {
-            val sessionsDeferred = async { accountRepository.getSessions() }
-            val currentSessionIdDeferred = async { accountRepository.parseAccountInfo() }
-
-
-            val sessions = sessionsDeferred.await()
-            val id = currentSessionIdDeferred.await()
-            when {
-                sessions is Response.Success && id is Response.Success -> uiState.update {
+            when (val sessions = accountRepository.getSessions()) {
+                is Response.Success -> uiState.update {
                     it.copy(
                         sessions = sessions.data.sessions
-                            .filter { session -> session.sessionId != id.data.sessionId }
                             .sortedByDescending { session -> session.lastActive }
                     )
                 }
 
-                else -> SnackbarController.receiveEvent(couldNotLoadActiveSessions { refreshSessions() })
+                is Response.Failure -> SnackbarController.receiveEvent(couldNotLoadActiveSessions { refreshSessions() })
             }
 
             uiState.update { it.copy(isRefreshing = false) }

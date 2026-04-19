@@ -32,7 +32,7 @@ internal fun RoundText(text: String, modifier: Modifier = Modifier) {
                 color = LockBoxTheme.colors.grey800,
                 shape = LockBoxTheme.shape.circleShape
             )
-            .size(80.dp),
+            .size(64.dp),
         contentAlignment = Alignment.Center
     ) {
         if (text.isNotEmpty()) {

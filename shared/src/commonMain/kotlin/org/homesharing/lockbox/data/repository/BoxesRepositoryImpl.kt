@@ -3,7 +3,6 @@ package org.homesharing.lockbox.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,6 +17,7 @@ import org.homesharing.lockbox.data.network.dto.create_linking_code.CreateLinkin
 import org.homesharing.lockbox.data.network.dto.open_box.OpenBoxDto
 import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
+import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.access.Access
@@ -44,7 +44,6 @@ private const val PAD_ZERO = '0'
 
 internal class BoxesRepositoryImpl(
     private val boxesApi: BoxesApi,
-    private val boxesPagingSourceFactory: () -> PagingSource<Int, BoxWithStatusDto>,
 ) : BoxesRepository {
     override fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>> =
         Pager(
@@ -53,7 +52,7 @@ internal class BoxesRepositoryImpl(
                 enablePlaceholders = false,
                 initialLoadSize = PAGE_SIZE
             ),
-            pagingSourceFactory = boxesPagingSourceFactory,
+            pagingSourceFactory = { BoxesPagingSource(boxesApi) },
         ).flow
             .map { pagingData ->
                 pagingData.map { boxDto ->

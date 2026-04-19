@@ -117,8 +117,11 @@ private fun AccountScreen(
                 }
                 .padding(top = 24.dp)
         ) {
-            if (accountUiState.imageUrl.isNotEmpty()) NetworkImage(url = accountUiState.imageUrl)
-            else RoundText(text = accountUiState.fullName)
+            if (accountUiState.imageUrl.isNotBlank()) {
+                NetworkImage(url = accountUiState.imageUrl)
+            } else {
+                RoundText(text = accountUiState.fullName)
+            }
 
             Text(
                 text = stringResource(R.string.load_account_photo),

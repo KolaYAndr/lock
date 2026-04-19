@@ -40,13 +40,13 @@ internal class SettingsViewModelImpl(
     override fun refreshAccountInfo() {
         viewModelScope.launch {
             uiState.update { it.copy(isRefreshing = true) }
-            when (val info = repository.refreshAccount()) {
+            when (val info = repository.getProfileInfo()) {
                 is Response.Success -> {
                     launch {
                         uiState.update {
                             it.copy(
-                                fullName = info.data.fullName ?: "",
-                                email = info.data.email,
+                                fullName = info.data.legalInfo.fullName,
+                                email = info.data.contactInfo.email,
                             )
                         }
                     }

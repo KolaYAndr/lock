@@ -4,6 +4,8 @@ import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.net.ConnectivityManager
 import android.os.Build
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -113,6 +115,7 @@ private fun ActiveSessionScreen(
             item {
                 Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
             }
+
             item {
                 Text(
                     text = stringResource(R.string.this_device),
@@ -144,27 +147,34 @@ private fun ActiveSessionScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                    AnimatedVisibility(activeSessionsUiState.sessions.isNotEmpty()) {
+                        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-                    LockboxButton(
-                        onClick = { showCloseSessionsDialog = true },
-                        text = stringResource(R.string.finish_all_other_sessions),
-                        style = LockboxButtonStyle.red(),
-                        paddingValues = PaddingValues(0.dp),
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth()
-                    )
+                        LockboxButton(
+                            onClick = { showCloseSessionsDialog = true },
+                            text = stringResource(R.string.finish_all_other_sessions),
+                            style = LockboxButtonStyle.red(),
+                            paddingValues = PaddingValues(0.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                        )
+                    }
                 }
             }
 
             item {
-                Text(
-                    text = stringResource(R.string.active_sessions),
-                    style = LockBoxTheme.typography.subHeadlineLarge,
-                    color = LockBoxTheme.colors.grey500,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
+                AnimatedVisibility(
+                    visible = activeSessionsUiState.sessions.isNotEmpty(),
+                    enter = expandVertically()
+                ) {
+                    Text(
+                        text = stringResource(R.string.active_sessions),
+                        style = LockBoxTheme.typography.subHeadlineLarge,
+                        color = LockBoxTheme.colors.grey500,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                }
             }
 
             item {

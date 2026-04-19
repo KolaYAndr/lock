@@ -1,6 +1,5 @@
 package org.homesharing.lockbox.di
 
-import androidx.paging.PagingSource
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.AccountApi
@@ -11,10 +10,6 @@ import org.homesharing.lockbox.data.network.api.LockBoxBoxesApi
 import org.homesharing.lockbox.data.network.api.LockBoxDocumentsApi
 import org.homesharing.lockbox.data.network.client.createNetworkClient
 import org.homesharing.lockbox.data.network.client.networkEngine
-import org.homesharing.lockbox.data.network.dto.box.BoxWithStatusDto
-import org.homesharing.lockbox.data.network.dto.contract_list.ContractDto
-import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
-import org.homesharing.lockbox.data.network.paging.ContractsPagingSource
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.koin.core.module.dsl.bind
@@ -32,22 +27,6 @@ val networkModule = module {
 
     singleOf(::LockBoxDocumentsApi) {
         bind<DocumentsApi>()
-    }
-
-    factory<() -> PagingSource<Int, BoxWithStatusDto>> {
-        {
-            BoxesPagingSource(
-                boxesApi = get<BoxesApi>(),
-            )
-        }
-    }
-
-    factory<() -> PagingSource<String, ContractDto>> {
-        {
-            ContractsPagingSource(
-                documentsApi = get<DocumentsApi>(),
-            )
-        }
     }
 
     single<HttpClient> {

@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -104,8 +102,7 @@ private fun LockBoxContractScreen(
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
-    val context = LocalContext.current
+    val formatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy") }
     LockBoxPullToRefresh(
         modifier = modifier,
         isRefreshing = contracts.loadState.refresh is LoadState.Loading,
@@ -148,7 +145,6 @@ private fun LockBoxContractScreen(
                             formatter = formatter,
                             contract = contract,
                             onClick = {},
-                            onDelete = {},
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -189,11 +185,10 @@ private fun ErrorScreen(
 private fun Contract(
     formatter: DateTimeFormatter,
     contract: Contract,
-    onClick: (Contract) -> Unit,
-    onDelete: (Contract) -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.clickable { onClick(contract) }) {
+    Column(modifier = modifier.clickable { onClick(contract.id) }) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painterResource(R.drawable.document),
@@ -224,27 +219,11 @@ private fun Contract(
                 )
             }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = { onDelete(contract) },
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.trash),
-                        contentDescription = null,
-                        tint = LockBoxTheme.colors.red600
-                    )
-                }
-
-                Icon(
-                    painter = painterResource(R.drawable.arrow_right),
-                    contentDescription = null,
-                    tint = LockBoxTheme.colors.grey500
-                )
-            }
+            Icon(
+                painter = painterResource(R.drawable.arrow_right),
+                contentDescription = null,
+                tint = LockBoxTheme.colors.grey500
+            )
         }
 
         LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
@@ -266,7 +245,6 @@ private fun PreviewContract() {
                 id = "1234"
             ),
             onClick = {},
-            onDelete = {},
             modifier = Modifier.fillMaxWidth()
         )
     }

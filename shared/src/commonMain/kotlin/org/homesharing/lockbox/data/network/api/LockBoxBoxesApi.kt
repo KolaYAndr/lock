@@ -25,11 +25,11 @@ import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpR
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxRequest
 
-internal const val DEVICES = "devices"
-internal const val BOXES = "boxes"
-internal const val ACCESSES = "accesses"
-internal const val SIGNUP = "signup"
-internal const val TEST = "test"
+private const val DEVICES = "devices"
+private const val BOXES = "boxes"
+private const val ACCESSES = "accesses"
+private const val SIGNUP = "signup"
+private const val TEST = "test"
 
 private const val PAGE_PARAMETER = "page"
 private const val SIZE_PARAMETER = "size"

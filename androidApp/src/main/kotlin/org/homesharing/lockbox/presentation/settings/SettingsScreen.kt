@@ -1,5 +1,7 @@
 package org.homesharing.lockbox.presentation.settings
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -100,12 +102,20 @@ private fun SettingsScreen(
             item {
                 Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
             }
-            item {
-                if (settingsUiState.imageLink.isNotEmpty()) {
-                    NetworkImage(url = settingsUiState.imageLink)
-                } else RoundText(text = settingsUiState.fullName)
 
-                if (settingsUiState.fullName.isNotEmpty())
+            item {
+                if (settingsUiState.imageLink.isNotBlank()) {
+                    NetworkImage(url = settingsUiState.imageLink)
+                } else {
+                    RoundText(text = settingsUiState.fullName)
+                }
+            }
+
+            item {
+                AnimatedVisibility(
+                    visible = settingsUiState.fullName.isNotEmpty(),
+                    enter = expandVertically()
+                ) {
                     Text(
                         text = settingsUiState.fullName,
                         style = LockBoxTheme.typography.titleMedium,
@@ -113,14 +123,20 @@ private fun SettingsScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp)
                     )
+                }
             }
 
             item {
-                Text(
-                    text = settingsUiState.email,
-                    style = LockBoxTheme.typography.subHeadlineMedium,
-                    color = LockBoxTheme.colors.grey500
-                )
+                AnimatedVisibility(
+                    visible = settingsUiState.fullName.isNotEmpty(),
+                    enter = expandVertically()
+                ) {
+                    Text(
+                        text = settingsUiState.email,
+                        style = LockBoxTheme.typography.subHeadlineMedium,
+                        color = LockBoxTheme.colors.grey500
+                    )
+                }
             }
 
             item {
