@@ -5,26 +5,17 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,6 +39,7 @@ import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailSt
 import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailUiState
 import org.homesharing.lockbox.presentation.change_email.viewmodel.ChangeEmailViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.TopAppBarSpacer
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButtonStyle
 import org.homesharing.lockbox.presentation.uikit.composables.core.inputs.LockboxEmailInput
@@ -79,13 +71,10 @@ private fun ChangeEmailScreen(
     changeEmail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
-    val topInsets =
-        WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950)
     ) {
-        Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
+        TopAppBarSpacer()
 
         when (uiState.changeEmailStep) {
             ChangeEmailStep.ConfirmNewEmail -> {
@@ -202,7 +191,6 @@ private fun NewEmailInputStep(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        val interactionSource = remember { MutableInteractionSource() }
         val focusManager = LocalFocusManager.current
         val keyboardController = LocalSoftwareKeyboardController.current
 

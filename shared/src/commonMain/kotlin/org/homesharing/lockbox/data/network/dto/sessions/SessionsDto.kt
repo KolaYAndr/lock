@@ -11,8 +11,7 @@ internal data class SessionsDto(
 @Serializable
 internal data class SessionDto(
     val id: String,
-    @SerialName("ip_address")
-    val ipAddress: String,
+    val ip: String,
     @SerialName("last_active")
     val lastActive: String,
 )

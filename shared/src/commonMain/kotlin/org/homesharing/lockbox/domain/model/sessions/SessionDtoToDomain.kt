@@ -7,7 +7,7 @@ import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 internal fun SessionsDto.toDomain() = Sessions(sessions = sessions.map { it.toDomain() })
 
 internal fun SessionDto.toDomain() = Session(
-    ipAddress = ipAddress,
+    ipAddress = ip,
     lastActive = LocalDateTime.parse(lastActive),
     sessionId = id,
 )

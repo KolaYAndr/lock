@@ -11,22 +11,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -55,6 +47,7 @@ import org.homesharing.lockbox.domain.model.sessions.Session
 import org.homesharing.lockbox.presentation.sessions.viewmodel.ActiveSessionsUiState
 import org.homesharing.lockbox.presentation.sessions.viewmodel.ActiveSessionsViewModel
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.TopAppBarSpacer
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxButton
@@ -94,117 +87,113 @@ private fun ActiveSessionScreen(
     modifier: Modifier = Modifier,
 ) {
     var showCloseSessionsDialog by remember { mutableStateOf(false) }
-    LockBoxPullToRefresh(
-        onRefresh = onRefresh,
-        isRefreshing = activeSessionsUiState.isRefreshing,
-        state = rememberPullToRefreshState(),
-        modifier = modifier,
-    ) {
-        val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
-        val topInsets =
-            WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
-                .calculateTopPadding()
-        LazyColumn(
-            modifier = Modifier
-                .background(LockBoxTheme.colors.grey950)
-                .fillMaxSize()
-                .padding(vertical = 12.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
+    Column {
+        TopAppBarSpacer()
+
+        LockBoxPullToRefresh(
+            onRefresh = onRefresh,
+            isRefreshing = activeSessionsUiState.isRefreshing,
+            state = rememberPullToRefreshState(),
+            modifier = modifier,
         ) {
-            item {
-                Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
-            }
-
-            item {
-                Text(
-                    text = stringResource(R.string.this_device),
-                    style = LockBoxTheme.typography.subHeadlineLarge,
-                    color = LockBoxTheme.colors.grey500,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-            }
-
-            item {
-                val context = LocalContext.current
-                val connectivityManager =
-                    remember { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
-                val ip = remember {
-                    connectivityManager.getLinkProperties(connectivityManager.activeNetwork)?.linkAddresses
-                        ?.map { it.address.hostAddress }
-                        ?.firstOrNull { it != null && !it.contains(":") }
-                }
-                LockboxGroup(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 6.dp, bottom = 12.dp),
-                ) {
-                    Device(
-                        painter = painterResource(R.drawable.smartphone),
-                        name = "${Build.MANUFACTURER} ${Build.DEVICE}".uppercase(),
-                        location = ip.orEmpty(),
-                        accessTime = stringResource(R.string.right_now),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    AnimatedVisibility(activeSessionsUiState.sessions.isNotEmpty()) {
-                        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                        LockboxButton(
-                            onClick = { showCloseSessionsDialog = true },
-                            text = stringResource(R.string.finish_all_other_sessions),
-                            style = LockboxButtonStyle.red(),
-                            paddingValues = PaddingValues(0.dp),
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .fillMaxWidth()
-                        )
-                    }
-                }
-            }
-
-            item {
-                AnimatedVisibility(
-                    visible = activeSessionsUiState.sessions.isNotEmpty(),
-                    enter = expandVertically()
-                ) {
+            LazyColumn(
+                modifier = Modifier
+                    .background(LockBoxTheme.colors.grey950)
+                    .fillMaxSize()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                item {
                     Text(
-                        text = stringResource(R.string.active_sessions),
+                        text = stringResource(R.string.this_device),
                         style = LockBoxTheme.typography.subHeadlineLarge,
                         color = LockBoxTheme.colors.grey500,
                         modifier = Modifier.padding(top = 12.dp)
                     )
                 }
-            }
 
-            item {
-                LockboxGroup(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 6.dp),
-                ) {
-                    activeSessionsUiState.sessions.forEachIndexed { index, session ->
+                item {
+                    val context = LocalContext.current
+                    val connectivityManager =
+                        remember { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
+                    val ip = remember {
+                        connectivityManager.getLinkProperties(connectivityManager.activeNetwork)?.linkAddresses
+                            ?.map { it.address.hostAddress }
+                            ?.firstOrNull { it != null && !it.contains(":") }
+                    }
+                    LockboxGroup(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 6.dp, bottom = 12.dp),
+                    ) {
                         Device(
-                            painter = painterResource(R.drawable.monitor_smartphone),
-                            name = stringResource(R.string.unknown_device),
-                            location = session.ipAddress,
-                            accessTime = getLastAccessedString(session.lastActive),
+                            painter = painterResource(R.drawable.smartphone),
+                            name = "${Build.MANUFACTURER} ${Build.DEVICE}".uppercase(),
+                            location = ip.orEmpty(),
+                            accessTime = stringResource(R.string.right_now),
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        if (index != activeSessionsUiState.sessions.lastIndex) {
+                        AnimatedVisibility(activeSessionsUiState.sessions.isNotEmpty()) {
                             LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+
+                            LockboxButton(
+                                onClick = { showCloseSessionsDialog = true },
+                                text = stringResource(R.string.finish_all_other_sessions),
+                                style = LockboxButtonStyle.red(),
+                                paddingValues = PaddingValues(0.dp),
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    this@Column.AnimatedVisibility(
+                        visible = activeSessionsUiState.sessions.isNotEmpty(),
+                        enter = expandVertically()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.active_sessions),
+                            style = LockBoxTheme.typography.subHeadlineLarge,
+                            color = LockBoxTheme.colors.grey500,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                    }
+                }
+
+                item {
+                    LockboxGroup(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 6.dp),
+                    ) {
+                        activeSessionsUiState.sessions.forEachIndexed { index, session ->
+                            Device(
+                                painter = painterResource(R.drawable.monitor_smartphone),
+                                name = stringResource(R.string.unknown_device),
+                                location = session.ipAddress,
+                                accessTime = getLastAccessedString(session.lastActive),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            if (index != activeSessionsUiState.sessions.lastIndex) {
+                                LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (showCloseSessionsDialog) {
-            CloseSessionsDialog(
-                onDismiss = { showCloseSessionsDialog = false },
-                onFinishSessions = onFinishSessions
-            )
+            if (showCloseSessionsDialog) {
+                CloseSessionsDialog(
+                    onDismiss = { showCloseSessionsDialog = false },
+                    onFinishSessions = onFinishSessions
+                )
+            }
         }
     }
 }

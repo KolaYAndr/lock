@@ -6,19 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.presentation.sign_in.FORGOT_PASSWORD_URL
 import org.homesharing.lockbox.presentation.uikit.composables.TitledTopBar
+import org.homesharing.lockbox.presentation.uikit.composables.TopAppBarSpacer
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 
 @Composable
@@ -47,15 +40,13 @@ private fun SecurityScreen(
     onToActiveSessions: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
-    val topInsets =
-        WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues().calculateTopPadding()
     Column(
         modifier = modifier.background(LockBoxTheme.colors.grey950),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
+        TopAppBarSpacer()
+
         val uriHandler = LocalUriHandler.current
         SecurityElement(
             modifier = Modifier

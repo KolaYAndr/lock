@@ -5,20 +5,12 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +33,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.HelpModalSheet
 import org.homesharing.lockbox.presentation.uikit.composables.IconTextArrow
 import org.homesharing.lockbox.presentation.uikit.composables.NetworkImage
 import org.homesharing.lockbox.presentation.uikit.composables.RoundText
+import org.homesharing.lockbox.presentation.uikit.composables.TopAppBarSpacer
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
 import org.homesharing.lockbox.presentation.uikit.composables.core.buttons.LockboxTextIconButton
@@ -84,10 +77,6 @@ private fun SettingsScreen(
         isRefreshing = settingsUiState.isRefreshing,
         state = rememberPullToRefreshState()
     ) {
-        val topAppBarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
-        val topInsets =
-            WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
-                .calculateTopPadding()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -100,7 +89,7 @@ private fun SettingsScreen(
             )
         ) {
             item {
-                Spacer(modifier = Modifier.height(topAppBarHeight + topInsets))
+                TopAppBarSpacer()
             }
 
             item {
