@@ -7,11 +7,17 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.homesharing.lockbox.data.network.api.DocumentsApi
+import org.homesharing.lockbox.data.network.dto.contact_file.ContractFileDto
+import org.homesharing.lockbox.data.network.dto.contract_detailed.ContractDetailedDto
 import org.homesharing.lockbox.data.network.paging.ContractsPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.domain.model.contract.toDomain
+import org.homesharing.lockbox.domain.model.contract_detailed.ContractDetailed
+import org.homesharing.lockbox.domain.model.contract_detailed.toDomain
+import org.homesharing.lockbox.domain.model.contract_file.toDomain
+import org.homesharing.lockbox.domain.model.contract_file.ContractFile
 import org.homesharing.lockbox.domain.repository.DocumentsRepository
 
 private const val PAGE_SIZE = 10
@@ -38,5 +44,19 @@ internal class DocumentsRepositoryImpl(
         return parseLockBoxApiResponse {
             documentsApi.deleteContract(id)
         }
+    }
+
+    override suspend fun getContract(id: String): Response<ContractDetailed> {
+        return parseLockBoxApiResponse(
+            apiCall = { documentsApi.getContract(id) },
+            mapper = ContractDetailedDto::toDomain
+        )
+    }
+
+    override suspend fun getContractFile(id: String): Response<ContractFile> {
+        return parseLockBoxApiResponse(
+            apiCall = { documentsApi.getContractFile(id) },
+            mapper = ContractFileDto::toDomain
+        )
     }
 }
