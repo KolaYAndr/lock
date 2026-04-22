@@ -54,7 +54,7 @@ internal struct EmptyScreenTemplate: View {
             .padding(.top, 16)
         }
         .padding(.horizontal, 32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

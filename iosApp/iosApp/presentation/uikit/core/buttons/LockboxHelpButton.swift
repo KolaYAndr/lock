@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-internal struct HelpButton : View {
+internal struct LockboxHelpButton : View {
     private let action: () -> Void
     
     init(action: @escaping () -> Void) {
@@ -30,9 +30,10 @@ internal struct HelpButton : View {
                 .foregroundStyle(.grey100)
                 .padding(7)
         }
+        .buttonStyle(.plain)
     }
 }
 
 #Preview {
-    HelpButton(action: {})
+    LockboxHelpButton(action: {})
 }

@@ -42,6 +42,7 @@ struct LockboxEmailInput: View {
                 }
             }
         )
+        .animation(.easeInOut(duration: 0.18), value: email.isEmpty)
     }
 }
 
@@ -49,3 +50,4 @@ struct LockboxEmailInput: View {
     @Previewable @State var email = "ivan@zolo"
     return LockboxEmailInput(email: $email, errorText: nil, onClearText: { })
 }
+

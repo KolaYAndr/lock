@@ -342,6 +342,7 @@
         }
       }
     },
+    },
     "change_email" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1114,7 +1115,6 @@
       }
     },
     "deletion_in_couple_of_days" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1682,18 +1682,18 @@
         }
       }
     },
-    "input_name" : {
+    "input_full_name" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter name"
+            "state" : "needs_review",
+            "value" : "Enter full name"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Введите имя"
+            "value" : "Введите полное имя"
           }
         }
       }
@@ -1716,6 +1716,7 @@
       }
     },
     "input_surname" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2543,7 +2544,6 @@
       }
     },
     "ready" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3398,7 +3398,6 @@
       }
     },
     "your_account_will_be_deleted" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3413,9 +3412,6 @@
           }
         }
       }
-    },
-    "Навигация" : {
-
     }
   },
   "version" : "1.0"

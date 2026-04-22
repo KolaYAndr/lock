@@ -12,50 +12,18 @@ import Combine
 
 @MainActor
 internal class AccountViewModel: ObservableObject {
-    @Published var name: String = ""
-    @Published var surname: String = ""
+    @Published var fullName: String = ""
     var imageLink: String = ""
-    private var sub: String = ""
     
     private let accountRepository: AccountRepository = KoinHelper.shared.getAccountRepository()
-    private var cancellables: Set<AnyCancellable> = []
-    
-    private let UPDATE_TIME_MS = 500
-    
-    init() {
-        let nameSurnamePublisher: AnyPublisher<(String, String), Never> = Publishers.CombineLatest($name, $surname)
-            .map { (name: String, surname: String) -> (String, String) in
-                (name, surname)
-            }
-            .drop { name, surname in
-                name.isEmpty || surname.isEmpty
-            }
-            .removeDuplicates { lhs, rhs in
-                lhs.0 == rhs.0 && lhs.1 == rhs.1
-            }
-            .debounce(for: .milliseconds(UPDATE_TIME_MS),
-                      scheduler: RunLoop.main)
-            .eraseToAnyPublisher()
-        
-        nameSurnamePublisher
-            .sink { [weak self] name, surname in
-                self?.performUpdate(name: name, surname: surname)
-            }
-            .store(in: &cancellables)
-    }
     
     func fetchInfo() {
         Task { [weak self] in
             do {
-                let response = try await self?.accountRepository.parseAccountInfo()
+                let response = try await self?.accountRepository.getProfileInfo()
                 
-                if let success = response as? ResponseSuccess<AccountInfo> {
-                    self?.name = success.data?.givenName ?? ""
-                    self?.surname = success.data?.familyName ?? ""
-                    self?.sub = success.data?.sub ?? ""
-                    
-                    let imageLinkResponse = try await self?.accountRepository.getImageLink(sub: success.data?.sub ?? "")
-                    self?.imageLink = imageLinkResponse ?? ""
+                if let success = response as? ResponseSuccess<ProfileInfo> {
+                    self?.fullName = success.data?.legalInfo.fullName ?? ""
                 }
                 
                 if let failure = response as? ResponseFailure {
@@ -67,17 +35,20 @@ internal class AccountViewModel: ObservableObject {
         }
     }
     
+    func updatePersonalName() {
+        Task {
+            do {
+                try await accountRepository.updateProfileInfo(email: nil, phoneNumber: nil, fullName: fullName, livingAddress: nil, passportIssuer: nil, passportNumber: nil, passportSeries: nil)
+            }
+        }
+    }
+    
     func refreshAccountInfo() async {
         do {
-            let response = try await accountRepository.refreshAccount()
+            let response = try await accountRepository.getProfileInfo()
             
-            if let success = response as? ResponseSuccess<AccountInfo> {
-                name = success.data?.givenName ?? ""
-                surname = success.data?.familyName ?? ""
-                sub = success.data?.sub ?? ""
-                
-                let imageLinkResponse = try await self.accountRepository.getImageLink(sub: success.data?.sub ?? "")
-                imageLink = imageLinkResponse
+            if let success = response as? ResponseSuccess<ProfileInfo> {
+                fullName = success.data?.legalInfo.fullName ?? ""
             }
             
             if let failure = response as? ResponseFailure {

@@ -54,9 +54,9 @@ struct LockboxPasswordInput: View {
                         Image(isSeen ? .eyeCrossed : .eye)
                             .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(.grey100)
-                            .accessibilityLabel(isSeen ? "Hide password" : "Show password")
                     }
                     .buttonStyle(.plain)
+                    .transition(.opacity.combined(with: .scale))
                 }
 
                 if !password.isEmpty {
@@ -90,6 +90,7 @@ struct LockboxPasswordInput: View {
         .animation(.easeInOut(duration: 0.18), value: isSeen)
         .animation(.easeInOut(duration: 0.18), value: password.isEmpty)
         .animation(.easeInOut(duration: 0.18), value: errorText != nil)
+        .animation(.easeInOut(duration: 0.18), value: isFocused)
     }
 
     private var borderColor: Color {

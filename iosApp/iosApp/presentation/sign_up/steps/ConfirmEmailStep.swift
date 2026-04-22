@@ -66,7 +66,7 @@ internal struct ConfirmEmailStep : View {
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .center)
         
-        HelpButton(action: { showHelpModalSheet.toggle() })
+        LockboxHelpButton(action: { showHelpModalSheet.toggle() })
             .frame(maxWidth: .infinity, alignment: .center)
             .sheet(isPresented: $showHelpModalSheet) {
                 HelpModalSheet()

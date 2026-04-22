@@ -13,7 +13,6 @@ internal class SettingsViewModel: ObservableObject {
     private let accountRepository = KoinHelper.shared.getAccountRepository()
     @Published var email: String = ""
     @Published var fullName: String = ""
-    private var sub: String = ""
     @Published var imageLink: String = ""
     
     init() {
@@ -23,15 +22,11 @@ internal class SettingsViewModel: ObservableObject {
     func fetchInfo() {
         Task { [weak self] in
             do {
-                let response = try await self?.accountRepository.parseAccountInfo()
+                let response = try await self?.accountRepository.getProfileInfo()
                 
-                if let success = response as? ResponseSuccess<AccountInfo> {
-                    self?.email = success.data?.email ?? ""
-                    self?.fullName = success.data?.fullName ?? ""
-                    self?.sub = success.data?.sub ?? ""
-                    
-                    let imageLinkResponse = try await self?.accountRepository.getImageLink(sub: success.data?.sub ?? "")
-                    self?.imageLink = imageLinkResponse ?? ""
+                if let success = response as? ResponseSuccess<ProfileInfo> {
+                    self?.email = success.data?.contactInfo.email ?? ""
+                    self?.fullName = success.data?.legalInfo.fullName ?? ""
                 }
                 
                 if let failure = response as? ResponseFailure {
@@ -46,15 +41,11 @@ internal class SettingsViewModel: ObservableObject {
     
     func refreshAccountInfo() async {
         do {
-            let response = try await accountRepository.refreshAccount()
+            let response = try await accountRepository.getProfileInfo()
             
-            if let success = response as? ResponseSuccess<AccountInfo> {
-                email = success.data?.email ?? ""
-                fullName = success.data?.fullName ?? ""
-                sub = success.data?.sub ?? ""
-                
-                let imageLinkResponse = try await self.accountRepository.getImageLink(sub: success.data?.sub ?? "")
-                imageLink = imageLinkResponse
+            if let success = response as? ResponseSuccess<ProfileInfo> {
+                email = success.data?.contactInfo.email ?? ""
+                fullName = success.data?.legalInfo.fullName ?? ""
             }
             
             if let failure = response as? ResponseFailure {

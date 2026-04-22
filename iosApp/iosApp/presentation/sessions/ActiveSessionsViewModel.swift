@@ -19,18 +19,9 @@ internal class ActiveSessionsViewModel: ObservableObject {
         Task {
             do {
                 let activeSessions = try await accountRepository.getSessions()
-                let accountInfo = try await accountRepository.parseAccountInfo()
                 
-                if let sessionSuccess = activeSessions as? ResponseSuccess<Sessions>,
-                   let accountInfoSuccess = accountInfo as? ResponseSuccess<AccountInfo> {
-                    sessions = sessionSuccess.data?.sessions.filter { session in
-                           session.sessionId != accountInfoSuccess.data?.sessionId
-                       } ?? []
-                    
-                    let currentSession = sessionSuccess.data?.sessions.first { session in
-                        session.sessionId == accountInfoSuccess.data?.sessionId
-                    }
-                    currentIp = currentSession?.ipAddress ?? ""
+                if let sessionSuccess = activeSessions as? ResponseSuccess<Sessions> {
+                    sessions = sessionSuccess.data?.sessions ?? []
                 }
             } catch {
                 print(error)

@@ -14,6 +14,7 @@ internal struct AccountScreen: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var imageData: Data? = nil
     @State private var showAlert = false
+    @State private var currentFullName: String = ""
     @Binding var path: NavigationPath
     
     var body: some View {
@@ -42,25 +43,16 @@ internal struct AccountScreen: View {
                     .foregroundStyle(.grey500)
                     .padding(.top, 12)
                     
-                    VStack {
-                        LockboxCredentialsInput(
-                            text: $viewModel.name,
-                            placeholderText: String(localized: "input_name")
-                        )
-                        .padding(.horizontal, 16)
-                        .padding(.top, 4)
-                        
-                        LockboxHorizontalDivider()
-                        
-                        LockboxCredentialsInput(
-                            text: $viewModel.surname,
-                            placeholderText: String(localized: "input_surname")
-                        )
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 4)
-                    }
-                    .background(.grey900)
-                    .clipShape(.roundedCornerShape8)
+                    LockboxCredentialsInput(
+                        text: $currentFullName,
+                        placeholderText: String(localized: "input_full_name"),
+                        canSave: currentFullName != viewModel.fullName,
+                        onCancel: { currentFullName = viewModel.fullName },
+                        onFinish: {
+                            viewModel.fullName = currentFullName
+                            viewModel.updatePersonalName()
+                        }
+                    )
                     .padding(.top, 24)
                     .padding(.horizontal, 16)
                     
@@ -83,7 +75,11 @@ internal struct AccountScreen: View {
                         viewModel.sendImage(data: data)
                     }
                 }
+                .onChange(of: viewModel.fullName) { _, newValue in
+                    currentFullName = newValue
+                }
                 .onAppear {
+                    currentFullName = viewModel.fullName
                     viewModel.fetchInfo()
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
@@ -113,3 +109,4 @@ internal struct AccountScreen: View {
         }
     }
 }
+

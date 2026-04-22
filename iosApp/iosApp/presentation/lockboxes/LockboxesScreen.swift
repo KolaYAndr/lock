@@ -16,7 +16,7 @@ internal struct LockboxesScreen: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .center, spacing: 10) {
+                VStack(alignment: .center) {
                     if viewModel.boxes.count > 0 {
                         ForEach(viewModel.boxes, id: \.box.macAddress) { boxWithStatus in
                             NavigationLink(value: boxWithStatus.box.macAddress) {
