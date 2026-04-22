@@ -63,7 +63,7 @@ final class SignInViewModel: ObservableObject {
             return
         }
         
-        Task {
+        Task { @MainActor in
             do {
                 let response = try await authRepository.loadTokensInitially(
                     username: trimmedEmail,

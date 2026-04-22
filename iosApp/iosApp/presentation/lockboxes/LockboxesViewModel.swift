@@ -12,8 +12,8 @@ import Shared
 @MainActor
 internal class LockboxesViewModel: ObservableObject {
     private let boxesRepository = KoinHelper.shared.getBoxesRepository()
-    @Published private(set) var boxes: [BoxWithStatus] = []
-//    [BoxWithStatus(box: Box(address: "Doma", alias: "U sebya", ownerSub: "", macAddress: "1:2:3"), status: Status(macAddress: "1:2:3", opened: false, batteryLevel: 100, signalStrength: 100, timeStamp: nil)), BoxWithStatus(box: Box(address: "Doma", alias: "U sebya", ownerSub: "", macAddress: "1:2:4"), status: Status(macAddress: "1:2:4", opened: false, batteryLevel: 100, signalStrength: 100, timeStamp: nil))]
+    @Published private(set) var boxes: [BoxWithStatus] =
+    [BoxWithStatus(box: Box(address: "Doma", alias: "U sebya", ownerSub: "", macAddress: "1:2:3"), status: Status(macAddress: "1:2:3", opened: false, batteryLevel: 100, signalStrength: 100, timeStamp: nil)), BoxWithStatus(box: Box(address: "Doma", alias: "U sebya", ownerSub: "", macAddress: "1:2:4"), status: Status(macAddress: "1:2:4", opened: false, batteryLevel: 100, signalStrength: 100, timeStamp: nil))]
     
     init() {
         let collector = DefaultFlowCollector<[BoxWithStatus]>(

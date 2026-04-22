@@ -11,11 +11,12 @@ struct LockboxApp: App {
     
     var body: some Scene {
         WindowGroup {
-            switch viewModel.loginState {
-            case .loggedIn: AuthenticatedNavigation(logOut: viewModel.logOut).preferredColorScheme(.dark)
-            case .loading: LockboxCircularProgressIndicator().frame(alignment: .center).preferredColorScheme(.dark)
-            case .notLoggedIn: LoginScreen().preferredColorScheme(.dark)
-            }
+//            switch viewModel.loginState {
+//            case .loggedIn: AuthenticatedNavigation(logOut: viewModel.logOut).preferredColorScheme(.dark)
+//            case .loading: LockboxCircularProgressIndicator().frame(alignment: .center).preferredColorScheme(.dark)
+//            case .notLoggedIn: LoginScreen().preferredColorScheme(.dark)
+//            }
+            AuthenticatedNavigation(logOut: viewModel.logOut).preferredColorScheme(.dark)
         }
     }
 }

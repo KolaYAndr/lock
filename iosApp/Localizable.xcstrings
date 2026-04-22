@@ -1129,9 +1129,6 @@
         }
       }
     },
-    "Details %@" : {
-
-    },
     "device_address" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2172,7 +2169,6 @@
       }
     },
     "open" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3014,7 +3010,6 @@
       }
     },
     "unbind_device" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

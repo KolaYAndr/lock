@@ -18,7 +18,7 @@ internal class AccountViewModel: ObservableObject {
     private let accountRepository: AccountRepository = KoinHelper.shared.getAccountRepository()
     
     func fetchInfo() {
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             do {
                 let response = try await self?.accountRepository.getProfileInfo()
                 
@@ -60,7 +60,7 @@ internal class AccountViewModel: ObservableObject {
     }
     
     func sendImage(data: Data) {
-        Task {
+        Task { @MainActor in
             do {
                 let response = try await accountRepository.sendImage(data: KotlinByteArray.from(data: data))
                 
@@ -90,7 +90,7 @@ internal class AccountViewModel: ObservableObject {
     }
     
     private func performUpdate(name: String, surname: String) {
-        Task {
+        Task { @MainActor in
             do {
                 try await accountRepository.updateInfo(
                     name: name,

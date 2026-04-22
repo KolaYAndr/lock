@@ -16,7 +16,7 @@ internal class ActiveSessionsViewModel: ObservableObject {
     @Published var sessions: [Session] = []
     
     func getSessions() {
-        Task {
+        Task { @MainActor in
             do {
                 let activeSessions = try await accountRepository.getSessions()
                 

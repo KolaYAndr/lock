@@ -20,7 +20,7 @@ internal class SettingsViewModel: ObservableObject {
     }
     
     func fetchInfo() {
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             do {
                 let response = try await self?.accountRepository.getProfileInfo()
                 

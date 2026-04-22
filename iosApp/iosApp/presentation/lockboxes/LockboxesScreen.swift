@@ -47,7 +47,7 @@ internal struct LockboxesScreen: View {
                 .navigationTitle(Text(String(localized: "main")))
                 .navigationBarHidden(true)
                 .navigationDestination(for: String.self) { macAddress in
-                    Text("Details \(macAddress)")
+                    DetailedLockboxScreen(mac: macAddress)
                 }
                 .sheet(isPresented: $showModal) {
                    
