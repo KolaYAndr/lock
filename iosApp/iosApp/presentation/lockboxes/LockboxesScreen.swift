@@ -15,9 +15,22 @@ internal struct LockboxesScreen: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .center) {
-                    if viewModel.boxes.count > 0 {
+            if viewModel.boxes.isEmpty {
+                EmptyScreenTemplate(
+                    imageResource: .fadingPlus,
+                    title: String(localized: "manage_devices"),
+                    subtitle: String(localized: "here_will_be_devices_you_add"),
+                    buttonText: String(localized: "add_device"),
+                    action: { showModal = true }
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .background(.grey950)
+                .sheet(isPresented: $showModal) {
+                   
+                }
+            } else {
+                ScrollView {
+                    VStack(alignment: .center) {
                         ForEach(viewModel.boxes, id: \.box.macAddress) { boxWithStatus in
                             NavigationLink(value: boxWithStatus.box.macAddress) {
                                 Lockbox(box: boxWithStatus.box)
@@ -25,28 +38,21 @@ internal struct LockboxesScreen: View {
                             LockboxHorizontalDivider()
                         }
                         AddRow(title: String(localized: "add_device"))
-                            .onTapGesture {showModal = true}
+                            .onTapGesture { showModal = true }
                             .padding(.top, 10)
-                    } else {
-                        EmptyScreenTemplate(
-                            imageResource: .fadingPlus,
-                            title: String(localized: "manage_devices"),
-                            subtitle: String(localized: "here_will_be_devices_you_add"),
-                            buttonText: String(localized: "add_device"),
-                            action: { showModal = true }
-                        )
                     }
                 }
+                .scrollContentBackground(.hidden)
+                .background(.grey950)
+                .navigationTitle(Text(String(localized: "main")))
+                .navigationBarHidden(true)
+                .navigationDestination(for: String.self) { macAddress in
+                    Text("Details \(macAddress)")
+                }
+                .sheet(isPresented: $showModal) {
+                   
+                }
             }
-            .scrollContentBackground(.hidden)
-            .background(.grey950)
-            .navigationTitle(Text(String(localized: "main")))
-            .navigationBarHidden(true)
-            .navigationDestination(for: String.self) { macAddress in
-                Text("Details \(macAddress)")
-            }
-            .sheet(isPresented: $showModal) {
-               
         }
     }
 }
@@ -87,7 +93,6 @@ private struct Lockbox: View {
         }
         .padding(.horizontal, 16)
     }
-}
 }
 
 #Preview {

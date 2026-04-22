@@ -25,18 +25,22 @@ internal class AuthRepositoryImpl(
     override suspend fun loadTokensInitially(
         username: String,
         password: String,
-    ): Response<Unit> =
-        when (val response = api.loadTokensInitially(username, password)) {
-            is AuthResponse.Success -> {
-                with(tokenStorage) {
-                    saveTokens(response.accessToken, response.refreshToken)
-                    saveNextRefreshTime(response.expiresIn + refreshManager.currentTime)
+    ): Response<Unit> {
+        return try {
+            when (val response = api.loadTokensInitially(username, password)) {
+                is AuthResponse.Success -> {
+                    with(tokenStorage) {
+                        saveTokens(response.accessToken, response.refreshToken)
+                        saveNextRefreshTime(response.expiresIn + refreshManager.currentTime)
+                    }
+                    Response.Success(Unit)
                 }
-                Response.Success(Unit)
+                is AuthResponse.Error -> Response.Failure(response.errorDescription)
             }
-
-            is AuthResponse.Error -> Response.Failure(response.errorDescription)
+        } catch (t: Throwable) {
+            Response.Failure(t.message.orEmpty())
         }
+    }
 
 
     override suspend fun sendConfirmation(email: String): Response<ConfirmEmail> =

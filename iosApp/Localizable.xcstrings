@@ -342,7 +342,6 @@
         }
       }
     },
-    },
     "change_email" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1575,9 +1574,6 @@
         }
       }
     },
-    "Hide password" : {
-
-    },
     "hours_ago" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1686,7 +1682,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Enter full name"
           }
         },
@@ -1711,23 +1707,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Введите новую электронную почту"
-          }
-        }
-      }
-    },
-    "input_surname" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter surname"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Введите фамилию"
           }
         }
       }
@@ -2774,9 +2753,6 @@
           }
         }
       }
-    },
-    "Show password" : {
-
     },
     "sign_in" : {
       "localizations" : {

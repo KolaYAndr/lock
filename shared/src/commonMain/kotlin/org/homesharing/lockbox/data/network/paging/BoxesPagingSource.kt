@@ -30,13 +30,8 @@ internal class BoxesPagingSource(
             )
 
             return when (apiResponse) {
-                is ApiResponse.Failure -> {
-                    if (apiResponse.errorCode == "empty_boxes") {
-                        LoadResult.Page(emptyList(), null, null)
-                    } else {
-                        LoadResult.Error(Throwable(apiResponse.message))
-                    }
-                }
+                is ApiResponse.Failure ->
+                    LoadResult.Error(Throwable(apiResponse.message))
 
                 is ApiResponse.Success -> {
                     val endOfPagination = apiResponse.data.boxes.size < size
