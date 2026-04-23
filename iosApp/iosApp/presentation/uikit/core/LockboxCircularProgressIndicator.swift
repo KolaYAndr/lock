@@ -12,7 +12,6 @@ internal struct LockboxCircularProgressIndicator : View {
     var body: some View {
         ProgressView()
             .progressViewStyle(.circular)
-            .foregroundStyle(.green500)
     }
 }
 

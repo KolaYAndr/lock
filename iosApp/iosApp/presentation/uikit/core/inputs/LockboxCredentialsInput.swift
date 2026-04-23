@@ -58,7 +58,7 @@ struct LockboxCredentialsInput: View {
                         Image(.close)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 20, height: 20)
+                            .frame(width: 24, height: 24)
                             .foregroundStyle(.grey100)
                             .padding(6)
                     }
@@ -72,7 +72,7 @@ struct LockboxCredentialsInput: View {
                         Image(.check)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 20, height: 20)
+                            .frame(width: 24, height: 24)
                             .foregroundStyle(.grey100)
                             .padding(6)
                     }

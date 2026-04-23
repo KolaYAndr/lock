@@ -45,7 +45,7 @@ internal struct AboutAppScreen: View {
                 .frame(maxHeight: .infinity, alignment: .center)
                 .padding(.horizontal, 16)
                 
-                VStack {
+                LockboxGroup {
                     Agreement(title: String(localized: "user_agreement"))
                         .onTapGesture {
                             openURL(userAgreementUrl)
@@ -58,8 +58,6 @@ internal struct AboutAppScreen: View {
                             openURL(privacyPolicyUrl)
                         }
                 }
-                .background(.grey900)
-                .clipShape(.roundedCornerShape8)
                 .padding(.bottom, 12)
             }
             .padding(.horizontal, 16)
@@ -85,7 +83,7 @@ private struct Agreement: View {
             Image(.chevronRight)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 24, height: 24)
                 .foregroundStyle(.grey500)
         }
         .padding(.horizontal, 16)

@@ -51,7 +51,9 @@ internal struct HelpModalSheet : View {
                         text: String(localized: "lockbox_email"),
                         imageRes: .mail
                     ).onTapGesture { openURL(emailUrl) }
+                    
                     LockboxHorizontalDivider()
+                    
                     ImageTextArrow(
                         text: String(localized: "telegram"),
                         imageRes: .send
@@ -62,7 +64,9 @@ internal struct HelpModalSheet : View {
                             openURL(tgWebUrl)
                         }
                     }
+                    
                     LockboxHorizontalDivider()
+                    
                     ImageTextArrow(
                         text: String(localized: "whats_app"),
                         imageRes: .phone

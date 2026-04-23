@@ -88,7 +88,7 @@ internal struct AccountScreen: View {
                 Alert(
                     title: Text(String(localized: "delete_account_question")),
                     message: Text(String(localized: "not_cancellable_delete_account")),
-                    primaryButton: .default(
+                    primaryButton: .cancel(
                         Text(String(localized: "cancel")),
                         action: { showAlert = false }
                     ),

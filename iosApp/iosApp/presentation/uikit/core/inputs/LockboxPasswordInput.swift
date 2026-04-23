@@ -52,7 +52,6 @@ struct LockboxPasswordInput: View {
                         isSeen.toggle()
                     } label: {
                         Image(isSeen ? .eyeCrossed : .eye)
-                            .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(.grey100)
                     }
                     .buttonStyle(.plain)
@@ -64,7 +63,6 @@ struct LockboxPasswordInput: View {
                         onClearText()
                     } label: {
                         Image(.close)
-                            .font(.system(size: 18, weight: .medium))
                             .foregroundStyle(.grey100)
                             .accessibilityLabel("Clear password")
                     }

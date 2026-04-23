@@ -49,7 +49,7 @@ private struct SecurityProperty: View {
             Image(.chevronRight)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 24, height: 24)
                 .foregroundStyle(.grey500)
         }
         .padding(.horizontal, 16)

@@ -1130,7 +1130,6 @@
       }
     },
     "device_address" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1215,7 +1214,6 @@
       }
     },
     "device_name" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2118,7 +2116,6 @@
       }
     },
     "not_cancellable_unbind_device" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2185,7 +2182,6 @@
       }
     },
     "open_device_question" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2993,7 +2989,6 @@
       }
     },
     "unbind" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3026,7 +3021,6 @@
       }
     },
     "unbind_device_question" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

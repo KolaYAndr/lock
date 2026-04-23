@@ -19,12 +19,13 @@ internal struct ActiveSessionsScreen: View {
                 Text(String(localized: "this_device"))
                     .subHeadlineLarge()
                     .foregroundStyle(.grey500)
-                VStack(alignment: .leading, spacing: 0) {
+                LockboxGroup {
                     Device(
                         title: deviceName,
                         subtitle: String(format: NSLocalizedString("location_dot_access_time", comment: ""), viewModel.currentIp),
                         imageResource: .smartphone
                     )
+                    .padding(.horizontal, 16)
                     
                     if !viewModel.sessions.isEmpty {
                         LockboxHorizontalDivider()
@@ -41,9 +42,6 @@ internal struct ActiveSessionsScreen: View {
                         .padding(.vertical, 10)
                     }
                 }
-                .padding(.horizontal, 16)
-                .background(.grey900)
-                .clipShape(.roundedCornerShape8)
                 .padding(.top, 6)
                 
                 if !viewModel.sessions.isEmpty {

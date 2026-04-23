@@ -32,8 +32,8 @@ internal struct LockboxesScreen: View {
                 ScrollView {
                     VStack(alignment: .center) {
                         ForEach(viewModel.boxes, id: \.box.macAddress) { boxWithStatus in
-                            NavigationLink(value: boxWithStatus.box.macAddress) {
-                                Lockbox(box: boxWithStatus.box)
+                            NavigationLink(value: boxWithStatus) {
+                                Lockbox(box: boxWithStatus)
                             }
                             LockboxHorizontalDivider()
                         }
@@ -46,8 +46,8 @@ internal struct LockboxesScreen: View {
                 .background(.grey950)
                 .navigationTitle(Text(String(localized: "main")))
                 .navigationBarHidden(true)
-                .navigationDestination(for: String.self) { macAddress in
-                    DetailedLockboxScreen(mac: macAddress)
+                .navigationDestination(for: BoxWithStatus.self) { box in
+                    DetailedLockboxScreen(mac: box.box.macAddress)
                 }
                 .sheet(isPresented: $showModal) {
                    
@@ -58,9 +58,9 @@ internal struct LockboxesScreen: View {
 }
 
 private struct Lockbox: View {
-    private let box: Box
+    private let box: BoxWithStatus
     
-    init(box: Box) {
+    init(box: BoxWithStatus) {
         self.box = box
     }
     
@@ -69,26 +69,34 @@ private struct Lockbox: View {
             Image(.lock)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 24, height: 24)
+                .frame(width: 30, height: 30)
                 .foregroundStyle(.grey500)
             
             
             VStack(alignment: .leading, spacing: 2) {
-                Text(box.alias)
+                Text(box.box.alias)
                     .headlineLarge()
                     .lineLimit(1, reservesSpace: false)
                     .foregroundStyle(.white)
                 
-                Text(box.address)
+                Text(box.box.address)
                     .footnote()
                     .foregroundStyle(.grey500)
                     .lineLimit(2, reservesSpace: false)
             }.frame(maxWidth: .infinity, alignment: .leading)
             
+            if box.status.batteryLevel != nil {
+                Image(.alert)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(.red500)
+            }
+            
             Image(.chevronRight)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 20, height: 20)
+                .frame(width: 24, height: 24)
                 .foregroundStyle(.grey500)
         }
         .padding(.horizontal, 16)

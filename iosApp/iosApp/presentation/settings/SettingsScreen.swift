@@ -44,7 +44,7 @@ internal struct SettingsScreen: View {
                                 .transition(.move(edge: .top).combined(with: .opacity))
                         }
                         
-                        VStack {
+                        LockboxGroup {
                             NavigationLink(value: SettingsRoute.account) {
                                 ImageTextArrow(text: String(localized: "account"), imageRes: .user)
                                     .padding(.top, 4)
@@ -61,11 +61,9 @@ internal struct SettingsScreen: View {
                                     .frame(maxWidth: .infinity, alignment: .center)
                             }
                         }
-                        .background(.grey900)
-                        .clipShape(.roundedCornerShape8)
                         .padding(.top, 24)
                         
-                        VStack {
+                        LockboxGroup {
                             NavigationLink(value: SettingsRoute.aboutApp) {
                                 ImageTextArrow(text: String(localized: "about_app"), imageRes: .alert)
                                     .padding(.top, 4)
@@ -83,8 +81,6 @@ internal struct SettingsScreen: View {
                                     showHelpModal = true
                                 }
                         }
-                        .background(.grey900)
-                        .clipShape(.roundedCornerShape8)
                         .padding(.top, 24)
                         
                         Button {
@@ -115,7 +111,7 @@ internal struct SettingsScreen: View {
                     .alert(isPresented: $showAlert) {
                         Alert(
                             title: Text(String(localized: "log_out_question")),
-                            primaryButton: .default(
+                            primaryButton: .cancel(
                                 Text(String(localized: "cancel")),
                                 action: { showAlert = false }
                             ),

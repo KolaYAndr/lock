@@ -25,6 +25,9 @@ internal struct CardTopRow : View {
         VStack {
             HStack {
                 Image(.arrowBack)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
                     .onTapGesture(perform: onBack)
                     .foregroundStyle(.grey500)
                     .padding(.trailing, 12)
@@ -41,6 +44,9 @@ internal struct CardTopRow : View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Image(.close)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
                     .onTapGesture(perform: onClose)
                     .foregroundStyle(.grey500)
                     .padding(.leading, 12)
