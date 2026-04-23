@@ -39,9 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.sessions.Session
 import org.homesharing.lockbox.presentation.sessions.viewmodel.ActiveSessionsUiState
@@ -231,11 +228,9 @@ private fun CloseSessionsDialog(
 
 @Composable
 @ReadOnlyComposable
-private fun getLastAccessedString(lastActive: LocalDateTime): String {
-    val tz = TimeZone.currentSystemDefault()
-    val now = Clock.System.now()
-    val lastActiveInstant = lastActive.toInstant(tz)
-    val diff = (now - lastActiveInstant).inWholeMilliseconds
+private fun getLastAccessedString(lastActive: Long): String {
+    val now = Clock.System.now().toEpochMilliseconds()
+    val diff = now - lastActive
 
     return when {
         diff > fourteenDaysMillis -> {
@@ -310,7 +305,7 @@ private fun Device(
 private fun PreviewActiveSessions() {
     LockBoxTheme {
         val state =
-            ActiveSessionsUiState(listOf(Session("", LocalDateTime.parse("2026-04-18"), "")))
+            ActiveSessionsUiState(listOf(Session("", 1_000_000, "")))
         ActiveSessionScreen(state, {}, {}, Modifier.fillMaxSize())
     }
 }

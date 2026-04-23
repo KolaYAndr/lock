@@ -32,6 +32,12 @@ internal class SettingsViewModel: ObservableObject {
                 if let failure = response as? ResponseFailure {
                     print(failure)
                 }
+                
+                let avatarResponse = try await self?.accountRepository.getImageLink()
+                if let avatar = avatarResponse as? ResponseSuccess<Avatar>,
+                   let downloadUrl = avatar.data?.downloadUrl {
+                    self?.imageLink = downloadUrl
+                }
             } catch {
                 print("Failed to fetch account info: \(error)")
             }
@@ -51,15 +57,21 @@ internal class SettingsViewModel: ObservableObject {
             if let failure = response as? ResponseFailure {
                 print(failure)
             }
+            
+            let avatarResponse = try await accountRepository.getImageLink()
+            if let avatar = avatarResponse as? ResponseSuccess<Avatar>,
+               let downloadUrl = avatar.data?.downloadUrl {
+                imageLink = downloadUrl
+            }
         } catch {
             print("Failed to refresh: \(error)")
         }
     }
     
     func logOut() {
-        Task { [weak self] in
+        Task {
             do {
-                try await self?.accountRepository.logOut()
+                try await accountRepository.logOut()
             } catch {
                 print("Logout failed: \(error)")
             }
