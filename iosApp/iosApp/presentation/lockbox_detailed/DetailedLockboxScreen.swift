@@ -81,6 +81,9 @@ internal struct DetailedLockboxScreen: View {
                 .buttonStyle(.darkRed)
                 .padding(.top, 24)
             }
+            .sheet(isPresented: $showNameChangeModal) {
+                
+            }
             .alert(isPresented: $showOpenBoxDialog) {
                 Alert(
                     title: Text(String(localized: "open_device_question")),
