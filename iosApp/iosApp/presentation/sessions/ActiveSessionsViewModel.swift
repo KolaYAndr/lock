@@ -20,8 +20,11 @@ internal class ActiveSessionsViewModel: ObservableObject {
             do {
                 let activeSessions = try await accountRepository.getSessions()
                 
-                if let sessionSuccess = activeSessions as? ResponseSuccess<Sessions> {
-                    sessions = sessionSuccess.data?.sessions ?? []
+                if let sessionSuccess = activeSessions as? ResponseSuccess<Sessions>,
+                   var sessionList = sessionSuccess.data?.sessions {
+                    sessions = sessionList.sorted { s1, s2 in
+                        s1.lastActive > s2.lastActive
+                    }
                 }
             } catch {
                 print(error)

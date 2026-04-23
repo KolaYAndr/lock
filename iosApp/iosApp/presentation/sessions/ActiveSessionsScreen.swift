@@ -26,44 +26,54 @@ internal struct ActiveSessionsScreen: View {
                         imageResource: .smartphone
                     )
                     
-                    LockboxHorizontalDivider()
-                    
-                    Button {
-                        viewModel.closeOtherSessions()
-                    } label: {
-                        Text(String(localized: "finish_all_other_sessions"))
-                            .headlineLarge()
-                            .foregroundStyle(.red600)
-                            .padding(4)
+                    if !viewModel.sessions.isEmpty {
+                        LockboxHorizontalDivider()
+                        
+                        Button {
+                            viewModel.closeOtherSessions()
+                        } label: {
+                            Text(String(localized: "finish_all_other_sessions"))
+                                .headlineLarge()
+                                .foregroundStyle(.red600)
+                                .padding(4)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.vertical, 10)
                     }
-                    .buttonStyle(.plain)
-                    .padding(.vertical, 10)
                 }
                 .padding(.horizontal, 16)
                 .background(.grey900)
                 .clipShape(.roundedCornerShape8)
                 .padding(.top, 6)
                 
-                Text(String(localized: "active_sessions"))
-                    .subHeadlineLarge()
-                    .foregroundStyle(.grey500)
-                    .padding(.top, 24)
-                    .padding(.bottom, 6)
-                
-                LazyVStack {
-                    ForEach(viewModel.sessions, id: \.sessionId) { session in
-                        Device(
-                            title: String(localized: "unknown_device"),
-                            subtitle: session.ipAddress,
-                            imageResource: .monitorSmartphone
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                if !viewModel.sessions.isEmpty {
+                    Group {
+                        Text(String(localized: "active_sessions"))
+                            .subHeadlineLarge()
+                            .foregroundStyle(.grey500)
+                            .padding(.top, 24)
+                            .padding(.bottom, 6)
+                            .contentTransition(.opacity)
+                        
+                        LazyVStack {
+                            ForEach(viewModel.sessions, id: \.sessionId) { session in
+                                Device(
+                                    title: String(localized: "unknown_device"),
+                                    subtitle: session.ipAddress,
+                                    imageResource: .monitorSmartphone
+                                )
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .background(.grey900)
+                        .clipShape(.roundedCornerShape8)
                     }
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
-                .padding(.horizontal, 16)
-                .background(.grey900)
-                .clipShape(.roundedCornerShape8)
             }
+            .animation(.easeInOut(duration: 0.25), value: viewModel.sessions.isEmpty)
             .onAppear {
                 viewModel.getSessions()
             }
@@ -104,6 +114,7 @@ private struct Device: View {
                     .footnote()
                     .foregroundStyle(.grey500)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 10)
         }
     }

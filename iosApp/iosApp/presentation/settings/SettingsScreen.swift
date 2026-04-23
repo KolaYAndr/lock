@@ -24,19 +24,25 @@ internal struct SettingsScreen: View {
                         NetworkImage(url: viewModel.imageLink)
                             .padding(.top, 12)
                         
-                        Text(viewModel.fullName)
-                            .titleMedium()
-                            .foregroundStyle(.grey50)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 12)
+                        if !viewModel.fullName.isEmpty {
+                            Text(viewModel.fullName)
+                                .titleMedium()
+                                .foregroundStyle(.grey50)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .multilineTextAlignment(.center)
+                                .padding(.top, 12)
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                        }
                         
-                        Text(viewModel.email)
-                            .subHeadlineMedium()
-                            .foregroundStyle(.grey500)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 2)
+                        if !viewModel.email.isEmpty {
+                            Text(viewModel.email)
+                                .subHeadlineMedium()
+                                .foregroundStyle(.grey500)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .multilineTextAlignment(.center)
+                                .padding(.top, 2)
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                        }
                         
                         VStack {
                             NavigationLink(value: SettingsRoute.account) {
@@ -98,6 +104,8 @@ internal struct SettingsScreen: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top, 24)
                     }
+                    .animation(.easeInOut(duration: 0.25), value: viewModel.fullName.isEmpty)
+                    .animation(.easeInOut(duration: 0.25), value: viewModel.email.isEmpty)
                     .onAppear {
                         viewModel.fetchInfo()
                     }
