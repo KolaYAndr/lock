@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
+import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
@@ -19,7 +20,7 @@ internal interface AccountApi {
         password: String
     ): AuthResponse
 
-    fun getImageLink(sub: String): String
+    suspend fun getAvatar(): ApiResponse<AvatarDto>
 
     suspend fun sendImage(
         data: ByteArray

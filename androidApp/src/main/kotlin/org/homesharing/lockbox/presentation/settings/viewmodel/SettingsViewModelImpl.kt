@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.repository.AccountRepository
 import org.homesharing.lockbox.presentation.snackbar.SnackbarController
 import org.homesharing.lockbox.presentation.snackbar.SnackbarDefaultEvents.couldNotLoadAccountInfo
@@ -27,12 +28,18 @@ internal class SettingsViewModelImpl(
                         it.copy(
                             fullName = response.data.legalInfo.fullName,
                             email = response.data.contactInfo.email,
-                            imageLink = repository.getImageLink()
                         )
                     }
                 }
 
                 is Response.Failure -> SnackbarController.receiveEvent(couldNotLoadAccountInfo { fetchInfo() })
+            }
+
+            val avatar = repository.getImageLink()
+            if (avatar is Response.Success<Avatar>) {
+                uiState.update {
+                    it.copy(imageLink = avatar.data.downloadUrl)
+                }
             }
         }
     }
@@ -55,6 +62,13 @@ internal class SettingsViewModelImpl(
                 is Response.Failure -> SnackbarController.receiveEvent(couldNotRefreshAccountInfo { refreshAccountInfo() })
             }
             uiState.update { it.copy(isRefreshing = false) }
+
+            val avatar = repository.getImageLink()
+            if (avatar is Response.Success<Avatar>) {
+                uiState.update {
+                    it.copy(imageLink = avatar.data.downloadUrl)
+                }
+            }
         }
     }
 

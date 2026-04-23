@@ -2,6 +2,7 @@ package org.homesharing.lockbox.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -11,7 +12,7 @@ interface AccountRepository {
 
     val loggedIn: Flow<Boolean>
 
-    fun getImageLink(): String
+    suspend fun getImageLink(): Response<Avatar>
 
     suspend fun sendImage(data: ByteArray): Response<Unit>
 
