@@ -38,6 +38,7 @@ jobs:
           xcodebuild -version
           xcode-select -p
           swift --version
+          uname -m
 
       - name: Set Default Scheme
         run: |
@@ -74,17 +75,17 @@ jobs:
             -scheme "$SCHEME" \
             -destination "generic/platform=iOS Simulator" \
             -derivedDataPath build/DerivedData \
-            -resultBundlePath build/ResultBundle \
+            -resultBundlePath build/ResultBundle.xcresult \
             CODE_SIGNING_ALLOWED=NO \
+            ONLY_ACTIVE_ARCH=YES \
+            EXCLUDED_ARCHS[sdk=iphonesimulator*]=x86_64 \
             | tee xcodebuild.log
 
-      - name: Print first errors
+      - name: Print errors
         if: failure()
         run: |
           echo "=== ERRORS ==="
           grep -n "error:" xcodebuild.log || true
-          echo "=== SWIFT / MODULE LINES ==="
-          grep -nE "SwiftEmitModule|EmitSwiftModule|CompileSwift" xcodebuild.log || true
 
       - name: Upload logs
         if: always()
@@ -93,4 +94,4 @@ jobs:
           name: ios-build-logs
           path: |
             iosApp/xcodebuild.log
-            iosApp/build/ResultBundle
+            iosApp/build/ResultBundle.xcresult
