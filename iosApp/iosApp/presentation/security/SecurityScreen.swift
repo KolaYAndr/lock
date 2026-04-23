@@ -10,7 +10,7 @@ import SwiftUI
 
 internal struct SecurityScreen: View {
     @Environment(\.openURL) private var openURL
-    private let forgotPasswordUrl = URL(string: String(localized: .forgotPasswordUrl))!
+    private let forgotPasswordUrl = URL(string: String(localized: "forgotPasswordUrl"))!
     
     var body: some View {
         ScrollView {
