@@ -3,6 +3,7 @@ package org.homesharing.lockbox.domain.model.contract_detailed
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.homesharing.lockbox.data.network.dto.contract_detailed.ContractDetailedDto
+import org.homesharing.lockbox.domain.model.flat.Flat
 
 internal fun ContractDetailedDto.toDomain() = ContractDetailed(
     booking = Booking(
@@ -15,9 +16,10 @@ internal fun ContractDetailedDto.toDomain() = ContractDetailed(
     ),
     contractCity = contractCity,
     contractDate = LocalDate.parse(contractDate),
-    flat = FlatParams(
+    flat = Flat(
         address = flat.address,
-        livingArea = flat.livingArea
+        livingArea = flat.livingArea,
+        id = id,
     ),
     id = id,
     landlordInfo = LandlordInfo(

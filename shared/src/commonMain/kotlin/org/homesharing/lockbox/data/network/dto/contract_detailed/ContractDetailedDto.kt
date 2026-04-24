@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.dto.contract_detailed
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.homesharing.lockbox.data.network.dto.flat.FlatDto
 
 @Serializable
 internal data class ContractDetailedDto(
@@ -10,7 +11,7 @@ internal data class ContractDetailedDto(
     val contractCity: String,
     @SerialName("contract_date")
     val contractDate: String,
-    val flat: FlatParamsDto,
+    val flat: FlatDto,
     val id: String,
     @SerialName("landlord_info")
     val landlordInfo: LandlordInfoDto,
@@ -38,13 +39,6 @@ internal data class BookingDto(
     val startTime: String,
     @SerialName("total_price")
     val totalPrice: Int
-)
-
-@Serializable
-internal data class FlatParamsDto(
-    val address: String,
-    @SerialName("living_area")
-    val livingArea: Double
 )
 
 @Serializable

@@ -2,12 +2,13 @@ package org.homesharing.lockbox.domain.model.contract_detailed
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import org.homesharing.lockbox.domain.model.flat.Flat
 
 data class ContractDetailed(
     val booking: Booking,
     val contractCity: String,
     val contractDate: LocalDate,
-    val flat: FlatParams,
+    val flat: Flat,
     val id: String,
     val landlordInfo: LandlordInfo,
     val renterInfo: RenterInfo
@@ -29,18 +30,10 @@ data class Booking(
     val totalPrice: Int
 )
 
-
-data class FlatParams(
-    val address: String,
-    val livingArea: Double
-)
-
-
 data class LandlordInfo(
     val contactInfo: ContactInfo,
     val legalInfo: LegalInfo
 )
-
 
 data class LegalInfo(
     val fullName: String,
@@ -48,13 +41,11 @@ data class LegalInfo(
     val passport: Passport
 )
 
-
 data class Passport(
     val issuer: String,
     val passportNumber: String,
     val passportSeries: String
 )
-
 
 data class RenterInfo(
     val contactInfo: ContactInfo,
