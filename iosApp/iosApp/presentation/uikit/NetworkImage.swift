@@ -21,19 +21,19 @@ internal struct NetworkImage: View {
             case .empty:
                 Image(.user)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
             case .success(let image):
                 image
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
             case .failure:
                 Image(.user)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
             @unknown default:
                 Image(.user)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
             }
         }
         .frame(width: 64, height: 64)
