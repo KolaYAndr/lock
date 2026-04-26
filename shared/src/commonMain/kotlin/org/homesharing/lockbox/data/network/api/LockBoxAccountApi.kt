@@ -66,7 +66,6 @@ internal class LockBoxAccountApi(
     private val client: HttpClient,
     private val json: Json,
 ) : AccountApi {
-
     override suspend fun signUp(
         username: String,
         password: String,
@@ -132,13 +131,8 @@ internal class LockBoxAccountApi(
         }.toApiResponse<ConfirmEmailDto>(json)
     }
 
-    override suspend fun updateUserInfo(
-        email: String?,
-        enabled: Boolean?,
-        firstName: String?,
-        lastName: String?,
-    ): ApiResponse<UpdateAccountDto> {
-        val request = UpdateAccountRequest(email, enabled, firstName, lastName)
+    override suspend fun deactivateUser(): ApiResponse<UpdateAccountDto> {
+        val request = UpdateAccountRequest(null, false, null, null)
         return client.patch {
             url(UPDATE_ACCOUNT_URL)
             setBody(request)

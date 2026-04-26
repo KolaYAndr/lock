@@ -18,12 +18,6 @@ interface AccountRepository {
 
     suspend fun getSessions(): Response<Sessions>
 
-    suspend fun updateInfo(
-        name: String? = null,
-        surname: String? = null,
-        email: String? = null
-    ): Response<UpdateAccount>
-
     suspend fun deactivateUser(): Response<UpdateAccount>
 
     suspend fun closeOtherSessions(): Response<Unit>

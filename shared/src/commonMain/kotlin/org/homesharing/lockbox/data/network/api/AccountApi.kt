@@ -30,12 +30,7 @@ internal interface AccountApi {
 
     suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailDto>
 
-    suspend fun updateUserInfo(
-        email: String? = null,
-        enabled: Boolean? = null,
-        firstName: String? = null,
-        lastName: String? = null
-    ): ApiResponse<UpdateAccountDto>
+    suspend fun deactivateUser(): ApiResponse<UpdateAccountDto>
 
     suspend fun closeOtherSessions(): ApiResponse<Unit>
 

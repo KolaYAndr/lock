@@ -44,27 +44,9 @@ internal class AccountRepositoryImpl(
             mapper = SessionsDto::toDomain
         )
 
-    override suspend fun updateInfo(
-        name: String?,
-        surname: String?,
-        email: String?,
-    ): Response<UpdateAccount> =
-        parseLockBoxApiResponse(
-            apiCall = {
-                api.updateUserInfo(
-                    email = email,
-                    firstName = name,
-                    lastName = surname
-                )
-            },
-            mapper = UpdateAccountDto::toDomain
-        )
-
     override suspend fun deactivateUser(): Response<UpdateAccount> =
         parseLockBoxApiResponse(
-            apiCall = {
-                api.updateUserInfo(enabled = false)
-            },
+            apiCall = { api.deactivateUser() },
             mapper = UpdateAccountDto::toDomain
         )
 
