@@ -100,16 +100,4 @@ internal class AccountViewModel: ObservableObject {
             }
         }
     }
-    
-    private func performUpdate(name: String, surname: String) {
-        Task { @MainActor in
-            do {
-                try await accountRepository.updateInfo(
-                    name: name,
-                    surname: surname,
-                    email: nil
-                )
-            }
-        }
-    }
 }

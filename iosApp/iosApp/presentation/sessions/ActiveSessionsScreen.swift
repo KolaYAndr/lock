@@ -40,6 +40,7 @@ internal struct ActiveSessionsScreen: View {
                         }
                         .buttonStyle(.plain)
                         .padding(.vertical, 10)
+                        .padding(.horizontal, 16)
                     }
                 }
                 .padding(.top, 6)

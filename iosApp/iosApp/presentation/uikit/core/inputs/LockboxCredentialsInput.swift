@@ -26,7 +26,7 @@ struct LockboxCredentialsInput: View {
     @FocusState private var isFocused: Bool
     
     var body: some View {
-        HStack(spacing: 8) {
+        HStack {
             TextField("", text: $text)
                 .focused($isFocused)
                 .keyboardType(.default)
@@ -46,6 +46,7 @@ struct LockboxCredentialsInput: View {
                         .bodyLarge()
                         .foregroundStyle(.grey500)
                 }
+                .padding(.vertical, 4)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             
@@ -60,7 +61,6 @@ struct LockboxCredentialsInput: View {
                             .scaledToFit()
                             .frame(width: 24, height: 24)
                             .foregroundStyle(.grey100)
-                            .padding(6)
                     }
                     .buttonStyle(.plain)
                     .transition(.opacity.combined(with: .scale))
@@ -74,7 +74,6 @@ struct LockboxCredentialsInput: View {
                             .scaledToFit()
                             .frame(width: 24, height: 24)
                             .foregroundStyle(.grey100)
-                            .padding(6)
                     }
                     .buttonStyle(.plain)
                     .transition(.opacity.combined(with: .scale))
