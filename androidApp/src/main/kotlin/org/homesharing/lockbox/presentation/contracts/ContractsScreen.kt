@@ -153,7 +153,10 @@ private fun LockBoxContractScreen(
                     )
                 }
             } else {
-                items(contracts.itemCount) { index ->
+                items(
+                    count = contracts.itemCount,
+                    key = { index -> contracts[index]?.id ?: index }
+                ) { index ->
                     val contract = contracts[index]
                     contract?.let {
                         LockBoxSwipeToDismiss(
