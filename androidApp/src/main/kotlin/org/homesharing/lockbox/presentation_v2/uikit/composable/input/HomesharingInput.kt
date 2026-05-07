@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ internal fun HomesharingInput(
     placeholderText: String? = null,
     leadingIcon: Painter? = null,
     trailingIcon: Painter? = null,
+    trailingIconAction: (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -73,23 +76,34 @@ internal fun HomesharingInput(
                 )
             }
         },
-        leadingIcon = leadingIcon?.let { icon ->
+        leadingIcon = if (isFocused && leadingIcon != null) {
             {
                 Icon(
-                    painter = icon,
+                    painter = leadingIcon,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                 )
             }
+        } else {
+            null
         },
-        trailingIcon = trailingIcon?.let { icon ->
+        trailingIcon = if (isFocused && trailingIcon != null && trailingIconAction != null) {
             {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                )
+                IconButton(
+                    onClick = trailingIconAction,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
+                    )
+                ) {
+                    Icon(
+                        painter = trailingIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
+        } else {
+            null
         },
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = HomesharingTheme.colors.white,
