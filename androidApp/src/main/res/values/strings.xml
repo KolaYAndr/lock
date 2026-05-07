@@ -214,4 +214,8 @@
         <item quantity="other">%d дня назад</item>
     </plurals>
     <string name="pick_a_lockbox">Выберите локбокс</string>
+
+    <string name="send_code_again">Отправить код повторно</string>
+    <string name="receive_code">Получить код</string>
+    <string name="sign_in_account">Войти в аккаунт</string>
 </resources>

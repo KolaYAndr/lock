@@ -12,6 +12,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -46,6 +47,7 @@ import org.homesharing.lockbox.presentation.uikit.animation.loginAnimation
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LockboxActivity : ComponentActivity() {
@@ -57,28 +59,31 @@ class LockboxActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         setContent {
-            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
-
-            val snackbarHostState = remember { SnackbarHostState() }
-            CollectSnackbarEvents(snackbarHostState)
-
-            val navigationState = rememberNavigationState(
-                startRoute = Route.Boxes,
-                topLevelRoutes = topLevelRoutes.keys,
-            )
-
-            val navigator = remember {
-                Navigator(navigationState)
+            HomesharingTheme {
+                org.homesharing.lockbox.presentation_v2.login.LoginScreen(modifier = Modifier.fillMaxSize())
             }
-
-            LockBoxTheme {
-                LockboxApp(
-                    isLoggedIn = isLoggedIn,
-                    navigationState = navigationState,
-                    navigator = navigator,
-                    snackbarHostState = snackbarHostState
-                )
-            }
+//            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
+//
+//            val snackbarHostState = remember { SnackbarHostState() }
+//            CollectSnackbarEvents(snackbarHostState)
+//
+//            val navigationState = rememberNavigationState(
+//                startRoute = Route.Boxes,
+//                topLevelRoutes = topLevelRoutes.keys,
+//            )
+//
+//            val navigator = remember {
+//                Navigator(navigationState)
+//            }
+//
+//            LockBoxTheme {
+//                LockboxApp(
+//                    isLoggedIn = isLoggedIn,
+//                    navigationState = navigationState,
+//                    navigator = navigator,
+//                    snackbarHostState = snackbarHostState
+//                )
+//            }
         }
     }
 

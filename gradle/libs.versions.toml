@@ -6,16 +6,16 @@ android-targetSdk = "36"
 androidx-activityCompose = "1.13.0"
 androidx-core = "1.2.0"
 androidx-lifecycle = "2.10.0"
-kotlin = "2.3.20"
+kotlin = "2.3.21"
 ktor = "3.4.3"
 koin = "4.2.1"
-navigation3 = "1.1.0"  # do not update to 2.10.0
+navigation3 = "1.1.1"  # do not update to 2.10.0
 material3Android = "1.4.0"
 coil = "3.4.0"
 paging = "3.4.2"
 datastore = "1.2.1"
 dateTime = "0.7.1"
-composeBom = "2026.03.01"
+composeBom = "2026.04.01"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
