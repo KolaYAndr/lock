@@ -30,8 +30,9 @@ internal fun HomesharingPickableItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     role: Role = Role.Switch,
+    enabled: Boolean = true,
 ) {
-    val isSelectedModifier = if (isSelected) {
+    val isSelectedModifier = if (isSelected && enabled) {
         Modifier.border(
             width = 2.dp,
             color = HomesharingTheme.colors.black,
@@ -51,7 +52,8 @@ internal fun HomesharingPickableItem(
             .background(HomesharingTheme.colors.white)
             .clickable(
                 onClick = onClick,
-                role = role
+                role = role,
+                enabled = enabled
             )
             .then(isSelectedModifier),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
@@ -60,13 +62,21 @@ internal fun HomesharingPickableItem(
         Icon(
             painter = icon,
             contentDescription = null,
-            tint = HomesharingTheme.colors.black,
+            tint = if (enabled) {
+                HomesharingTheme.colors.black
+            } else {
+                HomesharingTheme.colors.black.copy(alpha = .3f)
+            },
             modifier = Modifier.size(32.dp)
         )
 
         Text(
             text = title,
-            color = HomesharingTheme.colors.black,
+            color = if (enabled) {
+                HomesharingTheme.colors.black
+            } else {
+                HomesharingTheme.colors.black.copy(alpha = .3f)
+            },
             style = HomesharingTheme.typography.bodyLarge
         )
     }

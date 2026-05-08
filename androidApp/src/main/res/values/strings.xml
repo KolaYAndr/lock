@@ -226,4 +226,6 @@
     <string name="pick_a_role">Выберите роль</string>
     <string name="owner">Владелец</string>
     <string name="not_now">Не сейчас</string>
+    <string name="add_a_flat">Добавьте помещение</string>
+    <string name="soon">Скоро</string>
 </resources>

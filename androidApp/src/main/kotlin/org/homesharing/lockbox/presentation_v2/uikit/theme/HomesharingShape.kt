@@ -10,6 +10,7 @@ internal data class HomesharingShape(
     val roundedCornerShape18: Shape,
     val roundedCornerShape62top: Shape,
     val roundedCornerShape64: Shape,
+    val roundedCornerShape999: Shape,
 )
 
 internal val LocalHomesharingShape = staticCompositionLocalOf {
@@ -18,5 +19,6 @@ internal val LocalHomesharingShape = staticCompositionLocalOf {
         roundedCornerShape18 = roundedCornerShape18,
         roundedCornerShape62top = roundedCornerShape62top,
         roundedCornerShape64 = roundedCornerShape64,
+        roundedCornerShape999 = roundedCornerShape999,
     )
 }

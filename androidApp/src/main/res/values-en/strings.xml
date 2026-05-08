@@ -209,4 +209,6 @@
     <string name="pick_a_role">Pick a role</string>
     <string name="owner">Owner</string>
     <string name="not_now">Not now</string>
+    <string name="add_a_flat">Add a flat</string>
+    <string name="soon">Soon</string>
 </resources>
