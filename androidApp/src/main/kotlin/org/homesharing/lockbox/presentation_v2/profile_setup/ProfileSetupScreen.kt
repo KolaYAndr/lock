@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,6 +76,7 @@ private fun ProfileSetupScreen(
             text = stringResource(R.string.how_to_address_you),
             style = HomesharingTheme.typography.titleLarge,
             color = HomesharingTheme.colors.black,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(top = 16.dp)
                 .padding(horizontal = 16.dp)

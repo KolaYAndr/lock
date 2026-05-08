@@ -4,6 +4,7 @@ import org.homesharing.lockbox.LockboxActivityViewModel
 import org.homesharing.lockbox.LockboxActivityViewModelImpl
 import org.homesharing.lockbox.presentation_v2.login.LoginViewModel
 import org.homesharing.lockbox.presentation_v2.profile_setup.ProfileSetupViewModel
+import org.homesharing.lockbox.presentation_v2.role_chooser.RoleChooserViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -37,4 +38,5 @@ internal val viewModelModule = module {
 //    }
     viewModelOf(::LoginViewModel)
     viewModelOf(::ProfileSetupViewModel)
+    viewModelOf(::RoleChooserViewModel)
 }

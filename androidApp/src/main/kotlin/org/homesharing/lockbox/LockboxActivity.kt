@@ -48,6 +48,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackb
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation_v2.profile_setup.ProfileSetupScreen
+import org.homesharing.lockbox.presentation_v2.role_chooser.RoleChooserScreen
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -61,7 +62,7 @@ class LockboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomesharingTheme {
-                ProfileSetupScreen()
+                RoleChooserScreen()
             }
 //            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 //

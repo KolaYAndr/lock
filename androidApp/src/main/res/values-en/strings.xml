@@ -206,4 +206,7 @@
     <string name="full_name">Full name</string>
     <string name="how_to_address_you">How to address you?</string>
     <string name="proceed">Continue</string>
+    <string name="pick_a_role">Pick a role</string>
+    <string name="owner">Owner</string>
+    <string name="not_now">Not now</string>
 </resources>

@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -87,7 +88,8 @@ private fun LoginScreen(
             Text(
                 text = stringResource(R.string.sign_in_account),
                 style = HomesharingTheme.typography.titleLarge,
-                color = HomesharingTheme.colors.black
+                color = HomesharingTheme.colors.black,
+                fontWeight = FontWeight.Bold,
             )
 
             HomesharingInput(
