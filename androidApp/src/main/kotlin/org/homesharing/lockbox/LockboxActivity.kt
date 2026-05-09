@@ -48,6 +48,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackb
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation_v2.add_or_import_flat.AddFlatScreen
+import org.homesharing.lockbox.presentation_v2.flat_address.FlatAddressScreen
 import org.homesharing.lockbox.presentation_v2.profile_setup.ProfileSetupScreen
 import org.homesharing.lockbox.presentation_v2.role_chooser.RoleChooserScreen
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
@@ -63,7 +64,7 @@ class LockboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomesharingTheme {
-                AddFlatScreen()
+                FlatAddressScreen()
             }
 //            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 //

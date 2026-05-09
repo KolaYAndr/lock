@@ -211,4 +211,20 @@
     <string name="not_now">Not now</string>
     <string name="add_a_flat">Add a flat</string>
     <string name="soon">Soon</string>
+    <string name="new_flat">New flat</string>
+    <string name="address">Address</string>
+    <string name="name_example">for example \'flat on Pushkina st.\'</string>
+    <string name="flat_type">Flat type</string>
+    <string name="living">Living</string>
+    <string name="commercial">Commercial</string>
+    <string name="placeholder_city">City</string>
+    <string name="placeholder_street">Street</string>
+    <string name="placeholder_number">House number</string>
+    <string name="placeholder_entrance">Entrance</string>
+    <string name="placeholder_flat_number">Flat number</string>
+    <string name="placeholder_building">Building</string>
+    <string name="placeholder_structure">Structure</string>
+    <string name="placeholder_liter">Liter</string>
+    <string name="placeholder_comment">Comment</string>
+    <string name="placeholder_name">Name</string>
 </resources>

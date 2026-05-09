@@ -228,4 +228,20 @@
     <string name="not_now">Не сейчас</string>
     <string name="add_a_flat">Добавьте помещение</string>
     <string name="soon">Скоро</string>
+    <string name="new_flat">Новое помещение</string>
+    <string name="address">Адрес</string>
+    <string name="name_example">например, Квартира на Пушкина</string>
+    <string name="flat_type">Тип помещения</string>
+    <string name="living">Жилое</string>
+    <string name="commercial">Не жилое</string>
+    <string name="placeholder_city">Город</string>
+    <string name="placeholder_street">Улица</string>
+    <string name="placeholder_number">Дом</string>
+    <string name="placeholder_entrance">Подъезд</string>
+    <string name="placeholder_flat_number">Квартира</string>
+    <string name="placeholder_building">Корпус</string>
+    <string name="placeholder_structure">Строение</string>
+    <string name="placeholder_liter">Литера</string>
+    <string name="placeholder_comment">Комментарий</string>
+    <string name="placeholder_name">Название</string>
 </resources>
