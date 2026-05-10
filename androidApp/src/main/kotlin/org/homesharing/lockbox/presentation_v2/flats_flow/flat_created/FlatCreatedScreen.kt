@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +31,8 @@ internal fun FlatCreatedScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(HomesharingTheme.colors.white),
+            .background(HomesharingTheme.colors.white)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -74,8 +78,9 @@ internal fun FlatCreatedScreen() {
             style = HomesharingButtonDefaults.secondary(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
+                .padding(top = 8.dp, bottom = 16.dp)
                 .padding(horizontal = 11.dp)
+                .navigationBarsPadding()
         )
     }
 }

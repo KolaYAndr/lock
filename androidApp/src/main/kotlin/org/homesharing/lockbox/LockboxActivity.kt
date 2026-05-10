@@ -42,7 +42,7 @@ import org.homesharing.lockbox.presentation.uikit.animation.loginAnimation
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation_v2.flats_flow.flat_data.FlatDataScreen
+import org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.guest_invited.GuestInvitedScreen
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -56,7 +56,7 @@ class LockboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomesharingTheme {
-                FlatDataScreen()
+                GuestInvitedScreen()
             }
 //            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 //

@@ -263,4 +263,9 @@
     <string name="guest_info">Данные гостя</string>
     <string name="will_send_invitation_on_that_email">Отправим приглашение на эту почту</string>
     <string name="guest_invitation">Приглашение гостя</string>
+    <string name="invitation_sent">Приглашение отправлено</string>
+    <string name="we_sent_link_to_guest_email">Отправили ссылку на почту гостя</string>
+    <string name="go_to_check_in">Открыть заселение</string>
+    <string name="create_one_more">Создать ещё одно</string>
+    <string name="go_to_main_screen">На главную</string>
 </resources>
