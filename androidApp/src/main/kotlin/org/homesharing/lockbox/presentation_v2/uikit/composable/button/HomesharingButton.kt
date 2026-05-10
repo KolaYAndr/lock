@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -98,6 +99,7 @@ internal fun HomesharingButton(
     }
 }
 
+@Immutable
 internal data class HomesharingButtonStyle(
     val backgroundColor: Color,
     val titleColor: Color,
@@ -108,6 +110,7 @@ internal data class HomesharingButtonStyle(
     val interactionColor: Color
 )
 
+@Immutable
 internal object HomesharingButtonDefaults {
     @Composable
     fun primary() = HomesharingButtonStyle(

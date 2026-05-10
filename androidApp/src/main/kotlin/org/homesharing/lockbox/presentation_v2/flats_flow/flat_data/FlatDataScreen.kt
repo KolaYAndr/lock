@@ -3,12 +3,12 @@ package org.homesharing.lockbox.presentation_v2.flats_flow.flat_data
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -127,15 +127,12 @@ private fun FlatDataScreen(
                 .padding(top = 24.dp)
                 .padding(horizontal = 16.dp)
         ) {
-            LazyRow(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(
-                    uiState.chosenRooms.size,
-                    key = { index -> uiState.chosenRooms[index] },
-                    contentType = { FlatRoom }
-                ) { index ->
-                    val room = uiState.chosenRooms[index]
+                for (room in uiState.chosenRooms)
                     HomesharingChip(
                         title = stringResource(
                             when (room) {
@@ -158,7 +155,6 @@ private fun FlatDataScreen(
                             }
                         )
                     )
-                }
             }
         }
 

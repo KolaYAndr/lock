@@ -21,7 +21,7 @@ internal data class FlatDataUiState(
         val Initial = FlatDataUiState(
             flatAddress = "",
             commercial = false,
-            chosenRooms = emptyList()
+            chosenRooms = FlatRoom.entries
         )
     }
 }
