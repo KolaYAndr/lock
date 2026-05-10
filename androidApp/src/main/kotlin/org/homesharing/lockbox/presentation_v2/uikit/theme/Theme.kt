@@ -30,6 +30,7 @@ internal fun HomesharingTheme(
     )
 
     val homeSharingShape = HomesharingShape(
+        roundedCornerShape12 = roundedCornerShape12,
         roundedCornerShape16 = roundedCornerShape16,
         roundedCornerShape18 = roundedCornerShape18,
         roundedCornerShape62top = roundedCornerShape62top,

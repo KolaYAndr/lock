@@ -12,7 +12,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -20,7 +19,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -28,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
@@ -38,8 +35,6 @@ import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.navigation.AuthenticatedNavigation
 import org.homesharing.lockbox.navigation.NavigationState
 import org.homesharing.lockbox.navigation.Navigator
-import org.homesharing.lockbox.navigation.rememberNavigationState
-import org.homesharing.lockbox.navigation.routes.Route
 import org.homesharing.lockbox.navigation.routes.topLevelRoutes
 import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.snackbar.SnackbarController
@@ -47,11 +42,7 @@ import org.homesharing.lockbox.presentation.uikit.animation.loginAnimation
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation_v2.add_or_import_flat.AddFlatScreen
-import org.homesharing.lockbox.presentation_v2.flat_address.FlatAddressScreen
-import org.homesharing.lockbox.presentation_v2.flat_rooms.FlatRoomsScreen
-import org.homesharing.lockbox.presentation_v2.profile_setup.ProfileSetupScreen
-import org.homesharing.lockbox.presentation_v2.role_chooser.RoleChooserScreen
+import org.homesharing.lockbox.presentation_v2.flats_flow.flat_data.FlatDataScreen
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -65,7 +56,7 @@ class LockboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomesharingTheme {
-                FlatRoomsScreen()
+                FlatDataScreen()
             }
 //            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 //

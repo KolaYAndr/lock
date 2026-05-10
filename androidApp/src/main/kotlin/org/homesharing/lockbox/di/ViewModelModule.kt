@@ -2,12 +2,13 @@ package org.homesharing.lockbox.di
 
 import org.homesharing.lockbox.LockboxActivityViewModel
 import org.homesharing.lockbox.LockboxActivityViewModelImpl
-import org.homesharing.lockbox.presentation_v2.add_or_import_flat.AddFlatViewModel
-import org.homesharing.lockbox.presentation_v2.flat_address.FlatAddressViewModel
-import org.homesharing.lockbox.presentation_v2.flat_rooms.FlatRoomsViewModel
+import org.homesharing.lockbox.presentation_v2.flats_flow.add_or_import_flat.AddFlatViewModel
+import org.homesharing.lockbox.presentation_v2.flats_flow.flat_address.FlatAddressViewModel
+import org.homesharing.lockbox.presentation_v2.flats_flow.flat_data.FlatDataViewModel
+import org.homesharing.lockbox.presentation_v2.flats_flow.flat_rooms.FlatRoomsViewModel
 import org.homesharing.lockbox.presentation_v2.login.LoginViewModel
-import org.homesharing.lockbox.presentation_v2.profile_setup.ProfileSetupViewModel
-import org.homesharing.lockbox.presentation_v2.role_chooser.RoleChooserViewModel
+import org.homesharing.lockbox.presentation_v2.profile_flow.profile_setup.ProfileSetupViewModel
+import org.homesharing.lockbox.presentation_v2.profile_flow.role_chooser.RoleChooserViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -45,4 +46,5 @@ internal val viewModelModule = module {
     viewModelOf(::AddFlatViewModel)
     viewModelOf(::FlatAddressViewModel)
     viewModelOf(::FlatRoomsViewModel)
+    viewModelOf(::FlatDataViewModel)
 }

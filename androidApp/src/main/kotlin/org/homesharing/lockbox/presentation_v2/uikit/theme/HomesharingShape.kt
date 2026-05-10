@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Shape
 
 @Immutable
 internal data class HomesharingShape(
+    val roundedCornerShape12: Shape,
     val roundedCornerShape16: Shape,
     val roundedCornerShape18: Shape,
     val roundedCornerShape62top: Shape,
@@ -15,6 +16,7 @@ internal data class HomesharingShape(
 
 internal val LocalHomesharingShape = staticCompositionLocalOf {
     HomesharingShape(
+        roundedCornerShape12 = roundedCornerShape12,
         roundedCornerShape16 = roundedCornerShape16,
         roundedCornerShape18 = roundedCornerShape18,
         roundedCornerShape62top = roundedCornerShape62top,

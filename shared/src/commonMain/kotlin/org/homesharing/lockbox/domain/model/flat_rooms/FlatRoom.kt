@@ -7,7 +7,6 @@ sealed interface FlatRoom {
     data object LivingRoom: FlatRoom
     data object Toilet: FlatRoom
     data object Shower: FlatRoom
-    data object Custom: FlatRoom
 
     companion object {
         val entries = listOf(
@@ -17,7 +16,6 @@ sealed interface FlatRoom {
             LivingRoom,
             Toilet,
             Shower,
-            Custom,
         )
     }
 }

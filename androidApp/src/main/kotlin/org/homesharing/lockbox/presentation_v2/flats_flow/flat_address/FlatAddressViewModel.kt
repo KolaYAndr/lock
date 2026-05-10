@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation_v2.flat_address
+package org.homesharing.lockbox.presentation_v2.flats_flow.flat_address
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

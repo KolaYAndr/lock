@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation_v2.profile_setup
+package org.homesharing.lockbox.presentation_v2.profile_flow.profile_setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

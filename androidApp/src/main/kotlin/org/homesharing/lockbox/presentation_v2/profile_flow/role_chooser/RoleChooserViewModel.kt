@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation_v2.role_chooser
+package org.homesharing.lockbox.presentation_v2.profile_flow.role_chooser
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

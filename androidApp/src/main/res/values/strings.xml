@@ -253,6 +253,7 @@
     <string name="living_room">Гостиная</string>
     <string name="toilet">Туалет</string>
     <string name="shower">Душевая</string>
-    <string name="create_room">Создать свою</string>
+    <string name="create_custom">Создать свою</string>
+    <string name="create_flat">Создать помещение</string>
     <string name="skip">Пропустить</string>
 </resources>

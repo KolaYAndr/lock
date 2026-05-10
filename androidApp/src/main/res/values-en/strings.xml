@@ -236,6 +236,7 @@
     <string name="living_room">Living room</string>
     <string name="toilet">Toilet</string>
     <string name="shower">Shower</string>
-    <string name="create_room">Create room</string>
+    <string name="create_custom">Create custom room</string>
+    <string name="create_flat">Create a flat</string>
     <string name="skip">Skip</string>
 </resources>

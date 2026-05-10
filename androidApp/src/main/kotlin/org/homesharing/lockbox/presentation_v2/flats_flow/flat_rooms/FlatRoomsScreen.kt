@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation_v2.flat_rooms
+package org.homesharing.lockbox.presentation_v2.flats_flow.flat_rooms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import org.homesharing.lockbox.R
 import org.homesharing.lockbox.domain.model.flat_rooms.FlatRoom
 import org.homesharing.lockbox.presentation_v2.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation_v2.uikit.composable.button.HomesharingButtonDefaults
-import org.homesharing.lockbox.presentation_v2.uikit.composable.pick.HomesharingPickableItem
+import org.homesharing.lockbox.presentation_v2.uikit.composable.pickable.HomesharingPickableItem
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -222,7 +222,7 @@ private fun FlatRoomsScreen(
         ) {
             HomesharingPickableItem(
                 icon = painterResource(R.drawable.plus),
-                title = stringResource(R.string.create_room),
+                title = stringResource(R.string.create_custom),
                 isSelected = false,
                 enabled = false,
                 onClick = {},

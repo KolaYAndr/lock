@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation_v2.uikit.composable.pick
+package org.homesharing.lockbox.presentation_v2.uikit.composable.pickable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
