@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
@@ -426,6 +427,18 @@ private fun FlatAddressScreen(
                 .padding(bottom = 16.dp, top = 24.dp)
                 .padding(horizontal = 16.dp)
                 .navigationBarsPadding()
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewFlatAddressScreen() {
+    HomesharingTheme {
+        FlatAddressScreen(
+            flatAddress = FlatAddress.Initial,
+            onIntent = {},
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

@@ -227,4 +227,15 @@
     <string name="placeholder_liter">Liter</string>
     <string name="placeholder_comment">Comment</string>
     <string name="placeholder_name">Name</string>
+    <string name="rooms">Rooms</string>
+    <string name="will_help_with_report_when_checking_out">Will help with report when checking in and out</string>
+    <string name="popular">Popular</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="bathroom">Bathroom</string>
+    <string name="bedroom">Bedroom</string>
+    <string name="living_room">Living room</string>
+    <string name="toilet">Toilet</string>
+    <string name="shower">Shower</string>
+    <string name="create_room">Create room</string>
+    <string name="skip">Skip</string>
 </resources>

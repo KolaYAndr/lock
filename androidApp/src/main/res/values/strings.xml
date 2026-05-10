@@ -244,4 +244,15 @@
     <string name="placeholder_liter">Литера</string>
     <string name="placeholder_comment">Комментарий</string>
     <string name="placeholder_name">Название</string>
+    <string name="rooms">Комнаты</string>
+    <string name="will_help_with_report_when_checking_out">Помогут с отчётами при заселении и выезде</string>
+    <string name="popular">Популярные</string>
+    <string name="kitchen">Кухня</string>
+    <string name="bathroom">Ванная</string>
+    <string name="bedroom">Спальня</string>
+    <string name="living_room">Гостиная</string>
+    <string name="toilet">Туалет</string>
+    <string name="shower">Душевая</string>
+    <string name="create_room">Создать свою</string>
+    <string name="skip">Пропустить</string>
 </resources>

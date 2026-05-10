@@ -4,6 +4,7 @@ import org.homesharing.lockbox.LockboxActivityViewModel
 import org.homesharing.lockbox.LockboxActivityViewModelImpl
 import org.homesharing.lockbox.presentation_v2.add_or_import_flat.AddFlatViewModel
 import org.homesharing.lockbox.presentation_v2.flat_address.FlatAddressViewModel
+import org.homesharing.lockbox.presentation_v2.flat_rooms.FlatRoomsViewModel
 import org.homesharing.lockbox.presentation_v2.login.LoginViewModel
 import org.homesharing.lockbox.presentation_v2.profile_setup.ProfileSetupViewModel
 import org.homesharing.lockbox.presentation_v2.role_chooser.RoleChooserViewModel
@@ -43,4 +44,5 @@ internal val viewModelModule = module {
     viewModelOf(::RoleChooserViewModel)
     viewModelOf(::AddFlatViewModel)
     viewModelOf(::FlatAddressViewModel)
+    viewModelOf(::FlatRoomsViewModel)
 }
