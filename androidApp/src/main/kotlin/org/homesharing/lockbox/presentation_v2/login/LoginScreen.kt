@@ -80,7 +80,7 @@ private fun LoginScreen(
                 .align(Alignment.BottomCenter)
                 .clip(HomesharingTheme.shape.roundedCornerShape62top)
                 .background(HomesharingTheme.colors.white)
-                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .padding(vertical = 32.dp)
                 .navigationBarsPadding()
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,6 +90,7 @@ private fun LoginScreen(
                 style = HomesharingTheme.typography.titleLarge,
                 color = HomesharingTheme.colors.black,
                 fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
 
             HomesharingInput(
@@ -112,6 +113,7 @@ private fun LoginScreen(
                 placeholderText = stringResource(R.string.placeholder_email),
                 modifier = Modifier
                     .padding(top = 32.dp)
+                    .padding(horizontal = 11.dp)
                     .fillMaxWidth()
             )
 
@@ -127,7 +129,9 @@ private fun LoginScreen(
                 keyboardActions = KeyboardActions(
                     onDone = { signIn() }
                 ),
-                trailingIcon = if (isSeen) painterResource(R.drawable.eye_off) else painterResource(R.drawable.eye),
+                trailingIcon = if (isSeen) painterResource(R.drawable.eye_off) else painterResource(
+                    R.drawable.eye
+                ),
                 trailingIconAction = {
                     isSeen = !isSeen
                 },
@@ -135,6 +139,7 @@ private fun LoginScreen(
                 placeholderText = stringResource(R.string.password_placeholder),
                 modifier = Modifier
                     .padding(top = 16.dp)
+                    .padding(horizontal = 11.dp)
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
             )
@@ -144,6 +149,7 @@ private fun LoginScreen(
                 onClick = signIn,
                 modifier = Modifier
                     .padding(top = 16.dp)
+                    .padding(horizontal = 11.dp)
                     .fillMaxWidth()
             )
         }

@@ -167,7 +167,7 @@ private fun FlatDataScreen(
             onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 24.dp, bottom = 16.dp)
                 .navigationBarsPadding()
         )

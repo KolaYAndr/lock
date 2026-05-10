@@ -142,7 +142,7 @@ private fun FlatAddressScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp)
                 .focusRequester(cityFocusRequester)
         )
@@ -165,7 +165,7 @@ private fun FlatAddressScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp)
                 .focusRequester(streetFocusRequester)
         )
@@ -173,7 +173,7 @@ private fun FlatAddressScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -222,7 +222,7 @@ private fun FlatAddressScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -271,7 +271,7 @@ private fun FlatAddressScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -336,7 +336,7 @@ private fun FlatAddressScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp)
                 .focusRequester(commentFocusRequester)
         )
@@ -359,7 +359,7 @@ private fun FlatAddressScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .padding(top = 16.dp)
                 .focusRequester(nameFocusRequester)
         )
@@ -425,7 +425,7 @@ private fun FlatAddressScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp, top = 24.dp)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .navigationBarsPadding()
         )
     }

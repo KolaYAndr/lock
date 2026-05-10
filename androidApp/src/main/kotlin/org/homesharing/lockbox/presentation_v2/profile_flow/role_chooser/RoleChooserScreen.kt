@@ -47,9 +47,7 @@ private fun RoleChooserScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .background(HomesharingTheme.colors.white)
-            .padding(horizontal = 16.dp),
+        modifier = modifier.background(HomesharingTheme.colors.white),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -58,12 +56,14 @@ private fun RoleChooserScreen(
             style = HomesharingTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = HomesharingTheme.colors.black,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp),
+                .padding(top = 24.dp)
+                .padding(horizontal = 11.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
@@ -92,7 +92,8 @@ private fun RoleChooserScreen(
 
         AnimatedContent(
             targetState = pickedRole,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(horizontal = 11.dp)
         ) { role ->
             when (role) {
                 null -> HomesharingButton(

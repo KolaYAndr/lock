@@ -28,15 +28,16 @@ internal fun FlatCreatedScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(HomesharingTheme.colors.white)
-            .padding(horizontal = 16.dp),
+            .background(HomesharingTheme.colors.white),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(R.drawable.flat),
             contentDescription = null,
-            modifier = Modifier.size(200.dp),
+            modifier = Modifier
+                .size(200.dp)
+                .padding(horizontal = 16.dp),
         )
 
         Text(
@@ -44,14 +45,18 @@ internal fun FlatCreatedScreen() {
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             style = HomesharingTheme.typography.titleLarge,
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
         )
 
         Text(
             text = stringResource(R.string.now_you_can_add_guest),
             textAlign = TextAlign.Center,
             style = HomesharingTheme.typography.bodyLarge,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontal = 16.dp)
         )
 
         HomesharingButton(
@@ -60,6 +65,7 @@ internal fun FlatCreatedScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp)
+                .padding(horizontal = 11.dp)
         )
 
         HomesharingButton(
@@ -69,6 +75,7 @@ internal fun FlatCreatedScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
+                .padding(horizontal = 11.dp)
         )
     }
 }

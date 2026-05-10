@@ -86,13 +86,14 @@ private fun ProfileSetupScreen(
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
         }
+
         HomesharingInput(
             value = fullName,
             onValueChange = onChangeFullName,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
                 .focusRequester(focusRequester),
             keyboardActions = KeyboardActions(
                 onDone = { onFinish() }
@@ -114,7 +115,7 @@ private fun ProfileSetupScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 11.dp)
         )
     }
 }

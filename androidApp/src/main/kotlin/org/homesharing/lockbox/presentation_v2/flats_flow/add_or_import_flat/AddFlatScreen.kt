@@ -49,9 +49,7 @@ private fun AddFlatScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .background(HomesharingTheme.colors.white)
-            .padding(horizontal = 16.dp),
+        modifier = modifier.background(HomesharingTheme.colors.white),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -60,12 +58,14 @@ private fun AddFlatScreen(
             style = HomesharingTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = HomesharingTheme.colors.black,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp),
+                .padding(top = 24.dp)
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
@@ -100,6 +100,7 @@ private fun AddFlatScreen(
                         .align(Alignment.TopStart)
                 )
             }
+
             HomesharingPickableItem(
                 icon = painterResource(R.drawable.house),
                 title = stringResource(R.string.owner),
@@ -114,7 +115,8 @@ private fun AddFlatScreen(
 
         AnimatedContent(
             targetState = addType,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(horizontal = 11.dp)
         ) { addType ->
             when (addType) {
                 null -> HomesharingButton(
