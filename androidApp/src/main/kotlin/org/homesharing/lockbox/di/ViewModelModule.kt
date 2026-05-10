@@ -6,6 +6,7 @@ import org.homesharing.lockbox.presentation_v2.flats_flow.add_or_import_flat.Add
 import org.homesharing.lockbox.presentation_v2.flats_flow.flat_address.FlatAddressViewModel
 import org.homesharing.lockbox.presentation_v2.flats_flow.flat_data.FlatDataViewModel
 import org.homesharing.lockbox.presentation_v2.flats_flow.flat_rooms.FlatRoomsViewModel
+import org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.guest_info.GuestInfoViewModel
 import org.homesharing.lockbox.presentation_v2.login.LoginViewModel
 import org.homesharing.lockbox.presentation_v2.profile_flow.profile_setup.ProfileSetupViewModel
 import org.homesharing.lockbox.presentation_v2.profile_flow.role_chooser.RoleChooserViewModel
@@ -47,4 +48,5 @@ internal val viewModelModule = module {
     viewModelOf(::FlatAddressViewModel)
     viewModelOf(::FlatRoomsViewModel)
     viewModelOf(::FlatDataViewModel)
+    viewModelOf(::GuestInfoViewModel)
 }

@@ -260,4 +260,7 @@
     <string name="now_you_can_add_guest">Теперь вы можете добавить гостя и отправить приглашение</string>
     <string name="add_guest">Добавить гостя</string>
     <string name="go_to_flat">Перейти к помещению</string>
+    <string name="guest_info">Данные гостя</string>
+    <string name="will_send_invitation_on_that_email">Отправим приглашение на эту почту</string>
+    <string name="guest_invitation">Приглашение гостя</string>
 </resources>

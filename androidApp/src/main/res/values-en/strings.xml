@@ -243,4 +243,7 @@
     <string name="now_you_can_add_guest">Now you can add a guest and send an invitation</string>
     <string name="add_guest">Add a guest</string>
     <string name="go_to_flat">Go to the room</string>
+    <string name="guest_info">Guest info</string>
+    <string name="will_send_invitation_on_that_email">We will send invitation on that email</string>
+    <string name="guest_invitation">Guest invitation</string>
 </resources>
