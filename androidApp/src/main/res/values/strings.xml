@@ -256,4 +256,8 @@
     <string name="create_custom">Создать свою</string>
     <string name="create_flat">Создать помещение</string>
     <string name="skip">Пропустить</string>
+    <string name="flat_created">Помещение создано</string>
+    <string name="now_you_can_add_guest">Теперь вы можете добавить гостя и отправить приглашение</string>
+    <string name="add_guest">Добавить гостя</string>
+    <string name="go_to_flat">Перейти к помещению</string>
 </resources>

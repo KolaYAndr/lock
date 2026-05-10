@@ -239,4 +239,8 @@
     <string name="create_custom">Create custom room</string>
     <string name="create_flat">Create a flat</string>
     <string name="skip">Skip</string>
+    <string name="flat_created">Flat created</string>
+    <string name="now_you_can_add_guest">Now you can add a guest and send an invitation</string>
+    <string name="add_guest">Add a guest</string>
+    <string name="go_to_flat">Go to the room</string>
 </resources>
