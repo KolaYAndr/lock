@@ -268,4 +268,7 @@
     <string name="go_to_check_in">Открыть заселение</string>
     <string name="create_one_more">Создать ещё одно</string>
     <string name="go_to_main_screen">На главную</string>
+    <string name="check_in_dates">Даты заезда</string>
+    <string name="check_in_details">Детали заезда</string>
+    <string name="check_in_dates_separated" translatable="false">%1$s - %2$s</string>
 </resources>

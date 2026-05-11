@@ -33,6 +33,7 @@ internal fun HomesharingTheme(
         roundedCornerShape12 = roundedCornerShape12,
         roundedCornerShape16 = roundedCornerShape16,
         roundedCornerShape18 = roundedCornerShape18,
+        roundedCornerShape24 = roundedCornerShape24,
         roundedCornerShape62top = roundedCornerShape62top,
         roundedCornerShape64 = roundedCornerShape64,
         roundedCornerShape999 = roundedCornerShape999,

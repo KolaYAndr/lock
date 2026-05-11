@@ -251,4 +251,6 @@
     <string name="go_to_check_in">Go to check-in</string>
     <string name="create_one_more">Create one more</string>
     <string name="go_to_main_screen">Go to main screen</string>
+    <string name="check_in_dates">Check-in dates</string>
+    <string name="check_in_details">Check in details</string>
 </resources>

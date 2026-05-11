@@ -43,6 +43,7 @@ import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackb
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
 import org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.guest_invited.GuestInvitedScreen
+import org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.invitation_details.GuestInvitationScreen
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -56,7 +57,7 @@ class LockboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomesharingTheme {
-                GuestInvitedScreen()
+                GuestInvitationScreen()
             }
 //            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 //

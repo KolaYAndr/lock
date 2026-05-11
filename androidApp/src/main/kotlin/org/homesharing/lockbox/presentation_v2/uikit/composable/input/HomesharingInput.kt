@@ -137,8 +137,7 @@ internal fun HomesharingInput(
             errorLeadingIconColor = HomesharingTheme.colors.black.copy(alpha = .3f),
             errorTrailingIconColor = HomesharingTheme.colors.black.copy(alpha = .3f)
         ),
-        modifier = modifier
-            .paddedBorder(borderColor),
+        modifier = modifier.paddedBorder(borderColor),
     )
 }
 
