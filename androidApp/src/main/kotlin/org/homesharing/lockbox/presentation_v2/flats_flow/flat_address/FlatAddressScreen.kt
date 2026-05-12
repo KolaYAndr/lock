@@ -322,7 +322,7 @@ private fun FlatAddressScreen(
         HomesharingInput(
             value = flatAddress.comment,
             onValueChange = { onIntent(FlatAddressIntent.CommentChanged(it)) },
-            placeholderText = stringResource(R.string.placeholder_comment),
+            placeholderText = stringResource(R.string.comment_placeholder),
             trailingIcon = painterResource(R.drawable.close),
             trailingIconAction = { onIntent(FlatAddressIntent.CommentChanged("")) },
             keyboardOptions = KeyboardOptions(

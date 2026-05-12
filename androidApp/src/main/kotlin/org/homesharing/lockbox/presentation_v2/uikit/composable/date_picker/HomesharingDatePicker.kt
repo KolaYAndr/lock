@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation_v2.uikit.composable.date_picker
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -33,7 +34,12 @@ internal fun HomesharingDatePicker(
     DateRangePicker(
         modifier = modifier
             .heightIn(max = 360.dp)
-            .clip(HomesharingTheme.shape.roundedCornerShape24),
+            .clip(HomesharingTheme.shape.roundedCornerShape24)
+            .border(
+                width = 0.5.dp,
+                color = HomesharingTheme.colors.black,
+                shape = HomesharingTheme.shape.roundedCornerShape24
+            ),
         state = datePickerState,
         showModeToggle = false,
         title = null,
@@ -43,7 +49,9 @@ internal fun HomesharingDatePicker(
                 style = HomesharingTheme.typography.titleMedium,
                 color = HomesharingTheme.colors.black,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
             )
         },
         colors = DatePickerDefaults.colors(

@@ -225,7 +225,7 @@
     <string name="placeholder_building">Building</string>
     <string name="placeholder_structure">Structure</string>
     <string name="placeholder_liter">Liter</string>
-    <string name="placeholder_comment">Comment</string>
+    <string name="comment_placeholder">Comment</string>
     <string name="placeholder_name">Name</string>
     <string name="rooms">Rooms</string>
     <string name="will_help_with_report_when_checking_out">Will help with report when checking in and out</string>
@@ -252,5 +252,10 @@
     <string name="create_one_more">Create one more</string>
     <string name="go_to_main_screen">Go to main screen</string>
     <string name="check_in_dates">Check-in dates</string>
-    <string name="check_in_details">Check in details</string>
+    <string name="check_in_details">Check-in details</string>
+    <string name="check_in_time_placeholder">Check-in time</string>
+    <string name="check_out_time_placeholder">Check-out time</string>
+    <string name="guest_number_placeholder">Guest number</string>
+    <string name="deposit_placeholder">Deposit</string>
+    <string name="private_comment_placeholder">Comment (only accessible by you)</string>
 </resources>

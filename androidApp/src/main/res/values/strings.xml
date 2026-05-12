@@ -6,7 +6,6 @@
     <string name="telegram" translatable="false">Telegram</string>
     <string name="whatsapp" translatable="false">WhatsApp</string>
     <string name="location_dot_access_time" translatable="false">%1$s • %2$s</string>
-    <string name="selected_time" translatable="false">%1$d:%2$d</string>
     <string name="sign_in">Войти</string>
     <string name="log_in_your_profile">Войдите в профиль</string>
     <string name="start_using_today">Начните использовать наше приложение уже сегодня!</string>
@@ -242,7 +241,7 @@
     <string name="placeholder_building">Корпус</string>
     <string name="placeholder_structure">Строение</string>
     <string name="placeholder_liter">Литера</string>
-    <string name="placeholder_comment">Комментарий</string>
+    <string name="comment_placeholder">Комментарий</string>
     <string name="placeholder_name">Название</string>
     <string name="rooms">Комнаты</string>
     <string name="will_help_with_report_when_checking_out">Помогут с отчётами при заселении и выезде</string>
@@ -271,4 +270,10 @@
     <string name="check_in_dates">Даты заезда</string>
     <string name="check_in_details">Детали заезда</string>
     <string name="check_in_dates_separated" translatable="false">%1$s - %2$s</string>
+    <string name="check_in_time_placeholder">Время заезда</string>
+    <string name="check_out_time_placeholder">Время выезда</string>
+    <string name="guest_number_placeholder">Кол-во гостей</string>
+    <string name="deposit_placeholder">Залог</string>
+    <string name="private_comment_placeholder">Комментарий (виден только вам)</string>
+    <string name="selected_time" translatable="false">%1$02d:%2$02d</string>
 </resources>
