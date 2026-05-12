@@ -140,7 +140,8 @@ private fun CheckInSetupScreen(
                 imeAction = ImeAction.Done,
             ),
             keyboardActions = KeyboardActions(
-                onDone = {}
+                onDone = {
+                }
             ),
             modifier = Modifier
                 .fillMaxWidth()

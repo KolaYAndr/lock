@@ -4,7 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,17 +35,17 @@ internal fun HomesharingCheckBoxItem(
     enabled: Boolean = true,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()
+    val isPressed by interactionSource.collectIsPressedAsState()
 
     val borderColor by animateColorAsState(
-        targetValue = if (isFocused) {
+        targetValue = if (isPressed) {
             HomesharingTheme.colors.black.copy(alpha = .5f)
         } else {
             Color.Transparent
         }
     )
     val backgroundColor by animateColorAsState(
-        if (isFocused) {
+        if (isPressed) {
             HomesharingTheme.colors.black.copy(alpha = .05f)
         } else {
             HomesharingTheme.colors.white
@@ -53,6 +53,7 @@ internal fun HomesharingCheckBoxItem(
     )
     Row(
         modifier = modifier
+            .paddedBorder(borderColor)
             .clip(HomesharingTheme.shape.roundedCornerShape16)
             .background(
                 backgroundColor,
@@ -63,8 +64,7 @@ internal fun HomesharingCheckBoxItem(
                 role = Role.Checkbox,
                 interactionSource = interactionSource,
                 onClick = onCheck
-            )
-            .paddedBorder(borderColor),
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start)
     ) {
