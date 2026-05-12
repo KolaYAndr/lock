@@ -258,4 +258,15 @@
     <string name="guest_number_placeholder">Guest number</string>
     <string name="deposit_placeholder">Deposit</string>
     <string name="private_comment_placeholder">Comment (only accessible by you)</string>
+    <string name="check_in_setup">Check-in setup</string>
+    <string name="we_will_send_guest_check_in_guide">Will send check-in guide to the guest</string>
+    <string name="request_passport">Request passport</string>
+    <string name="sign_deal_online">Sign deal online</string>
+    <string name="check_in_report">Check-in report</string>
+    <string name="check_out_report">Check-out report</string>
+    <string name="guest_will_send_report_when_checking_in">Guest will send report when checking-in</string>
+    <string name="guest_will_send_report_before_checking_out">Guest will send report before checking-out</string>
+    <string name="we_will_request_passport_before_check_in">We will request passport before checking-in</string>
+    <string name="guest_will_sing_deal_in_app">Guest will sign the deal in-app</string>
+    <string name="how_to_find_entrance_and_etc">how to find entrance and etc.</string>
 </resources>

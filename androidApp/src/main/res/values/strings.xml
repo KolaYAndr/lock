@@ -276,4 +276,15 @@
     <string name="deposit_placeholder">Залог</string>
     <string name="private_comment_placeholder">Комментарий (виден только вам)</string>
     <string name="selected_time" translatable="false">%1$02d:%2$02d</string>
+    <string name="check_in_setup">Настройка заселения</string>
+    <string name="we_will_send_guest_check_in_guide">Отправим гостю инструкции для заселения</string>
+    <string name="request_passport">Запросить паспорт</string>
+    <string name="sign_deal_online">Подписать договор онлайн</string>
+    <string name="check_in_report">Отчёт при заезде</string>
+    <string name="check_out_report">Отчёт при выезде</string>
+    <string name="guest_will_send_report_when_checking_in">Гость отправит фото при заселении</string>
+    <string name="guest_will_send_report_before_checking_out">Гость отправит перед выездом</string>
+    <string name="we_will_request_passport_before_check_in">Попросим загрузить данные перед заселением</string>
+    <string name="guest_will_sing_deal_in_app">Гость подпишет договор в приложении</string>
+    <string name="how_to_find_entrance_and_etc">как найти вход, правила проживания и тп.</string>
 </resources>

@@ -55,7 +55,6 @@ internal fun HomesharingTimeInput(
 }
 
 private class TimeVisualTransformation : VisualTransformation {
-
     override fun filter(text: AnnotatedString): TransformedText {
         val raw = text.text.toTimeInputValue()
 
@@ -74,7 +73,6 @@ private class TimeVisualTransformation : VisualTransformation {
 }
 
 private object TimeOffsetMapping : OffsetMapping {
-
     override fun originalToTransformed(offset: Int): Int {
         return when {
             offset <= TIME_HOURS_LENGTH -> offset
