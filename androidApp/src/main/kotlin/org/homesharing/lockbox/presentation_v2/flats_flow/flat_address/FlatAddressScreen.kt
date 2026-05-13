@@ -49,12 +49,16 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun FlatAddressScreen(
-    viewModel: FlatAddressViewModel = koinViewModel()
+    viewModel: FlatAddressViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
 ) {
     val flatAddress by viewModel.flatAddress.collectAsStateWithLifecycle()
     FlatAddressScreen(
         flatAddress = flatAddress,
         onIntent = viewModel::onIntent,
+        onProceed = onProceed,
+        onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -64,6 +68,8 @@ internal fun FlatAddressScreen(
 private fun FlatAddressScreen(
     flatAddress: FlatAddress,
     onIntent: (FlatAddressIntent) -> Unit,
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -85,7 +91,7 @@ private fun FlatAddressScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -418,7 +424,7 @@ private fun FlatAddressScreen(
 
         HomesharingButton(
             title = stringResource(R.string.proceed),
-            onClick = {},
+            onClick = onProceed,
             enabled = flatAddress.city.isNotBlank() &&
                     flatAddress.street.isNotBlank() &&
                     flatAddress.number.isNotBlank() &&
@@ -440,6 +446,8 @@ private fun PreviewFlatAddressScreen() {
         FlatAddressScreen(
             flatAddress = FlatAddress.Initial,
             onIntent = {},
+            onProceed = {},
+            onNavBack = {},
             modifier = Modifier.fillMaxSize(),
         )
     }

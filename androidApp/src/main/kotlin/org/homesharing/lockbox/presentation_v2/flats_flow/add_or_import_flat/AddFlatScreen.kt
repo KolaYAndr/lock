@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation_v2.flats_flow.add_or_import_flat
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,12 +33,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun AddFlatScreen(
-    viewModel: AddFlatViewModel = koinViewModel()
+    viewModel: AddFlatViewModel = koinViewModel(),
+    onProceed: () -> Unit,
 ) {
+    BackHandler(enabled = false) { }
     val addType by viewModel.addType.collectAsStateWithLifecycle()
     AddFlatScreen(
         addType = addType,
         onSelectRole = viewModel::changeFlatType,
+        onProceed = onProceed,
         modifier = Modifier.fillMaxSize(),
     )
 }
@@ -46,6 +50,7 @@ internal fun AddFlatScreen(
 private fun AddFlatScreen(
     addType: AddFlatType?,
     onSelectRole: (AddFlatType) -> Unit,
+    onProceed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -121,7 +126,7 @@ private fun AddFlatScreen(
             when (addType) {
                 null -> HomesharingButton(
                     title = stringResource(R.string.not_now),
-                    onClick = {},
+                    onClick = onProceed,
                     style = HomesharingButtonDefaults.secondary(),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,7 +135,7 @@ private fun AddFlatScreen(
 
                 else -> HomesharingButton(
                     title = stringResource(R.string.proceed),
-                    onClick = {},
+                    onClick = onProceed,
                     style = HomesharingButtonDefaults.primary(),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -148,6 +153,7 @@ private fun PreviewAddOrImportFlatScreen() {
         AddFlatScreen(
             addType = null,
             onSelectRole = {},
+            onProceed = {},
             modifier = Modifier.fillMaxSize()
         )
     }

@@ -36,8 +36,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.homesharing.lockbox.R
+import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation_v2.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation_v2.uikit.composable.input.HomesharingDateInput
 import org.homesharing.lockbox.presentation_v2.uikit.composable.input.HomesharingInput
@@ -47,12 +49,21 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun GuestInvitationScreen(
-    viewModel: GuestInvitationViewModel = koinViewModel()
+    viewModel: GuestInvitationViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
 ) {
+    ActionOnSharedFlow(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        flow = viewModel.proceed
+    ) {
+        onProceed()
+    }
     val uiState by viewModel.guestInvitation.collectAsStateWithLifecycle()
     GuestInvitationScreen(
         uiState = uiState,
         onIntent = viewModel::onIntent,
+        onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -62,6 +73,7 @@ internal fun GuestInvitationScreen(
 private fun GuestInvitationScreen(
     uiState: GuestInvitationUiState,
     onIntent: (GuestInvitationIntent) -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -83,7 +95,7 @@ private fun GuestInvitationScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -244,6 +256,7 @@ private fun PreviewGuestInvitationScreen() {
         GuestInvitationScreen(
             uiState = GuestInvitationUiState.Initial,
             onIntent = {},
+            onNavBack = {},
             modifier = Modifier.fillMaxSize()
         )
     }

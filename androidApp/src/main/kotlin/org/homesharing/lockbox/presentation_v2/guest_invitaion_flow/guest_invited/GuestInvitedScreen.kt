@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.guest_invited
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 
 @Composable
 internal fun GuestInvitedScreen() {
+    BackHandler(enabled = false) { }
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -41,12 +41,16 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun FlatRoomsScreen(
-    viewModel: FlatRoomsViewModel = koinViewModel()
+    viewModel: FlatRoomsViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     FlatRoomsScreen(
         uiState = uiState,
         onToggleRoom = viewModel::toggleRoom,
+        onProceed = onProceed,
+        onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -56,6 +60,8 @@ internal fun FlatRoomsScreen(
 private fun FlatRoomsScreen(
     uiState: FlatRoomsUiState,
     onToggleRoom: (FlatRoom) -> Unit,
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -77,7 +83,7 @@ private fun FlatRoomsScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -247,7 +253,7 @@ private fun FlatRoomsScreen(
 
         HomesharingButton(
             title = stringResource(R.string.proceed),
-            onClick = {},
+            onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
@@ -256,7 +262,7 @@ private fun FlatRoomsScreen(
 
         HomesharingButton(
             title = stringResource(R.string.skip),
-            onClick = {},
+            onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, bottom = 16.dp)
@@ -274,6 +280,8 @@ private fun PreviewFlatRoomsScreen() {
         FlatRoomsScreen(
             uiState = FlatRoomsUiState.Initial,
             onToggleRoom = {},
+            onProceed = {},
+            onNavBack = {},
             modifier = Modifier.fillMaxSize()
         )
     }

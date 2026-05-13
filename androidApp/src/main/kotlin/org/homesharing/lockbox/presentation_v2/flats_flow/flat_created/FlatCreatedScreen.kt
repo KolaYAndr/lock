@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation_v2.flats_flow.flat_created
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +28,10 @@ import org.homesharing.lockbox.presentation_v2.uikit.composable.button.Homeshari
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 
 @Composable
-internal fun FlatCreatedScreen() {
+internal fun FlatCreatedScreen(
+    onProceed: () -> Unit,
+) {
+    BackHandler(enabled = false) { }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +69,7 @@ internal fun FlatCreatedScreen() {
 
         HomesharingButton(
             title = stringResource(R.string.add_guest),
-            onClick = {},
+            onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp)
@@ -89,6 +93,6 @@ internal fun FlatCreatedScreen() {
 @Composable
 private fun PreviewFlatCreatedScreen() {
     HomesharingTheme {
-        FlatCreatedScreen()
+        FlatCreatedScreen { }
     }
 }

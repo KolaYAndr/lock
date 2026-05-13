@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation_v2.profile_flow.profile_setup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,13 +36,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ProfileSetupScreen(
-    viewModel: ProfileSetupViewModel = koinViewModel()
+    viewModel: ProfileSetupViewModel = koinViewModel(),
+    onProceed: () -> Unit,
 ) {
+    BackHandler(enabled = false) { }
     val fullName by viewModel.fullName.collectAsStateWithLifecycle()
     ProfileSetupScreen(
         fullName = fullName,
         onChangeFullName = viewModel::onChangeFullName,
-        onFinish = viewModel::proceed,
+        onFinish = onProceed,
         modifier = Modifier.fillMaxSize(),
     )
 }

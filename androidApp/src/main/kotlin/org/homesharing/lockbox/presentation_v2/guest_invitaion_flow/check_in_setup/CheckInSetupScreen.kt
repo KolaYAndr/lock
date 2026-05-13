@@ -40,13 +40,17 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun CheckInSetupScreen(
-    viewModel: CheckInViewModel = koinViewModel()
+    viewModel: CheckInViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
 ) {
     val checkInState by viewModel.checkInState.collectAsStateWithLifecycle()
     CheckInSetupScreen(
         uiState = checkInState,
         onCheck = viewModel::onCheck,
         onChangeComment = viewModel::onChangeComment,
+        onProceed = onProceed,
+        onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize(),
     )
 }
@@ -57,6 +61,8 @@ private fun CheckInSetupScreen(
     uiState: CheckInUiState,
     onCheck: (CheckInSetup) -> Unit,
     onChangeComment: (String) -> Unit,
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -78,7 +84,7 @@ private fun CheckInSetupScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -161,7 +167,7 @@ private fun CheckInSetupScreen(
 
         HomesharingButton(
             title = stringResource(R.string.proceed),
-            onClick = {},
+            onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 11.dp, vertical = 19.dp)
@@ -178,6 +184,8 @@ private fun PreviewCheckInScreen() {
             uiState = CheckInUiState.Initial,
             onCheck = {},
             onChangeComment = {},
+            onProceed = {},
+            onNavBack = {},
             modifier = Modifier.fillMaxSize()
         )
     }

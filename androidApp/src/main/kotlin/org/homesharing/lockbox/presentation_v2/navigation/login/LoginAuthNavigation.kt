@@ -8,10 +8,10 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
 import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
 import org.homesharing.lockbox.presentation.uikit.animation.popExitTransition
+import org.homesharing.lockbox.presentation_v2.login.LoginScreen
 
 @Composable
 internal fun LoginAuthNavigation(

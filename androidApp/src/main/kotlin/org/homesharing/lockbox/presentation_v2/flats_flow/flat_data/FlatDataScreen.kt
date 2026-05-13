@@ -37,11 +37,21 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun FlatDataScreen(
-    viewModel: FlatDataViewModel = koinViewModel()
+    viewModel: FlatDataViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
+    onChangeAddress: () -> Unit,
+    onChangeFlatType: () -> Unit,
+    onChangeRooms: () -> Unit,
 ) {
     val uiState by viewModel.flatData.collectAsStateWithLifecycle()
     FlatDataScreen(
         uiState = uiState,
+        onProceed = onProceed,
+        onNavBack = onNavBack,
+        onChangeAddress = onChangeAddress,
+        onChangeFlatType = onChangeFlatType,
+        onChangeRooms = onChangeRooms,
         modifier = Modifier.fillMaxSize(),
     )
 }
@@ -50,6 +60,11 @@ internal fun FlatDataScreen(
 @Composable
 private fun FlatDataScreen(
     uiState: FlatDataUiState,
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
+    onChangeAddress: () -> Unit,
+    onChangeFlatType: () -> Unit,
+    onChangeRooms: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -71,7 +86,7 @@ private fun FlatDataScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -87,7 +102,7 @@ private fun FlatDataScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.address),
-            onChangeClick = {},
+            onChangeClick = onChangeAddress,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
@@ -102,7 +117,7 @@ private fun FlatDataScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.flat_type),
-            onChangeClick = {},
+            onChangeClick = onChangeFlatType,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
@@ -121,7 +136,7 @@ private fun FlatDataScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.rooms),
-            onChangeClick = {},
+            onChangeClick = onChangeRooms,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
@@ -160,7 +175,7 @@ private fun FlatDataScreen(
 
         HomesharingButton(
             title = stringResource(R.string.create_flat),
-            onClick = { },
+            onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 11.dp)
@@ -176,6 +191,11 @@ private fun PreviewFlatDataScreen() {
     HomesharingTheme {
         FlatDataScreen(
             uiState = FlatDataUiState.Initial,
+            onProceed = {},
+            onNavBack = {},
+            onChangeAddress = {},
+            onChangeFlatType = {},
+            onChangeRooms = {},
             modifier = Modifier.fillMaxSize()
         )
     }

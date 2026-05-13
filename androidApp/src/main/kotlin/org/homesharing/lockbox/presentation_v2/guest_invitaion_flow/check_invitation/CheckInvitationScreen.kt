@@ -41,11 +41,23 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun CheckInvitationScreen(
-    viewModel: CheckInvitationViewModel = koinViewModel()
+    viewModel: CheckInvitationViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onChangeGuestInfo: () -> Unit,
+    onChangeFlatInfo: () -> Unit,
+    onChangeDates: () -> Unit,
+    onChangeSetup: () -> Unit,
+    onNavBack: () -> Unit,
 ) {
     val checkInvitation by viewModel.checkInvitation.collectAsStateWithLifecycle()
     CheckInvitationScreen(
         uiState = checkInvitation,
+        onProceed = onProceed,
+        onChangeGuestInfo = onChangeGuestInfo,
+        onChangeFlatInfo = onChangeFlatInfo,
+        onChangeDates = onChangeDates,
+        onChangeSetup = onChangeSetup,
+        onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -54,6 +66,12 @@ internal fun CheckInvitationScreen(
 @Composable
 private fun CheckInvitationScreen(
     uiState: CheckInvitationUiState,
+    onProceed: () -> Unit,
+    onChangeGuestInfo: () -> Unit,
+    onChangeFlatInfo: () -> Unit,
+    onChangeDates: () -> Unit,
+    onChangeSetup: () -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -75,7 +93,7 @@ private fun CheckInvitationScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -101,7 +119,7 @@ private fun CheckInvitationScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.guest),
-            onChangeClick = {},
+            onChangeClick = onChangeGuestInfo,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -124,7 +142,7 @@ private fun CheckInvitationScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.flat),
-            onChangeClick = {},
+            onChangeClick = onChangeFlatInfo,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -141,7 +159,7 @@ private fun CheckInvitationScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.dates_and_conditions),
-            onChangeClick = {},
+            onChangeClick = onChangeDates,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -162,7 +180,11 @@ private fun CheckInvitationScreen(
 
             HomesharingProperty(
                 painter = painterResource(R.drawable.users),
-                name = pluralStringResource(R.plurals.guest_count, uiState.guestCount, uiState.guestCount),
+                name = pluralStringResource(
+                    R.plurals.guest_count,
+                    uiState.guestCount,
+                    uiState.guestCount
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -177,7 +199,7 @@ private fun CheckInvitationScreen(
 
         HomesharingChangeablePropertyContainer(
             title = stringResource(R.string.check_in_setup),
-            onChangeClick = {},
+            onChangeClick = onChangeSetup,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -220,7 +242,7 @@ private fun CheckInvitationScreen(
 
         HomesharingButton(
             title = stringResource(R.string.send_invitation),
-            onClick = {},
+            onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(11.dp)
@@ -235,7 +257,13 @@ private fun PreviewCheckInvitationScreen() {
     HomesharingTheme {
         CheckInvitationScreen(
             uiState = CheckInvitationUiState.Initial,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            onProceed = { },
+            onChangeGuestInfo = {},
+            onChangeFlatInfo = {},
+            onChangeDates = {},
+            onChangeSetup = {},
+            onNavBack = {},
         )
     }
 }

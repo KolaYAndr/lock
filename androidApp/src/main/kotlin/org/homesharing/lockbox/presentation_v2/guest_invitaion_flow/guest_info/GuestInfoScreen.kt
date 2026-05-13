@@ -43,13 +43,17 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun GuestInfoScreen(
-    viewModel: GuestInfoViewModel = koinViewModel()
+    viewModel: GuestInfoViewModel = koinViewModel(),
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
 ) {
     val guestInfo by viewModel.guestInfo.collectAsStateWithLifecycle()
     GuestInfoScreen(
         guestInfo = guestInfo,
         onChangeEmail = viewModel::updateEmail,
         onChangeName = viewModel::updateFullName,
+        onProceed = onProceed,
+        onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize(),
     )
 }
@@ -60,6 +64,8 @@ private fun GuestInfoScreen(
     guestInfo: GuestInfoUiState,
     onChangeEmail: (String) -> Unit,
     onChangeName: (String) -> Unit,
+    onProceed: () -> Unit,
+    onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -81,7 +87,7 @@ private fun GuestInfoScreen(
             ),
             navigationIcon = {
                 IconButton(
-                    onClick = {},
+                    onClick = onNavBack,
                     colors = IconButtonDefaults.iconButtonColors(
                         contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
                     )
@@ -165,7 +171,7 @@ private fun GuestInfoScreen(
 
         HomesharingButton(
             title = stringResource(R.string.proceed),
-            onClick = {},
+            onClick = onProceed,
             enabled = guestInfo.fullName.isNotEmpty() && guestInfo.email.isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
@@ -184,6 +190,8 @@ private fun PreviewGuestInfoScreen() {
             guestInfo = GuestInfoUiState.Initial,
             onChangeEmail = {},
             onChangeName = {},
+            onProceed = {},
+            onNavBack = {},
             modifier = Modifier.fillMaxSize(),
         )
     }

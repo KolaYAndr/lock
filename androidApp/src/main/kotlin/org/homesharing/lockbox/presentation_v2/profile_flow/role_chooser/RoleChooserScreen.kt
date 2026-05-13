@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.presentation_v2.profile_flow.role_chooser
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,12 +31,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun RoleChooserScreen(
-    viewModel: RoleChooserViewModel = koinViewModel()
+    viewModel: RoleChooserViewModel = koinViewModel(),
+    onProceed: () -> Unit,
 ) {
+    BackHandler(enabled = false) { }
     val pickedRole by viewModel.pickedRole.collectAsStateWithLifecycle()
     RoleChooserScreen(
         pickedRole = pickedRole,
         onSelectRole = viewModel::onPickRole,
+        onProceed = onProceed,
         modifier = Modifier.fillMaxSize(),
     )
 }
@@ -44,6 +48,7 @@ internal fun RoleChooserScreen(
 private fun RoleChooserScreen(
     pickedRole: UserRole?,
     onSelectRole: (UserRole) -> Unit,
+    onProceed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -98,7 +103,7 @@ private fun RoleChooserScreen(
             when (role) {
                 null -> HomesharingButton(
                     title = stringResource(R.string.not_now),
-                    onClick = {},
+                    onClick = onProceed,
                     style = HomesharingButtonDefaults.secondary(),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -107,7 +112,7 @@ private fun RoleChooserScreen(
 
                 else -> HomesharingButton(
                     title = stringResource(R.string.proceed),
-                    onClick = {},
+                    onClick = onProceed,
                     style = HomesharingButtonDefaults.primary(),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -125,6 +130,7 @@ private fun PreviewRoleChooserScreen() {
         RoleChooserScreen(
             pickedRole = null,
             onSelectRole = {},
+            onProceed = {},
             modifier = Modifier.fillMaxSize()
         )
     }

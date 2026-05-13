@@ -1,14 +1,21 @@
 package org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.invitation_details
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 internal class GuestInvitationViewModel : ViewModel() {
 
     private val _guestInvitation = MutableStateFlow(GuestInvitationUiState.Initial)
     val guestInvitation = _guestInvitation.asStateFlow()
+
+    private val _proceed = MutableSharedFlow<Unit>()
+    val proceed = _proceed.asSharedFlow()
 
     fun onIntent(intent: GuestInvitationIntent) {
         when (intent) {
@@ -72,7 +79,9 @@ internal class GuestInvitationViewModel : ViewModel() {
 
         if (hasError) return
 
-        // Пока ничего больше не делаем
+        viewModelScope.launch {
+            _proceed.emit(Unit)
+        }
     }
 
     private fun onDateRangeChanged(

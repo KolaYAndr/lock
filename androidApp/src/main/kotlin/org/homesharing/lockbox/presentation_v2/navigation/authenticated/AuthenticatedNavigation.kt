@@ -35,37 +35,123 @@ internal fun HomesharingNavigation(
         modifier = modifier,
         entryProvider = entryProvider {
             entry<AuthenticatedRoutes.ProfileSetup> {
-                ProfileSetupScreen()
+                ProfileSetupScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.ChooseRole)
+                    }
+                )
             }
             entry<AuthenticatedRoutes.ChooseRole> {
-                RoleChooserScreen()
+                RoleChooserScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.AddFlat)
+                    }
+                )
             }
             entry<AuthenticatedRoutes.AddFlat> {
-                AddFlatScreen()
+                AddFlatScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                    }
+                )
             }
             entry<AuthenticatedRoutes.FlatAddress> {
-                FlatAddressScreen()
+                FlatAddressScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.FlatRooms)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    }
+                )
             }
             entry<AuthenticatedRoutes.FlatRooms> {
-                FlatRoomsScreen()
+                FlatRoomsScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.CheckFlatData)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    }
+                )
             }
             entry<AuthenticatedRoutes.CheckFlatData> {
-                FlatDataScreen()
+                FlatDataScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.FlatCreated)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    },
+                    onChangeAddress = {
+                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                    },
+                    onChangeFlatType = {
+                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                    },
+                    onChangeRooms = {
+                        backstack.add(AuthenticatedRoutes.FlatRooms)
+                    }
+                )
             }
             entry<AuthenticatedRoutes.FlatCreated> {
-                FlatCreatedScreen()
+                FlatCreatedScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.GuestInfo)
+                    }
+                )
             }
             entry<AuthenticatedRoutes.GuestInfo> {
-                GuestInfoScreen()
+                GuestInfoScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.GuestInvitation)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    }
+                )
             }
             entry<AuthenticatedRoutes.GuestInvitation> {
-                GuestInvitationScreen()
+                GuestInvitationScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.CheckInSetup)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    }
+                )
             }
             entry<AuthenticatedRoutes.CheckInSetup> {
-                CheckInSetupScreen()
+                CheckInSetupScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.CheckInvitation)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    }
+                )
             }
             entry<AuthenticatedRoutes.CheckInvitation> {
-                CheckInvitationScreen()
+                CheckInvitationScreen(
+                    onProceed = {
+                        backstack.add(AuthenticatedRoutes.InvitationSent)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    },
+                    onChangeDates = {
+                        backstack.add(AuthenticatedRoutes.GuestInfo)
+                    },
+                    onChangeSetup = {
+                        backstack.add(AuthenticatedRoutes.CheckInSetup)
+                    },
+                    onChangeFlatInfo = {
+                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                    },
+                    onChangeGuestInfo = {
+                        backstack.add(AuthenticatedRoutes.GuestInfo)
+                    }
+                )
             }
             entry<AuthenticatedRoutes.InvitationSent> {
                 GuestInvitedScreen()
