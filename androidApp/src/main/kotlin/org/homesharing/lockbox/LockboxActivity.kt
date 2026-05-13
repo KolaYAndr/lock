@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,8 @@ import org.homesharing.lockbox.presentation.uikit.animation.loginAnimation
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSnackbar
 import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxNavBar
 import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.homesharing.lockbox.presentation_v2.guest_invitaion_flow.check_in_setup.CheckInSetupScreen
+import org.homesharing.lockbox.presentation_v2.navigation.authenticated.HomesharingNavigation
+import org.homesharing.lockbox.presentation_v2.navigation.login.LoginAuthNavigation
 import org.homesharing.lockbox.presentation_v2.uikit.theme.HomesharingTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -56,7 +58,13 @@ class LockboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomesharingTheme {
-                CheckInSetupScreen()
+                val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
+
+                if (isLoggedIn == LoginState.LoggedIn) {
+                    HomesharingNavigation()
+                } else {
+                    LoginAuthNavigation()
+                }
             }
 //            val isLoggedIn by lockboxActivityViewModel.loginState.collectAsStateWithLifecycle()
 //
