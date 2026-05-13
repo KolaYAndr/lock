@@ -269,4 +269,14 @@
     <string name="we_will_request_passport_before_check_in">We will request passport before checking-in</string>
     <string name="guest_will_sing_deal_in_app">Guest will sign the deal in-app</string>
     <string name="how_to_find_entrance_and_etc">how to find entrance and etc.</string>
+    <string name="check_invitation">Check invitation</string>
+    <string name="flat">Flat</string>
+    <string name="dates_and_conditions">Dates and conditions</string>
+    <string name="dates">%1$s - %2$s\nCheck-in at %3$s, check-out at %4$s</string>
+    <plurals name="guest_count">
+        <item quantity="one">%d guest</item>
+        <item quantity="other">%d guests</item>
+    </plurals>
+    <string name="deposit">Deposit %d</string>
+    <string name="send_invitation">Send invitation</string>
 </resources>

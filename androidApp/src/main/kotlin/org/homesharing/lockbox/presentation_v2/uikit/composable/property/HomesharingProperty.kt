@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.presentation_v2.uikit.composable.property
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -22,6 +23,7 @@ internal fun HomesharingProperty(
     painter: Painter,
     name: String,
     modifier: Modifier = Modifier,
+    description: String? = null,
 ) {
     Row(
         modifier = modifier,
@@ -35,11 +37,21 @@ internal fun HomesharingProperty(
             tint = HomesharingTheme.colors.black.copy(alpha = .3f)
         )
 
-        Text(
-            text = name,
-            color = HomesharingTheme.colors.black,
-            style = HomesharingTheme.typography.bodyLarge
-        )
+        Column {
+            Text(
+                text = name,
+                color = HomesharingTheme.colors.black,
+                style = HomesharingTheme.typography.bodyLarge
+            )
+
+            description?.let {
+                Text(
+                    text = it,
+                    color = HomesharingTheme.colors.black.copy(alpha = .5f),
+                    style = HomesharingTheme.typography.footnote
+                )
+            }
+        }
     }
 }
 

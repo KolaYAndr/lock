@@ -287,4 +287,16 @@
     <string name="we_will_request_passport_before_check_in">Попросим загрузить данные перед заселением</string>
     <string name="guest_will_sing_deal_in_app">Гость подпишет договор в приложении</string>
     <string name="how_to_find_entrance_and_etc">как найти вход, правила проживания и тп.</string>
+    <string name="check_invitation">Проверьте приглашение</string>
+    <string name="flat">Помещение</string>
+    <string name="dates_and_conditions">Даты и условия</string>
+    <string name="dates">%1$s - %2$s\nЗаезд в %3$s, выезд в %4$s</string>
+    <plurals name="guest_count">
+        <item quantity="one">%d гость</item>
+        <item quantity="few">%d гостя</item>
+        <item quantity="many">%d гостей</item>
+        <item quantity="other">%d гостя</item>
+    </plurals>
+    <string name="deposit">Залог %d</string>
+    <string name="send_invitation">Отправить приглашение</string>
 </resources>
