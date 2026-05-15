@@ -129,9 +129,11 @@ private fun LoginScreen(
                 keyboardActions = KeyboardActions(
                     onDone = { signIn() }
                 ),
-                trailingIcon = if (isSeen) painterResource(R.drawable.eye_off) else painterResource(
-                    R.drawable.eye
-                ),
+                trailingIcon = if (isSeen) {
+                    painterResource(R.drawable.eye_off)
+                } else {
+                    painterResource(R.drawable.eye)
+                },
                 trailingIconAction = {
                     isSeen = !isSeen
                 },

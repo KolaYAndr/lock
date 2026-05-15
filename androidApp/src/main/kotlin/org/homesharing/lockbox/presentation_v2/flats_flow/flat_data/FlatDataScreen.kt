@@ -125,7 +125,7 @@ private fun FlatDataScreen(
         ) {
             HomesharingProperty(
                 painter = painterResource(R.drawable.house),
-                name = if (uiState.commercial) {
+                name = if (!uiState.commercial) {
                     stringResource(R.string.living)
                 } else {
                     stringResource(R.string.commercial)
