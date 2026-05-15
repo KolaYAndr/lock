@@ -299,4 +299,6 @@
     </plurals>
     <string name="deposit">Залог %d</string>
     <string name="send_invitation">Отправить приглашение</string>
+    <string name="by_hand">Вручную</string>
+    <string name="imported">Импортировать</string>
 </resources>

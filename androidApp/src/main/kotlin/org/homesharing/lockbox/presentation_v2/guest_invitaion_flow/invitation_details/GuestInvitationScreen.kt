@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -151,7 +152,7 @@ private fun GuestInvitationScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HomesharingTimeInput(
-                value = uiState.startDateMillis,
+                value = uiState.checkInTime,
                 onValueChange = { onIntent(GuestInvitationIntent.CheckInTimeChanged(it)) },
                 placeholderText = stringResource(R.string.check_in_time_placeholder),
                 keyboardActions = KeyboardActions(
@@ -165,7 +166,7 @@ private fun GuestInvitationScreen(
             )
 
             HomesharingTimeInput(
-                value = uiState.endDateMillis,
+                value = uiState.checkOutTime,
                 onValueChange = { onIntent(GuestInvitationIntent.CheckOutTimeChanged(it)) },
                 placeholderText = stringResource(R.string.check_out_time_placeholder),
                 keyboardActions = KeyboardActions(
@@ -227,6 +228,7 @@ private fun GuestInvitationScreen(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.Sentences
             ),
             modifier = Modifier
                 .fillMaxWidth()

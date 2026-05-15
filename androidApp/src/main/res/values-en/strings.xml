@@ -279,4 +279,6 @@
     </plurals>
     <string name="deposit">Deposit %d</string>
     <string name="send_invitation">Send invitation</string>
+    <string name="by_hand">By hand</string>
+    <string name="imported">Import</string>
 </resources>

@@ -78,8 +78,8 @@ private fun AddFlatScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 HomesharingPickableItem(
-                    icon = painterResource(R.drawable.door_open),
-                    title = stringResource(R.string.guest),
+                    icon = painterResource(R.drawable.link),
+                    title = stringResource(R.string.imported),
                     isSelected = addType == AddFlatType.Import,
                     enabled = false,
                     onClick = {
@@ -107,8 +107,8 @@ private fun AddFlatScreen(
             }
 
             HomesharingPickableItem(
-                icon = painterResource(R.drawable.house),
-                title = stringResource(R.string.owner),
+                icon = painterResource(R.drawable.square_pen),
+                title = stringResource(R.string.by_hand),
                 isSelected = addType == AddFlatType.ByHand,
                 onClick = {
                     onSelectRole(AddFlatType.ByHand)
