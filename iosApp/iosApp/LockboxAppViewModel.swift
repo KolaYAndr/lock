@@ -20,7 +20,7 @@ internal class LockboxAppViewModel : ObservableObject {
                     self?.loginState = state
                 }
             },
-            defaltValue: false
+            defaultValue: false
         )
         accountRepository.loggedIn.collect(collector: collector) { error in
             self.loginState = .notLoggedIn

@@ -26,18 +26,25 @@ internal final class FlowStateCollector: FlowCollector {
 internal final class DefaultFlowCollector<T>: FlowCollector {
     private let onValue: (T) -> Void
     private let defaultValue: T
-    
-    init(onValue: @escaping (T) -> Void, defaltValue: T) {
+
+    init(
+        onValue: @escaping (T) -> Void,
+        defaultValue: T
+    ) {
         self.onValue = onValue
-        self.defaultValue = defaltValue
+        self.defaultValue = defaultValue
     }
-    
-    func emit(value: Any?, completionHandler: @escaping (Error?) -> Void) {
+
+    func emit(
+        value: Any?,
+        completionHandler: @escaping (Error?) -> Void
+    ) {
         if let typed = value as? T {
             onValue(typed)
         } else {
             onValue(defaultValue)
         }
+
         completionHandler(nil)
     }
 }

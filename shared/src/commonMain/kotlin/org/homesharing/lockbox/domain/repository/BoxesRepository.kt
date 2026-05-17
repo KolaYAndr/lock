@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.domain.repository
 
+import androidx.paging.ItemSnapshotList
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
@@ -14,6 +15,7 @@ import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 
 interface BoxesRepository {
     fun getBoxesPagingFlow(): Flow<PagingData<BoxWithStatus>>
+    fun getBoxesSnapshot(): Flow<ItemSnapshotList<BoxWithStatus>>
 
     suspend fun getBoxByMac(address: String): Response<BoxWithStatus>
     suspend fun openBoxByMac(address: String): Response<OpenBox>

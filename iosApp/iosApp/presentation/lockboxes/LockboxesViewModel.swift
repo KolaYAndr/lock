@@ -12,21 +12,28 @@ import Shared
 @MainActor
 internal class LockboxesViewModel: ObservableObject {
     private let boxesRepository = KoinHelper.shared.getBoxesRepository()
-    @Published private(set) var boxes: [BoxWithStatus] =
-    [BoxWithStatus(box: Box(address: "Doma", alias: "U sebya", ownerSub: "", macAddress: "1:2:3"), status: Status(macAddress: "1:2:3", opened: false, batteryLevel: 100, signalStrength: 100, timeStamp: nil)), BoxWithStatus(box: Box(address: "Doma", alias: "U sebya", ownerSub: "", macAddress: "1:2:4"), status: Status(macAddress: "1:2:4", opened: false, batteryLevel: 100, signalStrength: 100, timeStamp: nil))]
-    
+    @Published var boxes: [BoxWithStatus] = []
+
     init() {
+        observeBoxes()
+    }
+
+    private func observeBoxes() {
         let collector = DefaultFlowCollector<[BoxWithStatus]>(
-            onValue: { [weak self] boxes in
-                print(boxes)
-                DispatchQueue.main.async { [weak self] in
-                    self?.boxes.append(contentsOf: boxes)
+            onValue: { [weak self] snapshot in
+                let items = snapshot as [BoxWithStatus]
+
+                DispatchQueue.main.async {
+                    self?.boxes = items
                 }
             },
-            defaltValue: []
+            defaultValue: []
         )
-        boxesRepository.getBoxesPagingFlow().collect(collector: collector) { error in
-            print(error)
+
+        boxesRepository.getBoxesSnapshot().collect(collector: collector) { error in
+            if let error {
+                print(error)
+            }
         }
     }
 }

@@ -1,8 +1,10 @@
 package org.homesharing.lockbox.data.repository
 
+import androidx.paging.ItemSnapshotList
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.asItemSnapshotListFlow
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -36,6 +38,7 @@ import org.homesharing.lockbox.domain.model.physical_sign_up.toDomain
 import org.homesharing.lockbox.domain.model.update_box.UpdateBox
 import org.homesharing.lockbox.domain.model.update_box.toDomain
 import org.homesharing.lockbox.domain.repository.BoxesRepository
+import kotlin.collections.map
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -55,9 +58,25 @@ internal class BoxesRepositoryImpl(
             pagingSourceFactory = { BoxesPagingSource(boxesApi) },
         ).flow
             .map { pagingData ->
-                pagingData.map { boxDto ->
-                    boxDto.toDomain()
-                }
+                pagingData.map { it.toDomain() }
+            }
+
+    override fun getBoxesSnapshot(): Flow<ItemSnapshotList<BoxWithStatus>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false,
+                initialLoadSize = PAGE_SIZE
+            ),
+            pagingSourceFactory = { BoxesPagingSource(boxesApi) },
+        ).flow
+            .asItemSnapshotListFlow()
+            .map { snapshot ->
+                ItemSnapshotList(
+                    placeholdersBefore = snapshot.placeholdersBefore,
+                    placeholdersAfter = snapshot.placeholdersAfter,
+                    items = snapshot.items.map { it.toDomain() }
+                )
             }
 
     override suspend fun getBoxByMac(address: String): Response<BoxWithStatus> =
