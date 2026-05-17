@@ -61,7 +61,7 @@ internal fun FlatCreatedScreen(
         Text(
             text = stringResource(R.string.now_you_can_add_guest),
             textAlign = TextAlign.Center,
-            style = HomesharingTheme.typography.bodyLarge,
+            style = HomesharingTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 16.dp)

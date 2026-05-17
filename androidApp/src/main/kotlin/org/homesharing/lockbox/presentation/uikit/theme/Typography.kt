@@ -7,12 +7,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.homesharing.lockbox.R
 
-val inter = Font(R.font.inter)
-val interBlack = Font(R.font.inter_black)
+val inter = Font(R.font.inter_variable)
 
 val interFamily = FontFamily(
     inter,
-    interBlack,
 )
 
 val TitleLarge = TextStyle(

@@ -43,7 +43,7 @@ internal fun HomesharingChangeablePropertyContainer(
 
             Text(
                 text = stringResource(R.string.change_full),
-                style = HomesharingTheme.typography.subHeadlineMedium,
+                style = HomesharingTheme.typography.bodySmall,
                 color = HomesharingTheme.colors.black.copy(alpha = .5f),
                 modifier = Modifier.clickable { onChangeClick() }
             )

@@ -85,14 +85,14 @@ internal fun HomesharingButton(
             Text(
                 text = title,
                 color = if (enabled) style.titleColor else style.disabledTitleColor,
-                style = HomesharingTheme.typography.bodyLarge,
+                style = HomesharingTheme.typography.bodyMedium,
             )
 
             subtitle?.let {
                 Text(
                     text = it,
                     color = if (enabled) style.subtitleColor else style.disabledSubtitleColor,
-                    style = HomesharingTheme.typography.captionLarge,
+                    style = HomesharingTheme.typography.bodyXSmall,
                 )
             }
         }

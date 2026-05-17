@@ -79,7 +79,7 @@ private fun GuestInfoScreen(
             title = {
                 Text(
                     text = stringResource(R.string.guest_invitation),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -143,7 +143,7 @@ private fun GuestInfoScreen(
 
         Text(
             text = stringResource(R.string.will_send_invitation_on_that_email),
-            style = HomesharingTheme.typography.footnote,
+            style = HomesharingTheme.typography.bodySmall,
             color = HomesharingTheme.colors.black.copy(alpha = .5f),
             modifier = Modifier
                 .padding(top = 4.dp)

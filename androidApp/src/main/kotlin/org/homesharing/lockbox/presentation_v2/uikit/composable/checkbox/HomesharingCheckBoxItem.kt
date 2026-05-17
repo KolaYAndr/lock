@@ -94,7 +94,7 @@ internal fun HomesharingCheckBoxItem(
                 } else {
                     HomesharingTheme.colors.black.copy(alpha = .3f)
                 },
-                style = HomesharingTheme.typography.bodyLarge
+                style = HomesharingTheme.typography.bodyMedium
             )
 
             Text(
@@ -104,7 +104,7 @@ internal fun HomesharingCheckBoxItem(
                 } else {
                     HomesharingTheme.colors.black.copy(alpha = .3f)
                 },
-                style = HomesharingTheme.typography.footnote
+                style = HomesharingTheme.typography.bodySmall
             )
         }
     }

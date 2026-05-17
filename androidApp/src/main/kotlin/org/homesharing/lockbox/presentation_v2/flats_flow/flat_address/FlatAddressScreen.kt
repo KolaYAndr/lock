@@ -82,7 +82,7 @@ private fun FlatAddressScreen(
             title = {
                 Text(
                     text = stringResource(R.string.new_flat),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -377,7 +377,7 @@ private fun FlatAddressScreen(
                 .padding(top = 4.dp)
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.name_example),
-            style = HomesharingTheme.typography.footnote,
+            style = HomesharingTheme.typography.bodySmall,
             color = HomesharingTheme.colors.black.copy(alpha = .5f)
         )
 

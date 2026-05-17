@@ -59,7 +59,7 @@ internal fun GuestInvitedScreen() {
         Text(
             text = stringResource(R.string.we_sent_link_to_guest_email),
             textAlign = TextAlign.Center,
-            style = HomesharingTheme.typography.bodyLarge,
+            style = HomesharingTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 16.dp)

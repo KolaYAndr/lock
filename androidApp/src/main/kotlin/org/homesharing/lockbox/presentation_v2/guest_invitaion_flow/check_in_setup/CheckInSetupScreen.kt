@@ -75,7 +75,7 @@ private fun CheckInSetupScreen(
             title = {
                 Text(
                     text = stringResource(R.string.guest_invitation),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -110,7 +110,7 @@ private fun CheckInSetupScreen(
 
         Text(
             text = stringResource(R.string.we_will_send_guest_check_in_guide),
-            style = HomesharingTheme.typography.bodyLarge,
+            style = HomesharingTheme.typography.bodyMedium,
             color = HomesharingTheme.colors.black,
             modifier = Modifier
                 .padding(top = 8.dp, bottom = 23.dp)
@@ -161,7 +161,7 @@ private fun CheckInSetupScreen(
                 .padding(top = 4.dp)
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.how_to_find_entrance_and_etc),
-            style = HomesharingTheme.typography.footnote,
+            style = HomesharingTheme.typography.bodySmall,
             color = HomesharingTheme.colors.black.copy(alpha = .5f)
         )
 

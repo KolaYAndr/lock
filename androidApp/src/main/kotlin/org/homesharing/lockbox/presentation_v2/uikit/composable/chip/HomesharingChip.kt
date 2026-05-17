@@ -48,7 +48,7 @@ internal fun HomesharingChip(
         Text(
             text = title,
             color = HomesharingTheme.colors.black,
-            style = HomesharingTheme.typography.bodyLarge,
+            style = HomesharingTheme.typography.bodyMedium,
             maxLines = 1,
         )
     }

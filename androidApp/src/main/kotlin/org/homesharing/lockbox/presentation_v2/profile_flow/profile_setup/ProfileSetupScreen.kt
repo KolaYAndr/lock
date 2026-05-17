@@ -66,7 +66,7 @@ private fun ProfileSetupScreen(
             title = {
                 Text(
                     text = stringResource(R.string.profile_setup),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(

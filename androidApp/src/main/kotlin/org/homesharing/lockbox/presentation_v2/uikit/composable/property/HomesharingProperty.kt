@@ -41,14 +41,14 @@ internal fun HomesharingProperty(
             Text(
                 text = name,
                 color = HomesharingTheme.colors.black,
-                style = HomesharingTheme.typography.bodyLarge
+                style = HomesharingTheme.typography.bodyMedium
             )
 
             description?.let {
                 Text(
                     text = it,
                     color = HomesharingTheme.colors.black.copy(alpha = .5f),
-                    style = HomesharingTheme.typography.footnote
+                    style = HomesharingTheme.typography.bodySmall
                 )
             }
         }

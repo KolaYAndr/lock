@@ -77,7 +77,7 @@ internal fun HomesharingPickableItem(
             } else {
                 HomesharingTheme.colors.black.copy(alpha = .3f)
             },
-            style = HomesharingTheme.typography.bodyLarge
+            style = HomesharingTheme.typography.bodyMedium
         )
     }
 }

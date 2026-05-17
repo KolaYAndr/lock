@@ -87,7 +87,7 @@ private fun GuestInvitationScreen(
             title = {
                 Text(
                     text = stringResource(R.string.guest_invitation),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(

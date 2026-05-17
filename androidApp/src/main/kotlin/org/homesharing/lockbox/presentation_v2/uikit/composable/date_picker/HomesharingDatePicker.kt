@@ -46,7 +46,7 @@ internal fun HomesharingDatePicker(
         headline = {
             Text(
                 text = stringResource(R.string.check_in_dates),
-                style = HomesharingTheme.typography.titleMedium,
+                style = HomesharingTheme.typography.titleSmall,
                 color = HomesharingTheme.colors.black,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

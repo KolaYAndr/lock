@@ -74,7 +74,7 @@ private fun FlatRoomsScreen(
             title = {
                 Text(
                     text = stringResource(R.string.new_flat),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -109,7 +109,7 @@ private fun FlatRoomsScreen(
 
         Text(
             text = stringResource(R.string.will_help_with_report_when_checking_out),
-            style = HomesharingTheme.typography.bodyLarge,
+            style = HomesharingTheme.typography.bodyMedium,
             color = HomesharingTheme.colors.black,
             modifier = Modifier
                 .padding(top = 8.dp)

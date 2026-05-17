@@ -77,7 +77,7 @@ private fun FlatDataScreen(
             title = {
                 Text(
                     text = stringResource(R.string.new_flat),
-                    style = HomesharingTheme.typography.bodyLarge,
+                    style = HomesharingTheme.typography.bodyMedium,
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
