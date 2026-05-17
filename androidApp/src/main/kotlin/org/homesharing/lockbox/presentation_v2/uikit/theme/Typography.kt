@@ -7,101 +7,45 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.homesharing.lockbox.R
 
-internal val inter = Font(R.font.inter)
-internal val interBlack = Font(R.font.inter_black)
+internal val inter = Font(R.font.inter_variable)
+internal val interItalic = Font(R.font.inter_italic_variable)
 
 internal val interFamily = FontFamily(
     inter,
-    interBlack,
+    interItalic,
 )
 
 internal val TitleLarge = TextStyle(
     fontFamily = interFamily,
-    fontWeight = FontWeight.W500,
+    fontWeight = FontWeight.W600,
     fontSize = 24.sp,
-    lineHeight = 28.sp,
-    )
-
-internal val TitleMedium = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W500,
-    fontSize = 20.sp,
-    lineHeight = 26.sp,
+    lineHeight = 36.sp,
 )
 
 internal val TitleSmall = TextStyle(
     fontFamily = interFamily,
-    fontWeight = FontWeight.W500,
-    fontSize = 17.sp,
-    lineHeight = 22.sp,
-)
-
-internal val HeadlineLarge = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W500,
-    fontSize = 16.sp,
-    lineHeight = 20.sp,
-)
-
-internal val HeadlineMedium = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W500,
-    fontSize = 15.sp,
-    lineHeight = 20.sp,
-)
-
-internal val BodyLarge = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W400,
-    fontSize = 16.sp,
-    lineHeight = 20.sp,
+    fontWeight = FontWeight.W600,
+    fontSize = 18.sp,
+    lineHeight = 28.sp,
 )
 
 internal val BodyMedium = TextStyle(
     fontFamily = interFamily,
     fontWeight = FontWeight.W400,
-    fontSize = 15.sp,
-    lineHeight = 20.sp,
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
 )
 
-internal val SubHeadlineLarge = TextStyle(
+internal val BodySmall = TextStyle(
     fontFamily = interFamily,
     fontWeight = FontWeight.W500,
     fontSize = 14.sp,
-    lineHeight = 18.sp,
+    lineHeight = 20.sp,
 )
 
-internal val SubHeadlineMedium = TextStyle(
+internal val BodyXSmall = TextStyle(
     fontFamily = interFamily,
-    fontWeight = FontWeight.W400,
-    fontSize = 14.sp,
-    lineHeight = 18.sp,
-)
-
-internal val Footnote = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W400,
-    fontSize = 13.sp,
-    lineHeight = 18.sp,
-)
-
-internal val CaptionLarge = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W400,
+    fontWeight = FontWeight.W500,
     fontSize = 12.sp,
     lineHeight = 16.sp,
-)
-
-internal val CaptionMedium = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W400,
-    fontSize = 11.sp,
-    lineHeight = 14.sp,
-)
-
-internal val CaptionSmall = TextStyle(
-    fontFamily = interFamily,
-    fontWeight = FontWeight.W400,
-    fontSize = 9.sp,
-    lineHeight = 12.sp,
 )

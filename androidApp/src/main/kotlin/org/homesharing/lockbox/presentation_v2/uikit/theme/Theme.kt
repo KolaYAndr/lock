@@ -15,18 +15,10 @@ internal fun HomesharingTheme(
 
     val homesharingTypography = HomesharingTypography(
         TitleLarge,
-        TitleMedium,
         TitleSmall,
-        HeadlineLarge,
-        HeadlineMedium,
-        BodyLarge,
         BodyMedium,
-        SubHeadlineLarge,
-        SubHeadlineMedium,
-        Footnote,
-        CaptionLarge,
-        CaptionMedium,
-        CaptionSmall,
+        BodySmall,
+        BodyXSmall,
     )
 
     val homeSharingShape = HomesharingShape(
