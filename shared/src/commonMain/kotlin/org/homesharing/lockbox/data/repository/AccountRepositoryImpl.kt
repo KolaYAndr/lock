@@ -8,7 +8,7 @@ import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.profile_info.toDomain
@@ -28,30 +28,30 @@ internal class AccountRepositoryImpl(
     override val loggedIn: Flow<Boolean> = tokenStorage.loggedIn
 
     override suspend fun getImageLink(): Response<Avatar> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = { api.getAvatar() },
             mapper = AvatarDto::toDomain
         )
 
     override suspend fun sendImage(data: ByteArray): Response<Unit> =
-        parseLockBoxApiResponse {
+        parseLockboxApiResponse {
             api.sendImage(data = data)
         }
 
     override suspend fun getSessions(): Response<Sessions> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = { api.getSessions() },
             mapper = SessionsDto::toDomain
         )
 
     override suspend fun deactivateUser(): Response<UpdateAccount> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = { api.deactivateUser() },
             mapper = UpdateAccountDto::toDomain
         )
 
     override suspend fun closeOtherSessions(): Response<Unit> {
-        return parseLockBoxApiResponse(
+        return parseLockboxApiResponse(
             apiCall = {
                 api.closeOtherSessions()
             },
@@ -59,7 +59,7 @@ internal class AccountRepositoryImpl(
     }
 
     override suspend fun getProfileInfo(): Response<ProfileInfo> {
-        return parseLockBoxApiResponse(
+        return parseLockboxApiResponse(
             apiCall = {
                 api.getProfileInfo()
             },
@@ -76,7 +76,7 @@ internal class AccountRepositoryImpl(
         passportNumber: String?,
         passportSeries: String?
     ): Response<Unit> {
-        return parseLockBoxApiResponse {
+        return parseLockboxApiResponse {
             api.updateProfileInfo(
                 email = email,
                 phoneNumber = phoneNumber,

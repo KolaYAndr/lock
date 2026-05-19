@@ -1,9 +1,9 @@
 //
-//  LockBoxTypography.swift
+//  LockboxTypography.swift
 //  iosApp
 //
 //  Created by Николай on 21.09.2025.
-//  Copyright © 2025 LockBox. All rights reserved.
+//  Copyright © 2025 Lockbox. All rights reserved.
 //
 
 import SwiftUI

@@ -596,13 +596,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connect to network: LockBox-Network"
+            "value" : "Connect to network: Lockbox-Network"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Подключитесь к сети: LockBox-Network"
+            "value" : "Подключитесь к сети: Lockbox-Network"
           }
         }
       }
@@ -1442,13 +1442,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Go to your device's Wi-Fi settings and connect to the LockBox-Network"
+            "value" : "Go to your device's Wi-Fi settings and connect to the Lockbox-Network"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети LockBox-Network"
+            "value" : "Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети Lockbox-Network"
           }
         }
       }
@@ -1727,7 +1727,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LLC “LockBox: smart devices for comfortable living”"
+            "value" : "LLC “Lockbox: smart devices for comfortable living”"
           }
         },
         "ru" : {
@@ -2237,13 +2237,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LockBox"
+            "value" : "Lockbox"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LockBox"
+            "value" : "Lockbox"
           }
         }
       }
@@ -3339,7 +3339,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "©2025, LockBox"
+            "value" : "©2025, Lockbox"
           }
         }
       },

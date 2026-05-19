@@ -11,7 +11,7 @@ import org.homesharing.lockbox.data.network.dto.contact_file.ContractFileDto
 import org.homesharing.lockbox.data.network.dto.contract_detailed.ContractDetailedDto
 import org.homesharing.lockbox.data.network.paging.ContractsPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.domain.model.contract.toDomain
 import org.homesharing.lockbox.domain.model.contract_detailed.ContractDetailed
@@ -41,20 +41,20 @@ internal class DocumentsRepositoryImpl(
             }
 
     override suspend fun deleteContract(id: String): Response<Unit> {
-        return parseLockBoxApiResponse {
+        return parseLockboxApiResponse {
             documentsApi.deleteContract(id)
         }
     }
 
     override suspend fun getContract(id: String): Response<ContractDetailed> {
-        return parseLockBoxApiResponse(
+        return parseLockboxApiResponse(
             apiCall = { documentsApi.getContract(id) },
             mapper = ContractDetailedDto::toDomain
         )
     }
 
     override suspend fun getContractFile(id: String): Response<ContractFile> {
-        return parseLockBoxApiResponse(
+        return parseLockboxApiResponse(
             apiCall = { documentsApi.getContractFile(id) },
             mapper = ContractFileDto::toDomain
         )

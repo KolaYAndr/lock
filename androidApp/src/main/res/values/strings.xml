@@ -55,7 +55,7 @@
     <string name="delete">Удалить</string>
     <string name="app_version">Версия приложения %s</string>
     <string name="legal_info">ООО “Локбокс: умные устройства для комфортной жизни”</string>
-    <string name="year_lockbox" translatable="false">©2025, LockBox</string>
+    <string name="year_lockbox" translatable="false">©2025, Lockbox</string>
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="ready">Готово</string>
@@ -101,8 +101,8 @@
     <string name="add_device">Добавить устройство</string>
     <string name="add_contract">Создать договор</string>
     <string name="device_connection">Подключение устройства</string>
-    <string name="connect_to_lockbox_network">Подключитесь к сети:  LockBox-Network</string>
-    <string name="go_to_wifi_settings_to_connect">Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети LockBox-Network</string>
+    <string name="connect_to_lockbox_network">Подключитесь к сети:  Lockbox-Network</string>
+    <string name="go_to_wifi_settings_to_connect">Перейдите в настройки Wi-Fi вашего устройства и подключитесь к сети Lockbox-Network</string>
     <string name="open_wifi_settings">Открыть настройки Wi-Fi</string>
     <string name="open">Открыть</string>
     <string name="wifi_network">Wi-Fi cеть</string>
@@ -133,7 +133,7 @@
     <string name="device_type">Тип устройства</string>
     <string name="lockbox_type">Локбокс</string>
     <string name="original_naming">Оригинальное название</string>
-    <string name="original_naming_lockbox">LockBox</string>
+    <string name="original_naming_lockbox">Lockbox</string>
     <string name="this_device">Это устройство</string>
     <string name="right_now">Сейчас</string>
     <string name="finish_all_other_sessions">Завершить все другие сеансы</string>
@@ -213,92 +213,4 @@
         <item quantity="other">%d дня назад</item>
     </plurals>
     <string name="pick_a_lockbox">Выберите локбокс</string>
-
-    <string name="send_code_again">Отправить код повторно</string>
-    <string name="receive_code">Получить код</string>
-    <string name="sign_in_account">Войти в аккаунт</string>
-    <string name="placeholder_email">Электронная почта</string>
-    <string name="profile_setup">Настройка профиля</string>
-    <string name="full_name">Полное имя</string>
-    <string name="how_to_address_you">Как к вам обращаться?</string>
-    <string name="proceed">Продолжить</string>
-    <string name="pick_a_role">Выберите роль</string>
-    <string name="owner">Владелец</string>
-    <string name="not_now">Не сейчас</string>
-    <string name="add_a_flat">Добавьте помещение</string>
-    <string name="soon">Скоро</string>
-    <string name="new_flat">Новое помещение</string>
-    <string name="address">Адрес</string>
-    <string name="name_example">например, Квартира на Пушкина</string>
-    <string name="flat_type">Тип помещения</string>
-    <string name="living">Жилое</string>
-    <string name="commercial">Не жилое</string>
-    <string name="placeholder_city">Город</string>
-    <string name="placeholder_street">Улица</string>
-    <string name="placeholder_number">Дом</string>
-    <string name="placeholder_entrance">Подъезд</string>
-    <string name="placeholder_flat_number">Квартира</string>
-    <string name="placeholder_building">Корпус</string>
-    <string name="placeholder_structure">Строение</string>
-    <string name="placeholder_liter">Литера</string>
-    <string name="comment_placeholder">Комментарий</string>
-    <string name="placeholder_name">Название</string>
-    <string name="rooms">Комнаты</string>
-    <string name="will_help_with_report_when_checking_out">Помогут с отчётами при заселении и выезде</string>
-    <string name="popular">Популярные</string>
-    <string name="kitchen">Кухня</string>
-    <string name="bathroom">Ванная</string>
-    <string name="bedroom">Спальня</string>
-    <string name="living_room">Гостиная</string>
-    <string name="toilet">Туалет</string>
-    <string name="shower">Душевая</string>
-    <string name="create_custom">Создать свою</string>
-    <string name="create_flat">Создать помещение</string>
-    <string name="skip">Пропустить</string>
-    <string name="flat_created">Помещение создано</string>
-    <string name="now_you_can_add_guest">Теперь вы можете добавить гостя и отправить приглашение</string>
-    <string name="add_guest">Добавить гостя</string>
-    <string name="go_to_flat">Перейти к помещению</string>
-    <string name="guest_info">Данные гостя</string>
-    <string name="will_send_invitation_on_that_email">Отправим приглашение на эту почту</string>
-    <string name="guest_invitation">Приглашение гостя</string>
-    <string name="invitation_sent">Приглашение отправлено</string>
-    <string name="we_sent_link_to_guest_email">Отправили ссылку на почту гостя</string>
-    <string name="go_to_check_in">Открыть заселение</string>
-    <string name="create_one_more">Создать ещё одно</string>
-    <string name="go_to_main_screen">На главную</string>
-    <string name="check_in_dates">Даты заезда</string>
-    <string name="check_in_details">Детали заезда</string>
-    <string name="check_in_dates_separated" translatable="false">%1$s - %2$s</string>
-    <string name="check_in_time_placeholder">Время заезда</string>
-    <string name="check_out_time_placeholder">Время выезда</string>
-    <string name="guest_number_placeholder">Кол-во гостей</string>
-    <string name="deposit_placeholder">Залог</string>
-    <string name="private_comment_placeholder">Комментарий (виден только вам)</string>
-    <string name="selected_time" translatable="false">%1$02d:%2$02d</string>
-    <string name="check_in_setup">Настройка заселения</string>
-    <string name="we_will_send_guest_check_in_guide">Отправим гостю инструкции для заселения</string>
-    <string name="request_passport">Запросить паспорт</string>
-    <string name="sign_deal_online">Подписать договор онлайн</string>
-    <string name="check_in_report">Отчёт при заезде</string>
-    <string name="check_out_report">Отчёт при выезде</string>
-    <string name="guest_will_send_report_when_checking_in">Гость отправит фото при заселении</string>
-    <string name="guest_will_send_report_before_checking_out">Гость отправит перед выездом</string>
-    <string name="we_will_request_passport_before_check_in">Попросим загрузить данные перед заселением</string>
-    <string name="guest_will_sing_deal_in_app">Гость подпишет договор в приложении</string>
-    <string name="how_to_find_entrance_and_etc">как найти вход, правила проживания и тп.</string>
-    <string name="check_invitation">Проверьте приглашение</string>
-    <string name="flat">Помещение</string>
-    <string name="dates_and_conditions">Даты и условия</string>
-    <string name="dates">%1$s - %2$s\nЗаезд в %3$s, выезд в %4$s</string>
-    <plurals name="guest_count">
-        <item quantity="one">%d гость</item>
-        <item quantity="few">%d гостя</item>
-        <item quantity="many">%d гостей</item>
-        <item quantity="other">%d гостя</item>
-    </plurals>
-    <string name="deposit">Залог %d</string>
-    <string name="send_invitation">Отправить приглашение</string>
-    <string name="by_hand">Вручную</string>
-    <string name="imported">Импортировать</string>
 </resources>

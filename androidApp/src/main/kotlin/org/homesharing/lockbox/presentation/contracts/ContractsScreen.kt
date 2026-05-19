@@ -1,328 +1,328 @@
-package org.homesharing.lockbox.presentation.contracts
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
-import org.homesharing.lockbox.R
-import org.homesharing.lockbox.domain.model.contract.Contract
-import org.homesharing.lockbox.presentation.contracts.viewmodel.ContractsViewModel
-import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
-import org.homesharing.lockbox.presentation.uikit.composables.AddRow
-import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
-import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSwipeToDismiss
-import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
-import org.homesharing.lockbox.presentation.uikit.composables.templates.EmptyScreenContent
-import org.homesharing.lockbox.presentation.uikit.composables.templates.ErrorScreenContent
-import org.homesharing.lockbox.presentation.uikit.composables.templates.LoadingScreenContent
-import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
-import org.koin.androidx.compose.koinViewModel
-import java.time.format.DateTimeFormatter
-
-@Composable
-internal fun ContractsScreen(
-    contractsViewModel: ContractsViewModel = koinViewModel(),
-) {
-    val lazyContracts = contractsViewModel.contracts.collectAsLazyPagingItems()
-    ActionOnSharedFlow(
-        lifecycleOwner = LocalLifecycleOwner.current,
-        flow = contractsViewModel.deleteSuccess
-    ) {
-        lazyContracts.refresh()
-    }
-
-    ContractsScreen(
-        lazyContracts = lazyContracts,
-        onDelete = contractsViewModel::deleteContract,
-        modifier = Modifier.fillMaxSize(),
-    )
-}
-
-@Composable
-private fun ContractsScreen(
-    lazyContracts: LazyPagingItems<Contract>,
-    onDelete: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    when (lazyContracts.loadState.refresh) {
-        is LoadState.NotLoading -> {
-            LockBoxContractScreen(
-                contracts = lazyContracts,
-                onAddDocument = { },
-                onDelete = onDelete,
-                modifier = modifier,
-            )
-        }
-
-        is LoadState.Loading -> {
-            LoadingScreenContent(modifier = modifier)
-        }
-
-        is LoadState.Error -> {
-            ErrorScreen(
-                onRefresh = lazyContracts::refresh,
-                modifier = modifier
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun LockBoxContractScreen(
-    contracts: LazyPagingItems<Contract>,
-    onAddDocument: () -> Unit,
-    onDelete: (String) -> Unit,
-    modifier: Modifier,
-) {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-    val formatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy") }
-    LockBoxPullToRefresh(
-        modifier = modifier,
-        isRefreshing = contracts.loadState.refresh is LoadState.Loading,
-        state = rememberPullToRefreshState(),
-        onRefresh = {
-            contracts.refresh()
-            coroutineScope.launch {
-                listState.scrollToItem(0)
-            }
-        },
-    ) {
-        val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
-            .calculateTopPadding()
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                top = 12.dp + topPadding,
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 48.dp
-            ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            state = listState,
-        ) {
-            if (contracts.itemCount == 0) {
-                item {
-                    EmptyScreenContent(
-                        title = stringResource(R.string.manage_contracts),
-                        subtitle = stringResource(R.string.here_will_be_contracts_you_create),
-                        action = stringResource(R.string.add_contract),
-                        onAction = onAddDocument,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            } else {
-                items(
-                    count = contracts.itemCount,
-                    key = { index -> contracts[index]?.id ?: index }
-                ) { index ->
-                    val contract = contracts[index]
-                    contract?.let {
-                        LockBoxSwipeToDismiss(
-                            onDismiss = { onDelete(contract.id) },
-                            modifier = Modifier.fillParentMaxWidth()
-                        ) {
-                            Contract(
-                                formatter = formatter,
-                                contract = contract,
-                                onClick = {},
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    AddRow(
-                        onAdd = onAddDocument,
-                        text = stringResource(R.string.add_contract),
-                        modifier = Modifier.padding(top = 10.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ErrorScreen(
-    onRefresh: () -> Unit,
-    modifier: Modifier,
-) {
-    var isRefreshing by remember { mutableStateOf(false) }
-    ErrorScreenContent(
-        isRefreshing = isRefreshing,
-        onRefresh = {
-            isRefreshing = true
-            onRefresh()
-            isRefreshing = false
-        },
-        message = stringResource(R.string.something_went_wrong_try_refreshing),
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun Contract(
-    formatter: DateTimeFormatter,
-    contract: Contract,
-    onClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .clip(LockBoxTheme.shape.roundedCornerShape8)
-            .background(LockBoxTheme.colors.grey950)
-            .clickable { onClick(contract.id) }) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painterResource(R.drawable.document),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(vertical = 6.dp)
-                    .size(30.dp),
-                tint = LockBoxTheme.colors.grey500
-            )
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = 10.dp, horizontal = 12.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
-            ) {
-                Text(
-                    text = contract.flatAddress,
-                    color = LockBoxTheme.colors.constantWhite,
-                    style = LockBoxTheme.typography.headlineLarge
-                )
-
-                Text(
-                    text = contract.date.toJavaLocalDate().format(formatter),
-                    color = LockBoxTheme.colors.grey500,
-                    style = LockBoxTheme.typography.footnote,
-                )
-            }
-
-            Icon(
-                painter = painterResource(R.drawable.arrow_right),
-                contentDescription = null,
-                tint = LockBoxTheme.colors.grey500
-            )
-        }
-
-        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
-    }
-}
-
-
-@Preview
-@Composable
-private fun PreviewContract() {
-    LockBoxTheme {
-        val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
-        Contract(
-            formatter = formatter,
-            contract = Contract(
-                city = "SPB",
-                date = LocalDate.parse("2025-04-19"),
-                flatAddress = "Alpiyskiy",
-                id = "1234"
-            ),
-            onClick = {},
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewContractsScreen() {
-    LockBoxTheme {
-        val pagingData = flowOf(
-            PagingData.from(
-                listOf(
-                    Contract(
-                        city = "SPB",
-                        date = LocalDate.parse("2025-04-19"),
-                        flatAddress = "Alpiyskiy",
-                        id = "1234"
-                    )
-                ),
-                LoadStates(
-                    LoadState.NotLoading(true),
-                    LoadState.NotLoading(true),
-                    LoadState.NotLoading(true)
-                )
-            )
-        ).collectAsLazyPagingItems()
-        ContractsScreen(pagingData, {}, Modifier.fillMaxSize())
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewLoading() {
-    LockBoxTheme {
-        val pagingData = flowOf(PagingData.empty<Contract>())
-        ContractsScreen(pagingData.collectAsLazyPagingItems(), {}, Modifier.fillMaxSize())
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewEmptyScreen() {
-    LockBoxTheme {
-        val pagingData = flowOf(
-            PagingData.empty<Contract>(
-                LoadStates(
-                    LoadState.NotLoading(false),
-                    LoadState.NotLoading(false),
-                    LoadState.NotLoading(false)
-                )
-            )
-        ).collectAsLazyPagingItems()
-        ContractsScreen(pagingData, {}, Modifier.fillMaxSize())
-    }
-}
+//package org.homesharing.lockbox.presentation.contracts
+//
+//import androidx.compose.foundation.background
+//import androidx.compose.foundation.clickable
+//import androidx.compose.foundation.layout.Arrangement
+//import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.PaddingValues
+//import androidx.compose.foundation.layout.Row
+//import androidx.compose.foundation.layout.WindowInsets
+//import androidx.compose.foundation.layout.WindowInsetsSides
+//import androidx.compose.foundation.layout.asPaddingValues
+//import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.foundation.layout.only
+//import androidx.compose.foundation.layout.padding
+//import androidx.compose.foundation.layout.size
+//import androidx.compose.foundation.layout.statusBars
+//import androidx.compose.foundation.lazy.LazyColumn
+//import androidx.compose.foundation.lazy.rememberLazyListState
+//import androidx.compose.material3.ExperimentalMaterial3Api
+//import androidx.compose.material3.Icon
+//import androidx.compose.material3.Text
+//import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+//import androidx.compose.runtime.Composable
+//import androidx.compose.runtime.getValue
+//import androidx.compose.runtime.mutableStateOf
+//import androidx.compose.runtime.remember
+//import androidx.compose.runtime.rememberCoroutineScope
+//import androidx.compose.runtime.setValue
+//import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.draw.clip
+//import androidx.compose.ui.res.painterResource
+//import androidx.compose.ui.res.stringResource
+//import androidx.compose.ui.tooling.preview.Preview
+//import androidx.compose.ui.unit.dp
+//import androidx.lifecycle.compose.LocalLifecycleOwner
+//import androidx.paging.LoadState
+//import androidx.paging.LoadStates
+//import androidx.paging.PagingData
+//import androidx.paging.compose.LazyPagingItems
+//import androidx.paging.compose.collectAsLazyPagingItems
+//import kotlinx.coroutines.flow.flowOf
+//import kotlinx.coroutines.launch
+//import kotlinx.datetime.LocalDate
+//import kotlinx.datetime.toJavaLocalDate
+//import org.homesharing.lockbox.R
+//import org.homesharing.lockbox.domain.model.contract.Contract
+//import org.homesharing.lockbox.presentation.contracts.viewmodel.ContractsViewModel
+//import org.homesharing.lockbox.presentation.uikit.ActionOnSharedFlow
+//import org.homesharing.lockbox.presentation.uikit.composables.AddRow
+//import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxPullToRefresh
+//import org.homesharing.lockbox.presentation.uikit.composables.core.LockBoxSwipeToDismiss
+//import org.homesharing.lockbox.presentation.uikit.composables.core.LockboxHorizontalDivider
+//import org.homesharing.lockbox.presentation.uikit.composables.templates.EmptyScreenContent
+//import org.homesharing.lockbox.presentation.uikit.composables.templates.ErrorScreenContent
+//import org.homesharing.lockbox.presentation.uikit.composables.templates.LoadingScreenContent
+//import org.homesharing.lockbox.presentation.uikit.theme.LockBoxTheme
+//import org.koin.androidx.compose.koinViewModel
+//import java.time.format.DateTimeFormatter
+//
+//@Composable
+//internal fun ContractsScreen(
+//    contractsViewModel: ContractsViewModel = koinViewModel(),
+//) {
+//    val lazyContracts = contractsViewModel.contracts.collectAsLazyPagingItems()
+//    ActionOnSharedFlow(
+//        lifecycleOwner = LocalLifecycleOwner.current,
+//        flow = contractsViewModel.deleteSuccess
+//    ) {
+//        lazyContracts.refresh()
+//    }
+//
+//    ContractsScreen(
+//        lazyContracts = lazyContracts,
+//        onDelete = contractsViewModel::deleteContract,
+//        modifier = Modifier.fillMaxSize(),
+//    )
+//}
+//
+//@Composable
+//private fun ContractsScreen(
+//    lazyContracts: LazyPagingItems<Contract>,
+//    onDelete: (String) -> Unit,
+//    modifier: Modifier = Modifier,
+//) {
+//    when (lazyContracts.loadState.refresh) {
+//        is LoadState.NotLoading -> {
+//            LockBoxContractScreen(
+//                contracts = lazyContracts,
+//                onAddDocument = { },
+//                onDelete = onDelete,
+//                modifier = modifier,
+//            )
+//        }
+//
+//        is LoadState.Loading -> {
+//            LoadingScreenContent(modifier = modifier)
+//        }
+//
+//        is LoadState.Error -> {
+//            ErrorScreen(
+//                onRefresh = lazyContracts::refresh,
+//                modifier = modifier
+//            )
+//        }
+//    }
+//}
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//private fun LockBoxContractScreen(
+//    contracts: LazyPagingItems<Contract>,
+//    onAddDocument: () -> Unit,
+//    onDelete: (String) -> Unit,
+//    modifier: Modifier,
+//) {
+//    val listState = rememberLazyListState()
+//    val coroutineScope = rememberCoroutineScope()
+//    val formatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy") }
+//    LockBoxPullToRefresh(
+//        modifier = modifier,
+//        isRefreshing = contracts.loadState.refresh is LoadState.Loading,
+//        state = rememberPullToRefreshState(),
+//        onRefresh = {
+//            contracts.refresh()
+//            coroutineScope.launch {
+//                listState.scrollToItem(0)
+//            }
+//        },
+//    ) {
+//        val topPadding = WindowInsets.statusBars.only(WindowInsetsSides.Top).asPaddingValues()
+//            .calculateTopPadding()
+//        LazyColumn(
+//            modifier = Modifier.fillMaxSize(),
+//            contentPadding = PaddingValues(
+//                top = 12.dp + topPadding,
+//                start = 16.dp,
+//                end = 16.dp,
+//                bottom = 48.dp
+//            ),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            state = listState,
+//        ) {
+//            if (contracts.itemCount == 0) {
+//                item {
+//                    EmptyScreenContent(
+//                        title = stringResource(R.string.manage_contracts),
+//                        subtitle = stringResource(R.string.here_will_be_contracts_you_create),
+//                        action = stringResource(R.string.add_contract),
+//                        onAction = onAddDocument,
+//                        modifier = Modifier.fillMaxSize()
+//                    )
+//                }
+//            } else {
+//                items(
+//                    count = contracts.itemCount,
+//                    key = { index -> contracts[index]?.id ?: index }
+//                ) { index ->
+//                    val contract = contracts[index]
+//                    contract?.let {
+//                        LockBoxSwipeToDismiss(
+//                            onDismiss = { onDelete(contract.id) },
+//                            modifier = Modifier.fillParentMaxWidth()
+//                        ) {
+//                            Contract(
+//                                formatter = formatter,
+//                                contract = contract,
+//                                onClick = {},
+//                            )
+//                        }
+//                    }
+//                }
+//
+//                item {
+//                    AddRow(
+//                        onAdd = onAddDocument,
+//                        text = stringResource(R.string.add_contract),
+//                        modifier = Modifier.padding(top = 10.dp)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//private fun ErrorScreen(
+//    onRefresh: () -> Unit,
+//    modifier: Modifier,
+//) {
+//    var isRefreshing by remember { mutableStateOf(false) }
+//    ErrorScreenContent(
+//        isRefreshing = isRefreshing,
+//        onRefresh = {
+//            isRefreshing = true
+//            onRefresh()
+//            isRefreshing = false
+//        },
+//        message = stringResource(R.string.something_went_wrong_try_refreshing),
+//        modifier = modifier
+//    )
+//}
+//
+//@Composable
+//private fun Contract(
+//    formatter: DateTimeFormatter,
+//    contract: Contract,
+//    onClick: (String) -> Unit,
+//    modifier: Modifier = Modifier,
+//) {
+//    Column(
+//        modifier = modifier
+//            .clip(LockBoxTheme.shape.roundedCornerShape8)
+//            .background(LockBoxTheme.colors.grey950)
+//            .clickable { onClick(contract.id) }) {
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//            Icon(
+//                painterResource(R.drawable.document),
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .padding(vertical = 6.dp)
+//                    .size(30.dp),
+//                tint = LockBoxTheme.colors.grey500
+//            )
+//
+//            Column(
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .padding(vertical = 10.dp, horizontal = 12.dp),
+//                horizontalAlignment = Alignment.Start,
+//                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
+//            ) {
+//                Text(
+//                    text = contract.flatAddress,
+//                    color = LockBoxTheme.colors.constantWhite,
+//                    style = LockBoxTheme.typography.headlineLarge
+//                )
+//
+//                Text(
+//                    text = contract.date.toJavaLocalDate().format(formatter),
+//                    color = LockBoxTheme.colors.grey500,
+//                    style = LockBoxTheme.typography.footnote,
+//                )
+//            }
+//
+//            Icon(
+//                painter = painterResource(R.drawable.arrow_right),
+//                contentDescription = null,
+//                tint = LockBoxTheme.colors.grey500
+//            )
+//        }
+//
+//        LockboxHorizontalDivider(modifier = Modifier.fillMaxWidth())
+//    }
+//}
+//
+//
+//@Preview
+//@Composable
+//private fun PreviewContract() {
+//    LockBoxTheme {
+//        val formatter = remember { DateTimeFormatter.ofPattern("d MMM yyyy") }
+//        Contract(
+//            formatter = formatter,
+//            contract = Contract(
+//                city = "SPB",
+//                date = LocalDate.parse("2025-04-19"),
+//                flatAddress = "Alpiyskiy",
+//                id = "1234"
+//            ),
+//            onClick = {},
+//            modifier = Modifier.fillMaxWidth()
+//        )
+//    }
+//}
+//
+//@Preview
+//@Composable
+//private fun PreviewContractsScreen() {
+//    LockBoxTheme {
+//        val pagingData = flowOf(
+//            PagingData.from(
+//                listOf(
+//                    Contract(
+//                        city = "SPB",
+//                        date = LocalDate.parse("2025-04-19"),
+//                        flatAddress = "Alpiyskiy",
+//                        id = "1234"
+//                    )
+//                ),
+//                LoadStates(
+//                    LoadState.NotLoading(true),
+//                    LoadState.NotLoading(true),
+//                    LoadState.NotLoading(true)
+//                )
+//            )
+//        ).collectAsLazyPagingItems()
+//        ContractsScreen(pagingData, {}, Modifier.fillMaxSize())
+//    }
+//}
+//
+//@Preview
+//@Composable
+//private fun PreviewLoading() {
+//    LockBoxTheme {
+//        val pagingData = flowOf(PagingData.empty<Contract>())
+//        ContractsScreen(pagingData.collectAsLazyPagingItems(), {}, Modifier.fillMaxSize())
+//    }
+//}
+//
+//@Preview
+//@Composable
+//private fun PreviewEmptyScreen() {
+//    LockBoxTheme {
+//        val pagingData = flowOf(
+//            PagingData.empty<Contract>(
+//                LoadStates(
+//                    LoadState.NotLoading(false),
+//                    LoadState.NotLoading(false),
+//                    LoadState.NotLoading(false)
+//                )
+//            )
+//        ).collectAsLazyPagingItems()
+//        ContractsScreen(pagingData, {}, Modifier.fillMaxSize())
+//    }
+//}

@@ -21,7 +21,7 @@ import org.homesharing.lockbox.data.network.dto.physical_sign_up.PhysicalSignUpD
 import org.homesharing.lockbox.data.network.dto.update_box.UpdateBoxDto
 import org.homesharing.lockbox.data.network.paging.BoxesPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.access.Access
 import org.homesharing.lockbox.domain.model.access.Accesses
 import org.homesharing.lockbox.domain.model.access.toDomain
@@ -80,7 +80,7 @@ internal class BoxesRepositoryImpl(
             }
 
     override suspend fun getBoxByMac(address: String): Response<BoxWithStatus> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.getBoxByMac(
                     macAddress = address
@@ -90,7 +90,7 @@ internal class BoxesRepositoryImpl(
         )
 
     override suspend fun openBoxByMac(address: String): Response<OpenBox> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.openBox(
                     macAddress = address
@@ -100,7 +100,7 @@ internal class BoxesRepositoryImpl(
         )
 
     override suspend fun unbindBox(address: String): Response<Unit> =
-        parseLockBoxApiResponse {
+        parseLockboxApiResponse {
             boxesApi.deleteBox(
                 macAddress = address
             )
@@ -111,7 +111,7 @@ internal class BoxesRepositoryImpl(
         newName: String,
         ownerSub: String,
     ): Response<UpdateBox> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.updateBoxByMac(
                     macAddress = macAddress,
@@ -127,7 +127,7 @@ internal class BoxesRepositoryImpl(
         newAddress: String,
         ownerSub: String,
     ): Response<UpdateBox> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.updateBoxByMac(
                     macAddress = macAddress,
@@ -139,7 +139,7 @@ internal class BoxesRepositoryImpl(
         )
 
     override suspend fun getListOfAccesses(macAddress: String): Response<Accesses> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.getAccessedList(
                     macAddress = macAddress
@@ -156,7 +156,7 @@ internal class BoxesRepositoryImpl(
         endTime: Long,
         alias: String,
     ): Response<Access> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.createAccess(
                     macAddress = macAddress,
@@ -169,7 +169,7 @@ internal class BoxesRepositoryImpl(
         )
 
     override suspend fun revokeAccess(macAddress: String, tokenId: String): Response<AccessRevoke> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.revokeAccess(
                     macAddress = macAddress,
@@ -180,13 +180,13 @@ internal class BoxesRepositoryImpl(
         )
 
     override suspend fun createLinkingCode(): Response<CreateLinkingCode> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = { boxesApi.createLinkingCode() },
             mapper = CreateLinkingCodeDto::toDomain
         )
 
     override suspend fun physicalSignUp(code: Int, macAddress: String): Response<PhysicalSignUp> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = {
                 boxesApi.physicalSignUp(
                     code = code,
@@ -197,7 +197,7 @@ internal class BoxesRepositoryImpl(
         )
 
     override suspend fun createTestDevice(): Response<Unit> =
-        parseLockBoxApiResponse { boxesApi.createTestDevice() }
+        parseLockboxApiResponse { boxesApi.createTestDevice() }
 
     @OptIn(ExperimentalTime::class)
     private fun formatToBackendTimestamp(epochMillis: Long): String {

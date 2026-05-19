@@ -1,4 +1,4 @@
-rootProject.name = "LockBox"
+rootProject.name = "Lockbox"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -33,3 +33,5 @@ dependencyResolutionManagement {
 
 include(":androidApp")
 include(":shared")
+include(":sharedUI")
+include(":desktopApp")

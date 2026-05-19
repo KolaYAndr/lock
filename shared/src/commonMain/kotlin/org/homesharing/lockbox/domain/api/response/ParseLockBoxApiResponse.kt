@@ -6,7 +6,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 
-internal suspend fun <Dto : Any, Domain : Any> parseLockBoxApiResponse(
+internal suspend fun <Dto : Any, Domain : Any> parseLockboxApiResponse(
     apiCall: suspend () -> ApiResponse<Dto>,
     mapper: (Dto) -> Domain,
 ): Response<Domain> = withContext(Dispatchers.IO) {
@@ -25,7 +25,7 @@ internal suspend fun <Dto : Any, Domain : Any> parseLockBoxApiResponse(
     }
 }
 
-internal suspend fun <Dto : Any> parseLockBoxApiResponse(
+internal suspend fun <Dto : Any> parseLockboxApiResponse(
     apiCall: suspend () -> ApiResponse<Dto>,
 ): Response<Dto> = withContext(Dispatchers.IO) {
     try {

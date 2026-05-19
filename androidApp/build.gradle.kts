@@ -4,7 +4,7 @@ import org.gradle.api.JavaVersion.VERSION_21
 
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.composeCompiler)
 }
 
@@ -27,6 +27,7 @@ configure<ApplicationExtension> {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
         }
         debug {
             isMinifyEnabled = false
@@ -59,25 +60,8 @@ androidComponents {
 }
 
 dependencies {
-    implementation(libs.androidx.material3.android)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.compose.viewmodel)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network)
-    implementation(libs.paging.compose)
-    implementation(libs.datastore)
-    implementation(libs.navigation3.ui)
-    implementation(libs.navigation3.runtime)
-    implementation(libs.navigation3.viewmodel.lifecycle)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(projects.sharedUI)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.dateTime)
-    implementation(projects.shared)
-    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.koin.android)
 }

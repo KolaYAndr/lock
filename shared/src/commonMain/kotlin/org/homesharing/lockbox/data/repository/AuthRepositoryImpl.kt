@@ -6,7 +6,7 @@ import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
 import org.homesharing.lockbox.data.network.token.storage.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.api.response.parseLockBoxApiResponse
+import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
 import org.homesharing.lockbox.domain.model.confirm_email.toDomain
 import org.homesharing.lockbox.domain.repository.AuthRepository
@@ -20,7 +20,7 @@ internal class AuthRepositoryImpl(
         username: String,
         password: String,
         passwordRepeated: String,
-    ): Response<Unit> = parseLockBoxApiResponse { api.signUp(username, password, passwordRepeated) }
+    ): Response<Unit> = parseLockboxApiResponse { api.signUp(username, password, passwordRepeated) }
 
     override suspend fun loadTokensInitially(
         username: String,
@@ -44,7 +44,7 @@ internal class AuthRepositoryImpl(
 
 
     override suspend fun sendConfirmation(email: String): Response<ConfirmEmail> =
-        parseLockBoxApiResponse(
+        parseLockboxApiResponse(
             apiCall = { api.confirmEmail(email) },
             mapper = ConfirmEmailDto::toDomain
         )
