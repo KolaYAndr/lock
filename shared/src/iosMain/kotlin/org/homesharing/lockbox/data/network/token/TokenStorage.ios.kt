@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.data.network.token.storage
+package org.homesharing.lockbox.data.network.token
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,14 +33,6 @@ internal class TokenStorageImpl(
         userDefaults.removeObjectForKey(REFRESH_TOKEN_NAME)
         userDefaults.removeObjectForKey(REFRESH_IN_NAME)
         _loggedIn.update { false }
-    }
-
-    override suspend fun getNextRefreshTime(): Long {
-        return userDefaults.integerForKey(REFRESH_IN_NAME)
-    }
-
-    override suspend fun saveNextRefreshTime(time: Long) {
-        userDefaults.setInteger(time, forKey = REFRESH_IN_NAME)
     }
 
     private fun saveAccessToken(token: String) {

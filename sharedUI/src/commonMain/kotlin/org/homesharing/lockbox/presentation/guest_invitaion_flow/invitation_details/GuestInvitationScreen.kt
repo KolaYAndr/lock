@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -29,11 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,11 +39,10 @@ import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.check_in_details
 import lockbox.sharedui.generated.resources.check_in_time_placeholder
 import lockbox.sharedui.generated.resources.check_out_time_placeholder
-import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.deposit_placeholder
 import lockbox.sharedui.generated.resources.guest_invitation
 import lockbox.sharedui.generated.resources.guest_number_placeholder
-import lockbox.sharedui.generated.resources.private_comment_placeholder
+import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.proceed
 import org.homesharing.lockbox.presentation.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
@@ -55,6 +50,8 @@ import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingDa
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingTimeInput
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -150,7 +147,6 @@ private fun GuestInvitationScreen(
         val checkOutRequester = remember { FocusRequester() }
         val guestNumberRequester = remember { FocusRequester() }
         val depositRequester = remember { FocusRequester() }
-        val commentRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
         Row(
             modifier = Modifier
@@ -214,10 +210,10 @@ private fun GuestInvitationScreen(
             onValueChange = { onIntent(GuestInvitationIntent.DepositChanged(it)) },
             placeholderText = stringResource(Res.string.deposit_placeholder),
             keyboardActions = KeyboardActions(
-                onNext = { commentRequester.requestFocus() }
+                onDone = { focusManager.clearFocus() }
             ),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
+                imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Number,
             ),
             modifier = Modifier
@@ -225,26 +221,6 @@ private fun GuestInvitationScreen(
                 .padding(horizontal = 11.dp)
                 .padding(top = 11.dp)
                 .focusRequester(depositRequester)
-        )
-
-        HomesharingInput(
-            value = uiState.privateComment,
-            onValueChange = { onIntent(GuestInvitationIntent.PrivateCommentChanged(it)) },
-            placeholderText = stringResource(Res.string.private_comment_placeholder),
-            keyboardActions = KeyboardActions(
-                onDone = { focusManager.clearFocus() }
-            ),
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Text,
-                capitalization = KeyboardCapitalization.Sentences
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 11.dp)
-                .padding(top = 11.dp)
-                .heightIn(min = 96.dp)
-                .focusRequester(commentRequester)
         )
 
         HomesharingButton(

@@ -1,9 +1,8 @@
 package org.homesharing.lockbox.di
 
-import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
-import org.homesharing.lockbox.data.network.token.storage.LockboxCipher
-import org.homesharing.lockbox.data.network.token.storage.TokenStorage
-import org.homesharing.lockbox.data.network.token.storage.TokenStorageImpl
+import org.homesharing.lockbox.data.network.token.LockboxCipher
+import org.homesharing.lockbox.data.network.token.TokenStorage
+import org.homesharing.lockbox.data.network.token.TokenStorageImpl
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -14,5 +13,4 @@ actual val platformModule: Module = module {
     singleOf(::TokenStorageImpl) {
         bind<TokenStorage>()
     }
-    singleOf(::RefreshManager)
 }

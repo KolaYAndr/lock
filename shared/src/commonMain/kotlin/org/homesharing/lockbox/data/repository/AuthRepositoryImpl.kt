@@ -3,8 +3,7 @@ package org.homesharing.lockbox.data.repository
 import org.homesharing.lockbox.data.network.api.AccountApi
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
-import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
-import org.homesharing.lockbox.data.network.token.storage.TokenStorage
+import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
@@ -14,7 +13,6 @@ import org.homesharing.lockbox.domain.repository.AuthRepository
 internal class AuthRepositoryImpl(
     private val api: AccountApi,
     private val tokenStorage: TokenStorage,
-    private val refreshManager: RefreshManager,
 ) : AuthRepository {
     override suspend fun signUp(
         username: String,
@@ -31,7 +29,6 @@ internal class AuthRepositoryImpl(
                 is AuthResponse.Success -> {
                     with(tokenStorage) {
                         saveTokens(response.accessToken, response.refreshToken)
-                        saveNextRefreshTime(response.expiresIn + refreshManager.currentTime)
                     }
                     Response.Success(Unit)
                 }

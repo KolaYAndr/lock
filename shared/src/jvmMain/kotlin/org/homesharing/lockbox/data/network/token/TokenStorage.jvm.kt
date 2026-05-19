@@ -1,10 +1,9 @@
-package org.homesharing.lockbox.data.network.token.storage
+package org.homesharing.lockbox.data.network.token
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -45,17 +44,8 @@ internal class TokenStorageImpl : TokenStorage {
         dataStore.edit { it.clear() }
     }
 
-    override suspend fun getNextRefreshTime(): Long {
-        return dataStore.data.map { it[REFRESH_IN_KEY] }.first() ?: 0L
-    }
-
-    override suspend fun saveNextRefreshTime(time: Long) {
-        dataStore.edit { it[REFRESH_IN_KEY] = time }
-    }
-
     private companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey(ACCESS_TOKEN_NAME)
         private val REFRESH_TOKEN_KEY = stringPreferencesKey(REFRESH_TOKEN_NAME)
-        private val REFRESH_IN_KEY = longPreferencesKey(REFRESH_IN_NAME)
     }
 }

@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.data.network.token.storage
+package org.homesharing.lockbox.data.network.token
 
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec

@@ -23,8 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,12 +33,12 @@ import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.check_in_report
 import lockbox.sharedui.generated.resources.check_in_setup
 import lockbox.sharedui.generated.resources.check_out_report
-import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.guest_invitation
 import lockbox.sharedui.generated.resources.guest_will_send_report_before_checking_out
 import lockbox.sharedui.generated.resources.guest_will_send_report_when_checking_in
 import lockbox.sharedui.generated.resources.guest_will_sing_deal_in_app
 import lockbox.sharedui.generated.resources.how_to_find_entrance_and_etc
+import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.proceed
 import lockbox.sharedui.generated.resources.request_passport
 import lockbox.sharedui.generated.resources.sign_deal_online
@@ -50,6 +49,8 @@ import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingB
 import org.homesharing.lockbox.presentation.uikit.composable.checkbox.HomesharingCheckBoxItem
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -153,6 +154,7 @@ private fun CheckInSetupScreen(
             )
         }
 
+        val focusManager = LocalFocusManager.current
         HomesharingInput(
             value = uiState.commentForGuest,
             onValueChange = onChangeComment,
@@ -161,6 +163,7 @@ private fun CheckInSetupScreen(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
+                    focusManager.clearFocus()
                 }
             ),
             modifier = Modifier

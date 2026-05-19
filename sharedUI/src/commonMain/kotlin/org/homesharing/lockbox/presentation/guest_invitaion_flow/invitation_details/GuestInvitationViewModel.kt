@@ -46,10 +46,6 @@ internal class GuestInvitationViewModel : ViewModel() {
                 onDepositChanged(intent.value)
             }
 
-            is GuestInvitationIntent.PrivateCommentChanged -> {
-                onPrivateCommentChanged(intent.value)
-            }
-
             GuestInvitationIntent.ProceedClicked -> {
                 onProceedClicked()
             }
@@ -143,14 +139,6 @@ internal class GuestInvitationViewModel : ViewModel() {
             )
         }
     }
-
-    private fun onPrivateCommentChanged(value: String) {
-        _guestInvitation.update {
-            it.copy(
-                privateComment = value,
-            )
-        }
-    }
 }
 
 internal data class GuestInvitationUiState(
@@ -161,7 +149,6 @@ internal data class GuestInvitationUiState(
     val guestNumber: Int?,
     val guestError: Boolean,
     val deposit: Int?,
-    val privateComment: String,
     val checkInTimeError: Boolean,
     val checkOutTimeError: Boolean,
 ) {
@@ -183,7 +170,6 @@ internal data class GuestInvitationUiState(
             checkOutTime = null,
             guestNumber = null,
             deposit = null,
-            privateComment = "",
             checkInTimeError = false,
             checkOutTimeError = false,
             guestError = false,
@@ -213,10 +199,6 @@ internal sealed interface GuestInvitationIntent {
     ) : GuestInvitationIntent
 
     data class DepositChanged(
-        val value: String,
-    ) : GuestInvitationIntent
-
-    data class PrivateCommentChanged(
         val value: String,
     ) : GuestInvitationIntent
 

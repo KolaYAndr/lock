@@ -48,11 +48,5 @@ kotlin {
             implementation(libs.dateTime)
             implementation(libs.kotlinx.serialization.json)
         }
-        
-        androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.core.splashscreen)
-            implementation(libs.koin.android)
-        }
     }
 }

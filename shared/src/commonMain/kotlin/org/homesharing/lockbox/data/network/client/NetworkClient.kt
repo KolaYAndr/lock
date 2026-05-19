@@ -19,9 +19,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.api.response.toAuthResponse
-import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
-import org.homesharing.lockbox.data.network.token.storage.REFRESH_TOKEN_NAME
-import org.homesharing.lockbox.data.network.token.storage.TokenStorage
+import org.homesharing.lockbox.data.network.token.REFRESH_TOKEN_NAME
+import org.homesharing.lockbox.data.network.token.TokenStorage
 
 private const val API = "api"
 private const val V1 = "v1"
@@ -49,7 +48,6 @@ internal fun createNetworkClient(
     engine: HttpClientEngine,
     json: Json,
     tokenStorage: TokenStorage,
-    refreshManager: RefreshManager,
     mLogger: Logger = myLogger,
 ): HttpClient {
     return HttpClient(engine) {
@@ -95,7 +93,6 @@ internal fun createNetworkClient(
                             tokenResponse.accessToken,
                             tokenResponse.refreshToken
                         )
-                        tokenStorage.saveNextRefreshTime(tokenResponse.expiresIn + refreshManager.currentTime)
 
                         BearerTokens(
                             accessToken = tokenResponse.accessToken,

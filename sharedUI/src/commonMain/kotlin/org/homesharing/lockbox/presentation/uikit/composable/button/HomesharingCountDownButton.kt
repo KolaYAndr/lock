@@ -1,25 +1,25 @@
 package org.homesharing.lockbox.presentation.uikit.composable.button
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.retain.retain
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import lockbox.sharedui.generated.resources.Res
-import lockbox.sharedui.generated.resources.send_code_again
-import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.concurrent.TimeUnit
+//import androidx.compose.runtime.Composable
+//import androidx.compose.runtime.LaunchedEffect
+//import androidx.compose.runtime.getValue
+//import androidx.compose.runtime.mutableLongStateOf
+//import androidx.compose.runtime.mutableStateOf
+//import androidx.compose.runtime.remember
+//import androidx.compose.runtime.retain.retain
+//import androidx.compose.runtime.setValue
+//import androidx.compose.ui.Modifier
+//import org.jetbrains.compose.resources.stringResource
+//import androidx.compose.ui.tooling.preview.Preview
+//import lockbox.sharedui.generated.resources.Res
+//import lockbox.sharedui.generated.resources.send_code_again
+//import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+//import java.text.SimpleDateFormat
+//import java.util.Locale
+//import java.util.concurrent.TimeUnit
 
-private val countDownInterval = TimeUnit.SECONDS.toMillis(1)
-private val defaultStartingTime = TimeUnit.MINUTES.toMillis(1)
+//private val countDownInterval = TimeUnit.SECONDS.toMillis(1)
+//private val defaultStartingTime = TimeUnit.MINUTES.toMillis(1)
 
 //@Composable
 //internal fun HomesharingCountDownButton(

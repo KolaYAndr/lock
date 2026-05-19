@@ -337,7 +337,7 @@ private fun FlatAddressScreen(
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {
-                        commentFocusRequester.requestFocus()
+                        nameFocusRequester.requestFocus()
                     }
                 ),
                 modifier = Modifier
@@ -347,11 +347,11 @@ private fun FlatAddressScreen(
         }
 
         HomesharingInput(
-            value = flatAddress.comment,
-            onValueChange = { onIntent(FlatAddressIntent.CommentChanged(it)) },
-            placeholderText = stringResource(Res.string.comment_placeholder),
+            value = flatAddress.name,
+            onValueChange = { onIntent(FlatAddressIntent.NameChanged(it)) },
+            placeholderText = stringResource(Res.string.placeholder_name),
             trailingIcon = painterResource(Res.drawable.ic_close),
-            trailingIconAction = { onIntent(FlatAddressIntent.CommentChanged("")) },
+            trailingIconAction = { onIntent(FlatAddressIntent.NameChanged("")) },
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 keyboardType = KeyboardType.Text,
@@ -359,23 +359,23 @@ private fun FlatAddressScreen(
             ),
             keyboardActions = KeyboardActions(
                 onNext = {
-                    nameFocusRequester.requestFocus()
+                    commentFocusRequester.requestFocus()
                 }
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 11.dp)
                 .padding(top = 16.dp)
-                .focusRequester(commentFocusRequester)
-                .heightIn(min = 96.dp)
+                .focusRequester(nameFocusRequester)
         )
 
         HomesharingInput(
-            value = flatAddress.name,
-            onValueChange = { onIntent(FlatAddressIntent.NameChanged(it)) },
-            placeholderText = stringResource(Res.string.placeholder_name),
+            value = flatAddress.comment,
+            singleLine = false,
+            onValueChange = { onIntent(FlatAddressIntent.CommentChanged(it)) },
+            placeholderText = stringResource(Res.string.comment_placeholder),
             trailingIcon = painterResource(Res.drawable.ic_close),
-            trailingIconAction = { onIntent(FlatAddressIntent.NameChanged("")) },
+            trailingIconAction = { onIntent(FlatAddressIntent.CommentChanged("")) },
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 keyboardType = KeyboardType.Text,
@@ -390,7 +390,8 @@ private fun FlatAddressScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 11.dp)
                 .padding(top = 16.dp)
-                .focusRequester(nameFocusRequester)
+                .focusRequester(commentFocusRequester)
+                .heightIn(min = 96.dp)
         )
 
         Text(

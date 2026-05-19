@@ -10,8 +10,7 @@ import org.homesharing.lockbox.data.network.api.LockBoxBoxesApi
 import org.homesharing.lockbox.data.network.api.LockBoxDocumentsApi
 import org.homesharing.lockbox.data.network.client.createNetworkClient
 import org.homesharing.lockbox.data.network.client.networkEngine
-import org.homesharing.lockbox.data.network.token.refresh_manager.RefreshManager
-import org.homesharing.lockbox.data.network.token.storage.TokenStorage
+import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -34,7 +33,6 @@ val networkModule = module {
             engine = networkEngine,
             json = get<Json>(),
             tokenStorage = get<TokenStorage>(),
-            refreshManager = get<RefreshManager>(),
         )
     }
 
