@@ -4,19 +4,27 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - 'composeApp/**'
+      - 'shared/**'
+      - 'sharedUI/**'
       - 'androidApp/**'
       - 'gradle/**'
-      - 'build.gradle.kts'
-      - '.github/android.yaml'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/android.yml'
   pull_request:
     branches: [ "master" ]
     paths:
-      - 'composeApp/**'
+      - 'shared/**'
+      - 'sharedUI/**'
       - 'androidApp/**'
       - 'gradle/**'
-      - 'build.gradle.kts'
-      - '.github/android.yaml'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096M -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
 
 jobs:
   build:
@@ -32,13 +40,15 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug
+      - name: Build Android debug APK
+        run: ./gradlew :androidApp:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v6

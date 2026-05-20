@@ -6,11 +6,20 @@ on:
     paths:
       - "shared/**"
       - "iosApp/**"
+      - "gradle/**"
+      - "*.gradle.kts"
+      - "gradle.properties"
+      - ".github/workflows/ios.yml"
   pull_request:
     branches: ["master"]
     paths:
       - "shared/**"
       - "iosApp/**"
+      - "gradle/**"
+      - "*.gradle.kts"
+      - "gradle.properties"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -89,7 +98,7 @@ jobs:
 
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ios-build-logs
           path: |
