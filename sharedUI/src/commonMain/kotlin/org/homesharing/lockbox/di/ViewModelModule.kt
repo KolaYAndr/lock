@@ -15,7 +15,7 @@ import org.homesharing.lockbox.presentation.profile_flow.role_chooser.RoleChoose
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val sharedUIViewModelModule = module {
+val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::ProfileSetupViewModel)
     viewModelOf(::RoleChooserViewModel)

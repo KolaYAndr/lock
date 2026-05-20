@@ -7,9 +7,9 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.shared)
     implementation(projects.sharedUI)
     implementation(compose.desktop.currentOs)
+    implementation(libs.kotlinx.coroutinesSwing)
     implementation(libs.koin.core)
 }
 
@@ -19,7 +19,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "Lockbox"
+            packageName = "org.homesharing.lockbox"
             packageVersion = "1.0.0"
         }
     }
