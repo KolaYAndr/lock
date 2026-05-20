@@ -86,8 +86,8 @@ jobs:
             -derivedDataPath build/DerivedData \
             -resultBundlePath build/ResultBundle.xcresult \
             CODE_SIGNING_ALLOWED=NO \
+            ARCHS=arm64 \
             ONLY_ACTIVE_ARCH=YES \
-            EXCLUDED_ARCHS[sdk=iphonesimulator*]=x86_64 \
             | tee xcodebuild.log
 
       - name: Print errors
