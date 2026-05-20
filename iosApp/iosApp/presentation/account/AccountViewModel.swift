@@ -3,7 +3,7 @@
 //  iosApp
 //
 //  Created by Николай on 15.04.2026.
-//  Copyright © 2026 LockBox. All rights reserved.
+//  Copyright © 2026 Lockbox. All rights reserved.
 //
 
 import Foundation
