@@ -9,7 +9,7 @@ import org.homesharing.lockbox.domain.repository.AccountRepository
 
 private const val SUBSCRIPTION_THRESHOLD = 5000L
 
-internal class LockboxAppViewModel(
+class LockboxAppViewModel(
     accountRepository: AccountRepository,
 ) : ViewModel() {
     val loginState = accountRepository.loggedIn.map { loggedIn ->
@@ -25,7 +25,7 @@ internal class LockboxAppViewModel(
     )
 }
 
-internal sealed interface LoginState {
+sealed interface LoginState {
     object Loading : LoginState
     object LoggedIn : LoginState
     object NotLoggedIn : LoginState
