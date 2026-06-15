@@ -101,12 +101,12 @@ private fun RoleChooserScreen(
         }
 
         AnimatedContent(
-            targetState = pickedRole,
+            targetState = pickedRole != null,
             contentAlignment = Alignment.Center,
             modifier = Modifier.padding(horizontal = 11.dp)
-        ) { role ->
-            when (role) {
-                null -> HomesharingButton(
+        ) { hasPickedRole ->
+            if (!hasPickedRole) {
+                HomesharingButton(
                     title = stringResource(Res.string.not_now),
                     onClick = onProceed,
                     style = HomesharingButtonDefaults.secondary(),
@@ -114,8 +114,8 @@ private fun RoleChooserScreen(
                         .fillMaxWidth()
                         .padding(top = 24.dp)
                 )
-
-                else -> HomesharingButton(
+            } else {
+                HomesharingButton(
                     title = stringResource(Res.string.proceed),
                     onClick = onProceed,
                     style = HomesharingButtonDefaults.primary(),

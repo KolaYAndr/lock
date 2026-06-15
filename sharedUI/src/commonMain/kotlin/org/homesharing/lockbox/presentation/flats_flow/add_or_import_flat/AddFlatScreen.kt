@@ -125,12 +125,12 @@ private fun AddFlatScreen(
         }
 
         AnimatedContent(
-            targetState = addType,
+            targetState = addType != null,
             contentAlignment = Alignment.Center,
             modifier = Modifier.padding(horizontal = 11.dp)
-        ) { addType ->
-            when (addType) {
-                null -> HomesharingButton(
+        ) { pickedType ->
+            if (!pickedType) {
+                HomesharingButton(
                     title = stringResource(Res.string.not_now),
                     onClick = onProceed,
                     style = HomesharingButtonDefaults.secondary(),
@@ -138,8 +138,8 @@ private fun AddFlatScreen(
                         .fillMaxWidth()
                         .padding(top = 24.dp)
                 )
-
-                else -> HomesharingButton(
+            } else {
+                HomesharingButton(
                     title = stringResource(Res.string.proceed),
                     onClick = onProceed,
                     style = HomesharingButtonDefaults.primary(),

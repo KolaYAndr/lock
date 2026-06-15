@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ internal fun HomesharingButton(
     style: HomesharingButtonStyle = HomesharingButtonDefaults.primary()
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
     val isPressed by interactionSource.collectIsPressedAsState()
     val isFocused by interactionSource.collectIsFocusedAsState()
 
@@ -53,10 +55,11 @@ internal fun HomesharingButton(
 
     val backgroundColor by animateColorAsState(
         if (enabled) {
-            if (isPressed || isFocused) {
-                style.interactionColor
-            } else {
-                style.backgroundColor
+            when {
+                isHovered -> style.hoveredBackgroundColor
+                isPressed -> style.pressedBackgroundColor
+                isFocused -> style.focusedBackgroundColor
+                else -> style.backgroundColor
             }
         } else style.disabledBackgroundColor
     )
@@ -107,7 +110,9 @@ internal data class HomesharingButtonStyle(
     val disabledBackgroundColor: Color,
     val disabledTitleColor: Color,
     val disabledSubtitleColor: Color,
-    val interactionColor: Color
+    val hoveredBackgroundColor: Color,
+    val focusedBackgroundColor: Color,
+    val pressedBackgroundColor: Color,
 )
 
 @Immutable
@@ -120,29 +125,61 @@ internal object HomesharingButtonDefaults {
         disabledBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .1f),
         disabledTitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
         disabledSubtitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
-        interactionColor = HomesharingTheme.colors.black.copy(alpha = .9f)
+        hoveredBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .9f),
+        focusedBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .95f),
+        pressedBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .7f)
     )
 
     @Composable
     fun secondary() = HomesharingButtonStyle(
+        backgroundColor = HomesharingTheme.colors.black.copy(alpha = .05f),
+        titleColor = HomesharingTheme.colors.black,
+        subtitleColor = HomesharingTheme.colors.black.copy(alpha = .5f),
+        disabledBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .05f),
+        disabledTitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
+        disabledSubtitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
+        hoveredBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .1f),
+        focusedBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .08f),
+        pressedBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .15f)
+    )
+
+    @Composable
+    fun danger() = HomesharingButtonStyle(
+        backgroundColor = HomesharingTheme.colors.red.copy(alpha = .1f),
+        titleColor = HomesharingTheme.colors.red,
+        subtitleColor = HomesharingTheme.colors.black.copy(alpha = .5f),
+        disabledBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .05f),
+        disabledTitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
+        disabledSubtitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
+        hoveredBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .15f),
+        focusedBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .12f),
+        pressedBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .2f)
+    )
+
+    @Composable
+    fun ghost() = HomesharingButtonStyle(
         backgroundColor = Color.Transparent,
         titleColor = HomesharingTheme.colors.black,
         subtitleColor = HomesharingTheme.colors.black.copy(alpha = .5f),
         disabledBackgroundColor = Color.Transparent,
         disabledTitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
         disabledSubtitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
-        interactionColor = HomesharingTheme.colors.black.copy(alpha = .05f)
+        hoveredBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .05f),
+        focusedBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .03f),
+        pressedBackgroundColor = HomesharingTheme.colors.black.copy(alpha = .1f)
     )
 
     @Composable
-    fun error() = HomesharingButtonStyle(
+    fun dangerGhost() = HomesharingButtonStyle(
         backgroundColor = Color.Transparent,
         titleColor = HomesharingTheme.colors.red,
         subtitleColor = HomesharingTheme.colors.black.copy(alpha = .5f),
         disabledBackgroundColor = Color.Transparent,
         disabledTitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
         disabledSubtitleColor = HomesharingTheme.colors.black.copy(alpha = .3f),
-        interactionColor = HomesharingTheme.colors.red.copy(alpha = .05f)
+        hoveredBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .05f),
+        focusedBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .03f),
+        pressedBackgroundColor = HomesharingTheme.colors.red.copy(alpha = .1f)
     )
 }
 
@@ -150,84 +187,45 @@ internal object HomesharingButtonDefaults {
 @Composable
 private fun PreviewHomesharingButton() {
     HomesharingTheme {
+        val styles = listOf(
+            "primary" to HomesharingButtonDefaults.primary(),
+            "secondary" to HomesharingButtonDefaults.secondary(),
+            "danger" to HomesharingButtonDefaults.danger(),
+            "ghost" to HomesharingButtonDefaults.ghost(),
+            "dangerGhost" to HomesharingButtonDefaults.dangerGhost(),
+        )
+
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.background(WHITE).padding(8.dp)
         ) {
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                loading = true,
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-            )
+            styles.forEach { (name, style) ->
+                HomesharingButton(
+                    title = name,
+                    subtitle = "Subtitle",
+                    onClick = {},
+                    style = style,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                enabled = false,
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-            )
+                HomesharingButton(
+                    title = "$name · disabled",
+                    subtitle = "Subtitle",
+                    enabled = false,
+                    onClick = {},
+                    style = style,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                loading = true,
-                onClick = {},
-                style = HomesharingButtonDefaults.secondary(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                enabled = false,
-                onClick = {},
-                style = HomesharingButtonDefaults.secondary(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                onClick = {},
-                style = HomesharingButtonDefaults.secondary(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                loading = true,
-                onClick = {},
-                style = HomesharingButtonDefaults.error(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                enabled = false,
-                onClick = {},
-                style = HomesharingButtonDefaults.error(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HomesharingButton(
-                title = "Button Text",
-                subtitle = "Subtitle",
-                onClick = {},
-                style = HomesharingButtonDefaults.error(),
-                modifier = Modifier.fillMaxWidth()
-            )
+                HomesharingButton(
+                    title = "$name · loading",
+                    subtitle = "Subtitle",
+                    loading = true,
+                    onClick = {},
+                    style = style,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
