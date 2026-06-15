@@ -21,6 +21,7 @@ internal fun homesharingTypography(): HomesharingTypography {
     val inter = interFamily()
     return HomesharingTypography(
         titleLarge = TitleLarge.copy(fontFamily = inter),
+        titleMedium = TitleMedium.copy(fontFamily = inter),
         titleSmall = TitleSmall.copy(fontFamily = inter),
         bodyMedium = BodyMedium.copy(fontFamily = inter),
         bodySmall = BodySmall.copy(fontFamily = inter),
@@ -32,6 +33,12 @@ internal val TitleLarge = TextStyle(
     fontWeight = FontWeight.W600,
     fontSize = 24.sp,
     lineHeight = 36.sp,
+)
+
+internal val TitleMedium = TextStyle(
+    fontWeight = FontWeight.W600,
+    fontSize = 20.sp,
+    lineHeight = 32.sp,
 )
 
 internal val TitleSmall = TextStyle(

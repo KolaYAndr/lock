@@ -7,6 +7,7 @@ import androidx.compose.ui.text.TextStyle
 @Immutable
 internal data class HomesharingTypography(
     val titleLarge: TextStyle,
+    val titleMedium: TextStyle,
     val titleSmall: TextStyle,
     val bodyMedium: TextStyle,
     val bodySmall: TextStyle,
@@ -16,6 +17,7 @@ internal data class HomesharingTypography(
 internal val LocalHomesharingTypography = staticCompositionLocalOf {
     HomesharingTypography(
         TitleLarge,
+        TitleMedium,
         TitleSmall,
         BodyMedium,
         BodySmall,
