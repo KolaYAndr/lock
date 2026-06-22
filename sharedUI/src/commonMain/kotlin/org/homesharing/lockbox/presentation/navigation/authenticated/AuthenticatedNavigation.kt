@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import org.homesharing.lockbox.presentation.flat_detailed.FlatDetailedScreen
 import org.homesharing.lockbox.presentation.navigation.navBackstackSaver
 import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
 import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
@@ -24,6 +25,8 @@ import org.homesharing.lockbox.presentation.guest_invitaion_flow.guest_invited.G
 import org.homesharing.lockbox.presentation.guest_invitaion_flow.invitation_details.GuestInvitationScreen
 import org.homesharing.lockbox.presentation.profile_flow.profile_setup.ProfileSetupScreen
 import org.homesharing.lockbox.presentation.profile_flow.role_chooser.RoleChooserScreen
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 internal fun HomesharingNavigation(
@@ -32,7 +35,7 @@ internal fun HomesharingNavigation(
     val backstack = rememberSaveable(
         saver = navBackstackSaver(AuthenticatedRoutes.serializer())
     ) {
-        mutableStateListOf(AuthenticatedRoutes.ProfileSetup)
+        mutableStateListOf(AuthenticatedRoutes.FlatDetailed("1234"))
     }
     NavDisplay(
         modifier = modifier,
@@ -158,6 +161,16 @@ internal fun HomesharingNavigation(
             }
             entry<AuthenticatedRoutes.InvitationSent> {
                 GuestInvitedScreen()
+            }
+            entry<AuthenticatedRoutes.FlatDetailed> { route ->
+                FlatDetailedScreen(
+                    viewModel = koinViewModel {
+                        parametersOf(route.flatId)
+                    },
+                    onNavBack = {
+                        backstack.removeLastOrNull()
+                    }
+                )
             }
         },
         backStack = backstack,

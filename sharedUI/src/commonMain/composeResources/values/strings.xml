@@ -90,4 +90,5 @@
     <string name="guest">Гость</string>
     <string name="sign_in">Войти</string>
     <string name="change_full">Изменить</string>
+    <string name="flat_info">Информация о помещении</string>
 </resources>

@@ -89,4 +89,5 @@
     <string name="guest">Guest</string>
     <string name="sign_in">Sign in</string>
     <string name="change_full">Change</string>
+    <string name="flat_info">Flat information</string>
 </resources>

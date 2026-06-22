@@ -4,31 +4,43 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal sealed interface AuthenticatedRoutes: NavKey {
+internal sealed interface AuthenticatedRoutes : NavKey {
     @Serializable
-    data object ProfileSetup: AuthenticatedRoutes
-    @Serializable
-    data object ChooseRole: AuthenticatedRoutes
+    data object ProfileSetup : AuthenticatedRoutes
 
     @Serializable
-    data object AddFlat: AuthenticatedRoutes
-    @Serializable
-    data object FlatAddress: AuthenticatedRoutes
-    @Serializable
-    data object FlatRooms: AuthenticatedRoutes
-    @Serializable
-    data object CheckFlatData: AuthenticatedRoutes
-    @Serializable
-    data object FlatCreated: AuthenticatedRoutes
+    data object ChooseRole : AuthenticatedRoutes
 
     @Serializable
-    data object GuestInfo: AuthenticatedRoutes
+    data object AddFlat : AuthenticatedRoutes
+
     @Serializable
-    data object GuestInvitation: AuthenticatedRoutes
+    data object FlatAddress : AuthenticatedRoutes
+
     @Serializable
-    data object CheckInSetup: AuthenticatedRoutes
+    data object FlatRooms : AuthenticatedRoutes
+
     @Serializable
-    data object CheckInvitation: AuthenticatedRoutes
+    data object CheckFlatData : AuthenticatedRoutes
+
     @Serializable
-    data object InvitationSent: AuthenticatedRoutes
+    data object FlatCreated : AuthenticatedRoutes
+
+    @Serializable
+    data object GuestInfo : AuthenticatedRoutes
+
+    @Serializable
+    data object GuestInvitation : AuthenticatedRoutes
+
+    @Serializable
+    data object CheckInSetup : AuthenticatedRoutes
+
+    @Serializable
+    data object CheckInvitation : AuthenticatedRoutes
+
+    @Serializable
+    data object InvitationSent : AuthenticatedRoutes
+
+    @Serializable
+    data class FlatDetailed(val flatId: String) : AuthenticatedRoutes
 }
