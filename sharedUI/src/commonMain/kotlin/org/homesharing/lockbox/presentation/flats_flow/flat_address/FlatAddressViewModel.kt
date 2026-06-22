@@ -1,13 +1,26 @@
 package org.homesharing.lockbox.presentation.flats_flow.flat_address
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.premise_type.PremiseType
+import org.homesharing.lockbox.domain.repository.FlatRepository
 
-internal class FlatAddressViewModel : ViewModel() {
+internal class FlatAddressViewModel(
+    private val repository: FlatRepository,
+) : ViewModel() {
     private val _flatAddress = MutableStateFlow(FlatAddress.Initial)
     val flatAddress = _flatAddress.asStateFlow()
+
+    private val _onSuccess = MutableSharedFlow<Unit>()
+    val onSuccess: SharedFlow<Unit> = _onSuccess.asSharedFlow()
 
     fun onIntent(intent: FlatAddressIntent) {
         when (intent) {
@@ -43,6 +56,41 @@ internal class FlatAddressViewModel : ViewModel() {
 
             is FlatAddressIntent.FlatTypeChanged ->
                 _flatAddress.update { it.copy(flatType = intent.value) }
+
+            is FlatAddressIntent.Proceed -> proceed()
+        }
+    }
+
+    private fun proceed() {
+        val current = _flatAddress.value
+        if (
+            current.city.isNotBlank() &&
+            current.street.isNotBlank() &&
+            current.number.isNotBlank() &&
+            current.name.isNotBlank() &&
+            current.flatType != null
+        ) {
+            viewModelScope.launch {
+                val response = repository.createFlat(
+                    name = current.name,
+                    premiseType = current.flatType,
+                    city = current.city,
+                    street = current.street,
+                    house = current.number,
+                    entrance = current.entrance,
+                    apartment = current.flatNumber,
+                    block = current.structure,
+                    building = current.building,
+                    litera = current.liter,
+                    comment = current.comment,
+                    livingArea = null,
+                    roomNames = emptyList(),
+                )
+
+                if (response is Response.Success) {
+                    _onSuccess.emit(Unit)
+                }
+            }
         }
     }
 }
@@ -58,12 +106,8 @@ internal data class FlatAddress(
     val liter: String,
     val comment: String,
     val name: String,
-    val flatType: FlatType?,
+    val flatType: PremiseType?,
 ) {
-    internal sealed interface FlatType {
-        data object Living : FlatType
-        data object Commercial : FlatType
-    }
 
     companion object {
         val Initial = FlatAddress(
@@ -93,5 +137,6 @@ internal sealed interface FlatAddressIntent {
     data class LiterChanged(val value: String) : FlatAddressIntent
     data class CommentChanged(val value: String) : FlatAddressIntent
     data class NameChanged(val value: String) : FlatAddressIntent
-    data class FlatTypeChanged(val value: FlatAddress.FlatType?) : FlatAddressIntent
+    data class FlatTypeChanged(val value: PremiseType) : FlatAddressIntent
+    data object Proceed : FlatAddressIntent
 }

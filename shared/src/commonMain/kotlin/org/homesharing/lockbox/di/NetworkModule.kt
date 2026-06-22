@@ -3,11 +3,9 @@ package org.homesharing.lockbox.di
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.AccountApi
-import org.homesharing.lockbox.data.network.api.BoxesApi
-import org.homesharing.lockbox.data.network.api.DocumentsApi
-import org.homesharing.lockbox.data.network.api.LockBoxAccountApi
-import org.homesharing.lockbox.data.network.api.LockBoxBoxesApi
-import org.homesharing.lockbox.data.network.api.LockBoxDocumentsApi
+import org.homesharing.lockbox.data.network.api.AccountApiImpl
+import org.homesharing.lockbox.data.network.api.FlatApi
+import org.homesharing.lockbox.data.network.api.FlatApiImpl
 import org.homesharing.lockbox.data.network.client.createNetworkClient
 import org.homesharing.lockbox.data.network.client.networkEngine
 import org.homesharing.lockbox.data.network.token.TokenStorage
@@ -16,16 +14,12 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val networkModule = module {
-    singleOf(::LockBoxAccountApi) {
+    singleOf(::AccountApiImpl) {
         bind<AccountApi>()
     }
 
-    singleOf(::LockBoxBoxesApi) {
-        bind<BoxesApi>()
-    }
-
-    singleOf(::LockBoxDocumentsApi) {
-        bind<DocumentsApi>()
+    singleOf(::FlatApiImpl) {
+        bind<FlatApi>()
     }
 
     single<HttpClient> {

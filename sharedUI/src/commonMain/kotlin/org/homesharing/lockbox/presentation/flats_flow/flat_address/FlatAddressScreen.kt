@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.address
@@ -62,6 +63,8 @@ import lockbox.sharedui.generated.resources.placeholder_number
 import lockbox.sharedui.generated.resources.placeholder_street
 import lockbox.sharedui.generated.resources.placeholder_structure
 import lockbox.sharedui.generated.resources.proceed
+import org.homesharing.lockbox.domain.model.premise_type.PremiseType
+import org.homesharing.lockbox.presentation.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.composable.pickable.HomesharingPickableItem
@@ -75,10 +78,16 @@ internal fun FlatAddressScreen(
     onNavBack: () -> Unit,
 ) {
     val flatAddress by viewModel.flatAddress.collectAsStateWithLifecycle()
+
+    ActionOnSharedFlow(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        flow = viewModel.onSuccess,
+        onFlowCollected = { onProceed() }
+    )
+
     FlatAddressScreen(
         flatAddress = flatAddress,
         onIntent = viewModel::onIntent,
-        onProceed = onProceed,
         onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize()
     )
@@ -89,7 +98,6 @@ internal fun FlatAddressScreen(
 private fun FlatAddressScreen(
     flatAddress: FlatAddress,
     onIntent: (FlatAddressIntent) -> Unit,
-    onProceed: () -> Unit,
     onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -424,9 +432,9 @@ private fun FlatAddressScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_house),
                 title = stringResource(Res.string.living),
-                isSelected = flatAddress.flatType == FlatAddress.FlatType.Living,
+                isSelected = flatAddress.flatType == PremiseType.RESIDENTIAL,
                 onClick = {
-                    onIntent(FlatAddressIntent.FlatTypeChanged(FlatAddress.FlatType.Living))
+                    onIntent(FlatAddressIntent.FlatTypeChanged(PremiseType.RESIDENTIAL))
                 },
                 modifier = Modifier.weight(1f),
                 role = Role.RadioButton
@@ -435,9 +443,9 @@ private fun FlatAddressScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_commercial),
                 title = stringResource(Res.string.commercial),
-                isSelected = flatAddress.flatType == FlatAddress.FlatType.Commercial,
+                isSelected = flatAddress.flatType == PremiseType.NON_RESIDENTIAL,
                 onClick = {
-                    onIntent(FlatAddressIntent.FlatTypeChanged(FlatAddress.FlatType.Commercial))
+                    onIntent(FlatAddressIntent.FlatTypeChanged(PremiseType.NON_RESIDENTIAL))
                 },
                 modifier = Modifier.weight(1f),
                 role = Role.RadioButton
@@ -446,7 +454,7 @@ private fun FlatAddressScreen(
 
         HomesharingButton(
             title = stringResource(Res.string.proceed),
-            onClick = onProceed,
+            onClick = { onIntent(FlatAddressIntent.Proceed) },
             enabled = flatAddress.city.isNotBlank() &&
                     flatAddress.street.isNotBlank() &&
                     flatAddress.number.isNotBlank() &&
@@ -468,7 +476,6 @@ private fun PreviewFlatAddressScreen() {
         FlatAddressScreen(
             flatAddress = FlatAddress.Initial,
             onIntent = {},
-            onProceed = {},
             onNavBack = {},
             modifier = Modifier.fillMaxSize(),
         )
