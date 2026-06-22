@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.homesharing.lockbox.data.network.api.FlatApi
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
-import org.homesharing.lockbox.data.network.dto.premise_type.PremiseTypeDto
 import org.homesharing.lockbox.data.network.dto.room.RoomDto
 import org.homesharing.lockbox.data.repository.paging.FlatPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
@@ -98,6 +97,46 @@ internal class FlatRepositoryImpl(
 
         return parseLockboxApiResponse(
             apiCall = { api.createFlat(request) },
+            mapper = { it.toDomain() }
+        )
+    }
+
+    override suspend fun updateFlat(
+        id: String,
+        name: String,
+        premiseType: PremiseType,
+        city: String,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        apartment: String?,
+        block: String?,
+        building: String?,
+        litera: String?,
+        comment: String?,
+        livingArea: Double?,
+        roomNames: List<String>
+    ): Response<Flat> {
+        val request = CreateFlatRequestDto(
+            name = name,
+            premiseType = premiseType.toDto(),
+            address = CreateFlatRequestDto.AddressRequestDto(
+                city = city,
+                street = street,
+                house = house,
+                entrance = entrance,
+                apartment = apartment,
+                block = block,
+                building = building,
+                litera = litera,
+                comment = comment,
+            ),
+            livingArea = livingArea,
+            rooms = roomNames.map { RoomDto(name = it, position = null) }
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.updateFlat(id, request) },
             mapper = { it.toDomain() }
         )
     }

@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.api
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
@@ -20,6 +21,8 @@ private const val FLATS = "flats"
 // API arguments
 private const val CURSOR = "cursor"
 private const val LIMIT = "limit"
+private const val INCLUDE = "include"
+private const val INVITES = "invites"
 
 // API url
 private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
@@ -27,7 +30,7 @@ private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
 internal class FlatApiImpl(
     private val client: HttpClient,
     private val json: Json,
-): FlatApi {
+) : FlatApi {
     override suspend fun getFlats(
         limit: Int,
         cursor: String?
@@ -39,13 +42,28 @@ internal class FlatApiImpl(
         }.toApiResponse<FlatListDto>(json)
     }
 
-    override suspend fun getFlat(id: String): ApiResponse<FlatDto> {
-        TODO("Not yet implemented")
+    override suspend fun getFlat(
+        id: String,
+        includeInvites: Boolean
+    ): ApiResponse<FlatDto> {
+        return client.get {
+            if (includeInvites) {
+                parameter(INCLUDE, INVITES)
+            }
+            url("$FLATS_URL/$id")
+        }.toApiResponse<FlatDto>(json)
     }
 
     override suspend fun createFlat(request: CreateFlatRequestDto): ApiResponse<FlatDto> {
         return client.post {
             url(FLATS_URL)
+            setBody(request)
+        }.toApiResponse<FlatDto>(json)
+    }
+
+    override suspend fun updateFlat(id: String, request: CreateFlatRequestDto): ApiResponse<FlatDto> {
+        return client.patch {
+            url("$FLATS_URL/$id")
             setBody(request)
         }.toApiResponse<FlatDto>(json)
     }

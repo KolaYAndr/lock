@@ -13,9 +13,15 @@ internal interface FlatApi {
 
     suspend fun getFlat(
         id: String,
+        includeInvites: Boolean = false,
     ): ApiResponse<FlatDto>
 
     suspend fun createFlat(
+        request: CreateFlatRequestDto,
+    ): ApiResponse<FlatDto>
+
+    suspend fun updateFlat(
+        id: String,
         request: CreateFlatRequestDto,
     ): ApiResponse<FlatDto>
 }

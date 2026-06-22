@@ -34,4 +34,21 @@ interface FlatRepository {
         livingArea: Double?,
         roomNames: List<String>
     ): Response<Flat>
+
+    suspend fun updateFlat(
+        id: String,
+        name: String,
+        premiseType: PremiseType,
+        city: String,
+        street: String?,
+        house: String?,
+        entrance: String?,
+        apartment: String?,
+        block: String?,
+        building: String?,
+        litera: String?,
+        comment: String?,
+        livingArea: Double?,
+        roomNames: List<String>
+    ): Response<Flat>
 }

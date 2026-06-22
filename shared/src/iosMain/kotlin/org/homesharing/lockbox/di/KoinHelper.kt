@@ -15,5 +15,4 @@ fun initKoin() {
 object KoinHelper : KoinComponent {
     fun getAuthRepository(): AuthRepository = get()
     fun getAccountRepository(): AccountRepository = get()
-    fun getBoxesRepository(): BoxesRepository = get()
 }
