@@ -2,6 +2,7 @@ package org.homesharing.lockbox.di
 
 import org.homesharing.lockbox.presentation.LockboxAppViewModel
 import org.homesharing.lockbox.presentation.flat_detailed.FlatDetailedViewModel
+import org.homesharing.lockbox.presentation.flat_list.FlatListViewModel
 import org.homesharing.lockbox.presentation.flats_flow.add_or_import_flat.AddFlatViewModel
 import org.homesharing.lockbox.presentation.flats_flow.flat_address.FlatAddressViewModel
 import org.homesharing.lockbox.presentation.flats_flow.flat_data.FlatDataViewModel
@@ -30,4 +31,5 @@ val viewModelModule = module {
     viewModelOf(::CheckInvitationViewModel)
     viewModelOf(::LockboxAppViewModel)
     viewModelOf(::FlatDetailedViewModel)
+    viewModelOf(::FlatListViewModel)
 }

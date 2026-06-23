@@ -43,4 +43,7 @@ internal sealed interface AuthenticatedRoutes : NavKey {
 
     @Serializable
     data class FlatDetailed(val flatId: String) : AuthenticatedRoutes
+
+    @Serializable
+    data object FlatList : AuthenticatedRoutes
 }

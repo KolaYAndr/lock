@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import org.homesharing.lockbox.presentation.flat_detailed.FlatDetailedScreen
+import org.homesharing.lockbox.presentation.flat_list.FlatListScreen
 import org.homesharing.lockbox.presentation.navigation.navBackstackSaver
 import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
 import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
@@ -35,7 +36,7 @@ internal fun HomesharingNavigation(
     val backstack = rememberSaveable(
         saver = navBackstackSaver(AuthenticatedRoutes.serializer())
     ) {
-        mutableStateListOf(AuthenticatedRoutes.FlatDetailed("1234"))
+        mutableStateListOf(AuthenticatedRoutes.FlatList)
     }
     NavDisplay(
         modifier = modifier,
@@ -169,6 +170,15 @@ internal fun HomesharingNavigation(
                     },
                     onNavBack = {
                         backstack.removeLastOrNull()
+                    }
+                )
+            }
+            entry<AuthenticatedRoutes.FlatList> {
+                FlatListScreen(
+                    onNavigateToDetails = { id ->
+                        backstack.add(
+                            AuthenticatedRoutes.FlatDetailed(id)
+                        )
                     }
                 )
             }

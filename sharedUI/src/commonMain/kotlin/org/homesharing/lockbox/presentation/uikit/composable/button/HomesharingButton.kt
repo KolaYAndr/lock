@@ -89,6 +89,7 @@ internal fun HomesharingButton(
                 text = title,
                 color = if (enabled) style.titleColor else style.disabledTitleColor,
                 style = HomesharingTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
 
             subtitle?.let {
