@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -31,6 +32,7 @@ import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.ic_flat
 import lockbox.sharedui.generated.resources.living
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
+import org.homesharing.lockbox.presentation.uikit.composable.refresh.HomesharingPullToRefreshBox
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -45,6 +47,7 @@ internal fun FlatDetailedScreen(
 
     FlatDetailedScreen(
         state = flatDetailedState,
+        onIntent = viewModel::onIntent,
         onNavBack = onNavBack,
         modifier = Modifier.fillMaxSize()
     )
@@ -53,6 +56,7 @@ internal fun FlatDetailedScreen(
 @Composable
 private fun FlatDetailedScreen(
     state: FlatDetailedUiState,
+    onIntent: (FlatDetailedIntent) -> Unit,
     onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,76 +64,93 @@ private fun FlatDetailedScreen(
         state.loading -> {
             LoadingScreen(modifier = modifier)
         }
+
         state.error -> {
             ErrorScreen(modifier = modifier)
         }
 
         else -> {
-            Column(
-                modifier = modifier.background(HomesharingTheme.colors.white),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+            HomesharingPullToRefreshBox(
+                isRefreshing = false,
+                onRefresh = { onIntent(FlatDetailedIntent.Refresh) },
+                modifier = modifier.background(HomesharingTheme.colors.white)
             ) {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(Res.string.flat_info),
-                            style = HomesharingTheme.typography.bodyMedium,
+                LazyColumn(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    item {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(
+                                    text = stringResource(Res.string.flat_info),
+                                    style = HomesharingTheme.typography.bodyMedium,
+                                )
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = HomesharingTheme.colors.white,
+                                titleContentColor = HomesharingTheme.colors.black,
+                            ),
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = onNavBack,
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
+                                    )
+                                ) {
+                                    Icon(
+                                        painter = painterResource(Res.drawable.ic_chevron_left),
+                                        contentDescription = null,
+                                    )
+                                }
+                            },
+                            modifier = Modifier.statusBarsPadding()
                         )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = HomesharingTheme.colors.white,
-                        titleContentColor = HomesharingTheme.colors.black,
-                    ),
-                    navigationIcon = {
-                        IconButton(
-                            onClick = onNavBack,
-                            colors = IconButtonDefaults.iconButtonColors(
-                                contentColor = HomesharingTheme.colors.black.copy(alpha = .5f)
-                            )
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_chevron_left),
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                    modifier = Modifier.statusBarsPadding()
-                )
+                    }
 
-                Image(
-                    painter = painterResource(Res.drawable.ic_flat),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(200.dp)
-                        .padding(top = 16.dp),
-                )
+                    item {
+                        Image(
+                            painter = painterResource(Res.drawable.ic_flat),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(200.dp)
+                                .padding(top = 16.dp),
+                        )
+                    }
 
-                Text(
-                    text = when (state.premiseType) {
-                        PremiseType.RESIDENTIAL -> stringResource(Res.string.living)
-                        PremiseType.NON_RESIDENTIAL -> stringResource(Res.string.commercial)
-                    },
-                    style = HomesharingTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(top = 24.dp)
-                        .padding(horizontal = 16.dp),
-                    color = HomesharingTheme.colors.black.copy(alpha = .3f)
-                )
+                    item {
+                        Text(
+                            text = when (state.premiseType) {
+                                PremiseType.RESIDENTIAL -> stringResource(Res.string.living)
+                                PremiseType.NON_RESIDENTIAL -> stringResource(Res.string.commercial)
+                            },
+                            style = HomesharingTheme.typography.bodySmall,
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                                .padding(horizontal = 16.dp),
+                            color = HomesharingTheme.colors.black.copy(alpha = .3f)
+                        )
+                    }
 
-                Text(
-                    text = state.name,
-                    style = HomesharingTheme.typography.titleLarge,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+                    item {
+                        Text(
+                            text = state.name,
+                            style = HomesharingTheme.typography.titleLarge,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
 
-                Text(
-                    text = state.address,
-                    style = HomesharingTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .padding(horizontal = 16.dp)
-                )
+
+                    item {
+                        Text(
+                            text = state.address,
+                            style = HomesharingTheme.typography.bodyMedium,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -171,6 +192,7 @@ private fun PreviewFlatDetailedScreen() {
     HomesharingTheme {
         FlatDetailedScreen(
             state = FlatDetailedUiState.Initial,
+            onIntent = {},
             onNavBack = {},
             modifier = Modifier.fillMaxSize()
         )

@@ -2,9 +2,12 @@ package org.homesharing.lockbox.presentation.flat_detailed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.repository.FlatRepository
@@ -16,15 +19,25 @@ internal class FlatDetailedViewModel(
     private val flatRepository: FlatRepository,
 ) : ViewModel() {
     val flat = flow {
-        val state = when (val response = flatRepository.getFlat(id)) {
+        val state = loadState()
+        emit(state)
+
+        refreshListener.collect {
+            emit(FlatDetailedUiState.Initial)
+            emit(loadState())
+        }
+    }
+        .distinctUntilChanged()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(SUBSCRIPTION_THRESHOLD),
+            FlatDetailedUiState.Initial
+        )
+
+    private suspend fun loadState(): FlatDetailedUiState =
+        when (val response = flatRepository.getFlat(id)) {
             is Response.Failure -> {
-                FlatDetailedUiState(
-                    name = "",
-                    address = "",
-                    premiseType = PremiseType.RESIDENTIAL,
-                    loading = false,
-                    error = true,
-                )
+                FlatDetailedUiState.Failed
             }
 
             is Response.Success -> {
@@ -37,12 +50,22 @@ internal class FlatDetailedViewModel(
                 )
             }
         }
-        emit(state)
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(SUBSCRIPTION_THRESHOLD),
-        FlatDetailedUiState.Initial
-    )
+
+    private val refreshListener = MutableSharedFlow<Unit>()
+
+    fun onIntent(intent: FlatDetailedIntent) {
+        when (intent) {
+            FlatDetailedIntent.Refresh -> {
+                viewModelScope.launch {
+                    refreshListener.emit(Unit)
+                }
+            }
+        }
+    }
+}
+
+internal sealed interface FlatDetailedIntent {
+    object Refresh : FlatDetailedIntent
 }
 
 internal data class FlatDetailedUiState(
@@ -59,6 +82,14 @@ internal data class FlatDetailedUiState(
             premiseType = PremiseType.RESIDENTIAL,
             loading = true,
             error = false,
+        )
+
+        val Failed = FlatDetailedUiState(
+            name = "",
+            address = "",
+            premiseType = PremiseType.RESIDENTIAL,
+            loading = false,
+            error = true,
         )
     }
 }
