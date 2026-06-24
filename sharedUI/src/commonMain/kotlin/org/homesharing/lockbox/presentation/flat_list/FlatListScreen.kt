@@ -168,6 +168,7 @@ private fun ErrorItem(
             style = HomesharingTheme.typography.bodySmall,
             color = HomesharingTheme.colors.black
         )
+
         HomesharingButton(
             title = "Повторить",
             onClick = onRetry,
