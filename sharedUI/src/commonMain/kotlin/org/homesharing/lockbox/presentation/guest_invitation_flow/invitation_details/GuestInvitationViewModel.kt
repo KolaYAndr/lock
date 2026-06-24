@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.guest_invitaion_flow.invitation_details
+package org.homesharing.lockbox.presentation.guest_invitation_flow.invitation_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

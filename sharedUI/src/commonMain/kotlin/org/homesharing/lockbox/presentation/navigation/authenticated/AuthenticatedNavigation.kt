@@ -19,11 +19,11 @@ import org.homesharing.lockbox.presentation.flats_flow.flat_address.FlatAddressS
 import org.homesharing.lockbox.presentation.flats_flow.flat_created.FlatCreatedScreen
 import org.homesharing.lockbox.presentation.flats_flow.flat_data.FlatDataScreen
 import org.homesharing.lockbox.presentation.flats_flow.flat_rooms.FlatRoomsScreen
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.check_in_setup.CheckInSetupScreen
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.check_invitation.CheckInvitationScreen
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.guest_info.GuestInfoScreen
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.guest_invited.GuestInvitedScreen
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.invitation_details.GuestInvitationScreen
+import org.homesharing.lockbox.presentation.guest_invitation_flow.check_in_setup.CheckInSetupScreen
+import org.homesharing.lockbox.presentation.guest_invitation_flow.check_invitation.CheckInvitationScreen
+import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_info.GuestInfoScreen
+import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_invited.GuestInvitedScreen
+import org.homesharing.lockbox.presentation.guest_invitation_flow.invitation_details.GuestInvitationScreen
 import org.homesharing.lockbox.presentation.profile_flow.profile_setup.ProfileSetupScreen
 import org.homesharing.lockbox.presentation.profile_flow.role_chooser.RoleChooserScreen
 import org.koin.compose.viewmodel.koinViewModel

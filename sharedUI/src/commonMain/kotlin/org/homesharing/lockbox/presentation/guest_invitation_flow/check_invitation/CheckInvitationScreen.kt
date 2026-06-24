@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.guest_invitaion_flow.check_invitation
+package org.homesharing.lockbox.presentation.guest_invitation_flow.check_invitation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

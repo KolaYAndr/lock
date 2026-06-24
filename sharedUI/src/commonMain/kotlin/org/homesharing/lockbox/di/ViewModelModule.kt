@@ -7,10 +7,10 @@ import org.homesharing.lockbox.presentation.flats_flow.add_or_import_flat.AddFla
 import org.homesharing.lockbox.presentation.flats_flow.flat_address.FlatAddressViewModel
 import org.homesharing.lockbox.presentation.flats_flow.flat_data.FlatDataViewModel
 import org.homesharing.lockbox.presentation.flats_flow.flat_rooms.FlatRoomsViewModel
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.check_in_setup.CheckInViewModel
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.check_invitation.CheckInvitationViewModel
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.guest_info.GuestInfoViewModel
-import org.homesharing.lockbox.presentation.guest_invitaion_flow.invitation_details.GuestInvitationViewModel
+import org.homesharing.lockbox.presentation.guest_invitation_flow.check_in_setup.CheckInViewModel
+import org.homesharing.lockbox.presentation.guest_invitation_flow.check_invitation.CheckInvitationViewModel
+import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_info.GuestInfoViewModel
+import org.homesharing.lockbox.presentation.guest_invitation_flow.invitation_details.GuestInvitationViewModel
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.profile_flow.profile_setup.ProfileSetupViewModel
 import org.homesharing.lockbox.presentation.profile_flow.role_chooser.RoleChooserViewModel

@@ -1,9 +1,9 @@
-# Project: Lockbox (Home Sharing)
+# Project: Lockbox (Homesharing)
 
 ## Overview
 
-Lockbox is a multiplatform application for secure data storage, part of the "Home Sharing"
-ecosystem. It is built with **Kotlin Multiplatform (KMP)** and **Compose Multiplatform**,
+Lockbox is a multiplatform application for secure data storage, part of the "Homesharing"
+ecosystem. It is built with **Kotlin Multiplatform** and **Compose Multiplatform**,
 targeting Android, iOS, and Desktop (JVM).
 
 ## Project Structure
@@ -19,7 +19,8 @@ targeting Android, iOS, and Desktop (JVM).
       OkHttp engine, Android `PlatformModule`).
     - `iosMain/`: iOS implementations (Darwin Ktor engine, Keychain-backed `TokenStorage`,
       `KoinHelper` for Swift interop).
-    - `jvmMain/`: Desktop platform module.
+    - `jvmMain/`: Desktop platform module (JVM Ktor engine, DataStore-backed `TokenStorage`
+      under `~/.lockbox/`, desktop `PlatformModule`).
 - `sharedUI/`: Cross-platform Compose UI module — screens, ViewModels, navigation, theme, and the
   reusable UI kit. Consumed by `androidApp` and `desktopApp`; iOS uses its own SwiftUI surface.
 
@@ -27,41 +28,51 @@ targeting Android, iOS, and Desktop (JVM).
 
 - `login/` — authentication entry.
 - `flats_flow/` — add/import flat, address, data, rooms, created confirmation.
-- `guest_invitaion_flow/` — invitation check, details, check-in setup, guest info, invited state.
+- `flat_list/` — paginated list of flats (`FlatListScreen` + `FlatListViewModel`).
+- `flat_detailed/` — single flat detail view (`FlatDetailedScreen` + `FlatDetailedViewModel`).
+- `guest_invitation_flow/` — invitation check, details, check-in setup, guest info, invited state.
 - `profile_flow/` — role chooser, profile setup.
-- `uikit/` — shared composables (buttons, chips, inputs, pickers, date picker, checkboxes),
-  theme (colors, typography, shapes), animations, and modifiers.
+- `uikit/` — shared composables (buttons, chips, inputs, pickers, date picker, checkboxes,
+  pull-to-refresh, editable/property containers), theme (colors, typography, shapes), animations,
+  and modifiers.
 - `navigation/` — Navigation3 graphs split into `login/` (unauthenticated) and `authenticated/`.
 
 ## Tech Stack
 
-- **Language**: Kotlin 2.3.21 (multiplatform).
-- **UI**: Compose Multiplatform 1.11.0 (shared across Android/Desktop) + SwiftUI on iOS.
+- **Language**: Kotlin 2.4.0 (multiplatform).
+- **UI**: Compose Multiplatform 1.11.1 (shared across Android/Desktop) + SwiftUI on iOS.
 - **Navigation**: AndroidX Navigation3 (1.1.1 — pinned, do not bump to 2.10.0) with Jetbrains
-  lifecycle-viewmodel-navigation3.
+  lifecycle-viewmodel-navigation3 (2.11.0).
 - **Networking**: Ktor 3.5.0 (OkHttp on Android, Darwin on iOS), `kotlinx.serialization` JSON,
   content negotiation, logging, and auth plugins.
 - **Concurrency**: Kotlin Coroutines & Flow 1.11.0 (kotlinx-coroutines-swing on Desktop).
-- **DI**: Koin 4.2.1 (`koin-core`, `koin-compose`, `koin-compose-viewmodel`, `koin-android`).
-- **Paging**: AndroidX Paging 3.5.0 (used in `BoxesPagingSource`, `ContractsPagingSource`).
+- **DI**: Koin 4.2.2 (`koin-core`, `koin-compose`, `koin-compose-viewmodel`, `koin-android`).
+- **Paging**: AndroidX Paging 3.5.0 (used in `FlatPagingSource`).
 - **Persistence**: AndroidX DataStore Preferences 1.2.1.
-- **Image loading**: Coil 3.4.0 with Ktor3 network fetcher.
+- **Image loading**: Coil 3.5.0 with Ktor3 network fetcher.
 - **Dates**: `kotlinx-datetime` 0.8.0.
 - **Security**:
     - Android: AES/GCM/NoPadding via Android Keystore (`LockboxCipher`). StrongBox-preferred with
       fallback to standard TEE/SE.
     - iOS: Keychain-backed `TokenStorage`.
+    - Desktop (JVM): `TokenStorage` backed by DataStore Preferences in `~/.lockbox/` (no OS-level
+      keystore encryption).
 - **Build**: Gradle Kotlin DSL with version catalog (`gradle/libs.versions.toml`); AGP 9.2.1,
   `minSdk` 26, `compileSdk`/`targetSdk` 37; typesafe project accessors enabled.
 
 ## Key Components
 
 - `LockboxCipher` (Android): AES/GCM encryption via Keystore for sensitive blobs.
-- `TokenStorage` (common interface + `android`/`ios` implementations): persists access/refresh
-  tokens.
+- `TokenStorage` (common interface + `android`/`ios`/`jvm` implementations): persists access/refresh
+  tokens. Desktop (`TokenStorage.jvm.kt`) uses DataStore Preferences stored under `~/.lockbox/`.
 - `NetworkClient` (common + platform variants): Ktor client with auth and refresh wiring.
 - Repositories (in `data/repository/`): `AuthRepositoryImpl`, `AccountRepositoryImpl`,
-  `BoxesRepositoryImpl`, `DocumentsRepositoryImpl`, fulfilling interfaces in `domain/repository/`.
+  `FlatRepositoryImpl`, fulfilling interfaces in `domain/repository/` (`AuthRepository`,
+  `AccountRepository`, `FlatRepository`). `FlatPagingSource` (in `data/repository/paging/`) backs
+  the paged flat list.
+- Network APIs (in `data/network/api/`): `AccountApi`/`AccountApiImpl`, `FlatApi`/`FlatApiImpl`
+  (internal `*Api` interface + `*ApiImpl`), with shared response wrappers `ApiResponse`/`AuthResponse`
+  under `api/response/`.
 - Koin modules: `NetworkModule`, `RepositoryModule`, `PlatformModule` (expect/actual),
   `SharedAppModules` in `shared`; `ViewModelModule` + `Koin.kt` in `sharedUI`.
 - `LockboxAppViewModel` + `LockboxApp` composable: app-level state and routing between login and
@@ -83,12 +94,25 @@ targeting Android, iOS, and Desktop (JVM).
    new ad-hoc widgets or hard-coded colors/typography.
 5. **Security**: When touching `LockboxCipher`, always handle `StrongBoxUnavailableException` and
    fall back to the standard Keystore path. Don't log token material or cipher input/output.
-6. **Networking**: Add new endpoints as interfaces under `data/network/api/` (with a
-   `LockBox*Api` implementation) and surface them through a repository — don't call Ktor directly
-   from ViewModels. Define DTOs under `data/network/dto/<feature>/` and map them into
-   `domain/model/`.
+6. **Networking**: Add new endpoints as an internal `*Api` interface under `data/network/api/`
+   (with a `*ApiImpl` implementation) and surface them through a repository — don't call Ktor
+   directly from ViewModels. Define DTOs under `data/network/dto/<feature>/` and map them into
+   `domain/model/<feature>/` via `*DtoToDomain`/`*DomainToDto` mappers.
 7. **Strings & resources**: Prefer Compose Multiplatform resources in `sharedUI` for shared UI
    strings; use platform resources (Android `res/`, iOS `Localizable.xcstrings`) only for content
    that lives in those targets.
-8. **Testing**: Add tests for shared logic in `shared/src/commonTest` (and `sharedUI/src/commonTest`
-   for UI logic) so they run on every target.
+8. **Testing**: There is currently no test suite in the project (no `commonTest`/`*Test` source
+   sets). If you add tests, place shared-logic tests in `shared/src/commonTest` and UI-logic tests
+   in `sharedUI/src/commonTest` so they run on every target, and wire up the kotlin-test
+   dependencies in the corresponding `build.gradle.kts`.
+
+## Build & Run
+
+- **Android (debug APK)**: `./gradlew :androidApp:assembleDebug`
+- **Android (install on device/emulator)**: `./gradlew :androidApp:installDebug`
+- **Desktop (JVM)**: `./gradlew :desktopApp:run`
+- **iOS**: open `iosApp/iosApp.xcworkspace` in Xcode and run, or build the framework via the
+  KMP Gradle tasks.
+- **Compile checks**: `./gradlew :shared:compileKotlinMetadata`, `./gradlew :sharedUI:compileKotlinJvm`.
+- Configuration lives in `local.properties` (SDK path) and `gradle.properties`. Dependency
+  versions are centralized in `gradle/libs.versions.toml`.
