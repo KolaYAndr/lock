@@ -90,4 +90,8 @@
     <string name="sign_in">Sign in</string>
     <string name="change_full">Change</string>
     <string name="flat_info">Flat information</string>
+    <string name="failed_to_load_flat_info">Failed to load flat information</string>
+    <string name="failed_to_load_flats">Failed to load flats</string>
+    <string name="failed_to_load_more_flats">Failed to load more flats</string>
+    <string name="retry">Retry</string>
 </resources>

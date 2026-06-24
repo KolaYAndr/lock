@@ -29,13 +29,17 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.flowOf
 import lockbox.sharedui.generated.resources.Res
+import lockbox.sharedui.generated.resources.failed_to_load_flats
+import lockbox.sharedui.generated.resources.failed_to_load_more_flats
 import lockbox.sharedui.generated.resources.ic_flat
+import lockbox.sharedui.generated.resources.retry
 import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.refresh.HomesharingPullToRefreshBox
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -103,7 +107,6 @@ private fun FlatDetailedScreen(
 private fun LoadingScreen(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .fillMaxSize()
             .background(HomesharingTheme.colors.white),
         contentAlignment = Alignment.Center,
     ) {
@@ -118,19 +121,18 @@ private fun ErrorScreen(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
             .background(HomesharingTheme.colors.white)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
     ) {
         Text(
-            text = "Не удалось загрузить квартиры",
+            text = stringResource(Res.string.failed_to_load_flats),
             style = HomesharingTheme.typography.bodyMedium,
             color = HomesharingTheme.colors.black,
         )
         HomesharingButton(
-            title = "Повторить",
+            title = stringResource(Res.string.retry),
             onClick = onRetry,
         )
     }
@@ -164,13 +166,13 @@ private fun ErrorItem(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Не удалось загрузить больше квартир",
+            text = stringResource(Res.string.failed_to_load_more_flats),
             style = HomesharingTheme.typography.bodySmall,
             color = HomesharingTheme.colors.black
         )
 
         HomesharingButton(
-            title = "Повторить",
+            title = stringResource(Res.string.retry),
             onClick = onRetry,
 
         )
