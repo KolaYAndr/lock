@@ -17,8 +17,8 @@ targeting Android, iOS, and Desktop (JVM).
       token storage interfaces, Koin modules).
     - `androidMain/`: Android-specific implementations (`LockboxCipher` with Android Keystore,
       OkHttp engine, Android `PlatformModule`).
-    - `iosMain/`: iOS implementations (Darwin Ktor engine, Keychain-backed `TokenStorage`,
-      `KoinHelper` for Swift interop).
+    - `iosMain/`: iOS implementations (Darwin Ktor engine, Keychain-backed `TokenStorage` via the
+      `Keychain` Security-framework wrapper, `KoinHelper` for Swift interop).
     - `jvmMain/`: Desktop platform module (JVM Ktor engine, DataStore-backed `TokenStorage`
       under `~/.lockbox/`, desktop `PlatformModule`).
 - `sharedUI/`: Cross-platform Compose UI module — screens, ViewModels, navigation, theme, and the
@@ -54,17 +54,22 @@ targeting Android, iOS, and Desktop (JVM).
 - **Security**:
     - Android: AES/GCM/NoPadding via Android Keystore (`LockboxCipher`). StrongBox-preferred with
       fallback to standard TEE/SE.
-    - iOS: Keychain-backed `TokenStorage`.
-    - Desktop (JVM): `TokenStorage` backed by DataStore Preferences in `~/.lockbox/` (no OS-level
-      keystore encryption).
+    - iOS: Keychain-backed `TokenStorage` (`Keychain` wraps the Security framework; generic-password
+      items with `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` — device-only, not synced/backed up).
+    - Desktop (JVM): AES/GCM/NoPadding via `LockboxCipher` (256-bit key in a JCEKS keystore file
+      under `~/.lockbox/`, restricted to owner-only `600`). Tokens are stored encrypted in
+      DataStore Preferences. Not hardware-backed — the key lives on disk, unlike Android/iOS.
 - **Build**: Gradle Kotlin DSL with version catalog (`gradle/libs.versions.toml`); AGP 9.2.1,
   `minSdk` 26, `compileSdk`/`targetSdk` 37; typesafe project accessors enabled.
 
 ## Key Components
 
-- `LockboxCipher` (Android): AES/GCM encryption via Keystore for sensitive blobs.
 - `TokenStorage` (common interface + `android`/`ios`/`jvm` implementations): persists access/refresh
-  tokens. Desktop (`TokenStorage.jvm.kt`) uses DataStore Preferences stored under `~/.lockbox/`.
+  tokens. Android & desktop store them encrypted (`LockboxCipher`) in DataStore Preferences
+  (desktop under `~/.lockbox/`); iOS stores them in the Keychain via the `Keychain` wrapper.
+- `LockboxCipher`: AES/GCM encryption. Android backs the key with the Android Keystore
+  (StrongBox-preferred); desktop (`LockboxCipher.jvm.kt`) keeps the key in an owner-only JCEKS
+  keystore file under `~/.lockbox/`.
 - `NetworkClient` (common + platform variants): Ktor client with auth and refresh wiring.
 - Repositories (in `data/repository/`): `AuthRepositoryImpl`, `AccountRepositoryImpl`,
   `FlatRepositoryImpl`, fulfilling interfaces in `domain/repository/` (`AuthRepository`,
@@ -92,8 +97,10 @@ targeting Android, iOS, and Desktop (JVM).
 4. **UI kit first**: Reuse composables under `presentation/uikit/composable/` (buttons, inputs,
    chips, pickers, date picker, etc.) and theme tokens from `uikit/theme/` rather than introducing
    new ad-hoc widgets or hard-coded colors/typography.
-5. **Security**: When touching `LockboxCipher`, always handle `StrongBoxUnavailableException` and
-   fall back to the standard Keystore path. Don't log token material or cipher input/output.
+5. **Security**: `LockboxCipher` has per-platform implementations (Android Keystore, desktop JCEKS).
+   On Android, always handle `StrongBoxUnavailableException` and fall back to the standard Keystore
+   path. On decryption failure, clear stored tokens rather than surfacing stale/garbage data. Never
+   log token material or cipher input/output.
 6. **Networking**: Add new endpoints as an internal `*Api` interface under `data/network/api/`
    (with a `*ApiImpl` implementation) and surface them through a repository — don't call Ktor
    directly from ViewModels. Define DTOs under `data/network/dto/<feature>/` and map them into
