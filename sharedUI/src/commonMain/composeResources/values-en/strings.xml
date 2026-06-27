@@ -94,4 +94,6 @@
     <string name="failed_to_load_flats">Failed to load flats</string>
     <string name="failed_to_load_more_flats">Failed to load more flats</string>
     <string name="retry">Retry</string>
+    <string name="search_placeholder">Search</string>
+    <string name="all_filter">All</string>
 </resources>

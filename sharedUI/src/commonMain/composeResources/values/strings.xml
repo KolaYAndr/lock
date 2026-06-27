@@ -95,4 +95,6 @@
     <string name="failed_to_load_flats">Не удалось загрузить квартиры</string>
     <string name="failed_to_load_more_flats">Не удалось загрузить больше квартир</string>
     <string name="retry">Повторить</string>
+    <string name="search_placeholder">Поиск</string>
+    <string name="all_filter">Все</string>
 </resources>

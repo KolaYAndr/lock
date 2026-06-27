@@ -13,14 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -29,13 +32,18 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.flowOf
 import lockbox.sharedui.generated.resources.Res
+import lockbox.sharedui.generated.resources.all_filter
+import lockbox.sharedui.generated.resources.commercial
 import lockbox.sharedui.generated.resources.failed_to_load_flats
 import lockbox.sharedui.generated.resources.failed_to_load_more_flats
 import lockbox.sharedui.generated.resources.ic_flat
+import lockbox.sharedui.generated.resources.living
 import lockbox.sharedui.generated.resources.retry
 import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
+import org.homesharing.lockbox.presentation.uikit.composable.chip.HomesharingFilterChip
+import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingSearch
 import org.homesharing.lockbox.presentation.uikit.composable.refresh.HomesharingPullToRefreshBox
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
@@ -48,9 +56,15 @@ internal fun FlatListScreen(
     onNavigateToDetails: (String) -> Unit,
 ) {
     val lazyFlats = viewModel.flats.collectAsLazyPagingItems()
+    val search by viewModel.search.collectAsStateWithLifecycle()
+    val type by viewModel.type.collectAsStateWithLifecycle()
 
     FlatDetailedScreen(
         lazyFlats = lazyFlats,
+        search = search,
+        type = type,
+        onSearchChanged = viewModel::onSearchChanged,
+        onChangeFilter = viewModel::onChangeFilter,
         onNavigateToDetails = onNavigateToDetails,
         modifier = Modifier.fillMaxSize(),
     )
@@ -59,6 +73,10 @@ internal fun FlatListScreen(
 @Composable
 private fun FlatDetailedScreen(
     lazyFlats: LazyPagingItems<Flat>,
+    search: String,
+    type: FlatTypeFilter,
+    onSearchChanged: (String) -> Unit,
+    onChangeFilter: (FlatTypeFilter) -> Unit,
     onNavigateToDetails: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -79,6 +97,44 @@ private fun FlatDetailedScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(vertical = 12.dp),
             ) {
+                item(key = "search", contentType = "search") {
+                    HomesharingSearch(
+                        value = search,
+                        onValueChange = onSearchChanged,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 16.dp, bottom = 24.dp)
+                    )
+                }
+
+                item(key = "filter", contentType = "filter") {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        items(
+                            count = FlatTypeFilter.entries.size,
+                            key = { FlatTypeFilter.entries[it] },
+                            contentType = { FlatTypeFilter },
+                        ) { index ->
+                            FlatTypeFilter.entries[index].let { flatType ->
+                                HomesharingFilterChip(
+                                    title = when (flatType) {
+                                        FlatTypeFilter.All -> stringResource(Res.string.all_filter)
+                                        FlatTypeFilter.NonResidental -> stringResource(Res.string.commercial)
+                                        FlatTypeFilter.Residental -> stringResource(Res.string.living)
+                                    },
+                                    selected = flatType == type,
+                                    onSelectionChange = { onChangeFilter(flatType) }
+                                )
+                            }
+                        }
+                    }
+                }
+
                 items(
                     count = lazyFlats.itemCount,
                     key = lazyFlats.itemKey { it.id },
@@ -175,7 +231,7 @@ private fun ErrorItem(
             title = stringResource(Res.string.retry),
             onClick = onRetry,
 
-        )
+            )
     }
 }
 
@@ -254,7 +310,11 @@ private fun FlatListScreenPreview() {
         FlatDetailedScreen(
             lazyFlats = lazyFlats,
             onNavigateToDetails = {},
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            search = "",
+            type = FlatTypeFilter.All,
+            onSearchChanged = {},
+            onChangeFilter = {},
         )
     }
 }
