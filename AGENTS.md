@@ -4,14 +4,20 @@
 
 Lockbox is a multiplatform application for secure data storage, part of the "Homesharing"
 ecosystem. It is built with **Kotlin Multiplatform** and **Compose Multiplatform**,
-targeting Android, iOS, and Desktop (JVM).
+targeting Android, iOS, and Desktop (JVM). The shared Compose UI (`sharedUI`) runs on
+Android, Desktop, and iOS; there are two iOS apps — a native SwiftUI one (`iosApp`) and a
+Compose one (`iosComposeApp`) that reuses `sharedUI`.
 
 ## Project Structure
 
 - `androidApp/`: Android entry point (`LockboxActivity`, `LockboxApp`) and Android-only Koin setup.
 - `desktopApp/`: Desktop (JVM) entry point that hosts the shared Compose UI.
 - `iosApp/`: Native iOS application (SwiftUI) that consumes the `shared` module via the
-  KMP framework.
+  KMP framework (its own hand-written UI surface).
+- `iosComposeApp/`: iOS application (Compose Multiplatform) that consumes `sharedUI` via the
+  `SharedUI` framework and renders the same Compose UI as Android/Desktop. Thin Swift shell
+  (`iOSApp.swift`, `ContentView.swift` wrapping `MainViewControllerKt.MainViewController()`); its
+  "Compile Kotlin Framework" build phase runs `:sharedUI:embedAndSignAppleFrameworkForXcode`.
 - `shared/`: Pure business logic — data, domain, networking, DI.
     - `commonMain/`: Cross-platform code (Ktor APIs, DTOs, repositories, domain models, paging,
       token storage interfaces, Koin modules).
@@ -22,7 +28,11 @@ targeting Android, iOS, and Desktop (JVM).
     - `jvmMain/`: Desktop platform module (JVM Ktor engine, DataStore-backed `TokenStorage`
       under `~/.lockbox/`, desktop `PlatformModule`).
 - `sharedUI/`: Cross-platform Compose UI module — screens, ViewModels, navigation, theme, and the
-  reusable UI kit. Consumed by `androidApp` and `desktopApp`; iOS uses its own SwiftUI surface.
+  reusable UI kit. Targets Android, JVM, and iOS (`iosArm64`/`iosSimulatorArm64`, static `SharedUI`
+  framework). Consumed by `androidApp`, `desktopApp`, and `iosComposeApp`; `iosApp` uses its own
+  SwiftUI surface instead. `iosMain/MainViewController.kt` is the iOS entry point — it exposes
+  `MainViewController()` and starts Koin with `sharedUiModule` in the `ComposeUIViewController`
+  `configure` block.
 
 ### Feature flows (in `sharedUI/.../presentation`)
 
@@ -40,7 +50,8 @@ targeting Android, iOS, and Desktop (JVM).
 ## Tech Stack
 
 - **Language**: Kotlin 2.4.0 (multiplatform).
-- **UI**: Compose Multiplatform 1.11.1 (shared across Android/Desktop) + SwiftUI on iOS.
+- **UI**: Compose Multiplatform 1.11.1 (shared across Android/Desktop/iOS via `sharedUI`) +
+  SwiftUI in the native `iosApp`.
 - **Navigation**: AndroidX Navigation3 (1.1.1 — pinned, do not bump to 2.10.0) with Jetbrains
   lifecycle-viewmodel-navigation3 (2.11.0).
 - **Networking**: Ktor 3.5.0 (OkHttp on Android, Darwin on iOS), `kotlinx.serialization` JSON,
@@ -50,7 +61,8 @@ targeting Android, iOS, and Desktop (JVM).
 - **Paging**: AndroidX Paging 3.5.0 (used in `FlatPagingSource`).
 - **Persistence**: AndroidX DataStore Preferences 1.2.1.
 - **Image loading**: Coil 3.5.0 with Ktor3 network fetcher.
-- **Dates**: `kotlinx-datetime` 0.8.0.
+- **Dates**: `kotlinx-datetime` 0.8.0 with `kotlin.time` `Clock`/`Instant`. Date logic in
+  `commonMain` must use these (not `java.time`/`java.util`) so it compiles for the iOS target.
 - **Security**:
     - Android: AES/GCM/NoPadding via Android Keystore (`LockboxCipher`). StrongBox-preferred with
       fallback to standard TEE/SE.
@@ -87,7 +99,11 @@ targeting Android, iOS, and Desktop (JVM).
 
 1. **Consistency**: Maintain the KMP layout — domain/data/network logic in `shared/commonMain`,
    UI in `sharedUI/commonMain`. Only drop into platform source sets when you need an `actual`
-   implementation or platform API.
+   implementation or platform API. `sharedUI/commonMain` now compiles for iOS too, so keep it free
+   of JVM-only APIs (`java.*`, `System.currentTimeMillis()`); use multiplatform equivalents
+   (`kotlin.time`, `kotlinx-datetime`, Compose/coroutines APIs). Note `androidx.compose.material3`
+   `CalendarLocale` is an `expect class` (NSLocale on iOS) that can't be constructed in common code —
+   format dates via `kotlinx-datetime` instead of `DatePickerFormatter.formatDate(..., locale)`.
 2. **DI**: Register new dependencies in the appropriate Koin module (`NetworkModule`,
    `RepositoryModule`, `ViewModelModule`, or a `PlatformModule` actual). Don't instantiate
    collaborators ad-hoc inside ViewModels.
@@ -118,8 +134,14 @@ targeting Android, iOS, and Desktop (JVM).
 - **Android (debug APK)**: `./gradlew :androidApp:assembleDebug`
 - **Android (install on device/emulator)**: `./gradlew :androidApp:installDebug`
 - **Desktop (JVM)**: `./gradlew :desktopApp:run`
-- **iOS**: open `iosApp/iosApp.xcworkspace` in Xcode and run, or build the framework via the
-  KMP Gradle tasks.
-- **Compile checks**: `./gradlew :shared:compileKotlinMetadata`, `./gradlew :sharedUI:compileKotlinJvm`.
+- **iOS (SwiftUI)**: open `iosApp/iosApp.xcodeproj` in Xcode and run.
+- **iOS (Compose)**: open `iosComposeApp/iosComposeApp.xcodeproj` in Xcode and run. Only
+  `iosSimulatorArm64` is declared, so build against an **arm64** simulator (Apple Silicon), e.g.
+  `xcodebuild -project iosComposeApp/iosComposeApp.xcodeproj -scheme iosComposeApp -configuration Debug -destination 'id=<arm64-sim-uuid>' build`.
+  A `generic/platform=iOS Simulator` destination fails in `syncComposeResourcesForIos` ("Unknown iOS
+  simulator arch: 'x86_64'"). On the simulator the bundle id gets the `TEAM_ID` suffix
+  (`org.homesharing.lockbox.compose123`); `TEAM_ID` lives in `iosComposeApp/Configuration/Config.xcconfig`.
+- **Compile checks**: `./gradlew :shared:compileKotlinMetadata`, `./gradlew :sharedUI:compileKotlinJvm`,
+  `./gradlew :sharedUI:compileAndroidMain`, `./gradlew :sharedUI:linkDebugFrameworkIosSimulatorArm64`.
 - Configuration lives in `local.properties` (SDK path) and `gradle.properties`. Dependency
   versions are centralized in `gradle/libs.versions.toml`.

@@ -22,10 +22,11 @@ import androidx.compose.ui.unit.dp
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.check_in_dates
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import kotlin.time.Clock
+import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import java.time.Instant
-import java.time.ZoneId
-import java.util.Calendar
 
 @Composable
 internal fun HomesharingDatePicker(
@@ -96,23 +97,21 @@ internal fun HomesharingDatePicker(
 @Preview
 @Composable
 private fun PreviewHomesharingDatePicker() {
-    val currentTime = remember { System.currentTimeMillis() }
-    val calendar = remember {
-        Calendar.getInstance().apply {
-            timeInMillis = currentTime
-        }
+    val currentDate = remember {
+        Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date
     }
-    val currentYear = remember(calendar) { calendar.get(Calendar.YEAR) }
+    val currentYear = remember(currentDate) { currentDate.year }
 
     val availableDates = remember {
         object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val day = Instant.ofEpochMilli(utcTimeMillis)
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDate()
-                    .dayOfYear
+                val day = Instant.fromEpochMilliseconds(utcTimeMillis)
+                    .toLocalDateTime(TimeZone.UTC)
+                    .date
 
-                return day >= calendar.get(Calendar.DAY_OF_YEAR)
+                return day >= currentDate
             }
 
             override fun isSelectableYear(year: Int): Boolean = year >= currentYear

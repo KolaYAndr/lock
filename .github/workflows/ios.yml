@@ -5,7 +5,9 @@ on:
     branches: ["master"]
     paths:
       - "shared/**"
+      - "sharedUI/**"
       - "iosApp/**"
+      - "iosComposeApp/**"
       - "gradle/**"
       - "*.gradle.kts"
       - "gradle.properties"
@@ -14,7 +16,9 @@ on:
     branches: ["master"]
     paths:
       - "shared/**"
+      - "sharedUI/**"
       - "iosApp/**"
+      - "iosComposeApp/**"
       - "gradle/**"
       - "*.gradle.kts"
       - "gradle.properties"
@@ -23,11 +27,21 @@ on:
 
 jobs:
   build:
+    name: Build ${{ matrix.name }}
     runs-on: macos-15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iosApp (SwiftUI)
+            project: iosApp
+          - name: iosComposeApp (Compose)
+            project: iosComposeApp
 
     defaults:
       run:
-        working-directory: iosApp
+        working-directory: ${{ matrix.project }}
 
     steps:
       - name: Checkout
@@ -56,7 +70,7 @@ jobs:
           file_to_build="$(find . -maxdepth 1 -name '*.xcodeproj' -print | head -n 1 | sed 's|^\./||')"
 
           if [ -z "${file_to_build:-}" ]; then
-            echo "No .xcodeproj found in iosApp"
+            echo "No .xcodeproj found in ${{ matrix.project }}"
             exit 1
           fi
 
@@ -100,7 +114,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: ios-build-logs
+          name: ios-build-logs-${{ matrix.project }}
           path: |
-            iosApp/xcodebuild.log
-            iosApp/build/ResultBundle.xcresult
+            ${{ matrix.project }}/xcodebuild.log
+            ${{ matrix.project }}/build/ResultBundle.xcresult

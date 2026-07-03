@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,12 +40,32 @@ import lockbox.sharedui.generated.resources.ic_close
 import org.homesharing.lockbox.presentation.uikit.composable.date_picker.HomesharingDatePicker
 import org.homesharing.lockbox.presentation.uikit.modifier.paddedBorder
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import kotlin.time.Clock
+import kotlin.time.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import java.time.Instant
-import java.time.ZoneId
-import java.util.Calendar
-import java.util.Locale
+
+private val checkInDateFormat = LocalDate.Format {
+    monthName(MonthNames.ENGLISH_ABBREVIATED)
+    char(' ')
+    day(Padding.NONE)
+    chars(", ")
+    year()
+}
+
+private fun formatCheckInDate(dateMillis: Long?): String {
+    dateMillis ?: return ""
+    val date = Instant.fromEpochMilliseconds(dateMillis)
+        .toLocalDateTime(TimeZone.UTC)
+        .date
+    return checkInDateFormat.format(date)
+}
 
 @Composable
 internal fun HomesharingDateInput(
@@ -70,27 +89,21 @@ internal fun HomesharingDateInput(
             }
         )
 
-        val currentTime = remember { System.currentTimeMillis() }
-        val currentLocalDate = remember(currentTime) {
-            Instant.ofEpochMilli(currentTime)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
+        val currentLocalDate = remember {
+            Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .date
         }
-        val calendar = remember {
-            Calendar.getInstance().apply {
-                timeInMillis = currentTime
-            }
-        }
-        val currentYear = remember(calendar) { calendar.get(Calendar.YEAR) }
+        val currentYear = remember(currentLocalDate) { currentLocalDate.year }
 
         val availableDates = remember {
             object : SelectableDates {
                 override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    val day = Instant.ofEpochMilli(utcTimeMillis)
-                        .atZone(ZoneId.of("UTC"))
-                        .toLocalDate()
+                    val day = Instant.fromEpochMilliseconds(utcTimeMillis)
+                        .toLocalDateTime(TimeZone.UTC)
+                        .date
 
-                    return !day.isBefore(currentLocalDate)
+                    return day >= currentLocalDate
                 }
 
                 override fun isSelectableYear(year: Int): Boolean = year >= currentYear
@@ -129,26 +142,17 @@ internal fun HomesharingDateInput(
             }
         }
 
-        val formatter = remember { DatePickerDefaults.dateFormatter() }
-        val calendarLocale = remember(calendar) { Locale.getDefault() }
-
-        val startDate = remember(state.selectedStartDateMillis, calendarLocale) {
-            formatter.formatDate(
-                dateMillis = state.selectedStartDateMillis,
-                locale = calendarLocale,
-            ).orEmpty()
+        val startDate = remember(state.selectedStartDateMillis) {
+            formatCheckInDate(state.selectedStartDateMillis)
         }
 
-        val endDate = remember(state.selectedEndDateMillis, calendarLocale) {
-            formatter.formatDate(
-                dateMillis = state.selectedEndDateMillis,
-                locale = calendarLocale,
-            ).orEmpty()
+        val endDate = remember(state.selectedEndDateMillis) {
+            formatCheckInDate(state.selectedEndDateMillis)
         }
         val value = stringResource(
             Res.string.check_in_dates_separated,
-            formatter.formatDate(state.selectedStartDateMillis, calendarLocale).orEmpty(),
-            formatter.formatDate(state.selectedEndDateMillis, calendarLocale).orEmpty()
+            startDate,
+            endDate,
         ).takeIf { startDate.isNotEmpty() || endDate.isNotEmpty() }.orEmpty()
 
         Box(

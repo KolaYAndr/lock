@@ -10,12 +10,16 @@ Desktop (JVM).
 
 ## 🗂 Структура проекта
 ```text
-- androidApp   # Android-приложение (точка входа, Android-специфичный Koin)
-- desktopApp   # Desktop-приложение (JVM), хостит общий Compose UI
-- iosApp       # iOS-приложение (SwiftUI), требуется macOS
-- shared       # Общая бизнес-логика: data, domain, networking, DI
-- sharedUI     # Общий Compose UI: экраны, ViewModel, навигация, тема, UI-kit
+- androidApp     # Android-приложение (точка входа, Android-специфичный Koin)
+- desktopApp     # Desktop-приложение (JVM), хостит общий Compose UI
+- iosApp         # iOS-приложение (SwiftUI), хостит собственный UI поверх shared; требуется macOS
+- iosComposeApp  # iOS-приложение (Compose Multiplatform), переиспользует sharedUI; требуется macOS
+- shared         # Общая бизнес-логика: data, domain, networking, DI
+- sharedUI       # Общий Compose UI: экраны, ViewModel, навигация, тема, UI-kit (Android/Desktop/iOS)
 ```
+
+> Есть два iOS-приложения: `iosApp` — нативный SwiftUI-интерфейс поверх `shared`, а
+> `iosComposeApp` — тот же Compose-UI из `sharedUI`, что и на Android/Desktop.
 
 ---
 
@@ -65,10 +69,24 @@ cd mobile
 ```
 
 ### iOS (только macOS)
+Нативное SwiftUI-приложение:
 ```bash
 open iosApp/iosApp.xcodeproj
 ```
+Compose-приложение (переиспользует `sharedUI`):
+```bash
+open iosComposeApp/iosComposeApp.xcodeproj
+```
 Выберите симулятор → нажмите ▶️.
+
+> ⚠️ `shared`/`sharedUI` объявляют только `iosSimulatorArm64` (без `iosX64`), поэтому на симуляторе
+> собирайте под **arm64** (Apple Silicon). Сборка Compose-приложения из CLI:
+> ```bash
+> xcodebuild -project iosComposeApp/iosComposeApp.xcodeproj -scheme iosComposeApp \
+>   -configuration Debug -destination 'id=<uuid arm64-симулятора>' build
+> ```
+> На симуляторе bundle id получает суффикс `TEAM_ID` (напр. `org.homesharing.lockbox.compose123`).
+> `TEAM_ID` задаётся в `iosComposeApp/Configuration/Config.xcconfig` (по умолчанию placeholder `123`).
 
 ---
 
