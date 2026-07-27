@@ -1,7 +1,7 @@
 <resources>
     <string name="send_code_again">Отправить код повторно</string>
     <string name="receive_code">Получить код</string>
-    <string name="sign_in_account">Войти в аккаунт</string>
+    <string name="check_in_online">Заселение онлайн.\nБез ключей, звонков и бумаг</string>
     <string name="placeholder_email">Электронная почта</string>
     <string name="profile_setup">Настройка профиля</string>
     <string name="full_name">Полное имя</string>
@@ -77,6 +77,8 @@
     <string name="flat">Помещение</string>
     <string name="dates_and_conditions">Даты и условия</string>
     <string name="dates">%1$s - %2$s\nЗаезд в %3$s, выезд в %4$s</string>
+    <string name="or">или</string>
+    <string name="get_code">Получить код</string>
     <plurals name="guest_count">
         <item quantity="one">%d гость</item>
         <item quantity="few">%d гостя</item>

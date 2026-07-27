@@ -34,6 +34,15 @@ internal class LoginViewModel(
             )
         }
     }
+
+    fun getCode() {
+        viewModelScope.launch {
+            authRepository.loadTokensInitially(
+                username = uiState.value.email,
+                password = uiState.value.password,
+            )
+        }
+    }
 }
 
 internal data class LoginUiState(

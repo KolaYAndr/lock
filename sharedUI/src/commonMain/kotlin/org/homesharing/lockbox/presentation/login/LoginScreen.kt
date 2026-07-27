@@ -2,12 +2,15 @@ package org.homesharing.lockbox.presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -22,25 +25,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
-import lockbox.sharedui.generated.resources.ic_background
+import lockbox.sharedui.generated.resources.background
+import lockbox.sharedui.generated.resources.check_in_online
+import lockbox.sharedui.generated.resources.get_code
 import lockbox.sharedui.generated.resources.ic_close
 import lockbox.sharedui.generated.resources.ic_eye
 import lockbox.sharedui.generated.resources.ic_eye_off
+import lockbox.sharedui.generated.resources.lockbox_logo_horizontal
+import lockbox.sharedui.generated.resources.or
 import lockbox.sharedui.generated.resources.password_placeholder
 import lockbox.sharedui.generated.resources.placeholder_email
 import lockbox.sharedui.generated.resources.sign_in
-import lockbox.sharedui.generated.resources.sign_in_account
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
+import org.homesharing.lockbox.presentation.uikit.composable.divider.HomesharingDivider
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
@@ -58,8 +65,8 @@ internal fun LoginScreen(
         password = state.password,
         onChangeEmail = viewModel::onEmailChange,
         onChangePassword = viewModel::onPasswordChangeChange,
-        signIn = viewModel::singIn
-
+        signIn = viewModel::singIn,
+        getCode = viewModel::getCode
     )
 }
 
@@ -71,12 +78,13 @@ private fun LoginScreen(
     onChangeEmail: (String) -> Unit,
     onChangePassword: (String) -> Unit,
     signIn: () -> Unit,
+    getCode: () -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(Res.drawable.ic_background),
+            painter = painterResource(Res.drawable.background),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -93,12 +101,24 @@ private fun LoginScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Image(
+                painter = painterResource(Res.drawable.lockbox_logo_horizontal),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .size(190.dp, 40.dp)
+            )
+
             Text(
-                text = stringResource(Res.string.sign_in_account),
-                style = HomesharingTheme.typography.titleLarge,
+                text = stringResource(Res.string.check_in_online),
+                style = HomesharingTheme.typography.bodyMedium,
                 color = HomesharingTheme.colors.black,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 24.dp)
             )
 
             HomesharingInput(
@@ -120,7 +140,7 @@ private fun LoginScreen(
                 },
                 placeholderText = stringResource(Res.string.placeholder_email),
                 modifier = Modifier
-                    .padding(top = 32.dp)
+                    .padding(top = 19.dp)
                     .padding(horizontal = 11.dp)
                     .fillMaxWidth()
             )
@@ -157,8 +177,43 @@ private fun LoginScreen(
             HomesharingButton(
                 title = stringResource(Res.string.sign_in),
                 onClick = signIn,
+                enabled = email.isNotBlank() && password.isNotBlank(),
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = 11.dp)
+                    .padding(horizontal = 11.dp)
+                    .fillMaxWidth()
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 19.dp)
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                HomesharingDivider(
+                    modifier = Modifier.weight(1f)
+                )
+
+                Text(
+                    text = stringResource(Res.string.or),
+                    style = HomesharingTheme.typography.bodyMedium,
+                    color = HomesharingTheme.colors.black.copy(alpha = .3f),
+
+                )
+
+                HomesharingDivider(
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            HomesharingButton(
+                title = stringResource(Res.string.get_code),
+                enabled = email.isNotBlank(),
+                onClick = getCode,
+                modifier = Modifier
+                    .padding(top = 11.dp)
                     .padding(horizontal = 11.dp)
                     .fillMaxWidth()
             )

@@ -1,7 +1,7 @@
 <resources>
     <string name="send_code_again">Send code again</string>
     <string name="receive_code">Receive code</string>
-    <string name="sign_in_account">Sign in to account</string>
+    <string name="check_in_online">Sign in to account</string>
     <string name="placeholder_email">Email</string>
     <string name="profile_setup">Profile setup</string>
     <string name="full_name">Full name</string>
@@ -76,6 +76,8 @@
     <string name="flat">Flat</string>
     <string name="dates_and_conditions">Dates and conditions</string>
     <string name="dates">%1$s - %2$s\nCheck-in at %3$s, check-out at %4$s</string>
+    <string name="or">or</string>
+    <string name="get_code">Get code</string>
     <plurals name="guest_count">
         <item quantity="one">%d guest</item>
         <item quantity="few">%d guests</item>
