@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.add_or_import_flat
+package org.homesharing.lockbox.presentation.add_flat_flow.add_or_import_flat
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,16 +22,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.add_a_flat
 import lockbox.sharedui.generated.resources.by_hand
-import lockbox.sharedui.generated.resources.imported
 import lockbox.sharedui.generated.resources.ic_link
+import lockbox.sharedui.generated.resources.ic_square_pen
+import lockbox.sharedui.generated.resources.imported
 import lockbox.sharedui.generated.resources.not_now
 import lockbox.sharedui.generated.resources.proceed
 import lockbox.sharedui.generated.resources.soon
-import lockbox.sharedui.generated.resources.ic_square_pen
 import org.homesharing.lockbox.domain.model.add_flat.AddFlatType
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButtonDefaults
-import org.homesharing.lockbox.presentation.uikit.composable.pickable.HomesharingPickableItem
+import org.homesharing.lockbox.presentation.uikit.composable.radio_item.HomesharingRadioItem
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -83,7 +82,7 @@ private fun AddFlatScreen(
             Box(
                 modifier = Modifier.weight(1f)
             ) {
-                HomesharingPickableItem(
+                HomesharingRadioItem(
                     icon = painterResource(Res.drawable.ic_link),
                     title = stringResource(Res.string.imported),
                     isSelected = addType == AddFlatType.Import,
@@ -94,7 +93,6 @@ private fun AddFlatScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Center),
-                    role = Role.RadioButton
                 )
 
                 Text(
@@ -112,7 +110,7 @@ private fun AddFlatScreen(
                 )
             }
 
-            HomesharingPickableItem(
+            HomesharingRadioItem(
                 icon = painterResource(Res.drawable.ic_square_pen),
                 title = stringResource(Res.string.by_hand),
                 isSelected = addType == AddFlatType.ByHand,
@@ -120,7 +118,6 @@ private fun AddFlatScreen(
                     onSelectRole(AddFlatType.ByHand)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.RadioButton
             )
         }
 

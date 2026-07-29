@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal sealed interface AuthenticatedRoutes : NavKey {
     @Serializable
-    data object ProfileSetup : AuthenticatedRoutes
+    data object NameSetup : AuthenticatedRoutes
 
     @Serializable
-    data object ChooseRole : AuthenticatedRoutes
+    data object PickRole : AuthenticatedRoutes
 
     @Serializable
     data object AddFlat : AuthenticatedRoutes

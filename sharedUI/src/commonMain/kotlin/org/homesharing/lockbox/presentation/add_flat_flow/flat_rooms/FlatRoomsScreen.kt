@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.flat_rooms
+package org.homesharing.lockbox.presentation.add_flat_flow.flat_rooms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,41 +24,40 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
+import lockbox.sharedui.generated.resources.bathroom
+import lockbox.sharedui.generated.resources.bedroom
+import lockbox.sharedui.generated.resources.create_custom
 import lockbox.sharedui.generated.resources.ic_armchair
 import lockbox.sharedui.generated.resources.ic_bath
-import lockbox.sharedui.generated.resources.bathroom
 import lockbox.sharedui.generated.resources.ic_bed
-import lockbox.sharedui.generated.resources.bedroom
 import lockbox.sharedui.generated.resources.ic_chef_hat
 import lockbox.sharedui.generated.resources.ic_chevron_left
-import lockbox.sharedui.generated.resources.create_custom
+import lockbox.sharedui.generated.resources.ic_plus
+import lockbox.sharedui.generated.resources.ic_shower_head
+import lockbox.sharedui.generated.resources.ic_toilet
 import lockbox.sharedui.generated.resources.kitchen
 import lockbox.sharedui.generated.resources.living_room
 import lockbox.sharedui.generated.resources.new_flat
-import lockbox.sharedui.generated.resources.ic_plus
 import lockbox.sharedui.generated.resources.popular
 import lockbox.sharedui.generated.resources.proceed
 import lockbox.sharedui.generated.resources.rooms
 import lockbox.sharedui.generated.resources.shower
-import lockbox.sharedui.generated.resources.ic_shower_head
 import lockbox.sharedui.generated.resources.skip
 import lockbox.sharedui.generated.resources.soon
 import lockbox.sharedui.generated.resources.toilet
-import lockbox.sharedui.generated.resources.ic_toilet
 import lockbox.sharedui.generated.resources.will_help_with_report_when_checking_out
 import org.homesharing.lockbox.domain.model.flat_rooms.FlatRoom
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButtonDefaults
 import org.homesharing.lockbox.presentation.uikit.composable.pickable.HomesharingPickableItem
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -164,7 +163,6 @@ private fun FlatRoomsScreen(
                     onToggleRoom(FlatRoom.Kitchen)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.Switch
             )
 
             HomesharingPickableItem(
@@ -175,7 +173,6 @@ private fun FlatRoomsScreen(
                     onToggleRoom(FlatRoom.Bedroom)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.Switch
             )
         }
 
@@ -195,7 +192,6 @@ private fun FlatRoomsScreen(
                     onToggleRoom(FlatRoom.LivingRoom)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.Switch
             )
 
             HomesharingPickableItem(
@@ -206,7 +202,6 @@ private fun FlatRoomsScreen(
                     onToggleRoom(FlatRoom.Shower)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.Switch
             )
         }
 
@@ -226,7 +221,6 @@ private fun FlatRoomsScreen(
                     onToggleRoom(FlatRoom.Bathroom)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.Switch
             )
 
             HomesharingPickableItem(
@@ -237,7 +231,7 @@ private fun FlatRoomsScreen(
                     onToggleRoom(FlatRoom.Toilet)
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.Switch
+                
             )
         }
 
@@ -254,7 +248,6 @@ private fun FlatRoomsScreen(
                 isSelected = false,
                 enabled = false,
                 onClick = {},
-                role = Role.Button,
                 modifier = Modifier.fillMaxWidth()
             )
 

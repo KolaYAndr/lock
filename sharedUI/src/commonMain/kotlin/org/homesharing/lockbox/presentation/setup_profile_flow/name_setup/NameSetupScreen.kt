@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.profile_flow.profile_setup
+package org.homesharing.lockbox.presentation.setup_profile_flow.name_setup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,13 +25,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.ic_close
-import lockbox.sharedui.generated.resources.full_name
 import lockbox.sharedui.generated.resources.how_to_address_you
-import lockbox.sharedui.generated.resources.proceed
-import lockbox.sharedui.generated.resources.profile_setup
+import lockbox.sharedui.generated.resources.placeholder_first_name
+import lockbox.sharedui.generated.resources.placeholder_last_name
+import lockbox.sharedui.generated.resources.tell_us_about_yourself
+import lockbox.sharedui.generated.resources.save_and_proceed
+import lockbox.sharedui.generated.resources.set_your_name
+import org.homesharing.lockbox.presentation.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
@@ -40,25 +44,30 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun ProfileSetupScreen(
-    viewModel: ProfileSetupViewModel = koinViewModel(),
+internal fun NameSetupScreen(
+    viewModel: NameSetupViewModel = koinViewModel(),
     onProceed: () -> Unit,
 ) {
-    val fullName by viewModel.fullName.collectAsStateWithLifecycle()
-    ProfileSetupScreen(
-        fullName = fullName,
-        onChangeFullName = viewModel::onChangeFullName,
-        onFinish = onProceed,
+    val profileSetup by viewModel.profileSetup.collectAsStateWithLifecycle()
+
+    ActionOnSharedFlow(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        flow = viewModel.onSuccess,
+        onFlowCollected = { onProceed() }
+    )
+
+    NameSetupScreen(
+        nameSetupState = profileSetup,
+        onIntent = viewModel::onIntent,
         modifier = Modifier.fillMaxSize(),
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProfileSetupScreen(
-    fullName: String,
-    onChangeFullName: (String) -> Unit,
-    onFinish: () -> Unit,
+private fun NameSetupScreen(
+    nameSetupState: NameSetupState,
+    onIntent: (NameSetupAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -68,7 +77,7 @@ private fun ProfileSetupScreen(
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    text = stringResource(Res.string.profile_setup),
+                    text = stringResource(Res.string.tell_us_about_yourself),
                     style = HomesharingTheme.typography.bodyMedium,
                 )
             },
@@ -89,40 +98,72 @@ private fun ProfileSetupScreen(
                 .padding(horizontal = 16.dp)
         )
 
-        val focusRequester = remember { FocusRequester() }
+        Text(
+            text = stringResource(Res.string.set_your_name),
+            style = HomesharingTheme.typography.bodyMedium,
+            color = HomesharingTheme.colors.black.copy(alpha = .5f),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontal = 16.dp)
+        )
+
+        val firstNameFocusRequester = remember { FocusRequester() }
+        val lastNameFocusRequester = remember { FocusRequester() }
         LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
+            firstNameFocusRequester.requestFocus()
         }
 
         HomesharingInput(
-            value = fullName,
-            onValueChange = onChangeFullName,
+            value = nameSetupState.firstName,
+            onValueChange = { onIntent(NameSetupAction.FirstNameChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp)
+                .padding(top = 19.dp)
                 .padding(horizontal = 11.dp)
-                .focusRequester(focusRequester),
+                .focusRequester(firstNameFocusRequester),
             keyboardActions = KeyboardActions(
-                onDone = { onFinish() }
+                onNext = { lastNameFocusRequester.requestFocus() }
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                capitalization = KeyboardCapitalization.Words
+            ),
+            placeholderText = stringResource(Res.string.placeholder_first_name),
+            trailingIcon = painterResource(Res.drawable.ic_close),
+            trailingIconAction = {
+                onIntent(NameSetupAction.FirstNameChanged(""))
+            }
+        )
+
+        HomesharingInput(
+            value = nameSetupState.lastName,
+            onValueChange = { onIntent(NameSetupAction.LastNameChanged(it)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 11.dp)
+                .padding(horizontal = 11.dp)
+                .focusRequester(lastNameFocusRequester),
+            keyboardActions = KeyboardActions(
+                onDone = { onIntent(NameSetupAction.Proceed) }
             ),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
                 capitalization = KeyboardCapitalization.Words
             ),
-            placeholderText = stringResource(Res.string.full_name),
+            placeholderText = stringResource(Res.string.placeholder_last_name),
             trailingIcon = painterResource(Res.drawable.ic_close),
             trailingIconAction = {
-                onChangeFullName("")
+                onIntent(NameSetupAction.LastNameChanged(""))
             }
         )
 
         HomesharingButton(
-            title = stringResource(Res.string.proceed),
-            onClick = onFinish,
-            enabled = fullName.isNotEmpty(),
+            title = stringResource(Res.string.save_and_proceed),
+            onClick = { onIntent(NameSetupAction.Proceed) },
+            enabled = nameSetupState.firstName.isNotBlank() && nameSetupState.lastName.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp)
+                .padding(top = 11.dp)
                 .padding(horizontal = 11.dp)
         )
     }
@@ -132,10 +173,12 @@ private fun ProfileSetupScreen(
 @Composable
 private fun PreviewProfileSetupScreen() {
     HomesharingTheme {
-        ProfileSetupScreen(
-            fullName = "Kolya",
-            onChangeFullName = {},
-            onFinish = {},
+        NameSetupScreen(
+            nameSetupState = NameSetupState(
+                firstName = "Kolya",
+                lastName = "Andreev",
+            ),
+            onIntent = {},
             modifier = Modifier.fillMaxSize()
         )
     }

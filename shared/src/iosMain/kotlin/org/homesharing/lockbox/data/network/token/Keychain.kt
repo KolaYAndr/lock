@@ -53,6 +53,7 @@ import platform.posix.memcpy
 internal class Keychain(private val service: String) {
 
     fun set(key: String, value: String) {
+        platform.Foundation.NSLog("Keychain: set key=$key, valueLength=${value.length}")
         // Keychain has no upsert; remove any existing item first to avoid errSecDuplicateItem.
         delete(key)
 
@@ -88,7 +89,12 @@ internal class Keychain(private val service: String) {
         val result: CFTypeRef? = memScoped {
             val out = alloc<CFTypeRefVar>()
             val status = SecItemCopyMatching(query, out.ptr)
-            if (status == errSecSuccess) out.value else null
+            if (status == errSecSuccess) {
+                out.value
+            } else {
+                platform.Foundation.NSLog("Keychain: get key=$key failed with status=$status")
+                null
+            }
         }
 
         CFRelease(query)
@@ -98,7 +104,9 @@ internal class Keychain(private val service: String) {
         if (result == null) return null
         // CFBridgingRelease consumes the +1 retain returned by kSecReturnData.
         val nsData = CFBridgingRelease(result) as? NSData ?: return null
-        return nsData.toUtf8String()
+        val stringValue = nsData.toUtf8String()
+        platform.Foundation.NSLog("Keychain: get key=$key, valueLength=${stringValue.length}")
+        return stringValue
     }
 
     fun delete(key: String) {

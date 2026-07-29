@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.flat_address
+package org.homesharing.lockbox.presentation.add_flat_flow.flat_address
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.repository.FlatRepository
 
@@ -62,35 +61,26 @@ internal class FlatAddressViewModel(
     }
 
     private fun proceed() {
-        val current = _flatAddress.value
-        if (
-            current.city.isNotBlank() &&
-            current.street.isNotBlank() &&
-            current.number.isNotBlank() &&
-            current.name.isNotBlank() &&
-            current.flatType != null
-        ) {
-            viewModelScope.launch {
-                val response = repository.createFlat(
-                    name = current.name,
-                    premiseType = current.flatType,
-                    city = current.city,
-                    street = current.street,
-                    house = current.number,
-                    entrance = current.entrance,
-                    apartment = current.flatNumber,
-                    block = current.structure,
-                    building = current.building,
-                    litera = current.liter,
-                    comment = current.comment,
-                    livingArea = null,
-                    roomNames = emptyList(),
-                )
-
-                if (response is Response.Success) {
-                    _onSuccess.emit(Unit)
-                }
-            }
+        viewModelScope.launch {
+//            val response = repository.createFlat(
+//                name = _flatAddress.value.name,
+//                premiseType = _flatAddress.value.flatType!!,
+//                city = _flatAddress.value.city,
+//                street = _flatAddress.value.street,
+//                house = _flatAddress.value.number,
+//                entrance = _flatAddress.value.entrance,
+//                apartment = _flatAddress.value.flatNumber,
+//                block = _flatAddress.value.structure,
+//                building = _flatAddress.value.building,
+//                litera = _flatAddress.value.liter,
+//                comment = _flatAddress.value.comment,
+//                livingArea = null,
+//                roomNames = emptyList(),
+//            )
+//
+//            if (response is Response.Success) {
+                _onSuccess.emit(Unit)
+//            }
         }
     }
 }

@@ -14,14 +14,19 @@ internal class TokenStorageImpl(
     override val loggedIn: Flow<Boolean> = _loggedIn
 
     override suspend fun getAccessToken(): String {
-        return keychain.get(ACCESS_TOKEN_NAME).orEmpty()
+        val token = keychain.get(ACCESS_TOKEN_NAME).orEmpty()
+        platform.Foundation.NSLog("TokenStorage: getAccessToken, length=${token.length}")
+        return token
     }
 
     override suspend fun getRefreshToken(): String {
-        return keychain.get(REFRESH_TOKEN_NAME).orEmpty()
+        val token = keychain.get(REFRESH_TOKEN_NAME).orEmpty()
+        platform.Foundation.NSLog("TokenStorage: getRefreshToken, length=${token.length}")
+        return token
     }
 
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        platform.Foundation.NSLog("TokenStorage: saveTokens, accessLength=${accessToken.length}, refreshLength=${refreshToken.length}")
         keychain.set(ACCESS_TOKEN_NAME, accessToken)
         keychain.set(REFRESH_TOKEN_NAME, refreshToken)
         _loggedIn.update { true }

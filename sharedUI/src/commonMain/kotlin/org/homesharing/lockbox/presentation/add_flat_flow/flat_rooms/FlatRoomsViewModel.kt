@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.flat_rooms
+package org.homesharing.lockbox.presentation.add_flat_flow.flat_rooms
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel

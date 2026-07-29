@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.flat_address
+package org.homesharing.lockbox.presentation.add_flat_flow.flat_address
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,9 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -43,12 +40,12 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.address
-import lockbox.sharedui.generated.resources.ic_chevron_left
-import lockbox.sharedui.generated.resources.ic_close
 import lockbox.sharedui.generated.resources.comment_placeholder
 import lockbox.sharedui.generated.resources.commercial
-import lockbox.sharedui.generated.resources.ic_commercial
 import lockbox.sharedui.generated.resources.flat_type
+import lockbox.sharedui.generated.resources.ic_chevron_left
+import lockbox.sharedui.generated.resources.ic_close
+import lockbox.sharedui.generated.resources.ic_commercial
 import lockbox.sharedui.generated.resources.ic_house
 import lockbox.sharedui.generated.resources.living
 import lockbox.sharedui.generated.resources.name_example
@@ -67,8 +64,10 @@ import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.presentation.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
-import org.homesharing.lockbox.presentation.uikit.composable.pickable.HomesharingPickableItem
+import org.homesharing.lockbox.presentation.uikit.composable.radio_item.HomesharingRadioItem
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -429,7 +428,7 @@ private fun FlatAddressScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
-            HomesharingPickableItem(
+            HomesharingRadioItem(
                 icon = painterResource(Res.drawable.ic_house),
                 title = stringResource(Res.string.living),
                 isSelected = flatAddress.flatType == PremiseType.RESIDENTIAL,
@@ -437,10 +436,9 @@ private fun FlatAddressScreen(
                     onIntent(FlatAddressIntent.FlatTypeChanged(PremiseType.RESIDENTIAL))
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.RadioButton
             )
 
-            HomesharingPickableItem(
+            HomesharingRadioItem(
                 icon = painterResource(Res.drawable.ic_commercial),
                 title = stringResource(Res.string.commercial),
                 isSelected = flatAddress.flatType == PremiseType.NON_RESIDENTIAL,
@@ -448,7 +446,6 @@ private fun FlatAddressScreen(
                     onIntent(FlatAddressIntent.FlatTypeChanged(PremiseType.NON_RESIDENTIAL))
                 },
                 modifier = Modifier.weight(1f),
-                role = Role.RadioButton
             )
         }
 

@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.flat_data
+package org.homesharing.lockbox.presentation.add_flat_flow.flat_data
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

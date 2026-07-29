@@ -5,8 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -16,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lockbox.sharedui.generated.resources.Res
-import lockbox.sharedui.generated.resources.ic_house
-import lockbox.sharedui.generated.resources.ic_user
+import lockbox.sharedui.generated.resources.ic_chef_hat
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
 
@@ -31,34 +30,28 @@ internal fun HomesharingPickableItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    role: Role = Role.Switch,
     enabled: Boolean = true,
 ) {
-    val isSelectedModifier = if (isSelected && enabled) {
-        Modifier.border(
-            width = 2.dp,
-            color = HomesharingTheme.colors.black,
-            shape = HomesharingTheme.shape.roundedCornerShape16
-        )
-    } else {
-        Modifier.border(
-            width = 2.dp,
-            color = HomesharingTheme.colors.black.copy(alpha = .1f),
-            shape = HomesharingTheme.shape.roundedCornerShape16
-        )
-    }
     Column(
         modifier = modifier
-            .height(104.dp)
+            .border(
+                width = 2.dp,
+                color = if (isSelected && enabled) {
+                    HomesharingTheme.colors.black
+                } else {
+                    HomesharingTheme.colors.black.copy(alpha = .1f)
+                },
+                shape = HomesharingTheme.shape.roundedCornerShape16
+            )
             .clip(HomesharingTheme.shape.roundedCornerShape16)
             .background(HomesharingTheme.colors.white)
             .clickable(
                 onClick = onClick,
-                role = role,
+                role = Role.Switch,
                 enabled = enabled
             )
-            .then(isSelectedModifier),
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -79,7 +72,8 @@ internal fun HomesharingPickableItem(
             } else {
                 HomesharingTheme.colors.black.copy(alpha = .3f)
             },
-            style = HomesharingTheme.typography.bodyMedium
+            style = HomesharingTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -88,23 +82,11 @@ internal fun HomesharingPickableItem(
 @Composable
 private fun PreviewHomesharingPickableItem() {
     HomesharingTheme {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            HomesharingPickableItem(
-                icon = painterResource(Res.drawable.ic_house),
-                title = "Владелец",
-                isSelected = true,
-                onClick = {},
-                modifier = Modifier.weight(1f)
-            )
-            HomesharingPickableItem(
-                icon = painterResource(Res.drawable.ic_user),
-                title = "Гость",
-                isSelected = false,
-                onClick = {},
-                modifier = Modifier.weight(1f)
-            )
-        }
+        HomesharingPickableItem(
+            icon = painterResource(Res.drawable.ic_chef_hat),
+            title = "Кухня",
+            isSelected = true,
+            onClick = {},
+        )
     }
 }

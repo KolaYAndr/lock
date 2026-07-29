@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.presentation.flats_flow.flat_created
+package org.homesharing.lockbox.presentation.add_flat_flow.flat_created
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
