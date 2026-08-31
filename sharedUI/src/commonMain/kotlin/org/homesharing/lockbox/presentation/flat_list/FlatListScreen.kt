@@ -43,7 +43,6 @@ import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.chip.HomesharingFilterChip
-import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingSearch
 import org.homesharing.lockbox.presentation.uikit.composable.refresh.HomesharingPullToRefreshBox
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 import org.jetbrains.compose.resources.painterResource
@@ -56,14 +55,11 @@ internal fun FlatListScreen(
     onNavigateToDetails: (String) -> Unit,
 ) {
     val lazyFlats = viewModel.flats.collectAsLazyPagingItems()
-    val search by viewModel.search.collectAsStateWithLifecycle()
     val type by viewModel.type.collectAsStateWithLifecycle()
 
     FlatDetailedScreen(
         lazyFlats = lazyFlats,
-        search = search,
         type = type,
-        onSearchChanged = viewModel::onSearchChanged,
         onChangeFilter = viewModel::onChangeFilter,
         onNavigateToDetails = onNavigateToDetails,
         modifier = Modifier.fillMaxSize(),
@@ -73,9 +69,7 @@ internal fun FlatListScreen(
 @Composable
 private fun FlatDetailedScreen(
     lazyFlats: LazyPagingItems<Flat>,
-    search: String,
     type: FlatTypeFilter,
-    onSearchChanged: (String) -> Unit,
     onChangeFilter: (FlatTypeFilter) -> Unit,
     onNavigateToDetails: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -97,17 +91,6 @@ private fun FlatDetailedScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(vertical = 12.dp),
             ) {
-                item(key = "search", contentType = "search") {
-                    HomesharingSearch(
-                        value = search,
-                        onValueChange = onSearchChanged,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(top = 16.dp, bottom = 24.dp)
-                    )
-                }
-
                 item(key = "filter", contentType = "filter") {
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -118,7 +101,7 @@ private fun FlatDetailedScreen(
                         items(
                             count = FlatTypeFilter.entries.size,
                             key = { FlatTypeFilter.entries[it] },
-                            contentType = { FlatTypeFilter },
+                            contentType = { FlatTypeFilter::class },
                         ) { index ->
                             FlatTypeFilter.entries[index].let { flatType ->
                                 HomesharingFilterChip(
@@ -311,9 +294,7 @@ private fun FlatListScreenPreview() {
             lazyFlats = lazyFlats,
             onNavigateToDetails = {},
             modifier = Modifier.fillMaxSize(),
-            search = "",
             type = FlatTypeFilter.All,
-            onSearchChanged = {},
             onChangeFilter = {},
         )
     }

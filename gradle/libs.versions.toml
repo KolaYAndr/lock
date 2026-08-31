@@ -6,17 +6,17 @@ android-targetSdk = "37"
 androidx-activityCompose = "1.13.0"
 androidx-core = "1.2.0"
 androidx-lifecycle = "2.11.0"
-kotlin = "2.4.0"
-ktor = "3.5.0"
+kotlin = "2.4.10"
+ktor = "3.5.2"
 koin = "4.2.2"
 navigation3 = "1.1.1"  # do not update to 2.10.0
-jetbrains-lifecycle-nav3 = "2.10.0"
-coil = "3.5.0"
-paging = "3.5.0"
+jetbrains-lifecycle-nav3 = "2.11.0"
+coil = "3.6.0"
+paging = "3.5.1"
 datastore = "1.2.1"
 dateTime = "0.8.0"
 serialization = "1.11.0"
-composeMultiplatform = "1.11.1"
+composeMultiplatform = "1.12.0"
 composeMaterial3 = "1.11.0-alpha07"
 kotlinx-coroutines = "1.11.0"
 
@@ -53,6 +53,7 @@ compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMul
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-components-uiToolingPreview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

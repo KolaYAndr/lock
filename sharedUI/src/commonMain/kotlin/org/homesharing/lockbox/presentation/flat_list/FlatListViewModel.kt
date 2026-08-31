@@ -17,14 +17,11 @@ internal class FlatListViewModel(
 ) : ViewModel() {
     private val rawFlats = flatRepository.getFlatsFlow()
 
-    private val _search = MutableStateFlow("")
-    val search = _search.asStateFlow()
-
     private val _type = MutableStateFlow<FlatTypeFilter>(FlatTypeFilter.All)
     val type = _type.asStateFlow()
 
     val flats: Flow<PagingData<Flat>> =
-        combine(rawFlats, type, search) { data, flatType, searchString ->
+        combine(rawFlats, type) { data, flatType ->
             data.filter { flat ->
                 val matchType = when (flatType) {
                     FlatTypeFilter.Residental -> flat.premiseType == PremiseType.RESIDENTIAL
@@ -32,29 +29,14 @@ internal class FlatListViewModel(
                     FlatTypeFilter.All -> true
                 }
 
-                val matchSearch = if (searchString.isNotBlank()) {
-                    flat.name.contains(searchString, ignoreCase = true) ||
-                            flat.address.contains(searchString, ignoreCase = true)
-                } else true
-
-                matchType && matchSearch
+                matchType
             }
         }
-
-    fun onSearchChanged(newSearch: String) = _search.update { newSearch }
     fun onChangeFilter(newFilter: FlatTypeFilter) = _type.update { newFilter }
 }
 
-internal sealed interface FlatTypeFilter {
-    data object Residental : FlatTypeFilter
-    data object NonResidental : FlatTypeFilter
-    data object All : FlatTypeFilter
-
-    companion object {
-        val entries = listOf(
-            All,
-            Residental,
-            NonResidental,
-        )
-    }
+internal enum class FlatTypeFilter {
+    All,
+    Residental,
+    NonResidental,
 }

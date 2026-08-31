@@ -59,5 +59,8 @@ kotlin {
             implementation(libs.dateTime)
             implementation(libs.kotlinx.serialization.json)
         }
+        androidMain.dependencies {
+            implementation(libs.compose.uiTooling)
+        }
     }
 }

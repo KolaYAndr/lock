@@ -26,7 +26,7 @@ internal fun LoginAuthNavigation(
     NavDisplay(
         modifier = modifier,
         entryProvider = entryProvider {
-            entry<LoginRoutes.Login> {
+            entry(LoginRoutes.Login) {
                 LoginScreen()
             }
         },
