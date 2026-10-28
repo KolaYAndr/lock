@@ -18,15 +18,9 @@ Compose one (`iosComposeApp`) that reuses `sharedUI`.
   `SharedUI` framework and renders the same Compose UI as Android/Desktop. Thin Swift shell
   (`iOSApp.swift`, `ContentView.swift` wrapping `MainViewControllerKt.MainViewController()`); its
   "Compile Kotlin Framework" build phase runs `:sharedUI:embedAndSignAppleFrameworkForXcode`.
-- `shared/`: Pure business logic — data, domain, networking, DI.
-    - `commonMain/`: Cross-platform code (Ktor APIs, DTOs, repositories, domain models, paging,
-      token storage interfaces, Koin modules).
-    - `androidMain/`: Android-specific implementations (`LockboxCipher` with Android Keystore,
-      OkHttp engine, Android `PlatformModule`).
-    - `iosMain/`: iOS implementations (Darwin Ktor engine, Keychain-backed `TokenStorage` via the
-      `Keychain` Security-framework wrapper, `KoinHelper` for Swift interop).
-    - `jvmMain/`: Desktop platform module (JVM Ktor engine, DataStore-backed `TokenStorage`
-      under `~/.lockbox/`, desktop `PlatformModule`).
+- `core/`: Low-level cross-cutting infrastructure modules (`model`, `security`, `network`).
+- `feature/`: Business features decomposed into `:api` and `:impl` submodules (`auth`, `account`, `flat`, `invitation`).
+- `shared/`: Umbrella facade module exporting core and feature modules for Xcode (`Shared.framework`), DI aggregation (`SharedAppModules`), and Swift interop (`KoinHelper`).
 - `sharedUI/`: Cross-platform Compose UI module — screens, ViewModels, navigation, theme, and the
   reusable UI kit. Targets Android, JVM, and iOS (`iosArm64`/`iosSimulatorArm64`, static `SharedUI`
   framework). Consumed by `androidApp`, `desktopApp`, and `iosComposeApp`; `iosApp` uses its own
@@ -49,18 +43,18 @@ Compose one (`iosComposeApp`) that reuses `sharedUI`.
 
 ## Tech Stack
 
-- **Language**: Kotlin 2.4.0 (multiplatform).
-- **UI**: Compose Multiplatform 1.11.1 (shared across Android/Desktop/iOS via `sharedUI`) +
+- **Language**: Kotlin 2.4.21 (multiplatform).
+- **UI**: Compose Multiplatform 1.12.2 (shared across Android/Desktop/iOS via `sharedUI`) +
   SwiftUI in the native `iosApp`.
 - **Navigation**: AndroidX Navigation3 (1.1.1 — pinned, do not bump to 2.10.0) with Jetbrains
   lifecycle-viewmodel-navigation3 (2.11.0).
-- **Networking**: Ktor 3.5.0 (OkHttp on Android, Darwin on iOS), `kotlinx.serialization` JSON,
+- **Networking**: Ktor 3.6.0 (OkHttp on Android, Darwin on iOS), `kotlinx.serialization` JSON (1.12.0),
   content negotiation, logging, and auth plugins.
 - **Concurrency**: Kotlin Coroutines & Flow 1.11.0 (kotlinx-coroutines-swing on Desktop).
 - **DI**: Koin 4.2.2 (`koin-core`, `koin-compose`, `koin-compose-viewmodel`, `koin-android`).
-- **Paging**: AndroidX Paging 3.5.0 (used in `FlatPagingSource`).
-- **Persistence**: AndroidX DataStore Preferences 1.2.1.
-- **Image loading**: Coil 3.5.0 with Ktor3 network fetcher.
+- **Paging**: AndroidX Paging 3.5.3 (used in `FlatPagingSource`).
+- **Persistence**: AndroidX DataStore Preferences 1.3.0.
+- **Image loading**: Coil 3.6.3 with Ktor3 network fetcher.
 - **Dates**: `kotlinx-datetime` 0.8.0 with `kotlin.time` `Clock`/`Instant`. Date logic in
   `commonMain` must use these (not `java.time`/`java.util`) so it compiles for the iOS target.
 - **Security**:
@@ -71,7 +65,7 @@ Compose one (`iosComposeApp`) that reuses `sharedUI`.
     - Desktop (JVM): AES/GCM/NoPadding via `LockboxCipher` (256-bit key in a JCEKS keystore file
       under `~/.lockbox/`, restricted to owner-only `600`). Tokens are stored encrypted in
       DataStore Preferences. Not hardware-backed — the key lives on disk, unlike Android/iOS.
-- **Build**: Gradle Kotlin DSL with version catalog (`gradle/libs.versions.toml`); AGP 9.2.1,
+- **Build**: Gradle Kotlin DSL with version catalog (`gradle/libs.versions.toml`); AGP 9.5.0, Gradle 9.6.0,
   `minSdk` 26, `compileSdk`/`targetSdk` 37; typesafe project accessors enabled.
 
 ## Key Components
