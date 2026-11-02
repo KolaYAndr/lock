@@ -11,15 +11,17 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.homesharing.lockbox.data.network.api.response.AuthResponse
-import org.homesharing.lockbox.data.network.api.response.toAuthResponse
-import org.homesharing.lockbox.data.network.token.REFRESH_TOKEN_NAME
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.api.response.toApiResponse
+import org.homesharing.lockbox.data.network.dto.refresh.RefreshTokenRequest
+import org.homesharing.lockbox.data.network.dto.refresh.RefreshTokenResponseDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 
 private const val API = "api"
@@ -36,13 +38,22 @@ const val TOKEN_URL =
     "$KEYCLOACK_BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
 
 private const val CLIENT_TIMEOUT = 5_000L
-private const val CLIENT_ID = "client_id"
-private const val WEB_FRONT = "web-front"
-private const val GRANT_TYPE = "grant_type"
-private const val REFRESH_TOKEN = "refresh_token"
+private const val AUTH = "auth"
+private const val REFRESH = "refresh"
+private const val REFRESH_URL = "$GO_BASE_ENDPOINT/$AUTH/$REFRESH"
 
 expect val networkEngine: HttpClientEngine
 expect val myLogger: Logger
+
+suspend fun HttpClient.refreshToken(
+    refreshToken: String,
+    json: Json,
+): ApiResponse<RefreshTokenResponseDto> {
+    return post {
+        url(REFRESH_URL)
+        setBody(RefreshTokenRequest(refreshToken))
+    }.toApiResponse<RefreshTokenResponseDto>(json)
+}
 
 fun createNetworkClient(
     engine: HttpClientEngine,
@@ -79,28 +90,31 @@ fun createNetworkClient(
                 }
 
                 refreshTokens {
-                    val tokenResponse = client.submitForm(
-                        url = TOKEN_URL,
-                        formParameters = parameters {
-                            append(GRANT_TYPE, REFRESH_TOKEN)
-                            append(CLIENT_ID, WEB_FRONT)
-                            append(REFRESH_TOKEN_NAME, oldTokens?.refreshToken.orEmpty())
+                    val currentRefreshToken = oldTokens?.refreshToken
+                        ?.takeIf { it.isNotBlank() }
+                        ?: tokenStorage.getRefreshToken().takeIf { it.isNotBlank() }
+                        ?: return@refreshTokens null
+
+                    val response = runCatching {
+                        client.refreshToken(currentRefreshToken, json)
+                    }.getOrNull()
+
+                    when (response) {
+                        is ApiResponse.Success -> {
+                            tokenStorage.saveTokens(
+                                response.data.accessToken,
+                                response.data.refreshToken
+                            )
+
+                            BearerTokens(
+                                accessToken = response.data.accessToken,
+                                refreshToken = response.data.refreshToken
+                            )
                         }
-                    ).toAuthResponse(json)
-
-                    if (tokenResponse is AuthResponse.Success) {
-                        tokenStorage.saveTokens(
-                            tokenResponse.accessToken,
-                            tokenResponse.refreshToken
-                        )
-
-                        BearerTokens(
-                            accessToken = tokenResponse.accessToken,
-                            refreshToken = tokenResponse.refreshToken
-                        )
-                    } else {
-                        tokenStorage.clearInfo()
-                        null
+                        else -> {
+                            tokenStorage.clearInfo()
+                            null
+                        }
                     }
                 }
             }
