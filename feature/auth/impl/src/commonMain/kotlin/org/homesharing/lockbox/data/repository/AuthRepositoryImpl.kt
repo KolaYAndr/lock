@@ -1,13 +1,18 @@
 package org.homesharing.lockbox.data.repository
 
 import org.homesharing.lockbox.data.network.api.AuthApi
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
+import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
 import org.homesharing.lockbox.domain.model.confirm_email.toDomain
+import org.homesharing.lockbox.domain.model.otp.OtpResponse
+import org.homesharing.lockbox.domain.model.otp.OtpVerifyResult
+import org.homesharing.lockbox.domain.model.otp.toDomain
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 internal class AuthRepositoryImpl(
@@ -44,4 +49,26 @@ internal class AuthRepositoryImpl(
             apiCall = { api.confirmEmail(email) },
             mapper = ConfirmEmailDto::toDomain
         )
+
+    override suspend fun requestOtp(email: String): Response<OtpResponse> =
+        parseLockboxApiResponse(
+            apiCall = { api.requestOtp(email) },
+            mapper = OtpResponseDto::toDomain
+        )
+
+    override suspend fun verifyOtp(email: String, code: String): Response<OtpVerifyResult> {
+        return try {
+            when (val response = api.verifyOtp(email, code)) {
+                is ApiResponse.Success -> {
+                    with(tokenStorage) {
+                        saveTokens(response.data.accessToken, response.data.refreshToken)
+                    }
+                    Response.Success(response.data.toDomain())
+                }
+                is ApiResponse.Failure -> Response.Failure(response.message)
+            }
+        } catch (t: Throwable) {
+            Response.Failure(t.message.orEmpty())
+        }
+    }
 }

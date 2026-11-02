@@ -2,7 +2,12 @@ package org.homesharing.lockbox.domain.repository
 
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
+import org.homesharing.lockbox.domain.model.otp.OtpResponse
+import org.homesharing.lockbox.domain.model.otp.OtpVerifyResult
 
+/**
+ * Репозиторий для аутентификации и авторизации пользователей.
+ */
 interface AuthRepository {
     suspend fun signUp(
         username: String,
@@ -16,4 +21,21 @@ interface AuthRepository {
     ): Response<Unit>
 
     suspend fun sendConfirmation(email: String): Response<ConfirmEmail>
+
+    /**
+     * Запрашивает отправку одноразового кода (OTP) на указанный email.
+     *
+     * @param email адрес электронной почты
+     * @return [Response] с метаданными запроса OTP
+     */
+    suspend fun requestOtp(email: String): Response<OtpResponse>
+
+    /**
+     * Проверяет одноразовый код (OTP), сохраняет полученные токены и возвращает результат верификации.
+     *
+     * @param email адрес электронной почты
+     * @param code проверочный код
+     * @return [Response] с результатом проверки OTP
+     */
+    suspend fun verifyOtp(email: String, code: String): Response<OtpVerifyResult>
 }
