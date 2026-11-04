@@ -15,6 +15,12 @@ internal interface AccountApi {
         data: ByteArray
     ): ApiResponse<Unit>
 
+    /**
+     * Получает список активных сессий текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @return [ApiResponse] со списком активных сессий пользователя [SessionsDto]
+     */
     suspend fun getSessions(): ApiResponse<SessionsDto>
 
     suspend fun deactivateUser(): ApiResponse<UpdateAccountDto>
