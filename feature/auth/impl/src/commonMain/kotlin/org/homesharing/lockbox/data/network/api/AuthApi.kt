@@ -39,4 +39,12 @@ internal interface AuthApi {
      * @return [ApiResponse] с токенами авторизации и статусом нового пользователя
      */
     suspend fun verifyOtp(email: String, code: String): ApiResponse<OtpVerifyResponseDto>
+
+    /**
+     * Выполняет выход из текущей сессии. Требует авторизации (Bearer token).
+     *
+     * @param refreshToken refresh токен текущей сессии для инвалидации
+     * @return [ApiResponse] с пустым телом ответа (204 No Content)
+     */
+    suspend fun logout(refreshToken: String): ApiResponse<Unit>
 }

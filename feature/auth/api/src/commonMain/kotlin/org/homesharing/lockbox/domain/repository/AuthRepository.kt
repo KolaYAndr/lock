@@ -38,4 +38,11 @@ interface AuthRepository {
      * @return [Response] с результатом проверки OTP
      */
     suspend fun verifyOtp(email: String, code: String): Response<OtpVerifyResult>
+
+    /**
+     * Выполняет выход из текущей сессии и очищает локально сохранённые токены.
+     *
+     * @return [Response] с результатом операции
+     */
+    suspend fun logout(): Response<Unit>
 }
