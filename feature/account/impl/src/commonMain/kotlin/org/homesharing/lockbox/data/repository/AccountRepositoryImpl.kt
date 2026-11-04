@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.data.network.api.AccountApi
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
+import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
@@ -68,24 +69,74 @@ internal class AccountRepositoryImpl(
     }
 
     override suspend fun updateProfileInfo(
-        email: String?,
+        firstName: String?,
+        lastName: String?,
+        middleName: String?,
         phoneNumber: String?,
-        fullName: String?,
+        email: String?,
         livingAddress: String?,
-        passportIssuer: String?,
+        birthDate: String?,
+        passportSeries: String?,
         passportNumber: String?,
-        passportSeries: String?
-    ): Response<Unit> {
-        return parseLockboxApiResponse {
-            api.updateProfileInfo(
-                email = email,
+        passportIssuer: String?,
+        passportIssuedAt: String?,
+        passportDivisionCode: String?,
+    ): Response<ProfileInfo> {
+        val contactInfo = if (phoneNumber != null || email != null) {
+            ProfileInfoRequestDto.ContactInfoRequestDto(
                 phoneNumber = phoneNumber,
-                fullName = fullName,
-                livingAddress = livingAddress,
-                passportIssuer = passportIssuer,
-                passportNumber = passportNumber,
-                passportSeries = passportSeries,
+                email = email,
             )
+        } else {
+            null
         }
+
+        val passport = if (
+            passportSeries != null ||
+            passportNumber != null ||
+            passportIssuer != null ||
+            passportIssuedAt != null ||
+            passportDivisionCode != null
+        ) {
+            ProfileInfoRequestDto.LegalInfoRequestDto.PassportRequestDto(
+                passportSeries = passportSeries,
+                passportNumber = passportNumber,
+                issuer = passportIssuer,
+                issuedAt = passportIssuedAt,
+                divisionCode = passportDivisionCode,
+            )
+        } else {
+            null
+        }
+
+        val legalInfo = if (livingAddress != null || birthDate != null || passport != null) {
+            ProfileInfoRequestDto.LegalInfoRequestDto(
+                livingAddress = livingAddress,
+                birthDate = birthDate,
+                passport = passport,
+            )
+        } else {
+            null
+        }
+
+        val request = ProfileInfoRequestDto(
+            firstName = firstName,
+            lastName = lastName,
+            middleName = middleName,
+            contactInfo = contactInfo,
+            legalInfo = legalInfo,
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.updateProfileInfo(request) },
+            mapper = ProfileInfoDto::toDomain
+        )
+    }
+
+    override suspend fun becomeLandlord(): Response<ProfileInfo> {
+        return parseLockboxApiResponse(
+            apiCall = { api.becomeLandlord() },
+            mapper = ProfileInfoDto::toDomain
+        )
     }
 }

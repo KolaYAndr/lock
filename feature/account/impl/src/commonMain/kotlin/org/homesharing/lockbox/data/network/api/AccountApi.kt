@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
+import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 
@@ -27,13 +28,22 @@ internal interface AccountApi {
      */
     suspend fun getProfileInfo(): ApiResponse<ProfileInfoDto>
 
+    /**
+     * Создает или обновляет данные профиля текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @param request объект [ProfileInfoRequestDto] с данными профиля
+     * @return [ApiResponse] с полным объектом профиля пользователя [ProfileInfoDto] (201 Created)
+     */
     suspend fun updateProfileInfo(
-        email: String? = null,
-        phoneNumber: String? = null,
-        fullName: String? = null,
-        livingAddress: String? = null,
-        passportIssuer: String? = null,
-        passportNumber: String? = null,
-        passportSeries: String? = null,
-    ): ApiResponse<Unit>
+        request: ProfileInfoRequestDto
+    ): ApiResponse<ProfileInfoDto>
+
+    /**
+     * Активирует роль арендодателя (landlord) для текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @return [ApiResponse] с полным объектом профиля пользователя [ProfileInfoDto] (200 OK)
+     */
+    suspend fun becomeLandlord(): ApiResponse<ProfileInfoDto>
 }

@@ -8,17 +8,16 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
-import org.homesharing.lockbox.data.network.dto.profile_info.ContactInfoRequestDto
-import org.homesharing.lockbox.data.network.dto.profile_info.LegalInfoRequestDto
-import org.homesharing.lockbox.data.network.dto.profile_info.PassportRequestDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
@@ -33,12 +32,14 @@ private const val UPLOAD = "upload"
 private const val DOWNLOAD = "download"
 private const val ME = "me"
 private const val PROFILE_INFO = "profile-info"
+private const val LANDLORD = "landlord"
 
 private const val SESSIONS_URL = "$GO_BASE_ENDPOINT/$SESSIONS"
 private const val AVATARS_POST_URL = "$GO_BASE_ENDPOINT/$AVATARS/$UPLOAD"
 private const val AVATARS_URL = "$GO_BASE_ENDPOINT/$AVATARS/$DOWNLOAD"
 private const val UPDATE_ACCOUNT_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$ME"
 private const val PROFILE_INFO_URL = "$GO_BASE_ENDPOINT/$PROFILE_INFO"
+private const val PROFILE_INFO_LANDLORD_URL = "$PROFILE_INFO_URL/$LANDLORD"
 
 internal class AccountApiImpl(
     private val client: HttpClient,
@@ -92,32 +93,18 @@ internal class AccountApiImpl(
     }
 
     override suspend fun updateProfileInfo(
-        email: String?,
-        phoneNumber: String?,
-        fullName: String?,
-        livingAddress: String?,
-        passportIssuer: String?,
-        passportNumber: String?,
-        passportSeries: String?
-    ): ApiResponse<Unit> {
-        val request = ProfileInfoRequestDto(
-            contactInfo = ContactInfoRequestDto(
-                email = email,
-                phoneNumber = phoneNumber
-            ),
-            legalInfo = LegalInfoRequestDto(
-                fullName = fullName,
-                livingAddress = livingAddress,
-                passport = PassportRequestDto(
-                    issuer = passportIssuer,
-                    passportNumber = passportNumber,
-                    passportSeries = passportSeries
-                )
-            )
-        )
-        return client.patch {
+        request: ProfileInfoRequestDto
+    ): ApiResponse<ProfileInfoDto> {
+        return client.post {
             url(PROFILE_INFO_URL)
+            contentType(ContentType.Application.Json)
             setBody(request)
-        }.toApiResponse<Unit>(json)
+        }.toApiResponse<ProfileInfoDto>(json)
+    }
+
+    override suspend fun becomeLandlord(): ApiResponse<ProfileInfoDto> {
+        return client.post {
+            url(PROFILE_INFO_LANDLORD_URL)
+        }.toApiResponse<ProfileInfoDto>(json)
     }
 }

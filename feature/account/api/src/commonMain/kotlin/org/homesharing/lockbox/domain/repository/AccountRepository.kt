@@ -17,12 +17,18 @@ interface AccountRepository {
     suspend fun closeOtherSessions(): Response<Unit>
     suspend fun getProfileInfo(): Response<ProfileInfo>
     suspend fun updateProfileInfo(
-        email: String? = null,
+        firstName: String? = null,
+        lastName: String? = null,
+        middleName: String? = null,
         phoneNumber: String? = null,
-        fullName: String? = null,
+        email: String? = null,
         livingAddress: String? = null,
-        passportIssuer: String? = null,
-        passportNumber: String? = null,
+        birthDate: String? = null,
         passportSeries: String? = null,
-    ): Response<Unit>
+        passportNumber: String? = null,
+        passportIssuer: String? = null,
+        passportIssuedAt: String? = null,
+        passportDivisionCode: String? = null,
+    ): Response<ProfileInfo>
+    suspend fun becomeLandlord(): Response<ProfileInfo>
 }
