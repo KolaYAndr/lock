@@ -25,6 +25,12 @@ internal interface AccountApi {
 
     suspend fun deactivateUser(): ApiResponse<UpdateAccountDto>
 
+    /**
+     * Завершает все остальные активные сессии текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @return [ApiResponse] с пустым телом ответа (204 No Content)
+     */
     suspend fun closeOtherSessions(): ApiResponse<Unit>
 
     /**
