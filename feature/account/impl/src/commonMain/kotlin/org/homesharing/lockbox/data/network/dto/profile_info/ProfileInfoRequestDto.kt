@@ -4,31 +4,31 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ProfileInfoRequest(
+internal data class ProfileInfoRequestDto(
     @SerialName("contact_info")
-    val contactInfo: ContactInfoRequest? = null,
+    val contactInfo: ContactInfoRequestDto? = null,
     @SerialName("legal_info")
-    val legalInfo: LegalInfoRequest? = null
+    val legalInfo: LegalInfoRequestDto? = null
 )
 
 @Serializable
-internal data class ContactInfoRequest(
+internal data class ContactInfoRequestDto(
     val email: String? = null,
     @SerialName("phone_number")
     val phoneNumber: String? = null
 )
 
 @Serializable
-internal data class LegalInfoRequest(
+internal data class LegalInfoRequestDto(
     @SerialName("full_name")
     val fullName: String? = null,
     @SerialName("living_address")
     val livingAddress: String? = null,
-    val passport: PassportRequest? = null
+    val passport: PassportRequestDto? = null
 )
 
 @Serializable
-internal data class PassportRequest(
+internal data class PassportRequestDto(
     val issuer: String? = null,
     @SerialName("passport_number")
     val passportNumber: String? = null,

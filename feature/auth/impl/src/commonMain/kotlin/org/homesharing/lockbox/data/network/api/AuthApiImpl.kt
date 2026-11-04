@@ -16,13 +16,13 @@ import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.KOTLIN_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.TOKEN_URL
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequest
+import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
 import org.homesharing.lockbox.data.network.dto.logout.LogoutRequestDto
-import org.homesharing.lockbox.data.network.dto.otp.OtpRequest
+import org.homesharing.lockbox.data.network.dto.otp.OtpRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
-import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyRequest
+import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
-import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequest
+import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 
 private const val ACCOUNTS = "accounts"
 private const val USERS = "users"
@@ -57,7 +57,7 @@ internal class AuthApiImpl(
         password: String,
         passwordRepeated: String,
     ): ApiResponse<Unit> {
-        val request = SignUpRequest(
+        val request = SignUpRequestDto(
             email = username,
             password = password,
             passwordRepeat = passwordRepeated,
@@ -83,7 +83,7 @@ internal class AuthApiImpl(
     ).toAuthResponse(json)
 
     override suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailDto> {
-        val request = ConfirmEmailRequest(email)
+        val request = ConfirmEmailRequestDto(email)
         return client.post {
             url(CONFIRM_EMAIL_URL)
             setBody(request)
@@ -91,7 +91,7 @@ internal class AuthApiImpl(
     }
 
     override suspend fun requestOtp(email: String): ApiResponse<OtpResponseDto> {
-        val request = OtpRequest(email)
+        val request = OtpRequestDto(email)
         return client.post {
             url(OTP_REQUEST_URL)
             setBody(request)
@@ -99,7 +99,7 @@ internal class AuthApiImpl(
     }
 
     override suspend fun verifyOtp(email: String, code: String): ApiResponse<OtpVerifyResponseDto> {
-        val request = OtpVerifyRequest(email = email, code = code)
+        val request = OtpVerifyRequestDto(email = email, code = code)
         return client.post {
             url(OTP_VERIFY_URL)
             setBody(request)

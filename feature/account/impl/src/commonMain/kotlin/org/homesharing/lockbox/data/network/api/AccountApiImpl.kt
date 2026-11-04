@@ -16,14 +16,14 @@ import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
-import org.homesharing.lockbox.data.network.dto.profile_info.ContactInfoRequest
-import org.homesharing.lockbox.data.network.dto.profile_info.LegalInfoRequest
-import org.homesharing.lockbox.data.network.dto.profile_info.PassportRequest
+import org.homesharing.lockbox.data.network.dto.profile_info.ContactInfoRequestDto
+import org.homesharing.lockbox.data.network.dto.profile_info.LegalInfoRequestDto
+import org.homesharing.lockbox.data.network.dto.profile_info.PassportRequestDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
-import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequest
+import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequest
+import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
 
 private const val ACCOUNTS = "accounts"
 private const val AVATARS = "avatars"
@@ -72,7 +72,7 @@ internal class AccountApiImpl(
         }.toApiResponse<SessionsDto>(json)
 
     override suspend fun deactivateUser(): ApiResponse<UpdateAccountDto> {
-        val request = UpdateAccountRequest(null, false, null, null)
+        val request = UpdateAccountRequestDto(null, false, null, null)
         return client.patch {
             url(UPDATE_ACCOUNT_URL)
             setBody(request)
@@ -100,15 +100,15 @@ internal class AccountApiImpl(
         passportNumber: String?,
         passportSeries: String?
     ): ApiResponse<Unit> {
-        val request = ProfileInfoRequest(
-            contactInfo = ContactInfoRequest(
+        val request = ProfileInfoRequestDto(
+            contactInfo = ContactInfoRequestDto(
                 email = email,
                 phoneNumber = phoneNumber
             ),
-            legalInfo = LegalInfoRequest(
+            legalInfo = LegalInfoRequestDto(
                 fullName = fullName,
                 livingAddress = livingAddress,
-                passport = PassportRequest(
+                passport = PassportRequestDto(
                     issuer = passportIssuer,
                     passportNumber = passportNumber,
                     passportSeries = passportSeries
