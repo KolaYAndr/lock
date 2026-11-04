@@ -1,24 +1,35 @@
 package org.homesharing.lockbox.domain.model.profile_info
 
 data class ProfileInfo(
-    val contactInfo: ContactInfo,
     val id: String,
-    val legalInfo: LegalInfo
-)
+    val emailVerified: Boolean,
+    val activeRole: String,
+    val availableRoles: List<String>,
+    val identityComplete: Boolean,
+    val missingIdentityFields: List<String>,
+    val firstName: String?,
+    val lastName: String?,
+    val middleName: String?,
+    val contactInfo: ContactInfo?,
+    val legalInfo: LegalInfo?,
+) {
+    data class ContactInfo(
+        val email: String,
+        val phoneNumber: String,
+    )
 
-data class ContactInfo(
-    val email: String,
-    val phoneNumber: String
-)
-
-data class LegalInfo(
-    val fullName: String,
-    val livingAddress: String,
-    val passport: Passport
-)
-
-data class Passport(
-    val issuer: String,
-    val passportNumber: String,
-    val passportSeries: String
-)
+    data class LegalInfo(
+        val fullName: String,
+        val livingAddress: String,
+        val birthDate: String?,
+        val passport: Passport,
+    ) {
+        data class Passport(
+            val passportSeries: String,
+            val passportNumber: String,
+            val issuer: String,
+            val issuedAt: String?,
+            val divisionCode: String?,
+        )
+    }
+}

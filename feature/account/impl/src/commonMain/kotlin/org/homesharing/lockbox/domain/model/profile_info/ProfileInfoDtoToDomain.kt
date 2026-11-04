@@ -1,29 +1,37 @@
 package org.homesharing.lockbox.domain.model.profile_info
 
-import org.homesharing.lockbox.data.network.dto.profile_info.ContactInfoDto
-import org.homesharing.lockbox.data.network.dto.profile_info.LegalInfoDto
-import org.homesharing.lockbox.data.network.dto.profile_info.PassportDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 
 internal fun ProfileInfoDto.toDomain() = ProfileInfo(
     id = id,
-    contactInfo = contactInfo.toDomain(),
-    legalInfo = legalInfo.toDomain()
+    emailVerified = emailVerified,
+    activeRole = activeRole,
+    availableRoles = availableRoles,
+    identityComplete = identityComplete,
+    missingIdentityFields = missingIdentityFields,
+    firstName = firstName,
+    lastName = lastName,
+    middleName = middleName,
+    contactInfo = contactInfo?.toDomain(),
+    legalInfo = legalInfo?.toDomain(),
 )
 
-internal fun LegalInfoDto.toDomain() = LegalInfo(
+internal fun ProfileInfoDto.LegalInfoDto.toDomain() = ProfileInfo.LegalInfo(
     fullName = fullName,
     livingAddress = livingAddress,
-    passport = passport.toDomain()
+    birthDate = birthDate,
+    passport = passport.toDomain(),
 )
 
-internal fun PassportDto.toDomain() = Passport(
-    issuer = issuer,
+internal fun ProfileInfoDto.LegalInfoDto.PassportDto.toDomain() = ProfileInfo.LegalInfo.Passport(
+    passportSeries = passportSeries,
     passportNumber = passportNumber,
-    passportSeries = passportSeries
+    issuer = issuer,
+    issuedAt = issuedAt,
+    divisionCode = divisionCode,
 )
 
-internal fun ContactInfoDto.toDomain() = ContactInfo(
+internal fun ProfileInfoDto.ContactInfoDto.toDomain() = ProfileInfo.ContactInfo(
     email = email,
-    phoneNumber = phoneNumber
+    phoneNumber = phoneNumber,
 )

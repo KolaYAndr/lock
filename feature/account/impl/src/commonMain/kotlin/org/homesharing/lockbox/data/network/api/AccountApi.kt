@@ -19,6 +19,12 @@ internal interface AccountApi {
 
     suspend fun closeOtherSessions(): ApiResponse<Unit>
 
+    /**
+     * Получает информацию о профиле текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @return [ApiResponse] с данными профиля пользователя [ProfileInfoDto]
+     */
     suspend fun getProfileInfo(): ApiResponse<ProfileInfoDto>
 
     suspend fun updateProfileInfo(
