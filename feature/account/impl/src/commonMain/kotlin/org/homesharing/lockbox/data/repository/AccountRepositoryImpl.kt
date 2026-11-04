@@ -14,6 +14,8 @@ import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.avatar.toDomain
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.profile_info.toDomain
+import org.homesharing.lockbox.domain.model.role.UserRole
+import org.homesharing.lockbox.domain.model.role.toDto
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -136,6 +138,13 @@ internal class AccountRepositoryImpl(
     override suspend fun becomeLandlord(): Response<ProfileInfo> {
         return parseLockboxApiResponse(
             apiCall = { api.becomeLandlord() },
+            mapper = ProfileInfoDto::toDomain
+        )
+    }
+
+    override suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo> {
+        return parseLockboxApiResponse(
+            apiCall = { api.updateActiveRole(role.toDto()) },
             mapper = ProfileInfoDto::toDomain
         )
     }

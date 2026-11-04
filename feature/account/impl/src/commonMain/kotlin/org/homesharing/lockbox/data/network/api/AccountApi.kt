@@ -4,6 +4,7 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
+import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
 import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 
@@ -46,4 +47,15 @@ internal interface AccountApi {
      * @return [ApiResponse] с полным объектом профиля пользователя [ProfileInfoDto] (200 OK)
      */
     suspend fun becomeLandlord(): ApiResponse<ProfileInfoDto>
+
+    /**
+     * Обновляет активную роль текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @param role новая активная роль пользователя [UserRoleDto]
+     * @return [ApiResponse] с полным объектом профиля пользователя [ProfileInfoDto] (200 OK)
+     */
+    suspend fun updateActiveRole(
+        role: UserRoleDto
+    ): ApiResponse<ProfileInfoDto>
 }

@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
+import org.homesharing.lockbox.domain.model.role.UserRole
 import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
@@ -31,4 +32,5 @@ interface AccountRepository {
         passportDivisionCode: String? = null,
     ): Response<ProfileInfo>
     suspend fun becomeLandlord(): Response<ProfileInfo>
+    suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo>
 }

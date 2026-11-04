@@ -103,9 +103,9 @@ private fun RolePickerScreen(
             HomesharingRadioItem(
                 icon = painterResource(Res.drawable.ic_house),
                 title = stringResource(Res.string.owner),
-                isSelected = pickedRole == UserRole.Owner,
+                isSelected = pickedRole == UserRole.Landlord,
                 onClick = {
-                    onSelectRole(UserRole.Owner)
+                    onSelectRole(UserRole.Landlord)
                 },
                 modifier = Modifier.weight(1f),
             )
