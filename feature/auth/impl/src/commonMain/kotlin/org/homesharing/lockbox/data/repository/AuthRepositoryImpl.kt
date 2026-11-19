@@ -4,6 +4,7 @@ import org.homesharing.lockbox.data.network.api.AuthApi
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
+import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
@@ -55,6 +56,22 @@ internal class AuthRepositoryImpl(
                     Response.Success(Unit)
                 }
                 is AuthResponse.Error -> Response.Failure(response.errorDescription)
+            }
+        } catch (t: Throwable) {
+            Response.Failure(t.message.orEmpty())
+        }
+    }
+
+    override suspend fun login(email: String, password: String): Response<Unit> {
+        return try {
+            when (val response = api.login(LoginRequestDto(email = email, password = password))) {
+                is ApiResponse.Success -> {
+                    with(tokenStorage) {
+                        saveTokens(response.data.accessToken, response.data.refreshToken)
+                    }
+                    Response.Success(Unit)
+                }
+                is ApiResponse.Failure -> Response.Failure(response.message)
             }
         } catch (t: Throwable) {
             Response.Failure(t.message.orEmpty())

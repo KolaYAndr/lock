@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
+import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
@@ -33,6 +34,17 @@ internal interface AuthApi {
         username: String,
         password: String,
     ): AuthResponse
+
+    /**
+     * Обменивает email и пароль на пару токенов через Keycloak password grant.
+     * Публичный эндпоинт, авторизация не требуется.
+     *
+     * @param request объект [LoginRequestDto] с email и паролем
+     * @return [ApiResponse] с парой токенов [TokenResponseDto] (200 OK)
+     */
+    suspend fun login(
+        request: LoginRequestDto,
+    ): ApiResponse<TokenResponseDto>
 
     suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailDto>
 

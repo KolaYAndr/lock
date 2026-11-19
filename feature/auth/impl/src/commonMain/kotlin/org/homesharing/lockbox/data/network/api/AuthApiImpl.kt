@@ -17,6 +17,7 @@ import org.homesharing.lockbox.data.network.client.KOTLIN_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.TOKEN_URL
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailRequestDto
+import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.logout.LogoutRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
@@ -44,6 +45,7 @@ private const val REQUEST = "request"
 private const val VERIFY = "verify"
 private const val LOGOUT = "logout"
 private const val REGISTER = "register"
+private const val LOGIN = "login"
 
 private const val SIGN_UP_URL = "$KOTLIN_BASE_ENDPOINT/$USERS/$SIGN_UP"
 private const val CONFIRM_EMAIL_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
@@ -51,6 +53,7 @@ private const val OTP_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$REQUEST"
 private const val OTP_VERIFY_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$VERIFY"
 private const val LOGOUT_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGOUT"
 private const val REGISTER_URL = "$GO_BASE_ENDPOINT/$AUTH/$REGISTER"
+private const val LOGIN_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGIN"
 
 internal class AuthApiImpl(
     private val client: HttpClient,
@@ -94,6 +97,15 @@ internal class AuthApiImpl(
             append(SCOPE, OFFLINE_ACCESS_SCOPE)
         }
     ).toAuthResponse(json)
+
+    override suspend fun login(
+        request: LoginRequestDto,
+    ): ApiResponse<TokenResponseDto> {
+        return client.post {
+            url(LOGIN_URL)
+            setBody(request)
+        }.toApiResponse<TokenResponseDto>(json)
+    }
 
     override suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailDto> {
         val request = ConfirmEmailRequestDto(email)

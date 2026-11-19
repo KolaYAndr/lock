@@ -29,6 +29,16 @@ interface AuthRepository {
         password: String,
     ): Response<Unit>
 
+    /**
+     * Обменивает email и пароль на пару токенов через Keycloak password grant
+     * (`POST /api/auth/login`) и сохраняет их локально.
+     *
+     * @param email адрес электронной почты
+     * @param password пароль
+     * @return [Response] с результатом входа
+     */
+    suspend fun login(email: String, password: String): Response<Unit>
+
     suspend fun sendConfirmation(email: String): Response<ConfirmEmail>
 
     /**
