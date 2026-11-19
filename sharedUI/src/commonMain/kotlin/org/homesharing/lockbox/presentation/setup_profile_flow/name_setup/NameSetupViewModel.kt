@@ -34,12 +34,10 @@ internal class NameSetupViewModel(
 
     private fun proceed() {
         viewModelScope.launch {
-//            val fullName = buildString {
-//                append(_nameSetupState.value.firstName)
-//                append(" ")
-//                append(_nameSetupState.value.lastName)
-//            }
-//            val response = accountRepository.updateProfileInfo(fullName = fullName)
+//            val response = accountRepository.updateProfileInfo(
+//                firstName = _nameSetupState.value.firstName,
+//                lastName = _nameSetupState.value.lastName,
+//            )
 //
 //            if (response is Response.Success) {
                 _onSuccess.emit(Unit)

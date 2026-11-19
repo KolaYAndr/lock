@@ -45,7 +45,7 @@ private const val REFRESH_URL = "$GO_BASE_ENDPOINT/$AUTH/$REFRESH"
 expect val networkEngine: HttpClientEngine
 expect val myLogger: Logger
 
-suspend fun HttpClient.refreshToken(
+internal suspend fun HttpClient.refreshToken(
     refreshToken: String,
     json: Json,
 ): ApiResponse<RefreshTokenResponseDto> {
