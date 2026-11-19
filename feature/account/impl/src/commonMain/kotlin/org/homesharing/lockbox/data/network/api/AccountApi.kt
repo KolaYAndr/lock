@@ -5,7 +5,6 @@ import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
-import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 
 internal interface AccountApi {
@@ -15,23 +14,7 @@ internal interface AccountApi {
         data: ByteArray
     ): ApiResponse<Unit>
 
-    /**
-     * Получает список активных сессий текущего пользователя.
-     * Требует авторизации (Bearer token).
-     *
-     * @return [ApiResponse] со списком активных сессий пользователя [SessionsDto]
-     */
-    suspend fun getSessions(): ApiResponse<SessionsDto>
-
     suspend fun deactivateUser(): ApiResponse<UpdateAccountDto>
-
-    /**
-     * Завершает все остальные активные сессии текущего пользователя.
-     * Требует авторизации (Bearer token).
-     *
-     * @return [ApiResponse] с пустым телом ответа (204 No Content)
-     */
-    suspend fun closeOtherSessions(): ApiResponse<Unit>
 
     /**
      * Получает информацию о профиле текущего пользователя.

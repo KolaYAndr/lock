@@ -21,14 +21,11 @@ import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
-import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountRequestDto
 
 private const val ACCOUNTS = "accounts"
 private const val AVATARS = "avatars"
-private const val SESSIONS = "sessions"
-private const val LOGOUT = "logout"
 private const val UPLOAD = "upload"
 private const val DOWNLOAD = "download"
 private const val ME = "me"
@@ -36,7 +33,6 @@ private const val PROFILE_INFO = "profile-info"
 private const val LANDLORD = "landlord"
 private const val ACTIVE_ROLE = "active-role"
 
-private const val SESSIONS_URL = "$GO_BASE_ENDPOINT/$SESSIONS"
 private const val AVATARS_POST_URL = "$GO_BASE_ENDPOINT/$AVATARS/$UPLOAD"
 private const val AVATARS_URL = "$GO_BASE_ENDPOINT/$AVATARS/$DOWNLOAD"
 private const val UPDATE_ACCOUNT_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$ME"
@@ -70,23 +66,12 @@ internal class AccountApiImpl(
         ).toApiResponse<Unit>(json)
     }
 
-    override suspend fun getSessions(): ApiResponse<SessionsDto> =
-        client.get {
-            url(SESSIONS_URL)
-        }.toApiResponse<SessionsDto>(json)
-
     override suspend fun deactivateUser(): ApiResponse<UpdateAccountDto> {
         val request = UpdateAccountRequestDto(null, false, null, null)
         return client.patch {
             url(UPDATE_ACCOUNT_URL)
             setBody(request)
         }.toApiResponse<UpdateAccountDto>(json)
-    }
-
-    override suspend fun closeOtherSessions(): ApiResponse<Unit> {
-        return client.post {
-            url("$SESSIONS_URL/$LOGOUT")
-        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun getProfileInfo(): ApiResponse<ProfileInfoDto> {

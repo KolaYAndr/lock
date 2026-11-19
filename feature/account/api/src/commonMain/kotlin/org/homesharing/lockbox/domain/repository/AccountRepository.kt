@@ -5,7 +5,6 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.role.UserRole
-import org.homesharing.lockbox.domain.model.sessions.Sessions
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
 interface AccountRepository {
@@ -13,9 +12,7 @@ interface AccountRepository {
     val loggedIn: Flow<Boolean>
     suspend fun getImageLink(): Response<Avatar>
     suspend fun sendImage(data: ByteArray): Response<Unit>
-    suspend fun getSessions(): Response<Sessions>
     suspend fun deactivateUser(): Response<UpdateAccount>
-    suspend fun closeOtherSessions(): Response<Unit>
     suspend fun getProfileInfo(): Response<ProfileInfo>
     suspend fun updateProfileInfo(
         firstName: String? = null,

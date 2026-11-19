@@ -10,6 +10,7 @@ import org.homesharing.lockbox.data.network.dto.password.ChangePasswordRequestDt
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
+import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
@@ -18,6 +19,8 @@ import org.homesharing.lockbox.domain.model.confirm_email.toDomain
 import org.homesharing.lockbox.domain.model.otp.OtpResponse
 import org.homesharing.lockbox.domain.model.otp.OtpVerifyResult
 import org.homesharing.lockbox.domain.model.otp.toDomain
+import org.homesharing.lockbox.domain.model.sessions.Sessions
+import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.repository.AuthRepository
 
 internal class AuthRepositoryImpl(
@@ -144,6 +147,17 @@ internal class AuthRepositoryImpl(
             )
         }
     )
+
+    override suspend fun getSessions(): Response<Sessions> =
+        parseLockboxApiResponse(
+            apiCall = { api.getSessions() },
+            mapper = SessionsDto::toDomain
+        )
+
+    override suspend fun closeOtherSessions(): Response<Unit> =
+        parseLockboxApiResponse {
+            api.closeOtherSessions()
+        }
 
     override suspend fun logout(): Response<Unit> {
         return try {

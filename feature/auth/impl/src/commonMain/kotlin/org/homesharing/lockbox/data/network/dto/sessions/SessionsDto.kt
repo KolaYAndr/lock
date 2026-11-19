@@ -11,13 +11,7 @@ internal data class SessionsDto(
     internal data class SessionDto(
         val id: String,
         val ip: String,
-        @SerialName("user_agent")
-        val userAgent: String,
-        @SerialName("started_at")
-        val startedAt: String,
-        @SerialName("last_access_at")
-        val lastAccessAt: String,
-        @SerialName("is_current")
-        val isCurrent: Boolean,
+        @SerialName("last_active")
+        val lastActive: String,
     )
 }

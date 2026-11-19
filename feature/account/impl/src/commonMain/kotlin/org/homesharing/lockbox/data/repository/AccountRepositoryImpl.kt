@@ -5,7 +5,6 @@ import org.homesharing.lockbox.data.network.api.AccountApi
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
-import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
@@ -16,8 +15,6 @@ import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.profile_info.toDomain
 import org.homesharing.lockbox.domain.model.role.UserRole
 import org.homesharing.lockbox.domain.model.role.toDto
-import org.homesharing.lockbox.domain.model.sessions.Sessions
-import org.homesharing.lockbox.domain.model.sessions.toDomain
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 import org.homesharing.lockbox.domain.model.update_account.toDomain
 import org.homesharing.lockbox.domain.repository.AccountRepository
@@ -41,25 +38,11 @@ internal class AccountRepositoryImpl(
             api.sendImage(data = data)
         }
 
-    override suspend fun getSessions(): Response<Sessions> =
-        parseLockboxApiResponse(
-            apiCall = { api.getSessions() },
-            mapper = SessionsDto::toDomain
-        )
-
     override suspend fun deactivateUser(): Response<UpdateAccount> =
         parseLockboxApiResponse(
             apiCall = { api.deactivateUser() },
             mapper = UpdateAccountDto::toDomain
         )
-
-    override suspend fun closeOtherSessions(): Response<Unit> {
-        return parseLockboxApiResponse(
-            apiCall = {
-                api.closeOtherSessions()
-            },
-        )
-    }
 
     override suspend fun getProfileInfo(): Response<ProfileInfo> {
         return parseLockboxApiResponse(

@@ -6,9 +6,6 @@ data class Sessions(
     data class Session(
         val id: String,
         val ip: String,
-        val userAgent: String,
-        val startedAt: String,
-        val lastAccessAt: String,
-        val isCurrent: Boolean,
+        val lastActive: String,
     )
 }

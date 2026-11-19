@@ -9,8 +9,5 @@ internal fun SessionsDto.toDomain() = Sessions(
 internal fun SessionsDto.SessionDto.toDomain() = Sessions.Session(
     id = id,
     ip = ip,
-    userAgent = userAgent,
-    startedAt = startedAt,
-    lastAccessAt = lastAccessAt,
-    isCurrent = isCurrent,
+    lastActive = lastActive,
 )

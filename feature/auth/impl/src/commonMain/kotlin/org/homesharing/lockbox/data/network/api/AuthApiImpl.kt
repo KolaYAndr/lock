@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
@@ -27,6 +28,7 @@ import org.homesharing.lockbox.data.network.dto.password.ChangePasswordRequestDt
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
+import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
 
@@ -51,6 +53,7 @@ private const val CONFIRM = "confirm"
 private const val LOGOUT = "logout"
 private const val REGISTER = "register"
 private const val LOGIN = "login"
+private const val SESSIONS = "sessions"
 
 private const val SIGN_UP_URL = "$KOTLIN_BASE_ENDPOINT/$USERS/$SIGN_UP"
 private const val CONFIRM_EMAIL_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
@@ -62,6 +65,8 @@ private const val CHANGE_PASSWORD_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD"
 private const val LOGOUT_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGOUT"
 private const val REGISTER_URL = "$GO_BASE_ENDPOINT/$AUTH/$REGISTER"
 private const val LOGIN_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGIN"
+private const val SESSIONS_URL = "$GO_BASE_ENDPOINT/$SESSIONS"
+private const val CLOSE_OTHER_SESSIONS_URL = "$SESSIONS_URL/$LOGOUT"
 
 internal class AuthApiImpl(
     private val client: HttpClient,
@@ -165,6 +170,16 @@ internal class AuthApiImpl(
             setBody(request)
         }.toApiResponse<Unit>(json)
     }
+
+    override suspend fun getSessions(): ApiResponse<SessionsDto> =
+        client.get {
+            url(SESSIONS_URL)
+        }.toApiResponse<SessionsDto>(json)
+
+    override suspend fun closeOtherSessions(): ApiResponse<Unit> =
+        client.post {
+            url(CLOSE_OTHER_SESSIONS_URL)
+        }.toApiResponse<Unit>(json)
 
     override suspend fun logout(refreshToken: String): ApiResponse<Unit> {
         val request = LogoutRequestDto(refreshToken = refreshToken)

@@ -4,6 +4,7 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
 import org.homesharing.lockbox.domain.model.otp.OtpResponse
 import org.homesharing.lockbox.domain.model.otp.OtpVerifyResult
+import org.homesharing.lockbox.domain.model.sessions.Sessions
 
 /**
  * Репозиторий для аутентификации и авторизации пользователей.
@@ -93,6 +94,22 @@ interface AuthRepository {
         currentPassword: String,
         newPassword: String,
     ): Response<Unit>
+
+    /**
+     * Получает список активных сессий текущего пользователя.
+     * Требует авторизации.
+     *
+     * @return [Response] со списком активных сессий
+     */
+    suspend fun getSessions(): Response<Sessions>
+
+    /**
+     * Завершает все активные сессии текущего пользователя, кроме текущей.
+     * Требует авторизации.
+     *
+     * @return [Response] с результатом операции
+     */
+    suspend fun closeOtherSessions(): Response<Unit>
 
     /**
      * Выполняет выход из текущей сессии и очищает локально сохранённые токены.

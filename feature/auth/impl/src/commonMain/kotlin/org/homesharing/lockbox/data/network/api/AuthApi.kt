@@ -10,6 +10,7 @@ import org.homesharing.lockbox.data.network.dto.password.ChangePasswordRequestDt
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
+import org.homesharing.lockbox.data.network.dto.sessions.SessionsDto
 import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
 
 /**
@@ -100,6 +101,22 @@ internal interface AuthApi {
     suspend fun changePassword(
         request: ChangePasswordRequestDto,
     ): ApiResponse<Unit>
+
+    /**
+     * Получает список активных сессий текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @return [ApiResponse] со списком активных сессий пользователя [SessionsDto]
+     */
+    suspend fun getSessions(): ApiResponse<SessionsDto>
+
+    /**
+     * Завершает все остальные активные сессии текущего пользователя.
+     * Требует авторизации (Bearer token).
+     *
+     * @return [ApiResponse] с пустым телом ответа (204 No Content)
+     */
+    suspend fun closeOtherSessions(): ApiResponse<Unit>
 
     /**
      * Выполняет выход из текущей сессии. Требует авторизации (Bearer token).
