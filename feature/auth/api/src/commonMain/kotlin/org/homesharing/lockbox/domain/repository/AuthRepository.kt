@@ -82,6 +82,19 @@ interface AuthRepository {
     ): Response<Unit>
 
     /**
+     * Меняет пароль текущего пользователя. Требует авторизации;
+     * текущий пароль проверяется через Keycloak direct grant.
+     *
+     * @param currentPassword текущий пароль
+     * @param newPassword новый пароль (не короче 8 символов)
+     * @return [Response] с результатом операции
+     */
+    suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String,
+    ): Response<Unit>
+
+    /**
      * Выполняет выход из текущей сессии и очищает локально сохранённые токены.
      *
      * @return [Response] с результатом операции

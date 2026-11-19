@@ -23,6 +23,7 @@ import org.homesharing.lockbox.data.network.dto.otp.OtpRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
+import org.homesharing.lockbox.data.network.dto.password.ChangePasswordRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
@@ -57,6 +58,7 @@ private const val OTP_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$REQUEST"
 private const val OTP_VERIFY_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$VERIFY"
 private const val PASSWORD_RESET_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD/$RESET/$REQUEST"
 private const val PASSWORD_RESET_CONFIRM_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD/$RESET/$CONFIRM"
+private const val CHANGE_PASSWORD_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD"
 private const val LOGOUT_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGOUT"
 private const val REGISTER_URL = "$GO_BASE_ENDPOINT/$AUTH/$REGISTER"
 private const val LOGIN_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGIN"
@@ -151,6 +153,15 @@ internal class AuthApiImpl(
     ): ApiResponse<Unit> {
         return client.post {
             url(PASSWORD_RESET_CONFIRM_URL)
+            setBody(request)
+        }.toApiResponse<Unit>(json)
+    }
+
+    override suspend fun changePassword(
+        request: ChangePasswordRequestDto,
+    ): ApiResponse<Unit> {
+        return client.post {
+            url(CHANGE_PASSWORD_URL)
             setBody(request)
         }.toApiResponse<Unit>(json)
     }
