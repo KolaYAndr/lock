@@ -18,6 +18,7 @@ val coreNetworkModule = module {
 
     single<Json> {
         Json {
+            explicitNulls = false
             ignoreUnknownKeys = true
             prettyPrint = true
             isLenient = true

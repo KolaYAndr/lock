@@ -1,12 +1,13 @@
 package org.homesharing.lockbox.domain.model.profile_info
 
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
+import org.homesharing.lockbox.domain.model.role.toDomain
 
 internal fun ProfileInfoDto.toDomain() = ProfileInfo(
     id = id,
     emailVerified = emailVerified,
-    activeRole = activeRole,
-    availableRoles = availableRoles,
+    activeRole = activeRole.toDomain(),
+    availableRoles = availableRoles.map { it.toDomain() },
     identityComplete = identityComplete,
     missingIdentityFields = missingIdentityFields,
     firstName = firstName,

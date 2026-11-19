@@ -59,7 +59,6 @@ fun createNetworkClient(
     engine: HttpClientEngine,
     json: Json,
     tokenStorage: TokenStorage,
-    mLogger: Logger = myLogger,
 ): HttpClient {
     return HttpClient(engine) {
         install(HttpTimeout) {
@@ -69,7 +68,7 @@ fun createNetworkClient(
 
         install(Logging) {
             level = LogLevel.ALL
-            logger = mLogger
+            logger = myLogger
         }
 
         install(ContentNegotiation) {

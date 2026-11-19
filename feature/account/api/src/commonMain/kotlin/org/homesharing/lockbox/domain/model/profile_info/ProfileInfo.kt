@@ -1,10 +1,12 @@
 package org.homesharing.lockbox.domain.model.profile_info
 
+import org.homesharing.lockbox.domain.model.role.UserRole
+
 data class ProfileInfo(
     val id: String,
     val emailVerified: Boolean,
-    val activeRole: String,
-    val availableRoles: List<String>,
+    val activeRole: UserRole,
+    val availableRoles: List<UserRole>,
     val identityComplete: Boolean,
     val missingIdentityFields: List<String>,
     val firstName: String?,

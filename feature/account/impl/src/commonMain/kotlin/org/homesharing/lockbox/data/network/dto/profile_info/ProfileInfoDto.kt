@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.dto.profile_info
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
 
 @Serializable
 internal data class ProfileInfoDto(
@@ -9,9 +10,9 @@ internal data class ProfileInfoDto(
     @SerialName("email_verified")
     val emailVerified: Boolean,
     @SerialName("active_role")
-    val activeRole: String,
+    val activeRole: UserRoleDto,
     @SerialName("available_roles")
-    val availableRoles: List<String>,
+    val availableRoles: List<UserRoleDto>,
     @SerialName("identity_complete")
     val identityComplete: Boolean,
     @SerialName("missing_identity_fields")
