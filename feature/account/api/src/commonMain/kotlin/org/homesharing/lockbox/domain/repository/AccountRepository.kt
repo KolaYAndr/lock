@@ -13,7 +13,34 @@ interface AccountRepository {
     suspend fun getImageLink(): Response<Avatar>
     suspend fun sendImage(data: ByteArray): Response<Unit>
     suspend fun deactivateUser(): Response<UpdateAccount>
+
+    /**
+     * Получает профиль текущего пользователя.
+     * Требует авторизации.
+     *
+     * @return [Response] с полным профилем пользователя
+     */
     suspend fun getProfileInfo(): Response<ProfileInfo>
+
+    /**
+     * Создаёт или частично обновляет профиль текущего пользователя.
+     * Отсутствующие поля сохраняют текущие значения, обязательных полей нет.
+     * Требует авторизации.
+     *
+     * @param firstName имя (до 100 символов)
+     * @param lastName фамилия (до 100 символов)
+     * @param middleName отчество (до 100 символов)
+     * @param phoneNumber номер телефона
+     * @param email адрес электронной почты
+     * @param livingAddress адрес проживания
+     * @param birthDate дата рождения в формате ISO (`yyyy-MM-dd`)
+     * @param passportSeries серия паспорта
+     * @param passportNumber номер паспорта
+     * @param passportIssuer кем выдан паспорт
+     * @param passportIssuedAt дата выдачи паспорта в формате ISO (`yyyy-MM-dd`)
+     * @param passportDivisionCode код подразделения
+     * @return [Response] с полным профилем пользователя
+     */
     suspend fun updateProfileInfo(
         firstName: String? = null,
         lastName: String? = null,
