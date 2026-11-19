@@ -3,6 +3,7 @@ package org.homesharing.lockbox.domain.repository
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.avatar.Avatar
+import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentList
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.role.UserRole
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -55,6 +56,17 @@ interface AccountRepository {
         passportIssuedAt: String? = null,
         passportDivisionCode: String? = null,
     ): Response<ProfileInfo>
+
+    /**
+     * Получает список документов текущего пользователя.
+     * Требует авторизации.
+     *
+     * Для каждого документа возвращается presigned URL для скачивания с TTL 300 секунд.
+     *
+     * @return [Response] со списком документов
+     */
+    suspend fun getPersonalDocuments(): Response<PersonalDocumentList>
+
     suspend fun becomeLandlord(): Response<ProfileInfo>
     suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo>
 }

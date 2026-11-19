@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
+import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
@@ -44,6 +45,16 @@ internal interface AccountApi {
     suspend fun updateProfileInfo(
         request: ProfileInfoRequestDto
     ): ApiResponse<ProfileInfoDto>
+
+    /**
+     * Получает список документов текущего пользователя (`GET /api/profile-info/documents`).
+     * Требует авторизации (Bearer token).
+     *
+     * Для каждого документа возвращается presigned URL для скачивания с TTL 300 секунд.
+     *
+     * @return [ApiResponse] со списком документов [PersonalDocumentListDto] (200 OK)
+     */
+    suspend fun getPersonalDocuments(): ApiResponse<PersonalDocumentListDto>
 
     /**
      * Активирует роль арендодателя (landlord) для текущего пользователя.
