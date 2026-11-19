@@ -6,6 +6,7 @@ import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
+import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
@@ -105,6 +106,12 @@ internal class AuthRepositoryImpl(
             Response.Failure(t.message.orEmpty())
         }
     }
+
+    override suspend fun requestPasswordReset(email: String): Response<OtpResponse> =
+        parseLockboxApiResponse(
+            apiCall = { api.requestPasswordReset(PasswordResetRequestDto(email = email)) },
+            mapper = OtpResponseDto::toDomain
+        )
 
     override suspend fun logout(): Response<Unit> {
         return try {

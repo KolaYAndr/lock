@@ -23,6 +23,7 @@ import org.homesharing.lockbox.data.network.dto.otp.OtpRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
+import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
 import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
@@ -43,6 +44,7 @@ private const val AUTH = "auth"
 private const val OTP = "otp"
 private const val REQUEST = "request"
 private const val VERIFY = "verify"
+private const val RESET = "reset"
 private const val LOGOUT = "logout"
 private const val REGISTER = "register"
 private const val LOGIN = "login"
@@ -51,6 +53,7 @@ private const val SIGN_UP_URL = "$KOTLIN_BASE_ENDPOINT/$USERS/$SIGN_UP"
 private const val CONFIRM_EMAIL_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$MAIL/$SEND"
 private const val OTP_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$REQUEST"
 private const val OTP_VERIFY_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$VERIFY"
+private const val PASSWORD_RESET_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD/$RESET/$REQUEST"
 private const val LOGOUT_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGOUT"
 private const val REGISTER_URL = "$GO_BASE_ENDPOINT/$AUTH/$REGISTER"
 private const val LOGIN_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGIN"
@@ -129,6 +132,15 @@ internal class AuthApiImpl(
             url(OTP_VERIFY_URL)
             setBody(request)
         }.toApiResponse<OtpVerifyResponseDto>(json)
+    }
+
+    override suspend fun requestPasswordReset(
+        request: PasswordResetRequestDto,
+    ): ApiResponse<OtpResponseDto> {
+        return client.post {
+            url(PASSWORD_RESET_REQUEST_URL)
+            setBody(request)
+        }.toApiResponse<OtpResponseDto>(json)
     }
 
     override suspend fun logout(refreshToken: String): ApiResponse<Unit> {

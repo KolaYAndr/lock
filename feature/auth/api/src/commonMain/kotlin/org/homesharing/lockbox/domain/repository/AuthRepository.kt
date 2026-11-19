@@ -59,6 +59,15 @@ interface AuthRepository {
     suspend fun verifyOtp(email: String, code: String): Response<OtpVerifyResult>
 
     /**
+     * Запрашивает одноразовый код для сброса пароля.
+     * Ответ одинаков для существующих и несуществующих адресов (anti-enumeration).
+     *
+     * @param email адрес электронной почты
+     * @return [Response] с параметрами повторной отправки и временем жизни кода
+     */
+    suspend fun requestPasswordReset(email: String): Response<OtpResponse>
+
+    /**
      * Выполняет выход из текущей сессии и очищает локально сохранённые токены.
      *
      * @return [Response] с результатом операции

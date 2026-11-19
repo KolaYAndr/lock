@@ -6,6 +6,7 @@ import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
+import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
 
@@ -64,6 +65,17 @@ internal interface AuthApi {
      * @return [ApiResponse] с токенами авторизации и статусом нового пользователя
      */
     suspend fun verifyOtp(email: String, code: String): ApiResponse<OtpVerifyResponseDto>
+
+    /**
+     * Запрашивает одноразовый код для сброса пароля.
+     * Публичный эндпоинт, ответ одинаков для существующих и несуществующих адресов.
+     *
+     * @param request объект [PasswordResetRequestDto] с email
+     * @return [ApiResponse] с параметрами повторной отправки и временем жизни кода (202 Accepted)
+     */
+    suspend fun requestPasswordReset(
+        request: PasswordResetRequestDto,
+    ): ApiResponse<OtpResponseDto>
 
     /**
      * Выполняет выход из текущей сессии. Требует авторизации (Bearer token).
