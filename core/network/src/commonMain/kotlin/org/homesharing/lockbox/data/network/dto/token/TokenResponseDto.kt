@@ -1,10 +1,10 @@
-package org.homesharing.lockbox.data.network.dto.refresh
+package org.homesharing.lockbox.data.network.dto.token
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class RefreshTokenResponseDto(
+data class TokenResponseDto(
     @SerialName("access_token")
     val accessToken: String,
     @SerialName("refresh_token")

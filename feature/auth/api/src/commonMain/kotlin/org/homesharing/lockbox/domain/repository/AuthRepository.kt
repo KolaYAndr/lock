@@ -15,6 +15,15 @@ interface AuthRepository {
         passwordRepeated: String,
     ): Response<Unit>
 
+    /**
+     * Создаёт аккаунт и сразу выполняет вход (auto-login), сохраняя полученные токены.
+     *
+     * @param email адрес электронной почты
+     * @param password пароль (не короче 8 символов)
+     * @return [Response] с результатом регистрации
+     */
+    suspend fun register(email: String, password: String): Response<Unit>
+
     suspend fun loadTokensInitially(
         username: String,
         password: String,

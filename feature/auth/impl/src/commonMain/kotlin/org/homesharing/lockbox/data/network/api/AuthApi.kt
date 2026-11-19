@@ -5,6 +5,8 @@ import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
+import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
+import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
 
 /**
  * Сетевой API для аутентификации и авторизации пользователей.
@@ -15,6 +17,17 @@ internal interface AuthApi {
         password: String,
         passwordRepeated: String,
     ): ApiResponse<Unit>
+
+    /**
+     * Создаёт аккаунт и сразу выполняет вход (auto-login).
+     * Публичный эндпоинт, авторизация не требуется.
+     *
+     * @param request объект [RegisterRequestDto] с email и паролем
+     * @return [ApiResponse] с парой токенов [TokenResponseDto] (201 Created)
+     */
+    suspend fun register(
+        request: RegisterRequestDto,
+    ): ApiResponse<TokenResponseDto>
 
     suspend fun loadTokensInitially(
         username: String,

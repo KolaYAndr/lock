@@ -21,7 +21,7 @@ import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.dto.refresh.RefreshTokenRequest
-import org.homesharing.lockbox.data.network.dto.refresh.RefreshTokenResponseDto
+import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 
 private const val API = "api"
@@ -48,11 +48,11 @@ expect val myLogger: Logger
 internal suspend fun HttpClient.refreshToken(
     refreshToken: String,
     json: Json,
-): ApiResponse<RefreshTokenResponseDto> {
+): ApiResponse<TokenResponseDto> {
     return post {
         url(REFRESH_URL)
         setBody(RefreshTokenRequest(refreshToken))
-    }.toApiResponse<RefreshTokenResponseDto>(json)
+    }.toApiResponse<TokenResponseDto>(json)
 }
 
 fun createNetworkClient(

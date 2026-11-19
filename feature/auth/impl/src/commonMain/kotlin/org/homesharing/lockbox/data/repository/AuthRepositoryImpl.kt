@@ -5,6 +5,7 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
 import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
+import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
@@ -24,6 +25,22 @@ internal class AuthRepositoryImpl(
         password: String,
         passwordRepeated: String,
     ): Response<Unit> = parseLockboxApiResponse { api.signUp(username, password, passwordRepeated) }
+
+    override suspend fun register(email: String, password: String): Response<Unit> {
+        return try {
+            when (val response = api.register(RegisterRequestDto(email = email, password = password))) {
+                is ApiResponse.Success -> {
+                    with(tokenStorage) {
+                        saveTokens(response.data.accessToken, response.data.refreshToken)
+                    }
+                    Response.Success(Unit)
+                }
+                is ApiResponse.Failure -> Response.Failure(response.message)
+            }
+        } catch (t: Throwable) {
+            Response.Failure(t.message.orEmpty())
+        }
+    }
 
     override suspend fun loadTokensInitially(
         username: String,

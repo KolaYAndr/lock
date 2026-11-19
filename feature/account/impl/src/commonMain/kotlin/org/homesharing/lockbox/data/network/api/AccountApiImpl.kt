@@ -9,10 +9,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
-import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
@@ -102,7 +100,6 @@ internal class AccountApiImpl(
     ): ApiResponse<ProfileInfoDto> {
         return client.post {
             url(PROFILE_INFO_URL)
-            contentType(ContentType.Application.Json)
             setBody(request)
         }.toApiResponse<ProfileInfoDto>(json)
     }
@@ -119,7 +116,6 @@ internal class AccountApiImpl(
         val request = UpdateActiveRoleRequestDto(role = role)
         return client.put {
             url(PROFILE_INFO_ACTIVE_ROLE_URL)
-            contentType(ContentType.Application.Json)
             setBody(request)
         }.toApiResponse<ProfileInfoDto>(json)
     }
