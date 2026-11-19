@@ -23,6 +23,7 @@ import org.homesharing.lockbox.data.network.dto.otp.OtpRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
+import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.dto.sign_up.SignUpRequestDto
@@ -45,6 +46,7 @@ private const val OTP = "otp"
 private const val REQUEST = "request"
 private const val VERIFY = "verify"
 private const val RESET = "reset"
+private const val CONFIRM = "confirm"
 private const val LOGOUT = "logout"
 private const val REGISTER = "register"
 private const val LOGIN = "login"
@@ -54,6 +56,7 @@ private const val CONFIRM_EMAIL_URL = "$KEYCLOACK_BASE_ENDPOINT:8445/$ACCOUNTS/$
 private const val OTP_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$REQUEST"
 private const val OTP_VERIFY_URL = "$GO_BASE_ENDPOINT/$AUTH/$OTP/$VERIFY"
 private const val PASSWORD_RESET_REQUEST_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD/$RESET/$REQUEST"
+private const val PASSWORD_RESET_CONFIRM_URL = "$GO_BASE_ENDPOINT/$AUTH/$PASSWORD/$RESET/$CONFIRM"
 private const val LOGOUT_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGOUT"
 private const val REGISTER_URL = "$GO_BASE_ENDPOINT/$AUTH/$REGISTER"
 private const val LOGIN_URL = "$GO_BASE_ENDPOINT/$AUTH/$LOGIN"
@@ -141,6 +144,15 @@ internal class AuthApiImpl(
             url(PASSWORD_RESET_REQUEST_URL)
             setBody(request)
         }.toApiResponse<OtpResponseDto>(json)
+    }
+
+    override suspend fun confirmPasswordReset(
+        request: PasswordResetConfirmRequestDto,
+    ): ApiResponse<Unit> {
+        return client.post {
+            url(PASSWORD_RESET_CONFIRM_URL)
+            setBody(request)
+        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun logout(refreshToken: String): ApiResponse<Unit> {

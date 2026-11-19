@@ -6,6 +6,7 @@ import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
+import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.password_reset.PasswordResetRequestDto
 import org.homesharing.lockbox.data.network.dto.register.RegisterRequestDto
 import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
@@ -76,6 +77,17 @@ internal interface AuthApi {
     suspend fun requestPasswordReset(
         request: PasswordResetRequestDto,
     ): ApiResponse<OtpResponseDto>
+
+    /**
+     * Устанавливает новый пароль по коду из письма.
+     * Публичный эндпоинт, авторизация не требуется.
+     *
+     * @param request объект [PasswordResetConfirmRequestDto] с email, кодом и новым паролем
+     * @return [ApiResponse] с пустым телом ответа (204 No Content)
+     */
+    suspend fun confirmPasswordReset(
+        request: PasswordResetConfirmRequestDto,
+    ): ApiResponse<Unit>
 
     /**
      * Выполняет выход из текущей сессии. Требует авторизации (Bearer token).

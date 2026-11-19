@@ -68,6 +68,20 @@ interface AuthRepository {
     suspend fun requestPasswordReset(email: String): Response<OtpResponse>
 
     /**
+     * Устанавливает новый пароль по коду из письма.
+     *
+     * @param email адрес электронной почты
+     * @param code шестизначный код из письма
+     * @param newPassword новый пароль (не короче 8 символов)
+     * @return [Response] с результатом операции
+     */
+    suspend fun confirmPasswordReset(
+        email: String,
+        code: String,
+        newPassword: String,
+    ): Response<Unit>
+
+    /**
      * Выполняет выход из текущей сессии и очищает локально сохранённые токены.
      *
      * @return [Response] с результатом операции
