@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
+import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentTypeDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
@@ -55,6 +56,42 @@ internal interface AccountApi {
      * @return [ApiResponse] со списком документов [PersonalDocumentListDto] (200 OK)
      */
     suspend fun getPersonalDocuments(): ApiResponse<PersonalDocumentListDto>
+
+    /**
+     * Получает документ текущего пользователя по идентификатору
+     * (`GET /api/profile-info/documents/{id}`).
+     * Требует авторизации (Bearer token).
+     *
+     * Для документа возвращается presigned URL для скачивания с TTL 300 секунд.
+     * Чужой идентификатор возвращает `404 Not Found`.
+     *
+     * @param id идентификатор документа (uuid)
+     * @return [ApiResponse] с документом [PersonalDocumentListDto.PersonalDocumentDto] (200 OK)
+     */
+    suspend fun getPersonalDocument(
+        id: String
+    ): ApiResponse<PersonalDocumentListDto.PersonalDocumentDto>
+
+    /**
+     * Загружает документ текущего пользователя (`POST /api/profile-info/documents`).
+     * Требует авторизации (Bearer token).
+     *
+     * Тело запроса — `multipart/form-data`: файл в поле `document` (PDF/JPEG/PNG, до 20 MiB)
+     * и необязательный тип документа в поле `doc_type` (по умолчанию `passport`).
+     *
+     * @param data содержимое загружаемого файла
+     * @param fileName имя загружаемого файла
+     * @param contentType MIME-тип файла (`application/pdf`, `image/jpeg`, `image/png`)
+     * @param docType тип документа [PersonalDocumentTypeDto]; при `null` сервер использует `passport`
+     * @return [ApiResponse] с загруженным документом
+     * [PersonalDocumentListDto.PersonalDocumentDto] (201 Created)
+     */
+    suspend fun uploadPersonalDocument(
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: PersonalDocumentTypeDto?,
+    ): ApiResponse<PersonalDocumentListDto.PersonalDocumentDto>
 
     /**
      * Активирует роль арендодателя (landlord) для текущего пользователя.

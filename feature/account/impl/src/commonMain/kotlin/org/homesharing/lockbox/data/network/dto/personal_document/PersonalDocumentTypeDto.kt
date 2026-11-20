@@ -9,5 +9,8 @@ internal enum class PersonalDocumentTypeDto {
     Passport,
 
     @SerialName("additional")
-    Additional,
+    Additional;
 }
+
+internal val PersonalDocumentTypeDto.apiValue: String
+    get() = PersonalDocumentTypeDto.serializer().descriptor.getElementName(ordinal)

@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentList
+import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentType
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.role.UserRole
 import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
@@ -66,6 +67,32 @@ interface AccountRepository {
      * @return [Response] со списком документов
      */
     suspend fun getPersonalDocuments(): Response<PersonalDocumentList>
+
+    /**
+     * Получает документ текущего пользователя по идентификатору.
+     * Требует авторизации.
+     *
+     * @param id идентификатор документа (uuid)
+     * @return [Response] с документом; для чужого идентификатора — ошибка (`404`)
+     */
+    suspend fun getPersonalDocument(id: String): Response<PersonalDocumentList.PersonalDocument>
+
+    /**
+     * Загружает документ текущего пользователя.
+     * Требует авторизации.
+     *
+     * @param data содержимое файла (PDF/JPEG/PNG, до 20 MiB)
+     * @param fileName имя загружаемого файла
+     * @param contentType MIME-тип файла
+     * @param docType тип документа; при `null` сервер использует `passport`
+     * @return [Response] с загруженным документом
+     */
+    suspend fun uploadPersonalDocument(
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: PersonalDocumentType? = null,
+    ): Response<PersonalDocumentList.PersonalDocument>
 
     suspend fun becomeLandlord(): Response<ProfileInfo>
     suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo>

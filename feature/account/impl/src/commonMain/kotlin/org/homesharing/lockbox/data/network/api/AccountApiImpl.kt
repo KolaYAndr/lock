@@ -19,6 +19,8 @@ import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.active_role.UpdateActiveRoleRequestDto
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
+import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentTypeDto
+import org.homesharing.lockbox.data.network.dto.personal_document.apiValue
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
@@ -32,6 +34,8 @@ private const val DOWNLOAD = "download"
 private const val ME = "me"
 private const val PROFILE_INFO = "profile-info"
 private const val DOCUMENTS = "documents"
+private const val DOCUMENT = "document"
+private const val DOC_TYPE = "doc_type"
 private const val LANDLORD = "landlord"
 private const val ACTIVE_ROLE = "active-role"
 
@@ -96,6 +100,38 @@ internal class AccountApiImpl(
         return client.get {
             url(PROFILE_INFO_DOCUMENTS_URL)
         }.toApiResponse<PersonalDocumentListDto>(json)
+    }
+
+    override suspend fun getPersonalDocument(
+        id: String
+    ): ApiResponse<PersonalDocumentListDto.PersonalDocumentDto> {
+        return client.get {
+            url("$PROFILE_INFO_DOCUMENTS_URL/$id")
+        }.toApiResponse<PersonalDocumentListDto.PersonalDocumentDto>(json)
+    }
+
+    override suspend fun uploadPersonalDocument(
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: PersonalDocumentTypeDto?,
+    ): ApiResponse<PersonalDocumentListDto.PersonalDocumentDto> {
+        return client.submitFormWithBinaryData(
+            url = PROFILE_INFO_DOCUMENTS_URL,
+            formData = formData {
+                append(
+                    key = DOCUMENT,
+                    value = data,
+                    headers = Headers.build {
+                        append(HttpHeaders.ContentType, contentType)
+                        append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                    }
+                )
+                docType?.let {
+                    append(DOC_TYPE, it.apiValue)
+                }
+            }
+        ).toApiResponse<PersonalDocumentListDto.PersonalDocumentDto>(json)
     }
 
     override suspend fun becomeLandlord(): ApiResponse<ProfileInfoDto> {

@@ -13,7 +13,9 @@ import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.avatar.toDomain
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentList
+import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentType
 import org.homesharing.lockbox.domain.model.personal_document.toDomain
+import org.homesharing.lockbox.domain.model.personal_document.toDto
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.profile_info.toDomain
 import org.homesharing.lockbox.domain.model.role.UserRole
@@ -125,6 +127,34 @@ internal class AccountRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.getPersonalDocuments() },
             mapper = PersonalDocumentListDto::toDomain,
+        )
+    }
+
+    override suspend fun getPersonalDocument(
+        id: String
+    ): Response<PersonalDocumentList.PersonalDocument> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getPersonalDocument(id) },
+            mapper = PersonalDocumentListDto.PersonalDocumentDto::toDomain,
+        )
+    }
+
+    override suspend fun uploadPersonalDocument(
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: PersonalDocumentType?,
+    ): Response<PersonalDocumentList.PersonalDocument> {
+        return parseLockboxApiResponse(
+            apiCall = {
+                api.uploadPersonalDocument(
+                    data = data,
+                    fileName = fileName,
+                    contentType = contentType,
+                    docType = docType?.toDto(),
+                )
+            },
+            mapper = PersonalDocumentListDto.PersonalDocumentDto::toDomain,
         )
     }
 
