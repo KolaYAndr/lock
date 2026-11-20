@@ -2,7 +2,6 @@ package org.homesharing.lockbox.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.model.avatar.Avatar
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentList
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentType
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
@@ -12,7 +11,16 @@ import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 interface AccountRepository {
     suspend fun logOut()
     val loggedIn: Flow<Boolean>
-    suspend fun getImageLink(): Response<Avatar>
+    /**
+     * Получает presigned URL на аватар текущего пользователя.
+     * Требует авторизации.
+     *
+     * Ссылка действительна 3600 секунд.
+     *
+     * @return [Response] с presigned URL аватара
+     */
+    suspend fun getImageLink(): Response<String>
+
     /**
      * Загружает аватар текущего пользователя.
      * Требует авторизации.

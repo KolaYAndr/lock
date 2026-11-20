@@ -11,8 +11,6 @@ import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
-import org.homesharing.lockbox.domain.model.avatar.Avatar
-import org.homesharing.lockbox.domain.model.avatar.toDomain
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentList
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentType
 import org.homesharing.lockbox.domain.model.personal_document.toDomain
@@ -33,10 +31,10 @@ internal class AccountRepositoryImpl(
 
     override val loggedIn: Flow<Boolean> = tokenStorage.loggedIn
 
-    override suspend fun getImageLink(): Response<Avatar> =
+    override suspend fun getImageLink(): Response<String> =
         parseLockboxApiResponse(
             apiCall = { api.getAvatar() },
-            mapper = AvatarDto::toDomain
+            mapper = AvatarDto::downloadUrl
         )
 
     override suspend fun sendImage(data: ByteArray): Response<String> =

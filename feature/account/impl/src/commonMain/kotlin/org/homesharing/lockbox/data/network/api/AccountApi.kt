@@ -11,6 +11,15 @@ import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
 import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 
 internal interface AccountApi {
+    /**
+     * Получает presigned URL на аватар текущего пользователя
+     * (`GET /api/avatars/download`).
+     * Требует авторизации (Bearer token).
+     *
+     * Ссылка действительна 3600 секунд.
+     *
+     * @return [ApiResponse] с ссылкой на аватар [AvatarDto] (200 OK)
+     */
     suspend fun getAvatar(): ApiResponse<AvatarDto>
 
     /**
