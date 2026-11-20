@@ -94,6 +94,15 @@ internal interface AccountApi {
     ): ApiResponse<PersonalDocumentListDto.PersonalDocumentDto>
 
     /**
+     * Удаляет документ текущего пользователя (`DELETE /api/profile-info/documents/{id}`).
+     * Требует авторизации (Bearer token).
+     *
+     * @param id идентификатор документа (uuid)
+     * @return [ApiResponse] без тела ответа (204 No Content)
+     */
+    suspend fun deletePersonalDocument(id: String): ApiResponse<Unit>
+
+    /**
      * Активирует роль арендодателя (landlord) для текущего пользователя.
      * Требует авторизации (Bearer token).
      *

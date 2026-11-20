@@ -158,6 +158,12 @@ internal class AccountRepositoryImpl(
         )
     }
 
+    override suspend fun deletePersonalDocument(id: String): Response<Unit> {
+        return parseLockboxApiResponse {
+            api.deletePersonalDocument(id)
+        }
+    }
+
     override suspend fun becomeLandlord(): Response<ProfileInfo> {
         return parseLockboxApiResponse(
             apiCall = { api.becomeLandlord() },

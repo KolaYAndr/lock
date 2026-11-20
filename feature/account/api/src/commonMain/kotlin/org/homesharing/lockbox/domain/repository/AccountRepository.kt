@@ -94,6 +94,15 @@ interface AccountRepository {
         docType: PersonalDocumentType? = null,
     ): Response<PersonalDocumentList.PersonalDocument>
 
+    /**
+     * Удаляет документ текущего пользователя.
+     * Требует авторизации.
+     *
+     * @param id идентификатор документа (uuid)
+     * @return [Response] без полезной нагрузки
+     */
+    suspend fun deletePersonalDocument(id: String): Response<Unit>
+
     suspend fun becomeLandlord(): Response<ProfileInfo>
     suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo>
 }

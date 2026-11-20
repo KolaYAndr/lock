@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.network.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
@@ -132,6 +133,12 @@ internal class AccountApiImpl(
                 }
             }
         ).toApiResponse<PersonalDocumentListDto.PersonalDocumentDto>(json)
+    }
+
+    override suspend fun deletePersonalDocument(id: String): ApiResponse<Unit> {
+        return client.delete {
+            url("$PROFILE_INFO_DOCUMENTS_URL/$id")
+        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun becomeLandlord(): ApiResponse<ProfileInfoDto> {
