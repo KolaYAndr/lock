@@ -103,7 +103,9 @@ internal interface AccountApi {
     suspend fun deletePersonalDocument(id: String): ApiResponse<Unit>
 
     /**
-     * Активирует роль арендодателя (landlord) для текущего пользователя.
+     * Выдаёт роль арендодателя (landlord) текущему пользователю
+     * (`POST /api/profile-info/landlord`) и переключает контекст на неё.
+     * Тело запроса отсутствует.
      * Требует авторизации (Bearer token).
      *
      * @return [ApiResponse] с полным объектом профиля пользователя [ProfileInfoDto] (200 OK)

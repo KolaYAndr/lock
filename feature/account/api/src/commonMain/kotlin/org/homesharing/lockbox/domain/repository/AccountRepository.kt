@@ -103,6 +103,13 @@ interface AccountRepository {
      */
     suspend fun deletePersonalDocument(id: String): Response<Unit>
 
+    /**
+     * Выдаёт роль арендодателя (landlord) текущему пользователю и переключает
+     * контекст на неё.
+     * Требует авторизации.
+     *
+     * @return [Response] с полным профилем пользователя
+     */
     suspend fun becomeLandlord(): Response<ProfileInfo>
     suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo>
 }
