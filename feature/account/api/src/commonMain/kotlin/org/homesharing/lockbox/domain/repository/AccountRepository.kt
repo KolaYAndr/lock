@@ -111,5 +111,13 @@ interface AccountRepository {
      * @return [Response] с полным профилем пользователя
      */
     suspend fun becomeLandlord(): Response<ProfileInfo>
+    /**
+     * Переключает активную роль текущего пользователя.
+     * Права и сессии не изменяются.
+     * Требует авторизации.
+     *
+     * @param role новая активная роль пользователя
+     * @return [Response] с полным профилем пользователя
+     */
     suspend fun updateActiveRole(role: UserRole): Response<ProfileInfo>
 }

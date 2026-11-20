@@ -113,8 +113,11 @@ internal interface AccountApi {
     suspend fun becomeLandlord(): ApiResponse<ProfileInfoDto>
 
     /**
-     * Обновляет активную роль текущего пользователя.
+     * Переключает активную роль текущего пользователя (`PUT /api/profile-info/active-role`).
+     * Права и сессии не изменяются.
      * Требует авторизации (Bearer token).
+     *
+     * Тело запроса — `application/json` с обязательным полем `active_role`.
      *
      * @param role новая активная роль пользователя [UserRoleDto]
      * @return [ApiResponse] с полным объектом профиля пользователя [ProfileInfoDto] (200 OK)
