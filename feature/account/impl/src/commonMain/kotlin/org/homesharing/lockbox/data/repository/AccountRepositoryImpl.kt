@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.repository
 import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.data.network.api.AccountApi
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
+import org.homesharing.lockbox.data.network.dto.avatar.AvatarUploadResponseDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
@@ -38,10 +39,13 @@ internal class AccountRepositoryImpl(
             mapper = AvatarDto::toDomain
         )
 
-    override suspend fun sendImage(data: ByteArray): Response<Unit> =
-        parseLockboxApiResponse {
-            api.sendImage(data = data)
-        }
+    override suspend fun sendImage(data: ByteArray): Response<String> =
+        parseLockboxApiResponse(
+            apiCall = {
+                api.sendImage(data = data)
+            },
+            mapper = AvatarUploadResponseDto::message,
+        )
 
     override suspend fun deactivateUser(): Response<UpdateAccount> =
         parseLockboxApiResponse(

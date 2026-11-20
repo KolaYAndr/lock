@@ -13,7 +13,14 @@ interface AccountRepository {
     suspend fun logOut()
     val loggedIn: Flow<Boolean>
     suspend fun getImageLink(): Response<Avatar>
-    suspend fun sendImage(data: ByteArray): Response<Unit>
+    /**
+     * Загружает аватар текущего пользователя.
+     * Требует авторизации.
+     *
+     * @param data содержимое изображения
+     * @return [Response] с сообщением о результате загрузки
+     */
+    suspend fun sendImage(data: ByteArray): Response<String>
     suspend fun deactivateUser(): Response<UpdateAccount>
 
     /**

@@ -19,6 +19,7 @@ import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.client.KEYCLOACK_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.active_role.UpdateActiveRoleRequestDto
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
+import org.homesharing.lockbox.data.network.dto.avatar.AvatarUploadResponseDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentTypeDto
 import org.homesharing.lockbox.data.network.dto.personal_document.apiValue
@@ -58,7 +59,7 @@ internal class AccountApiImpl(
         }.toApiResponse<AvatarDto>(json)
     }
 
-    override suspend fun sendImage(data: ByteArray): ApiResponse<Unit> {
+    override suspend fun sendImage(data: ByteArray): ApiResponse<AvatarUploadResponseDto> {
         return client.submitFormWithBinaryData(
             url = AVATARS_POST_URL,
             formData = formData {
@@ -71,7 +72,7 @@ internal class AccountApiImpl(
                     }
                 )
             }
-        ).toApiResponse<Unit>(json)
+        ).toApiResponse<AvatarUploadResponseDto>(json)
     }
 
     override suspend fun deactivateUser(): ApiResponse<UpdateAccountDto> {

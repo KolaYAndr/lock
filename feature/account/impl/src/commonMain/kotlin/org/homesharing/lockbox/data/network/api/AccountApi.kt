@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.avatar.AvatarDto
+import org.homesharing.lockbox.data.network.dto.avatar.AvatarUploadResponseDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentTypeDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
@@ -12,9 +13,19 @@ import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 internal interface AccountApi {
     suspend fun getAvatar(): ApiResponse<AvatarDto>
 
+    /**
+     * Загружает аватар текущего пользователя (`POST /api/avatars/upload`).
+     * Требует авторизации (Bearer token).
+     *
+     * Тело запроса — `multipart/form-data`, файл в поле `avatar`.
+     * Тип изображения определяется сервером по magic bytes.
+     *
+     * @param data содержимое изображения
+     * @return [ApiResponse] с результатом загрузки [AvatarUploadResponseDto] (201 Created)
+     */
     suspend fun sendImage(
         data: ByteArray
-    ): ApiResponse<Unit>
+    ): ApiResponse<AvatarUploadResponseDto>
 
     suspend fun deactivateUser(): ApiResponse<UpdateAccountDto>
 
