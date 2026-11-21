@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
+import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.model.room.RoomInput
 
@@ -14,9 +15,10 @@ interface FlatRepository {
      * Получает поток страниц списка квартир текущего пользователя (`GET /flats`).
      * Требует авторизации.
      *
+     * @param status фильтр по статусу квартир; по умолчанию возвращаются только активные
      * @return [Flow] с [PagingData] квартир
      */
-    fun getFlatsFlow(): Flow<PagingData<Flat>>
+    fun getFlatsFlow(status: FlatStatusFilter = FlatStatusFilter.Active): Flow<PagingData<Flat>>
 
     /**
      * Получает снимок страницы списка квартир (`GET /flats`).
@@ -24,11 +26,13 @@ interface FlatRepository {
      *
      * @param limit размер страницы
      * @param cursor курсор следующей страницы; при `null` возвращается первая страница
+     * @param status фильтр по статусу квартир; по умолчанию возвращаются только активные
      * @return [Flow] со снимком страницы квартир
      */
     suspend fun getFlatsSnapshot(
         limit: Int,
-        cursor: String?
+        cursor: String?,
+        status: FlatStatusFilter = FlatStatusFilter.Active,
     ): Flow<ItemSnapshotList<Flat>>
 
     /**

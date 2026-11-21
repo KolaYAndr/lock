@@ -4,20 +4,25 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import org.homesharing.lockbox.data.network.api.FlatApi
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
-import org.homesharing.lockbox.data.network.dto.flat.FlatDto
+import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
+import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class FlatPagingSource(
     private val api: FlatApi,
-) : PagingSource<String, FlatDto>() {
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, FlatDto> {
+    private val status: FlatStatusFilterDto,
+) : PagingSource<String, FlatSummaryListDto.FlatSummaryDto>() {
+    override suspend fun load(
+        params: LoadParams<String>
+    ): LoadResult<String, FlatSummaryListDto.FlatSummaryDto> {
         val cursor = params.key
         val size = params.loadSize
 
         try {
             val apiResponse = api.getFlats(
                 cursor = cursor,
-                limit = size
+                limit = size,
+                status = status,
             )
 
             return when (apiResponse) {
@@ -39,5 +44,7 @@ internal class FlatPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, FlatDto>): String? = null
+    override fun getRefreshKey(
+        state: PagingState<String, FlatSummaryListDto.FlatSummaryDto>
+    ): String? = null
 }

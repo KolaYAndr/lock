@@ -3,21 +3,27 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
-import org.homesharing.lockbox.data.network.dto.flat_list.FlatListDto
+import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
+import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 
 internal interface FlatApi {
     /**
      * Получает страницу списка квартир текущего пользователя (`GET /flats`).
      * Требует авторизации (Bearer token).
      *
-     * @param limit размер страницы
-     * @param cursor курсор следующей страницы; при `null` возвращается первая страница
-     * @return [ApiResponse] со страницей квартир [FlatListDto] (200 OK)
+     * По умолчанию возвращаются только активные квартиры. Значения `limit` вне
+     * диапазона 1..100 клампятся сервером, невалидный `status` возвращает `400 Bad Request`.
+     *
+     * @param limit размер страницы (1..100, по умолчанию 10)
+     * @param cursor курсор следующей страницы из `next_cursor`; при `null` возвращается первая страница
+     * @param status фильтр по статусу квартир [FlatStatusFilterDto] (по умолчанию `active`)
+     * @return [ApiResponse] со страницей квартир [FlatSummaryListDto] (200 OK)
      */
     suspend fun getFlats(
         limit: Int,
         cursor: String?,
-    ): ApiResponse<FlatListDto>
+        status: FlatStatusFilterDto,
+    ): ApiResponse<FlatSummaryListDto>
 
     /**
      * Получает детальную проекцию квартиры (`GET /flats/{id}`).

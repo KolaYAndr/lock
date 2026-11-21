@@ -19,6 +19,8 @@ import org.homesharing.lockbox.domain.model.flat.toDomain
 import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
 import org.homesharing.lockbox.domain.model.flat_detail.toDomain
 import org.homesharing.lockbox.domain.model.flat_detail.toDto
+import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
+import org.homesharing.lockbox.domain.model.flat_list.toDto
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.model.premise_type.toDto
 import org.homesharing.lockbox.domain.model.room.RoomInput
@@ -31,25 +33,29 @@ internal class FlatRepositoryImpl(
     private val api: FlatApi,
 ) : FlatRepository {
 
-    override fun getFlatsFlow(): Flow<PagingData<Flat>> =
+    override fun getFlatsFlow(status: FlatStatusFilter): Flow<PagingData<Flat>> =
         Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
                 enablePlaceholders = false,
             ),
-            pagingSourceFactory = { FlatPagingSource(api) }
+            pagingSourceFactory = { FlatPagingSource(api, status.toDto()) }
         ).flow
             .map { pagingData ->
                 pagingData.map { it.toDomain() }
             }
 
-    override suspend fun getFlatsSnapshot(limit: Int, cursor: String?): Flow<ItemSnapshotList<Flat>> =
+    override suspend fun getFlatsSnapshot(
+        limit: Int,
+        cursor: String?,
+        status: FlatStatusFilter,
+    ): Flow<ItemSnapshotList<Flat>> =
         Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
                 enablePlaceholders = false,
             ),
-            pagingSourceFactory = { FlatPagingSource(api) }
+            pagingSourceFactory = { FlatPagingSource(api, status.toDto()) }
         ).flow
             .asItemSnapshotListFlow()
             .map { snapshot ->
