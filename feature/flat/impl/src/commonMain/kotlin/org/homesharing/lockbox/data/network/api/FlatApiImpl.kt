@@ -13,6 +13,8 @@ import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
+import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
+import org.homesharing.lockbox.data.network.dto.flat_detail.apiValue
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import org.homesharing.lockbox.data.network.dto.flat_list.apiValue
@@ -25,7 +27,6 @@ private const val CURSOR = "cursor"
 private const val LIMIT = "limit"
 private const val STATUS = "status"
 private const val INCLUDE = "include"
-private const val INVITES = "invites"
 
 // API url
 private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
@@ -49,13 +50,11 @@ internal class FlatApiImpl(
 
     override suspend fun getFlat(
         id: String,
-        includeInvites: Boolean
+        include: FlatIncludeDto?,
     ): ApiResponse<FlatDetailDto> {
         return client.get {
-            if (includeInvites) {
-                parameter(INCLUDE, INVITES)
-            }
             url("$FLATS_URL/$id")
+            include?.let { parameter(INCLUDE, it.apiValue) }
         }.toApiResponse<FlatDetailDto>(json)
     }
 

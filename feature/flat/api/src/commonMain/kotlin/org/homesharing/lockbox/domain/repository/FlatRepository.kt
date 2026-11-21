@@ -37,13 +37,16 @@ interface FlatRepository {
 
     /**
      * Получает детальную проекцию квартиры (`GET /flats/{id}`).
-     * Требует авторизации.
+     * Требует авторизации. Архивные квартиры доступны для чтения.
      *
      * @param id идентификатор квартиры (uuid)
+     * @param includeInvites при `true` добавляет первые 5 инвайтов,
+     * без него поле `invites` отсутствует
      * @return [Response] с детальной информацией о квартире
      */
     suspend fun getFlat(
-        id: String
+        id: String,
+        includeInvites: Boolean,
     ): Response<FlatDetail>
 
     /**

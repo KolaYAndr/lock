@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import org.homesharing.lockbox.data.network.api.FlatApi
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
+import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
 import org.homesharing.lockbox.data.repository.paging.FlatPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
@@ -66,9 +67,21 @@ internal class FlatRepositoryImpl(
                 )
             }
 
-    override suspend fun getFlat(id: String): Response<FlatDetail> {
+    override suspend fun getFlat(
+        id: String,
+        includeInvites: Boolean,
+    ): Response<FlatDetail> {
         return parseLockboxApiResponse(
-            apiCall = { api.getFlat(id) },
+            apiCall = {
+                api.getFlat(
+                    id = id,
+                    include = if (includeInvites) {
+                        FlatIncludeDto.Invites
+                    } else {
+                        null
+                    },
+                )
+            },
             mapper = FlatDetailDto::toDomain
         )
     }
