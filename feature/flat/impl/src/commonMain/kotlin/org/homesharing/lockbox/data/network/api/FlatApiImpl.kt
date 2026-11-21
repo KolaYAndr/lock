@@ -12,7 +12,7 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
-import org.homesharing.lockbox.data.network.dto.flat.FlatDto
+import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatListDto
 
 // API endpoints
@@ -45,26 +45,26 @@ internal class FlatApiImpl(
     override suspend fun getFlat(
         id: String,
         includeInvites: Boolean
-    ): ApiResponse<FlatDto> {
+    ): ApiResponse<FlatDetailDto> {
         return client.get {
             if (includeInvites) {
                 parameter(INCLUDE, INVITES)
             }
             url("$FLATS_URL/$id")
-        }.toApiResponse<FlatDto>(json)
+        }.toApiResponse<FlatDetailDto>(json)
     }
 
-    override suspend fun createFlat(request: CreateFlatRequestDto): ApiResponse<FlatDto> {
+    override suspend fun createFlat(request: CreateFlatRequestDto): ApiResponse<FlatDetailDto> {
         return client.post {
             url(FLATS_URL)
             setBody(request)
-        }.toApiResponse<FlatDto>(json)
+        }.toApiResponse<FlatDetailDto>(json)
     }
 
-    override suspend fun updateFlat(id: String, request: CreateFlatRequestDto): ApiResponse<FlatDto> {
+    override suspend fun updateFlat(id: String, request: CreateFlatRequestDto): ApiResponse<FlatDetailDto> {
         return client.patch {
             url("$FLATS_URL/$id")
             setBody(request)
-        }.toApiResponse<FlatDto>(json)
+        }.toApiResponse<FlatDetailDto>(json)
     }
 }

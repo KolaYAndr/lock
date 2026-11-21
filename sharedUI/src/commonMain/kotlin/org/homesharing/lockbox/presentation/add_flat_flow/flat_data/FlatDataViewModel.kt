@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.homesharing.lockbox.domain.model.flat_rooms.FlatRoom
+import org.homesharing.lockbox.domain.model.room.RoomType
 
 internal class FlatDataViewModel: ViewModel() {
     private val _flatData = MutableStateFlow(FlatDataUiState.Initial)
@@ -15,13 +15,13 @@ internal class FlatDataViewModel: ViewModel() {
 internal data class FlatDataUiState(
     val flatAddress: String,
     val commercial: Boolean,
-    val chosenRooms: List<FlatRoom>,
+    val chosenRooms: List<RoomType>,
 ) {
     companion object {
         val Initial = FlatDataUiState(
             flatAddress = "",
             commercial = false,
-            chosenRooms = FlatRoom.entries
+            chosenRooms = RoomType.entries
         )
     }
 }

@@ -51,7 +51,7 @@ import lockbox.sharedui.generated.resources.skip
 import lockbox.sharedui.generated.resources.soon
 import lockbox.sharedui.generated.resources.toilet
 import lockbox.sharedui.generated.resources.will_help_with_report_when_checking_out
-import org.homesharing.lockbox.domain.model.flat_rooms.FlatRoom
+import org.homesharing.lockbox.domain.model.room.RoomType
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButtonDefaults
 import org.homesharing.lockbox.presentation.uikit.composable.pickable.HomesharingPickableItem
@@ -80,7 +80,7 @@ internal fun FlatRoomsScreen(
 @Composable
 private fun FlatRoomsScreen(
     uiState: FlatRoomsUiState,
-    onToggleRoom: (FlatRoom) -> Unit,
+    onToggleRoom: (RoomType) -> Unit,
     onProceed: () -> Unit,
     onNavBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -158,9 +158,9 @@ private fun FlatRoomsScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_chef_hat),
                 title = stringResource(Res.string.kitchen),
-                isSelected = FlatRoom.Kitchen in uiState.chosenRooms,
+                isSelected = RoomType.Kitchen in uiState.chosenRooms,
                 onClick = {
-                    onToggleRoom(FlatRoom.Kitchen)
+                    onToggleRoom(RoomType.Kitchen)
                 },
                 modifier = Modifier.weight(1f),
             )
@@ -168,9 +168,9 @@ private fun FlatRoomsScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_bed),
                 title = stringResource(Res.string.bedroom),
-                isSelected = FlatRoom.Bedroom in uiState.chosenRooms,
+                isSelected = RoomType.Bedroom in uiState.chosenRooms,
                 onClick = {
-                    onToggleRoom(FlatRoom.Bedroom)
+                    onToggleRoom(RoomType.Bedroom)
                 },
                 modifier = Modifier.weight(1f),
             )
@@ -187,9 +187,9 @@ private fun FlatRoomsScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_armchair),
                 title = stringResource(Res.string.living_room),
-                isSelected = FlatRoom.LivingRoom in uiState.chosenRooms,
+                isSelected = RoomType.LivingRoom in uiState.chosenRooms,
                 onClick = {
-                    onToggleRoom(FlatRoom.LivingRoom)
+                    onToggleRoom(RoomType.LivingRoom)
                 },
                 modifier = Modifier.weight(1f),
             )
@@ -197,9 +197,9 @@ private fun FlatRoomsScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_shower_head),
                 title = stringResource(Res.string.shower),
-                isSelected = FlatRoom.Shower in uiState.chosenRooms,
+                isSelected = RoomType.ShowerRoom in uiState.chosenRooms,
                 onClick = {
-                    onToggleRoom(FlatRoom.Shower)
+                    onToggleRoom(RoomType.ShowerRoom)
                 },
                 modifier = Modifier.weight(1f),
             )
@@ -216,9 +216,9 @@ private fun FlatRoomsScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_bath),
                 title = stringResource(Res.string.bathroom),
-                isSelected = FlatRoom.Bathroom in uiState.chosenRooms,
+                isSelected = RoomType.Bathroom in uiState.chosenRooms,
                 onClick = {
-                    onToggleRoom(FlatRoom.Bathroom)
+                    onToggleRoom(RoomType.Bathroom)
                 },
                 modifier = Modifier.weight(1f),
             )
@@ -226,9 +226,9 @@ private fun FlatRoomsScreen(
             HomesharingPickableItem(
                 icon = painterResource(Res.drawable.ic_toilet),
                 title = stringResource(Res.string.toilet),
-                isSelected = FlatRoom.Toilet in uiState.chosenRooms,
+                isSelected = RoomType.Toilet in uiState.chosenRooms,
                 onClick = {
-                    onToggleRoom(FlatRoom.Toilet)
+                    onToggleRoom(RoomType.Toilet)
                 },
                 modifier = Modifier.weight(1f),
                 

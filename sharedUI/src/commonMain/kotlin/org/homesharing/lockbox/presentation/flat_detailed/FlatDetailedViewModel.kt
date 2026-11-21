@@ -43,7 +43,7 @@ internal class FlatDetailedViewModel(
             is Response.Success -> {
                 FlatDetailedUiState(
                     name = response.data.name,
-                    address = response.data.address,
+                    address = response.data.fullAddress,
                     premiseType = response.data.premiseType,
                     loading = false,
                     error = false,

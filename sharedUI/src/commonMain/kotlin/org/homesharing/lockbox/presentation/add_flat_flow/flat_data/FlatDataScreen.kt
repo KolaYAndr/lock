@@ -21,40 +21,42 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.address
-import lockbox.sharedui.generated.resources.ic_armchair
-import lockbox.sharedui.generated.resources.ic_bath
 import lockbox.sharedui.generated.resources.bathroom
-import lockbox.sharedui.generated.resources.ic_bed
 import lockbox.sharedui.generated.resources.bedroom
-import lockbox.sharedui.generated.resources.ic_chef_hat
-import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.commercial
+import lockbox.sharedui.generated.resources.create_custom
 import lockbox.sharedui.generated.resources.create_flat
 import lockbox.sharedui.generated.resources.flat_type
+import lockbox.sharedui.generated.resources.ic_armchair
+import lockbox.sharedui.generated.resources.ic_bath
+import lockbox.sharedui.generated.resources.ic_bed
+import lockbox.sharedui.generated.resources.ic_chef_hat
+import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.ic_house
+import lockbox.sharedui.generated.resources.ic_map_pin
+import lockbox.sharedui.generated.resources.ic_plus
+import lockbox.sharedui.generated.resources.ic_shower_head
 import lockbox.sharedui.generated.resources.ic_toilet
 import lockbox.sharedui.generated.resources.kitchen
 import lockbox.sharedui.generated.resources.living
 import lockbox.sharedui.generated.resources.living_room
-import lockbox.sharedui.generated.resources.ic_map_pin
 import lockbox.sharedui.generated.resources.new_flat
 import lockbox.sharedui.generated.resources.rooms
 import lockbox.sharedui.generated.resources.shower
-import lockbox.sharedui.generated.resources.ic_shower_head
 import lockbox.sharedui.generated.resources.toilet
-import org.homesharing.lockbox.domain.model.flat_rooms.FlatRoom
+import org.homesharing.lockbox.domain.model.room.RoomType
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.changeable.HomesharingChangeablePropertyContainer
 import org.homesharing.lockbox.presentation.uikit.composable.chip.HomesharingChip
 import org.homesharing.lockbox.presentation.uikit.composable.property.HomesharingProperty
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -173,22 +175,24 @@ private fun FlatDataScreen(
                     HomesharingChip(
                         title = stringResource(
                             when (room) {
-                                FlatRoom.Bathroom -> Res.string.bathroom
-                                FlatRoom.Bedroom -> Res.string.bedroom
-                                FlatRoom.Kitchen -> Res.string.kitchen
-                                FlatRoom.LivingRoom -> Res.string.living_room
-                                FlatRoom.Shower -> Res.string.shower
-                                FlatRoom.Toilet -> Res.string.toilet
+                                RoomType.Bathroom -> Res.string.bathroom
+                                RoomType.Bedroom -> Res.string.bedroom
+                                RoomType.Kitchen -> Res.string.kitchen
+                                RoomType.LivingRoom -> Res.string.living_room
+                                RoomType.ShowerRoom -> Res.string.shower
+                                RoomType.Toilet -> Res.string.toilet
+                                RoomType.Custom -> Res.string.create_custom
                             }
                         ),
                         painter = painterResource(
                             when (room) {
-                                FlatRoom.Bathroom -> Res.drawable.ic_bath
-                                FlatRoom.Bedroom -> Res.drawable.ic_bed
-                                FlatRoom.Kitchen -> Res.drawable.ic_chef_hat
-                                FlatRoom.LivingRoom -> Res.drawable.ic_armchair
-                                FlatRoom.Shower -> Res.drawable.ic_shower_head
-                                FlatRoom.Toilet -> Res.drawable.ic_toilet
+                                RoomType.Bathroom -> Res.drawable.ic_bath
+                                RoomType.Bedroom -> Res.drawable.ic_bed
+                                RoomType.Kitchen -> Res.drawable.ic_chef_hat
+                                RoomType.LivingRoom -> Res.drawable.ic_armchair
+                                RoomType.ShowerRoom -> Res.drawable.ic_shower_head
+                                RoomType.Toilet -> Res.drawable.ic_toilet
+                                RoomType.Custom -> Res.drawable.ic_plus
                             }
                         )
                     )
