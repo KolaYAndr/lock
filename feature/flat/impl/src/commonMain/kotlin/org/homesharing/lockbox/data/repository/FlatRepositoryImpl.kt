@@ -12,6 +12,7 @@ import org.homesharing.lockbox.data.network.api.FlatApi
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
+import org.homesharing.lockbox.data.network.dto.flat_document.FlatDocumentListDto
 import org.homesharing.lockbox.data.network.dto.flat_photo.ReorderPhotosRequestDto
 import org.homesharing.lockbox.data.repository.paging.FlatPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
@@ -21,6 +22,8 @@ import org.homesharing.lockbox.domain.model.flat.toDomain
 import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
 import org.homesharing.lockbox.domain.model.flat_detail.toDomain
 import org.homesharing.lockbox.domain.model.flat_detail.toDto
+import org.homesharing.lockbox.domain.model.flat_document.FlatDocumentList
+import org.homesharing.lockbox.domain.model.flat_document.toDomain
 import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
 import org.homesharing.lockbox.domain.model.flat_list.toDto
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
@@ -182,6 +185,13 @@ internal class FlatRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.restoreFlat(id) },
             mapper = FlatDetailDto::toDomain
+        )
+    }
+
+    override suspend fun getFlatDocuments(id: String): Response<FlatDocumentList> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getFlatDocuments(id) },
+            mapper = FlatDocumentListDto::toDomain
         )
     }
 }

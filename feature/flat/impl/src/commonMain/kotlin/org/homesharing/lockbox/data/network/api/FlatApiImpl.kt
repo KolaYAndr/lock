@@ -21,6 +21,7 @@ import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.apiValue
+import org.homesharing.lockbox.data.network.dto.flat_document.FlatDocumentListDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import org.homesharing.lockbox.data.network.dto.flat_list.apiValue
@@ -33,6 +34,7 @@ private const val ARCHIVE = "archive"
 private const val RESTORE = "restore"
 private const val PHOTOS = "photos"
 private const val ORDER = "order"
+private const val DOCUMENTS = "documents"
 
 // API arguments
 private const val CURSOR = "cursor"
@@ -138,5 +140,11 @@ internal class FlatApiImpl(
         return client.post {
             url("$FLATS_URL/$id/$RESTORE")
         }.toApiResponse<FlatDetailDto>(json)
+    }
+
+    override suspend fun getFlatDocuments(id: String): ApiResponse<FlatDocumentListDto> {
+        return client.get {
+            url("$FLATS_URL/$id/$DOCUMENTS")
+        }.toApiResponse<FlatDocumentListDto>(json)
     }
 }

@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
+import org.homesharing.lockbox.domain.model.flat_document.FlatDocumentList
 import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.model.room.RoomInput
@@ -178,4 +179,15 @@ interface FlatRepository {
     suspend fun restoreFlat(
         id: String,
     ): Response<FlatDetail>
+
+    /**
+     * Получает документы права собственности квартиры (`GET /flats/{id}/documents`).
+     * Требует авторизации. Документы видны только владельцу.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [Response] со списком документов квартиры
+     */
+    suspend fun getFlatDocuments(
+        id: String,
+    ): Response<FlatDocumentList>
 }
