@@ -95,4 +95,28 @@ interface FlatRepository {
         livingArea: Double? = null,
         rooms: List<RoomInput> = emptyList(),
     ): Response<FlatDetail>
+
+    /**
+     * Мягко архивирует квартиру текущего пользователя (`POST /flats/{id}/archive`).
+     * Требует авторизации.
+     *
+     * Операция идемпотентна: повторная архивация успешна.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [Response] с детальной проекцией архивной квартиры
+     */
+    suspend fun archiveFlat(
+        id: String,
+    ): Response<FlatDetail>
+
+    /**
+     * Возвращает квартиру текущего пользователя из архива (`POST /flats/{id}/restore`).
+     * Требует авторизации.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [Response] с детальной проекцией восстановленной квартиры
+     */
+    suspend fun restoreFlat(
+        id: String,
+    ): Response<FlatDetail>
 }

@@ -21,6 +21,8 @@ import org.homesharing.lockbox.data.network.dto.flat_list.apiValue
 
 // API endpoints
 private const val FLATS = "flats"
+private const val ARCHIVE = "archive"
+private const val RESTORE = "restore"
 
 // API arguments
 private const val CURSOR = "cursor"
@@ -69,6 +71,18 @@ internal class FlatApiImpl(
         return client.patch {
             url("$FLATS_URL/$id")
             setBody(request)
+        }.toApiResponse<FlatDetailDto>(json)
+    }
+
+    override suspend fun archiveFlat(id: String): ApiResponse<FlatDetailDto> {
+        return client.post {
+            url("$FLATS_URL/$id/$ARCHIVE")
+        }.toApiResponse<FlatDetailDto>(json)
+    }
+
+    override suspend fun restoreFlat(id: String): ApiResponse<FlatDetailDto> {
+        return client.post {
+            url("$FLATS_URL/$id/$RESTORE")
         }.toApiResponse<FlatDetailDto>(json)
     }
 }

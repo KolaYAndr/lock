@@ -70,4 +70,30 @@ internal interface FlatApi {
         id: String,
         request: CreateFlatRequestDto,
     ): ApiResponse<FlatDetailDto>
+
+    /**
+     * Мягко архивирует квартиру текущего пользователя (`POST /flats/{id}/archive`).
+     * Требует авторизации (Bearer token).
+     *
+     * Тело запроса отсутствует. Операция идемпотентна: повторная архивация успешна.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [ApiResponse] с детальной проекцией архивной квартиры [FlatDetailDto] (200 OK)
+     */
+    suspend fun archiveFlat(
+        id: String,
+    ): ApiResponse<FlatDetailDto>
+
+    /**
+     * Возвращает квартиру текущего пользователя из архива (`POST /flats/{id}/restore`).
+     * Требует авторизации (Bearer token).
+     *
+     * Тело запроса отсутствует.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [ApiResponse] с детальной проекцией восстановленной квартиры [FlatDetailDto] (200 OK)
+     */
+    suspend fun restoreFlat(
+        id: String,
+    ): ApiResponse<FlatDetailDto>
 }

@@ -132,4 +132,18 @@ internal class FlatRepositoryImpl(
             mapper = FlatDetailDto::toDomain
         )
     }
+
+    override suspend fun archiveFlat(id: String): Response<FlatDetail> {
+        return parseLockboxApiResponse(
+            apiCall = { api.archiveFlat(id) },
+            mapper = FlatDetailDto::toDomain
+        )
+    }
+
+    override suspend fun restoreFlat(id: String): Response<FlatDetail> {
+        return parseLockboxApiResponse(
+            apiCall = { api.restoreFlat(id) },
+            mapper = FlatDetailDto::toDomain
+        )
+    }
 }
