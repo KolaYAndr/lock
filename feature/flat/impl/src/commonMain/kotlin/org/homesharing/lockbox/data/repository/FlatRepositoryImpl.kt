@@ -86,6 +86,13 @@ internal class FlatRepositoryImpl(
         )
     }
 
+    override suspend fun getFlatPhotos(id: String): Response<List<String>> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getFlatPhotos(id) },
+            mapper = { it.items.map { photo -> photo.url } }
+        )
+    }
+
     override suspend fun createFlat(
         address: FlatDetail.Address,
         name: String?,

@@ -50,6 +50,17 @@ interface FlatRepository {
     ): Response<FlatDetail>
 
     /**
+     * Получает URL фотографий квартиры в порядке отображения (`GET /flats/{id}/photos`).
+     * Требует авторизации. Доступно и для архивных квартир.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [Response] со списком URL фотографий
+     */
+    suspend fun getFlatPhotos(
+        id: String,
+    ): Response<List<String>>
+
+    /**
      * Создаёт квартиру текущего пользователя (`POST /flats`).
      * Требует авторизации.
      *

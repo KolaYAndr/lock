@@ -6,6 +6,7 @@ import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
+import org.homesharing.lockbox.data.network.dto.flat_photo.FlatPhotoListDto
 
 internal interface FlatApi {
     /**
@@ -43,6 +44,17 @@ internal interface FlatApi {
         id: String,
         include: FlatIncludeDto?,
     ): ApiResponse<FlatDetailDto>
+
+    /**
+     * Получает фотографии квартиры в порядке отображения (`GET /flats/{id}/photos`).
+     * Требует авторизации (Bearer token). Доступно и для архивных квартир.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @return [ApiResponse] со списком фотографий [FlatPhotoListDto] (200 OK)
+     */
+    suspend fun getFlatPhotos(
+        id: String,
+    ): ApiResponse<FlatPhotoListDto>
 
     /**
      * Создаёт квартиру текущего пользователя (`POST /flats`).
