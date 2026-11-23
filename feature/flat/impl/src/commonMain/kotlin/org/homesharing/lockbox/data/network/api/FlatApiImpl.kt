@@ -1,12 +1,18 @@
 package org.homesharing.lockbox.data.network.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
@@ -19,18 +25,21 @@ import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import org.homesharing.lockbox.data.network.dto.flat_list.apiValue
 import org.homesharing.lockbox.data.network.dto.flat_photo.FlatPhotoListDto
+import org.homesharing.lockbox.data.network.dto.flat_photo.ReorderPhotosRequestDto
 
 // API endpoints
 private const val FLATS = "flats"
 private const val ARCHIVE = "archive"
 private const val RESTORE = "restore"
 private const val PHOTOS = "photos"
+private const val ORDER = "order"
 
 // API arguments
 private const val CURSOR = "cursor"
 private const val LIMIT = "limit"
 private const val STATUS = "status"
 private const val INCLUDE = "include"
+private const val PHOTO = "photo"
 
 // API url
 private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
@@ -66,6 +75,43 @@ internal class FlatApiImpl(
         return client.get {
             url("$FLATS_URL/$id/$PHOTOS")
         }.toApiResponse<FlatPhotoListDto>(json)
+    }
+
+    override suspend fun uploadFlatPhoto(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+    ): ApiResponse<FlatPhotoListDto.FlatPhotoDto> {
+        return client.submitFormWithBinaryData(
+            url = "$FLATS_URL/$id/$PHOTOS",
+            formData = formData {
+                append(
+                    key = PHOTO,
+                    value = data,
+                    headers = Headers.build {
+                        append(HttpHeaders.ContentType, contentType)
+                        append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                    }
+                )
+            }
+        ).toApiResponse<FlatPhotoListDto.FlatPhotoDto>(json)
+    }
+
+    override suspend fun reorderFlatPhotos(
+        id: String,
+        request: ReorderPhotosRequestDto,
+    ): ApiResponse<FlatPhotoListDto> {
+        return client.put {
+            url("$FLATS_URL/$id/$PHOTOS/$ORDER")
+            setBody(request)
+        }.toApiResponse<FlatPhotoListDto>(json)
+    }
+
+    override suspend fun deleteFlatPhoto(id: String, photoId: String): ApiResponse<Unit> {
+        return client.delete {
+            url("$FLATS_URL/$id/$PHOTOS/$photoId")
+        }.toApiResponse<Unit>(json)
     }
 
     override suspend fun createFlat(request: CreateFlatRequestDto): ApiResponse<FlatDetailDto> {

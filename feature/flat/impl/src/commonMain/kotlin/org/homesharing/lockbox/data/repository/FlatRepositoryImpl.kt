@@ -12,6 +12,7 @@ import org.homesharing.lockbox.data.network.api.FlatApi
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
+import org.homesharing.lockbox.data.network.dto.flat_photo.ReorderPhotosRequestDto
 import org.homesharing.lockbox.data.repository.paging.FlatPagingSource
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
@@ -91,6 +92,36 @@ internal class FlatRepositoryImpl(
             apiCall = { api.getFlatPhotos(id) },
             mapper = { it.items.map { photo -> photo.url } }
         )
+    }
+
+    override suspend fun uploadFlatPhoto(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+    ): Response<String> {
+        return parseLockboxApiResponse(
+            apiCall = { api.uploadFlatPhoto(id, data, fileName, contentType) },
+            mapper = { it.url }
+        )
+    }
+
+    override suspend fun reorderFlatPhotos(
+        id: String,
+        photoIds: List<String>,
+    ): Response<List<String>> {
+        val request = ReorderPhotosRequestDto(photoIds = photoIds)
+
+        return parseLockboxApiResponse(
+            apiCall = { api.reorderFlatPhotos(id, request) },
+            mapper = { it.items.map { photo -> photo.url } }
+        )
+    }
+
+    override suspend fun deleteFlatPhoto(id: String, photoId: String): Response<Unit> {
+        return parseLockboxApiResponse {
+            api.deleteFlatPhoto(id, photoId)
+        }
     }
 
     override suspend fun createFlat(

@@ -7,6 +7,7 @@ import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import org.homesharing.lockbox.data.network.dto.flat_photo.FlatPhotoListDto
+import org.homesharing.lockbox.data.network.dto.flat_photo.ReorderPhotosRequestDto
 
 internal interface FlatApi {
     /**
@@ -55,6 +56,55 @@ internal interface FlatApi {
     suspend fun getFlatPhotos(
         id: String,
     ): ApiResponse<FlatPhotoListDto>
+
+    /**
+     * Загружает одно фото квартиры (`POST /flats/{id}/photos`).
+     * Требует авторизации (Bearer token).
+     *
+     * Тело запроса — `multipart/form-data`, файл в поле `photo` (до 10 MiB).
+     * Тип изображения определяется сервером по magic bytes: jpeg/png/webp/avif/heic.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param data содержимое изображения
+     * @param fileName имя загружаемого файла
+     * @param contentType MIME-тип файла
+     * @return [ApiResponse] с загруженным фото [FlatPhotoListDto.FlatPhotoDto] (201 Created)
+     */
+    suspend fun uploadFlatPhoto(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+    ): ApiResponse<FlatPhotoListDto.FlatPhotoDto>
+
+    /**
+     * Задаёт новый порядок фотографий квартиры (`PUT /flats/{id}/photos/order`).
+     * Требует авторизации (Bearer token).
+     *
+     * Тело запроса — `application/json` с обязательным массивом `photo_ids`.
+     * Список должен быть перестановкой всех фото квартиры без дублей.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param request объект [ReorderPhotosRequestDto] с новым порядком фотографий
+     * @return [ApiResponse] со списком фотографий в новом порядке [FlatPhotoListDto] (200 OK)
+     */
+    suspend fun reorderFlatPhotos(
+        id: String,
+        request: ReorderPhotosRequestDto,
+    ): ApiResponse<FlatPhotoListDto>
+
+    /**
+     * Удаляет фото квартиры (`DELETE /flats/{id}/photos/{photoId}`).
+     * Требует авторизации (Bearer token).
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param photoId идентификатор фотографии (uuid)
+     * @return [ApiResponse] без тела ответа (204 No Content)
+     */
+    suspend fun deleteFlatPhoto(
+        id: String,
+        photoId: String,
+    ): ApiResponse<Unit>
 
     /**
      * Создаёт квартиру текущего пользователя (`POST /flats`).

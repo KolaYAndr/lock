@@ -61,6 +61,54 @@ interface FlatRepository {
     ): Response<List<String>>
 
     /**
+     * Загружает одно фото квартиры (`POST /flats/{id}/photos`).
+     * Требует авторизации.
+     *
+     * Тело — `multipart/form-data`, файл в поле `photo` (до 10 MiB).
+     * Тип определяется сервером по magic bytes: jpeg/png/webp/avif/heic.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param data содержимое изображения
+     * @param fileName имя загружаемого файла
+     * @param contentType MIME-тип файла
+     * @return [Response] с URL загруженного фото
+     */
+    suspend fun uploadFlatPhoto(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+    ): Response<String>
+
+    /**
+     * Задаёт новый порядок фотографий квартиры (`PUT /flats/{id}/photos/order`).
+     * Требует авторизации.
+     *
+     * Список `photoIds` должен быть перестановкой всех фото квартиры без дублей.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param photoIds новый порядок идентификаторов фотографий
+     * @return [Response] со списком URL фотографий в новом порядке
+     */
+    suspend fun reorderFlatPhotos(
+        id: String,
+        photoIds: List<String>,
+    ): Response<List<String>>
+
+    /**
+     * Удаляет фото квартиры (`DELETE /flats/{id}/photos/{photoId}`).
+     * Требует авторизации.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param photoId идентификатор фотографии (uuid)
+     * @return [Response] без тела ответа
+     */
+    suspend fun deleteFlatPhoto(
+        id: String,
+        photoId: String,
+    ): Response<Unit>
+
+    /**
      * Создаёт квартиру текущего пользователя (`POST /flats`).
      * Требует авторизации.
      *
