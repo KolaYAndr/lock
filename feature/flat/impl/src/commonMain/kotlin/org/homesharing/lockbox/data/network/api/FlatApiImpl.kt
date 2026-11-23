@@ -22,6 +22,8 @@ import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.apiValue
 import org.homesharing.lockbox.data.network.dto.flat_document.FlatDocumentListDto
+import org.homesharing.lockbox.data.network.dto.flat_document.FlatDocumentTypeDto
+import org.homesharing.lockbox.data.network.dto.flat_document.apiValue
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import org.homesharing.lockbox.data.network.dto.flat_list.apiValue
@@ -42,6 +44,8 @@ private const val LIMIT = "limit"
 private const val STATUS = "status"
 private const val INCLUDE = "include"
 private const val PHOTO = "photo"
+private const val DOCUMENT = "document"
+private const val DOC_TYPE = "doc_type"
 
 // API url
 private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
@@ -146,5 +150,36 @@ internal class FlatApiImpl(
         return client.get {
             url("$FLATS_URL/$id/$DOCUMENTS")
         }.toApiResponse<FlatDocumentListDto>(json)
+    }
+
+    override suspend fun uploadFlatDocument(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: FlatDocumentTypeDto?,
+    ): ApiResponse<FlatDocumentListDto.FlatDocumentDto> {
+        return client.submitFormWithBinaryData(
+            url = "$FLATS_URL/$id/$DOCUMENTS",
+            formData = formData {
+                append(
+                    key = DOCUMENT,
+                    value = data,
+                    headers = Headers.build {
+                        append(HttpHeaders.ContentType, contentType)
+                        append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                    }
+                )
+                docType?.let {
+                    append(DOC_TYPE, it.apiValue)
+                }
+            }
+        ).toApiResponse<FlatDocumentListDto.FlatDocumentDto>(json)
+    }
+
+    override suspend fun deleteFlatDocument(id: String, documentId: String): ApiResponse<Unit> {
+        return client.delete {
+            url("$FLATS_URL/$id/$DOCUMENTS/$documentId")
+        }.toApiResponse<Unit>(json)
     }
 }

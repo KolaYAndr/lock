@@ -20,3 +20,6 @@ internal enum class FlatDocumentTypeDto {
     @SerialName("other")
     Other,
 }
+
+internal val FlatDocumentTypeDto.apiValue: String
+    get() = FlatDocumentTypeDto.serializer().descriptor.getElementName(ordinal)

@@ -23,7 +23,9 @@ import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
 import org.homesharing.lockbox.domain.model.flat_detail.toDomain
 import org.homesharing.lockbox.domain.model.flat_detail.toDto
 import org.homesharing.lockbox.domain.model.flat_document.FlatDocumentList
+import org.homesharing.lockbox.domain.model.flat_document.FlatDocumentType
 import org.homesharing.lockbox.domain.model.flat_document.toDomain
+import org.homesharing.lockbox.domain.model.flat_document.toDto
 import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
 import org.homesharing.lockbox.domain.model.flat_list.toDto
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
@@ -193,5 +195,32 @@ internal class FlatRepositoryImpl(
             apiCall = { api.getFlatDocuments(id) },
             mapper = FlatDocumentListDto::toDomain
         )
+    }
+
+    override suspend fun uploadFlatDocument(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: FlatDocumentType?,
+    ): Response<FlatDocumentList.FlatDocument> {
+        return parseLockboxApiResponse(
+            apiCall = {
+                api.uploadFlatDocument(
+                    id = id,
+                    data = data,
+                    fileName = fileName,
+                    contentType = contentType,
+                    docType = docType?.toDto(),
+                )
+            },
+            mapper = FlatDocumentListDto.FlatDocumentDto::toDomain
+        )
+    }
+
+    override suspend fun deleteFlatDocument(id: String, documentId: String): Response<Unit> {
+        return parseLockboxApiResponse {
+            api.deleteFlatDocument(id, documentId)
+        }
     }
 }

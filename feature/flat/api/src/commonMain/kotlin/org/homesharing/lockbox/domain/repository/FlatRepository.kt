@@ -7,6 +7,7 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
 import org.homesharing.lockbox.domain.model.flat_document.FlatDocumentList
+import org.homesharing.lockbox.domain.model.flat_document.FlatDocumentType
 import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.model.room.RoomInput
@@ -190,4 +191,39 @@ interface FlatRepository {
     suspend fun getFlatDocuments(
         id: String,
     ): Response<FlatDocumentList>
+
+    /**
+     * Загружает документ права собственности квартиры (`POST /flats/{id}/documents`).
+     * Требует авторизации. Документы доступны только владельцу.
+     *
+     * Тело — `multipart/form-data`, файл в поле `document` (до 20 MiB).
+     * Тип определяется сервером по magic bytes: pdf/jpeg/png/heic.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param data содержимое документа
+     * @param fileName имя загружаемого файла
+     * @param contentType MIME-тип файла
+     * @param docType тип документа; при `null` сервер использует `other`
+     * @return [Response] с загруженным документом
+     */
+    suspend fun uploadFlatDocument(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: FlatDocumentType? = null,
+    ): Response<FlatDocumentList.FlatDocument>
+
+    /**
+     * Удаляет документ права собственности квартиры (`DELETE /flats/{id}/documents/{documentId}`).
+     * Требует авторизации. Документы доступны только владельцу.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param documentId идентификатор документа (uuid)
+     * @return [Response] без тела ответа
+     */
+    suspend fun deleteFlatDocument(
+        id: String,
+        documentId: String,
+    ): Response<Unit>
 }

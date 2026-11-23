@@ -5,6 +5,7 @@ import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
 import org.homesharing.lockbox.data.network.dto.flat_document.FlatDocumentListDto
+import org.homesharing.lockbox.data.network.dto.flat_document.FlatDocumentTypeDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 import org.homesharing.lockbox.data.network.dto.flat_photo.FlatPhotoListDto
@@ -174,4 +175,40 @@ internal interface FlatApi {
     suspend fun getFlatDocuments(
         id: String,
     ): ApiResponse<FlatDocumentListDto>
+
+    /**
+     * Загружает документ права собственности квартиры (`POST /flats/{id}/documents`).
+     * Требует авторизации (Bearer token). Документы доступны только владельцу.
+     *
+     * Тело запроса — `multipart/form-data`, файл в поле `document` (до 20 MiB).
+     * Тип файла определяется сервером по magic bytes: pdf/jpeg/png/heic.
+     * Верификация и модерация не выполняются.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param data содержимое документа
+     * @param fileName имя загружаемого файла
+     * @param contentType MIME-тип файла
+     * @param docType тип документа [FlatDocumentTypeDto]; при `null` сервер использует `other`
+     * @return [ApiResponse] с загруженным документом [FlatDocumentListDto.FlatDocumentDto] (201 Created)
+     */
+    suspend fun uploadFlatDocument(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        docType: FlatDocumentTypeDto?,
+    ): ApiResponse<FlatDocumentListDto.FlatDocumentDto>
+
+    /**
+     * Удаляет документ права собственности квартиры (`DELETE /flats/{id}/documents/{documentId}`).
+     * Требует авторизации (Bearer token). Документы доступны только владельцу.
+     *
+     * @param id идентификатор квартиры (uuid)
+     * @param documentId идентификатор документа (uuid)
+     * @return [ApiResponse] без тела ответа (204 No Content)
+     */
+    suspend fun deleteFlatDocument(
+        id: String,
+        documentId: String,
+    ): ApiResponse<Unit>
 }
