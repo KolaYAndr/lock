@@ -56,11 +56,14 @@ internal interface FlatApi {
     ): ApiResponse<FlatDetailDto>
 
     /**
-     * Частично обновляет квартиру текущего пользователя (`PATCH /flats/{id}`).
+     * Обновляет квартиру текущего пользователя (`PATCH /flats/{id}`).
      * Требует авторизации (Bearer token).
      *
+     * Переданные поля заменяются. `address` обязателен; если `rooms` не передан,
+     * список комнат очищается.
+     *
      * @param id идентификатор квартиры (uuid)
-     * @param request объект [CreateFlatRequestDto] с изменяемыми полями квартиры
+     * @param request объект [CreateFlatRequestDto] с новыми полями квартиры
      * @return [ApiResponse] с детальной проекцией обновлённой квартиры [FlatDetailDto] (200 OK)
      */
     suspend fun updateFlat(

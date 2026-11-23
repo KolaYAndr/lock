@@ -71,16 +71,19 @@ interface FlatRepository {
     ): Response<FlatDetail>
 
     /**
-     * Частично обновляет квартиру текущего пользователя (`PATCH /flats/{id}`).
+     * Обновляет квартиру текущего пользователя (`PATCH /flats/{id}`).
      * Требует авторизации.
      *
+     * Переданные поля заменяются. `address` обязателен; если `rooms` не передан,
+     * список комнат очищается.
+     *
      * @param id идентификатор квартиры (uuid)
-     * @param address адрес квартиры; обязателен только `city`
-     * @param name название; при `null` или пустом значении сервер подставляет `full_address`
-     * @param description описание (до 10000 символов)
-     * @param premiseType тип помещения; при `null` сервер использует `residential`
-     * @param livingArea жилая площадь; отрицательное значение отклоняется сервером (`400`)
-     * @param rooms комнаты; `position` по умолчанию — индекс в массиве
+     * @param address адрес квартиры (обязателен)
+     * @param name название квартиры
+     * @param description описание квартиры
+     * @param premiseType тип помещения
+     * @param livingArea жилая площадь
+     * @param rooms комнаты; при отсутствии список комнат очищается
      * @return [Response] с детальной проекцией обновлённой квартиры
      */
     suspend fun updateFlat(
