@@ -83,6 +83,20 @@ interface InvitationRepository {
     ): Response<Invite>
 
     /**
+     * Отзывает инвайт (`POST /api/invites/{id}/cancel`).
+     * Требует авторизации. Доступно только владельцу инвайта.
+     *
+     * Явный отзыв: `status = revoked`, гостевая ссылка перестаёт работать,
+     * запись и журнал событий остаются.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @return [Response] с отозванным инвайтом
+     */
+    suspend fun cancelInvite(
+        id: String,
+    ): Response<Invite>
+
+    /**
      * Создаёт инвайт для гостя (`POST /api/invites`).
      * Требует авторизации.
      *

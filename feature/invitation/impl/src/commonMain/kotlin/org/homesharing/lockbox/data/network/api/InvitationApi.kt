@@ -81,6 +81,20 @@ internal interface InvitationApi {
     ): ApiResponse<InviteDto>
 
     /**
+     * Отзывает инвайт (`POST /api/invites/{id}/cancel`).
+     * Требует авторизации (Bearer token). Доступно только владельцу инвайта.
+     *
+     * Явный отзыв: `status = revoked`, гостевая ссылка перестаёт работать,
+     * запись и журнал событий остаются.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @return [ApiResponse] с отозванным инвайтом [InviteDto] (200 OK)
+     */
+    suspend fun cancelInvite(
+        id: String,
+    ): ApiResponse<InviteDto>
+
+    /**
      * Создаёт инвайт для гостя (`POST /api/invites`).
      * Требует авторизации (Bearer token).
      *

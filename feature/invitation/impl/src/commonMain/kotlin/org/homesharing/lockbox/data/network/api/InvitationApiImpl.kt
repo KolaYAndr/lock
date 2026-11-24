@@ -19,6 +19,7 @@ import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 // API endpoints
 private const val INVITES = "invites"
 private const val RESEND = "resend"
+private const val CANCEL = "cancel"
 
 // API arguments
 private const val FLAT_ID = "flat_id"
@@ -70,6 +71,12 @@ internal class InvitationApiImpl(
     override suspend fun resendInvite(id: String): ApiResponse<InviteDto> {
         return client.post {
             url("$INVITES_URL/$id/$RESEND")
+        }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun cancelInvite(id: String): ApiResponse<InviteDto> {
+        return client.post {
+            url("$INVITES_URL/$id/$CANCEL")
         }.toApiResponse<InviteDto>(json)
     }
 
