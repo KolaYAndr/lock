@@ -1,10 +1,10 @@
-package org.homesharing.lockbox.data.network.dto.invite_list
+package org.homesharing.lockbox.data.network.dto.invite
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal enum class EmailStatusDto {
+internal enum class InviteEmailStatusDto {
     @SerialName("pending")
     Pending,
 

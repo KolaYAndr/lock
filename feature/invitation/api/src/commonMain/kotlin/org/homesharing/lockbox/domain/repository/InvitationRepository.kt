@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.domain.repository
 
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.invite.Invite
 import org.homesharing.lockbox.domain.model.invite_list.InviteList
 
 interface InvitationRepository {
@@ -19,4 +20,25 @@ interface InvitationRepository {
         limit: Int,
         cursor: String?,
     ): Response<InviteList>
+
+    /**
+     * Создаёт инвайт для гостя (`POST /api/invites`).
+     * Требует авторизации.
+     *
+     * Квартира должна принадлежать текущему лендлорду и быть активной.
+     * `totalPrice` и `remainingPrice` из [checkIn] при создании не отправляются:
+     * сервер считает итоговую стоимость сам.
+     *
+     * @param flatId идентификатор активной квартиры лендлорда (uuid)
+     * @param guest контактные данные гостя
+     * @param checkIn детали планируемого заезда
+     * @param settings настройки заселения; при `null` сервер использует zero-value
+     * @return [Response] с созданным инвайтом
+     */
+    suspend fun createInvite(
+        flatId: String,
+        guest: Invite.Guest,
+        checkIn: Invite.CheckInDetails,
+        settings: Invite.CheckInSettings? = null,
+    ): Response<Invite>
 }

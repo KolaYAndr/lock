@@ -1,9 +1,14 @@
 package org.homesharing.lockbox.data.repository
 
 import org.homesharing.lockbox.data.network.api.InvitationApi
+import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
+import org.homesharing.lockbox.data.network.dto.invite.InviteDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
+import org.homesharing.lockbox.domain.model.invite.Invite
+import org.homesharing.lockbox.domain.model.invite.toDomain
+import org.homesharing.lockbox.domain.model.invite.toRequestDto
 import org.homesharing.lockbox.domain.model.invite_list.InviteList
 import org.homesharing.lockbox.domain.model.invite_list.toDomain
 import org.homesharing.lockbox.domain.repository.InvitationRepository
@@ -19,6 +24,25 @@ internal class InvitationRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.getInvites(flatId = flatId, limit = limit, cursor = cursor) },
             mapper = InviteListDto::toDomain,
+        )
+    }
+
+    override suspend fun createInvite(
+        flatId: String,
+        guest: Invite.Guest,
+        checkIn: Invite.CheckInDetails,
+        settings: Invite.CheckInSettings?,
+    ): Response<Invite> {
+        val request = InviteCreateRequestDto(
+            flatId = flatId,
+            guest = guest.toRequestDto(),
+            checkIn = checkIn.toRequestDto(),
+            settings = settings?.toRequestDto(),
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.createInvite(request) },
+            mapper = InviteDto::toDomain,
         )
     }
 }

@@ -1,12 +1,21 @@
-package org.homesharing.lockbox.data.network.dto.invite_list
+package org.homesharing.lockbox.data.network.dto.invite
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal enum class InviteStatusDto {
-    @SerialName("sent")
-    Sent,
+internal enum class InviteEventTypeDto {
+    @SerialName("created")
+    Created,
+
+    @SerialName("updated")
+    Updated,
+
+    @SerialName("resent")
+    Resent,
+
+    @SerialName("opened")
+    Opened,
 
     @SerialName("accepted")
     Accepted,

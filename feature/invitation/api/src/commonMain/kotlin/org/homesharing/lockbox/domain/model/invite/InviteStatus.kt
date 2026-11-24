@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model.invite_list
+package org.homesharing.lockbox.domain.model.invite
 
 enum class InviteStatus {
     Sent,

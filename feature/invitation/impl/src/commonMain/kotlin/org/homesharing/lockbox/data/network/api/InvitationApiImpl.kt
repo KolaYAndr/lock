@@ -3,11 +3,15 @@ package org.homesharing.lockbox.data.network.api
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
+import org.homesharing.lockbox.data.network.dto.invite.InviteDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 
 // API endpoints
@@ -36,5 +40,14 @@ internal class InvitationApiImpl(
             parameter(LIMIT, limit)
             cursor?.let { parameter(CURSOR, it) }
         }.toApiResponse<InviteListDto>(json)
+    }
+
+    override suspend fun createInvite(
+        request: InviteCreateRequestDto,
+    ): ApiResponse<InviteDto> {
+        return client.post {
+            url(INVITES_URL)
+            setBody(request)
+        }.toApiResponse<InviteDto>(json)
     }
 }

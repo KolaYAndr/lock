@@ -2,6 +2,8 @@ package org.homesharing.lockbox.data.network.dto.invite_list
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.homesharing.lockbox.data.network.dto.invite.InviteEmailStatusDto
+import org.homesharing.lockbox.data.network.dto.invite.InviteStatusDto
 
 @Serializable
 internal data class InviteListDto(
@@ -18,7 +20,7 @@ internal data class InviteListDto(
         val guestName: String,
         val status: InviteStatusDto,
         @SerialName("email_status")
-        val emailStatus: EmailStatusDto,
+        val emailStatus: InviteEmailStatusDto,
         @SerialName("flat_id")
         val flatId: String?,
         @SerialName("flat_name")
