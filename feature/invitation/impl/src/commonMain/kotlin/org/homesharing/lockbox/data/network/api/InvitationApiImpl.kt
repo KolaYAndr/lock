@@ -12,6 +12,7 @@ import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
@@ -20,6 +21,7 @@ import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 private const val INVITES = "invites"
 private const val RESEND = "resend"
 private const val CANCEL = "cancel"
+private const val BY_TOKEN = "by-token"
 
 // API arguments
 private const val FLAT_ID = "flat_id"
@@ -28,6 +30,7 @@ private const val CURSOR = "cursor"
 
 // API url
 private const val INVITES_URL = "$GO_BASE_ENDPOINT/$INVITES"
+private const val INVITES_BY_TOKEN_URL = "$INVITES_URL/$BY_TOKEN"
 
 internal class InvitationApiImpl(
     private val client: HttpClient,
@@ -50,6 +53,12 @@ internal class InvitationApiImpl(
         return client.get {
             url("$INVITES_URL/$id")
         }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun getInviteByToken(token: String): ApiResponse<GuestInviteDto> {
+        return client.get {
+            url("$INVITES_BY_TOKEN_URL/$token")
+        }.toApiResponse<GuestInviteDto>(json)
     }
 
     override suspend fun updateInvite(

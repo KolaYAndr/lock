@@ -1,11 +1,14 @@
 package org.homesharing.lockbox.data.repository
 
 import org.homesharing.lockbox.data.network.api.InvitationApi
+import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
+import org.homesharing.lockbox.domain.model.guest_invite.GuestInvite
+import org.homesharing.lockbox.domain.model.guest_invite.toDomain
 import org.homesharing.lockbox.domain.model.invite.Invite
 import org.homesharing.lockbox.domain.model.invite.toDomain
 import org.homesharing.lockbox.domain.model.invite.toRequestDto
@@ -31,6 +34,13 @@ internal class InvitationRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.getInvite(id) },
             mapper = InviteDto::toDomain,
+        )
+    }
+
+    override suspend fun getInviteByToken(token: String): Response<GuestInvite> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getInviteByToken(token) },
+            mapper = GuestInviteDto::toDomain,
         )
     }
 

@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
@@ -34,6 +35,21 @@ internal interface InvitationApi {
     suspend fun getInvite(
         id: String,
     ): ApiResponse<InviteDto>
+
+    /**
+     * Получает гостевую проекцию инвайта по токену (`GET /api/invites/by-token/{token}`).
+     * Публичный эндпоинт (не требует авторизации).
+     *
+     * Гостевой лендинг по ссылке из письма. Фиксирует первое открытие (`sent` → `opened`,
+     * либо `expired`), возвращает гостевую проекцию без id инвайта, лендлорда и документов;
+     * `settings.intercom_code` вычищается.
+     *
+     * @param token токен инвайта (string, opaque)
+     * @return [ApiResponse] с гостевой проекцией инвайта [GuestInviteDto] (200 OK)
+     */
+    suspend fun getInviteByToken(
+        token: String,
+    ): ApiResponse<GuestInviteDto>
 
     /**
      * Полностью заменяет условия открытого инвайта (`PUT /api/invites/{id}`).

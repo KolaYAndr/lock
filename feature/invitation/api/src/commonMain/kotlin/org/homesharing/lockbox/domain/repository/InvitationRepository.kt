@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.domain.repository
 
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.guest_invite.GuestInvite
 import org.homesharing.lockbox.domain.model.invite.Invite
 import org.homesharing.lockbox.domain.model.invite_list.InviteList
 
@@ -31,6 +32,21 @@ interface InvitationRepository {
     suspend fun getInvite(
         id: String,
     ): Response<Invite>
+
+    /**
+     * Получает гостевую проекцию инвайта по токену (`GET /api/invites/by-token/{token}`).
+     * Публичный эндпоинт (не требует авторизации).
+     *
+     * Гостевой лендинг по ссылке из письма. Фиксирует первое открытие (`sent` → `opened`,
+     * либо `expired`), возвращает гостевую проекцию без id инвайта, лендлорда и документов;
+     * `settings.intercom_code` вычищается.
+     *
+     * @param token токен инвайта (string, opaque)
+     * @return [Response] с гостевой проекцией инвайта
+     */
+    suspend fun getInviteByToken(
+        token: String,
+    ): Response<GuestInvite>
 
     /**
      * Полностью заменяет условия открытого инвайта (`PUT /api/invites/{id}`).
