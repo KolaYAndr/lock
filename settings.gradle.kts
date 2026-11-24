@@ -59,6 +59,8 @@ project(":feature:flat:impl").projectDir = file("feature/flat/impl")
 
 include(":feature:invitation:api")
 project(":feature:invitation:api").projectDir = file("feature/invitation/api")
+include(":feature:invitation:impl")
+project(":feature:invitation:impl").projectDir = file("feature/invitation/impl")
 
 include(":androidApp")
 include(":shared")

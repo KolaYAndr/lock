@@ -48,6 +48,7 @@ kotlin {
             api(projects.feature.flat.api)
             api(projects.feature.flat.impl)
             api(projects.feature.invitation.api)
+            api(projects.feature.invitation.impl)
             api(libs.koin.core)
         }
     }
