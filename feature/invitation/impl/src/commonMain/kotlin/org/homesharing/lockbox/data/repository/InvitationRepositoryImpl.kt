@@ -27,6 +27,39 @@ internal class InvitationRepositoryImpl(
         )
     }
 
+    override suspend fun getInvite(id: String): Response<Invite> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getInvite(id) },
+            mapper = InviteDto::toDomain,
+        )
+    }
+
+    override suspend fun updateInvite(
+        id: String,
+        flatId: String,
+        guest: Invite.Guest,
+        checkIn: Invite.CheckInDetails,
+        settings: Invite.CheckInSettings?,
+    ): Response<Invite> {
+        val request = InviteCreateRequestDto(
+            flatId = flatId,
+            guest = guest.toRequestDto(),
+            checkIn = checkIn.toRequestDto(),
+            settings = settings?.toRequestDto(),
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.updateInvite(id, request) },
+            mapper = InviteDto::toDomain,
+        )
+    }
+
+    override suspend fun deleteInvite(id: String): Response<Unit> {
+        return parseLockboxApiResponse {
+            api.deleteInvite(id)
+        }
+    }
+
     override suspend fun createInvite(
         flatId: String,
         guest: Invite.Guest,

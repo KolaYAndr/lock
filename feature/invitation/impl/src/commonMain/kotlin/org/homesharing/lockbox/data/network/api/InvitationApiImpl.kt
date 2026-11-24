@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
@@ -40,6 +41,22 @@ internal class InvitationApiImpl(
             parameter(LIMIT, limit)
             cursor?.let { parameter(CURSOR, it) }
         }.toApiResponse<InviteListDto>(json)
+    }
+
+    override suspend fun getInvite(id: String): ApiResponse<InviteDto> {
+        return client.get {
+            url("$INVITES_URL/$id")
+        }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun updateInvite(
+        id: String,
+        request: InviteCreateRequestDto,
+    ): ApiResponse<InviteDto> {
+        return client.put {
+            url("$INVITES_URL/$id")
+            setBody(request)
+        }.toApiResponse<InviteDto>(json)
     }
 
     override suspend fun createInvite(

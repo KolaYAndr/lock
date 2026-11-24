@@ -22,6 +22,52 @@ interface InvitationRepository {
     ): Response<InviteList>
 
     /**
+     * Получает полные детали инвайта с журналом событий (`GET /api/invites/{id}`).
+     * Требует авторизации. Доступно только владельцу инвайта.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @return [Response] с полными деталями инвайта
+     */
+    suspend fun getInvite(
+        id: String,
+    ): Response<Invite>
+
+    /**
+     * Полностью заменяет условия открытого инвайта (`PUT /api/invites/{id}`).
+     * Требует авторизации. Доступно только владельцу инвайта.
+     *
+     * Email гостя неизменяем. `totalPrice` и `remainingPrice` из [checkIn]
+     * не отправляются: сервер считает итоговую стоимость сам.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @param flatId идентификатор активной квартиры лендлорда (uuid)
+     * @param guest контактные данные гостя
+     * @param checkIn новые детали планируемого заезда
+     * @param settings настройки заселения; при `null` сервер использует zero-value
+     * @return [Response] с обновлённым инвайтом
+     */
+    suspend fun updateInvite(
+        id: String,
+        flatId: String,
+        guest: Invite.Guest,
+        checkIn: Invite.CheckInDetails,
+        settings: Invite.CheckInSettings? = null,
+    ): Response<Invite>
+
+    /**
+     * Отменяет инвайт (`DELETE /api/invites/{id}`).
+     * Требует авторизации. Доступно только владельцу инвайта.
+     *
+     * Устаревший мягкий алиас на cancel: запись и журнал событий сохраняются.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @return [Response] без тела ответа
+     */
+    suspend fun deleteInvite(
+        id: String,
+    ): Response<Unit>
+
+    /**
      * Создаёт инвайт для гостя (`POST /api/invites`).
      * Требует авторизации.
      *
