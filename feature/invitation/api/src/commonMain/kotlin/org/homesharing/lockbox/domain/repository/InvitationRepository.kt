@@ -69,6 +69,20 @@ interface InvitationRepository {
     ): Response<Unit>
 
     /**
+     * Повторно отправляет инвайт гостю (`POST /api/invites/{id}/resend`).
+     * Требует авторизации.
+     *
+     * Повторно ставит письмо в очередь для инвайта, ждущего решения: `email_status = pending`,
+     * `expires_at` продлевается на 30 дней, в журнал добавляется событие `resent`.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @return [Response] с обновлённым инвайтом
+     */
+    suspend fun resendInvite(
+        id: String,
+    ): Response<Invite>
+
+    /**
      * Создаёт инвайт для гостя (`POST /api/invites`).
      * Требует авторизации.
      *

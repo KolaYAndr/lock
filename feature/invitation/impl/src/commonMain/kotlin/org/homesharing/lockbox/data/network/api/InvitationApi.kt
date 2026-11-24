@@ -67,6 +67,20 @@ internal interface InvitationApi {
     ): ApiResponse<Unit>
 
     /**
+     * Повторно отправляет инвайт гостю (`POST /api/invites/{id}/resend`).
+     * Требует авторизации (Bearer token).
+     *
+     * Повторно ставит письмо в очередь для инвайта, ждущего решения: `email_status = pending`,
+     * `expires_at` продлевается на 30 дней, в журнал добавляется событие `resent`.
+     *
+     * @param id идентификатор инвайта (uuid)
+     * @return [ApiResponse] с обновлённым инвайтом [InviteDto] (202 Accepted)
+     */
+    suspend fun resendInvite(
+        id: String,
+    ): ApiResponse<InviteDto>
+
+    /**
      * Создаёт инвайт для гостя (`POST /api/invites`).
      * Требует авторизации (Bearer token).
      *

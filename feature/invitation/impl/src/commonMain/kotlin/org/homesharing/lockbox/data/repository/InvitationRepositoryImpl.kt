@@ -60,6 +60,13 @@ internal class InvitationRepositoryImpl(
         }
     }
 
+    override suspend fun resendInvite(id: String): Response<Invite> {
+        return parseLockboxApiResponse(
+            apiCall = { api.resendInvite(id) },
+            mapper = InviteDto::toDomain,
+        )
+    }
+
     override suspend fun createInvite(
         flatId: String,
         guest: Invite.Guest,
