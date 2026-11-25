@@ -6,6 +6,7 @@ import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
 import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersionDto
+import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersionListDto
 
 internal interface ContractsApi {
     /**
@@ -85,5 +86,33 @@ internal interface ContractsApi {
      */
     suspend fun prepareContract(
         id: String,
+    ): ApiResponse<ContractVersionDto>
+
+    /**
+     * Возвращает список исторических версий контракта (`GET /api/contracts/{id}/versions`).
+     * Требует авторизации (Bearer token).
+     *
+     * Владелец видит все версии, гость — только версии со своим участием.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [ApiResponse] со списком версий контракта [ContractVersionListDto] (200 OK)
+     */
+    suspend fun getContractVersions(
+        id: String,
+    ): ApiResponse<ContractVersionListDto>
+
+    /**
+     * Возвращает конкретную версию контракта (`GET /api/contracts/{id}/versions/{version_id}`).
+     * Требует авторизации (Bearer token).
+     *
+     * Включает snapshot, подтверждения и ссылку на PDF (если готов).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param versionId идентификатор версии контракта (uuid)
+     * @return [ApiResponse] с версией контракта [ContractVersionDto] (200 OK)
+     */
+    suspend fun getContractVersion(
+        id: String,
+        versionId: String,
     ): ApiResponse<ContractVersionDto>
 }

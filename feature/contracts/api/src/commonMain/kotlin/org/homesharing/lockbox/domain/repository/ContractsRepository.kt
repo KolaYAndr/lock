@@ -5,6 +5,7 @@ import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.domain.model.contract_list.ContractList
 import org.homesharing.lockbox.domain.model.contract_pdf.ContractPdf
 import org.homesharing.lockbox.domain.model.contract_version.ContractVersion
+import org.homesharing.lockbox.domain.model.contract_version.ContractVersionList
 
 interface ContractsRepository {
     /**
@@ -107,5 +108,33 @@ interface ContractsRepository {
      */
     suspend fun prepareContract(
         id: String,
+    ): Response<ContractVersion>
+
+    /**
+     * Возвращает список исторических версий контракта (`GET /api/contracts/{id}/versions`).
+     * Требует авторизации.
+     *
+     * Владелец видит все версии, гость — только версии со своим участием.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [Response] со списком версий контракта
+     */
+    suspend fun getContractVersions(
+        id: String,
+    ): Response<ContractVersionList>
+
+    /**
+     * Возвращает конкретную версию контракта (`GET /api/contracts/{id}/versions/{version_id}`).
+     * Требует авторизации.
+     *
+     * Включает snapshot, подтверждения и ссылку на PDF (если готов).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param versionId идентификатор версии контракта (uuid)
+     * @return [Response] с версией контракта
+     */
+    suspend fun getContractVersion(
+        id: String,
+        versionId: String,
     ): Response<ContractVersion>
 }
