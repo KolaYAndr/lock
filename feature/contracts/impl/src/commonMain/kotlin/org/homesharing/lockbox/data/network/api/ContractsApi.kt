@@ -44,4 +44,17 @@ internal interface ContractsApi {
     suspend fun getContract(
         id: String,
     ): ApiResponse<ContractDto>
+
+    /**
+     * Обновляет данные существующего контракта (`PUT /api/contracts/{id}`).
+     * Требует авторизации (Bearer token).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param request новые данные контракта [ContractCreateRequestDto]
+     * @return [ApiResponse] с обновлённым контрактом [ContractDto] (200 OK)
+     */
+    suspend fun updateContract(
+        id: String,
+        request: ContractCreateRequestDto,
+    ): ApiResponse<ContractDto>
 }

@@ -55,4 +55,28 @@ internal class ContractsRepositoryImpl(
             mapper = ContractDto::toDomain,
         )
     }
+
+    override suspend fun updateContract(
+        id: String,
+        contractCity: String,
+        contractDate: String,
+        landlordInfo: Contract.Profile,
+        renterInfo: Contract.Profile,
+        flat: Contract.Flat,
+        booking: Contract.Booking,
+    ): Response<Contract> {
+        val request = ContractCreateRequestDto(
+            contractCity = contractCity,
+            contractDate = contractDate,
+            landlordInfo = landlordInfo.toRequestDto(),
+            renterInfo = renterInfo.toRequestDto(),
+            flat = flat.toRequestDto(),
+            booking = booking.toRequestDto(),
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.updateContract(id = id, request = request) },
+            mapper = ContractDto::toDomain,
+        )
+    }
 }

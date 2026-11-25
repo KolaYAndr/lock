@@ -54,4 +54,29 @@ interface ContractsRepository {
     suspend fun getContract(
         id: String,
     ): Response<Contract>
+
+    /**
+     * Обновляет данные существующего контракта (`PUT /api/contracts/{id}`).
+     * Требует авторизации.
+     *
+     * `remainingPrice` из [booking] не отправляется (readOnly).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param contractCity город заключения контракта
+     * @param contractDate дата заключения контракта (ISO date)
+     * @param landlordInfo данные арендодателя
+     * @param renterInfo данные арендатора
+     * @param flat данные квартиры
+     * @param booking данные бронирования
+     * @return [Response] с обновлённым контрактом
+     */
+    suspend fun updateContract(
+        id: String,
+        contractCity: String,
+        contractDate: String,
+        landlordInfo: Contract.Profile,
+        renterInfo: Contract.Profile,
+        flat: Contract.Flat,
+        booking: Contract.Booking,
+    ): Response<Contract>
 }

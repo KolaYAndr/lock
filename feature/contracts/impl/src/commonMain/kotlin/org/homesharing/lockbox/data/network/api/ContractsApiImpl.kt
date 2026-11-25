@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
@@ -51,6 +52,16 @@ internal class ContractsApiImpl(
     override suspend fun getContract(id: String): ApiResponse<ContractDto> {
         return client.get {
             url("$CONTRACTS_URL/$id")
+        }.toApiResponse<ContractDto>(json)
+    }
+
+    override suspend fun updateContract(
+        id: String,
+        request: ContractCreateRequestDto,
+    ): ApiResponse<ContractDto> {
+        return client.put {
+            url("$CONTRACTS_URL/$id")
+            setBody(request)
         }.toApiResponse<ContractDto>(json)
     }
 }
