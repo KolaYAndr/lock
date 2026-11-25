@@ -5,6 +5,7 @@ import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDt
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
+import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersionDto
 
 internal interface ContractsApi {
     /**
@@ -72,4 +73,17 @@ internal interface ContractsApi {
     suspend fun getContractPdf(
         id: String,
     ): ApiResponse<ContractPdfDto>
+
+    /**
+     * Фиксирует иммутабельную версию контракта (snapshot) для черновика (`POST /api/contracts/{id}/prepare`).
+     * Требует авторизации (Bearer token). Доступно владельцу контракта.
+     *
+     * Проверяет полноту профилей и ставит в очередь генерацию PDF.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [ApiResponse] с зафиксированной версией контракта [ContractVersionDto] (200 OK)
+     */
+    suspend fun prepareContract(
+        id: String,
+    ): ApiResponse<ContractVersionDto>
 }

@@ -4,6 +4,7 @@ import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.domain.model.contract_list.ContractList
 import org.homesharing.lockbox.domain.model.contract_pdf.ContractPdf
+import org.homesharing.lockbox.domain.model.contract_version.ContractVersion
 
 interface ContractsRepository {
     /**
@@ -94,4 +95,17 @@ interface ContractsRepository {
     suspend fun getContractPdf(
         id: String,
     ): Response<ContractPdf>
+
+    /**
+     * Фиксирует иммутабельную версию контракта (snapshot) для черновика (`POST /api/contracts/{id}/prepare`).
+     * Требует авторизации. Доступно владельцу контракта.
+     *
+     * Проверяет полноту профилей и ставит в очередь генерацию PDF.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [Response] с зафиксированной версией контракта
+     */
+    suspend fun prepareContract(
+        id: String,
+    ): Response<ContractVersion>
 }

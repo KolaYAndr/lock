@@ -15,10 +15,12 @@ import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDt
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
+import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersionDto
 
 // API endpoints
 private const val CONTRACTS = "contracts"
 private const val PDF = "pdf"
+private const val PREPARE = "prepare"
 
 // API arguments
 private const val LIMIT = "limit"
@@ -71,5 +73,11 @@ internal class ContractsApiImpl(
         return client.get {
             url("$CONTRACTS_URL/$id/$PDF")
         }.toApiResponse<ContractPdfDto>(json)
+    }
+
+    override suspend fun prepareContract(id: String): ApiResponse<ContractVersionDto> {
+        return client.post {
+            url("$CONTRACTS_URL/$id/$PREPARE")
+        }.toApiResponse<ContractVersionDto>(json)
     }
 }
