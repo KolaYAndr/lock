@@ -43,4 +43,15 @@ interface ContractsRepository {
         flat: Contract.Flat,
         booking: Contract.Booking,
     ): Response<Contract>
+
+    /**
+     * Получает детальную информацию о контракте по идентификатору (`GET /api/contracts/{id}`).
+     * Требует авторизации. Доступно участнику контракта (арендодателю или гостю).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [Response] с детальной информацией о контракте
+     */
+    suspend fun getContract(
+        id: String,
+    ): Response<Contract>
 }

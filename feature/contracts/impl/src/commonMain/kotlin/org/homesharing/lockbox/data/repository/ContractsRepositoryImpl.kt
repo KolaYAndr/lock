@@ -48,4 +48,11 @@ internal class ContractsRepositoryImpl(
             mapper = ContractDto::toDomain,
         )
     }
+
+    override suspend fun getContract(id: String): Response<Contract> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getContract(id) },
+            mapper = ContractDto::toDomain,
+        )
+    }
 }

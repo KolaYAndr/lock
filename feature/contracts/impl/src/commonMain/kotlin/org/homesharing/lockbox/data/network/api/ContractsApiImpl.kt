@@ -47,4 +47,10 @@ internal class ContractsApiImpl(
             setBody(request)
         }.toApiResponse<ContractDto>(json)
     }
+
+    override suspend fun getContract(id: String): ApiResponse<ContractDto> {
+        return client.get {
+            url("$CONTRACTS_URL/$id")
+        }.toApiResponse<ContractDto>(json)
+    }
 }

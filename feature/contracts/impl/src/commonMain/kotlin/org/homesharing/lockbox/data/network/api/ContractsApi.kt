@@ -33,4 +33,15 @@ internal interface ContractsApi {
     suspend fun createContract(
         request: ContractCreateRequestDto,
     ): ApiResponse<ContractDto>
+
+    /**
+     * Получает детальную информацию о контракте по идентификатору (`GET /api/contracts/{id}`).
+     * Требует авторизации (Bearer token). Доступно участнику контракта (арендодателю или гостю).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [ApiResponse] с детальной информацией о контракте [ContractDto] (200 OK)
+     */
+    suspend fun getContract(
+        id: String,
+    ): ApiResponse<ContractDto>
 }
