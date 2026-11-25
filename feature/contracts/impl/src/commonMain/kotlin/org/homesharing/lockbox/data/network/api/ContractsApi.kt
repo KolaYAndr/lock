@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmationRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.OtpRequestResponseDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
@@ -131,4 +132,19 @@ internal interface ContractsApi {
         id: String,
         request: ContractConfirmationRequestDto,
     ): ApiResponse<OtpRequestResponseDto>
+
+    /**
+     * Подтверждает указанную версию контракта от имени стороны (`POST /api/contracts/{id}/confirm`)
+     * с проверкой 6-значного OTP-кода. Требует авторизации (Bearer token).
+     *
+     * После подтверждения обеими сторонами статус контракта переходит в `signed`.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param request данные подтверждения контракта [ContractConfirmRequestDto]
+     * @return [ApiResponse] с обновлённым контрактом [ContractDto] (200 OK)
+     */
+    suspend fun confirmContract(
+        id: String,
+        request: ContractConfirmRequestDto,
+    ): ApiResponse<ContractDto>
 }

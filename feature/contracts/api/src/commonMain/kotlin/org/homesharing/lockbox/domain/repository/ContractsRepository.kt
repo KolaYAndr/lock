@@ -155,4 +155,23 @@ interface ContractsRepository {
         versionId: String,
         party: ContractParty,
     ): Response<OtpRequestResponse>
+
+    /**
+     * Подтверждает указанную версию контракта от имени стороны (`POST /api/contracts/{id}/confirm`)
+     * с проверкой 6-значного OTP-кода. Требует авторизации.
+     *
+     * После подтверждения обеими сторонами статус контракта переходит в `Signed`.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param versionId идентификатор версии контракта (uuid)
+     * @param party сторона контракта ([ContractParty.Landlord] или [ContractParty.Guest])
+     * @param code 6-значный OTP-код подтверждения
+     * @return [Response] с обновлённым контрактом
+     */
+    suspend fun confirmContract(
+        id: String,
+        versionId: String,
+        party: ContractParty,
+        code: String,
+    ): Response<Contract>
 }

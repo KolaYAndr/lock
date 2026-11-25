@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.repository
 import org.homesharing.lockbox.data.network.api.ContractsApi
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmationRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.OtpRequestResponseDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
@@ -138,6 +139,24 @@ internal class ContractsRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.requestConfirmationCode(id = id, request = request) },
             mapper = OtpRequestResponseDto::toDomain,
+        )
+    }
+
+    override suspend fun confirmContract(
+        id: String,
+        versionId: String,
+        party: ContractParty,
+        code: String,
+    ): Response<Contract> {
+        val request = ContractConfirmRequestDto(
+            versionId = versionId,
+            party = party.toDto(),
+            code = code,
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.confirmContract(id = id, request = request) },
+            mapper = ContractDto::toDomain,
         )
     }
 }

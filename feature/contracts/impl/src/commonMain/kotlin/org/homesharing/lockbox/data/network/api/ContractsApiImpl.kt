@@ -13,6 +13,7 @@ import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmationRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.OtpRequestResponseDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
@@ -26,6 +27,7 @@ private const val PDF = "pdf"
 private const val PREPARE = "prepare"
 private const val VERSIONS = "versions"
 private const val CONFIRMATION_CODE = "confirmation-code"
+private const val CONFIRM = "confirm"
 
 // API arguments
 private const val LIMIT = "limit"
@@ -109,5 +111,15 @@ internal class ContractsApiImpl(
             url("$CONTRACTS_URL/$id/$CONFIRMATION_CODE")
             setBody(request)
         }.toApiResponse<OtpRequestResponseDto>(json)
+    }
+
+    override suspend fun confirmContract(
+        id: String,
+        request: ContractConfirmRequestDto,
+    ): ApiResponse<ContractDto> {
+        return client.post {
+            url("$CONTRACTS_URL/$id/$CONFIRM")
+            setBody(request)
+        }.toApiResponse<ContractDto>(json)
     }
 }
