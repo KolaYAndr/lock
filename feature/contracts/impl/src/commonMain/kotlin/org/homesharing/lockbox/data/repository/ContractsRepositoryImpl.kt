@@ -3,6 +3,8 @@ package org.homesharing.lockbox.data.repository
 import org.homesharing.lockbox.data.network.api.ContractsApi
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmationRequestDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.OtpRequestResponseDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
 import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersionDto
@@ -10,8 +12,12 @@ import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersion
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.contract.Contract
+import org.homesharing.lockbox.domain.model.contract.ContractParty
 import org.homesharing.lockbox.domain.model.contract.toDomain
+import org.homesharing.lockbox.domain.model.contract.toDto
 import org.homesharing.lockbox.domain.model.contract.toRequestDto
+import org.homesharing.lockbox.domain.model.contract_confirmation.OtpRequestResponse
+import org.homesharing.lockbox.domain.model.contract_confirmation.toDomain
 import org.homesharing.lockbox.domain.model.contract_list.ContractList
 import org.homesharing.lockbox.domain.model.contract_list.toDomain
 import org.homesharing.lockbox.domain.model.contract_pdf.ContractPdf
@@ -116,6 +122,22 @@ internal class ContractsRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.getContractVersion(id = id, versionId = versionId) },
             mapper = ContractVersionDto::toDomain,
+        )
+    }
+
+    override suspend fun requestConfirmationCode(
+        id: String,
+        versionId: String,
+        party: ContractParty,
+    ): Response<OtpRequestResponse> {
+        val request = ContractConfirmationRequestDto(
+            versionId = versionId,
+            party = party.toDto(),
+        )
+
+        return parseLockboxApiResponse(
+            apiCall = { api.requestConfirmationCode(id = id, request = request) },
+            mapper = OtpRequestResponseDto::toDomain,
         )
     }
 }

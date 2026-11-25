@@ -3,6 +3,8 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmationRequestDto
+import org.homesharing.lockbox.data.network.dto.contract_confirmation.OtpRequestResponseDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
 import org.homesharing.lockbox.data.network.dto.contract_version.ContractVersionDto
@@ -115,4 +117,18 @@ internal interface ContractsApi {
         id: String,
         versionId: String,
     ): ApiResponse<ContractVersionDto>
+
+    /**
+     * Запрашивает и отправляет на email участника 6-значный OTP-код для подтверждения
+     * указанной версии контракта (`POST /api/contracts/{id}/confirmation-code`).
+     * Требует авторизации (Bearer token).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param request данные запроса OTP-кода [ContractConfirmationRequestDto]
+     * @return [ApiResponse] с параметрами повторной отправки и срока жизни кода [OtpRequestResponseDto] (202 Accepted)
+     */
+    suspend fun requestConfirmationCode(
+        id: String,
+        request: ContractConfirmationRequestDto,
+    ): ApiResponse<OtpRequestResponseDto>
 }

@@ -2,6 +2,8 @@ package org.homesharing.lockbox.domain.repository
 
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.contract.Contract
+import org.homesharing.lockbox.domain.model.contract.ContractParty
+import org.homesharing.lockbox.domain.model.contract_confirmation.OtpRequestResponse
 import org.homesharing.lockbox.domain.model.contract_list.ContractList
 import org.homesharing.lockbox.domain.model.contract_pdf.ContractPdf
 import org.homesharing.lockbox.domain.model.contract_version.ContractVersion
@@ -137,4 +139,20 @@ interface ContractsRepository {
         id: String,
         versionId: String,
     ): Response<ContractVersion>
+
+    /**
+     * Запрашивает и отправляет на email участника 6-значный OTP-код для подтверждения
+     * указанной версии контракта (`POST /api/contracts/{id}/confirmation-code`).
+     * Требует авторизации.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param versionId идентификатор версии контракта (uuid)
+     * @param party сторона контракта ([ContractParty.Landlord] или [ContractParty.Guest])
+     * @return [Response] с параметрами повторной отправки и срока жизни кода
+     */
+    suspend fun requestConfirmationCode(
+        id: String,
+        versionId: String,
+        party: ContractParty,
+    ): Response<OtpRequestResponse>
 }
