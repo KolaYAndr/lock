@@ -4,6 +4,7 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
+import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
 
 internal interface ContractsApi {
     /**
@@ -57,4 +58,18 @@ internal interface ContractsApi {
         id: String,
         request: ContractCreateRequestDto,
     ): ApiResponse<ContractDto>
+
+    /**
+     * Получает статус генерации PDF-файла текущей версии контракта и presigned S3 URL
+     * для скачивания (`GET /api/contracts/{id}/pdf`).
+     * Требует авторизации (Bearer token).
+     *
+     * Если `current_version_id` ещё не создан, сервер возвращает `document_status = pending`.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [ApiResponse] со статусом PDF и ссылкой на скачивание [ContractPdfDto] (200 OK)
+     */
+    suspend fun getContractPdf(
+        id: String,
+    ): ApiResponse<ContractPdfDto>
 }

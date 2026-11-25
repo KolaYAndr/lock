@@ -3,6 +3,7 @@ package org.homesharing.lockbox.domain.repository
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.contract.Contract
 import org.homesharing.lockbox.domain.model.contract_list.ContractList
+import org.homesharing.lockbox.domain.model.contract_pdf.ContractPdf
 
 interface ContractsRepository {
     /**
@@ -79,4 +80,18 @@ interface ContractsRepository {
         flat: Contract.Flat,
         booking: Contract.Booking,
     ): Response<Contract>
+
+    /**
+     * Получает статус генерации PDF-файла текущей версии контракта и presigned S3 URL
+     * для скачивания (`GET /api/contracts/{id}/pdf`).
+     * Требует авторизации.
+     *
+     * Если `current_version_id` ещё не создан, сервер возвращает `documentStatus = Pending`.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @return [Response] со статусом PDF и ссылкой на скачивание
+     */
+    suspend fun getContractPdf(
+        id: String,
+    ): Response<ContractPdf>
 }

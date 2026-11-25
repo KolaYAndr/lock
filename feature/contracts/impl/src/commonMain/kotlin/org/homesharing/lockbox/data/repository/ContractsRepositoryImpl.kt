@@ -4,6 +4,7 @@ import org.homesharing.lockbox.data.network.api.ContractsApi
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
+import org.homesharing.lockbox.data.network.dto.contract_pdf.ContractPdfDto
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
 import org.homesharing.lockbox.domain.model.contract.Contract
@@ -11,6 +12,8 @@ import org.homesharing.lockbox.domain.model.contract.toDomain
 import org.homesharing.lockbox.domain.model.contract.toRequestDto
 import org.homesharing.lockbox.domain.model.contract_list.ContractList
 import org.homesharing.lockbox.domain.model.contract_list.toDomain
+import org.homesharing.lockbox.domain.model.contract_pdf.ContractPdf
+import org.homesharing.lockbox.domain.model.contract_pdf.toDomain
 import org.homesharing.lockbox.domain.repository.ContractsRepository
 
 internal class ContractsRepositoryImpl(
@@ -77,6 +80,13 @@ internal class ContractsRepositoryImpl(
         return parseLockboxApiResponse(
             apiCall = { api.updateContract(id = id, request = request) },
             mapper = ContractDto::toDomain,
+        )
+    }
+
+    override suspend fun getContractPdf(id: String): Response<ContractPdf> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getContractPdf(id) },
+            mapper = ContractPdfDto::toDomain,
         )
     }
 }
