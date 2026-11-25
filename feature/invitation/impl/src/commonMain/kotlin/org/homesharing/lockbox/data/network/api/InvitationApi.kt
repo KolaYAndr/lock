@@ -4,6 +4,8 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.AcceptInviteRequestDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.InviteAcceptResponseDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 
 internal interface InvitationApi {
@@ -48,6 +50,35 @@ internal interface InvitationApi {
      * @return [ApiResponse] с гостевой проекцией инвайта [GuestInviteDto] (200 OK)
      */
     suspend fun getInviteByToken(
+        token: String,
+    ): ApiResponse<GuestInviteDto>
+
+    /**
+     * Принимает инвайт гостем (`POST /api/invites/by-token/{token}/accept`).
+     * Требует авторизации (Bearer token).
+     *
+     * Аутентифицированный гость принимает инвайт: сервер сверяет terms_version, личность
+     * и email, создаёт или находит пользователя, создаёт booking и contract, ставит PDF-джобу.
+     *
+     * @param token токен инвайта (string)
+     * @param request данные принятия инвайта [AcceptInviteRequestDto]
+     * @return [ApiResponse] с результатом принятия инвайта [InviteAcceptResponseDto] (200 OK)
+     */
+    suspend fun acceptInvite(
+        token: String,
+        request: AcceptInviteRequestDto,
+    ): ApiResponse<InviteAcceptResponseDto>
+
+    /**
+     * Отклоняет открытый инвайт гостем (`POST /api/invites/by-token/{token}/decline`).
+     * Требует авторизации (Bearer token).
+     *
+     * Гость отклоняет открытый инвайт (`status = declined`), возвращает гостевую проекцию.
+     *
+     * @param token токен инвайта (string)
+     * @return [ApiResponse] с обновлённой гостевой проекцией инвайта [GuestInviteDto] (200 OK)
+     */
+    suspend fun declineInvite(
         token: String,
     ): ApiResponse<GuestInviteDto>
 

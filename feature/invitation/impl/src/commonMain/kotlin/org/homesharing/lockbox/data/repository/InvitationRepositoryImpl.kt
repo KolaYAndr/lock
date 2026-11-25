@@ -4,6 +4,8 @@ import org.homesharing.lockbox.data.network.api.InvitationApi
 import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.AcceptInviteRequestDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.InviteAcceptResponseDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
@@ -12,6 +14,8 @@ import org.homesharing.lockbox.domain.model.guest_invite.toDomain
 import org.homesharing.lockbox.domain.model.invite.Invite
 import org.homesharing.lockbox.domain.model.invite.toDomain
 import org.homesharing.lockbox.domain.model.invite.toRequestDto
+import org.homesharing.lockbox.domain.model.invite_accept.InviteAccept
+import org.homesharing.lockbox.domain.model.invite_accept.toDomain
 import org.homesharing.lockbox.domain.model.invite_list.InviteList
 import org.homesharing.lockbox.domain.model.invite_list.toDomain
 import org.homesharing.lockbox.domain.repository.InvitationRepository
@@ -40,6 +44,24 @@ internal class InvitationRepositoryImpl(
     override suspend fun getInviteByToken(token: String): Response<GuestInvite> {
         return parseLockboxApiResponse(
             apiCall = { api.getInviteByToken(token) },
+            mapper = GuestInviteDto::toDomain,
+        )
+    }
+
+    override suspend fun acceptInvite(
+        token: String,
+        termsVersion: Long,
+    ): Response<InviteAccept> {
+        val request = AcceptInviteRequestDto(termsVersion = termsVersion)
+        return parseLockboxApiResponse(
+            apiCall = { api.acceptInvite(token = token, request = request) },
+            mapper = InviteAcceptResponseDto::toDomain,
+        )
+    }
+
+    override suspend fun declineInvite(token: String): Response<GuestInvite> {
+        return parseLockboxApiResponse(
+            apiCall = { api.declineInvite(token) },
             mapper = GuestInviteDto::toDomain,
         )
     }

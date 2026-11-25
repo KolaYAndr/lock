@@ -15,6 +15,8 @@ import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.AcceptInviteRequestDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.InviteAcceptResponseDto
 import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
 
 // API endpoints
@@ -22,6 +24,8 @@ private const val INVITES = "invites"
 private const val RESEND = "resend"
 private const val CANCEL = "cancel"
 private const val BY_TOKEN = "by-token"
+private const val ACCEPT = "accept"
+private const val DECLINE = "decline"
 
 // API arguments
 private const val FLAT_ID = "flat_id"
@@ -58,6 +62,22 @@ internal class InvitationApiImpl(
     override suspend fun getInviteByToken(token: String): ApiResponse<GuestInviteDto> {
         return client.get {
             url("$INVITES_BY_TOKEN_URL/$token")
+        }.toApiResponse<GuestInviteDto>(json)
+    }
+
+    override suspend fun acceptInvite(
+        token: String,
+        request: AcceptInviteRequestDto,
+    ): ApiResponse<InviteAcceptResponseDto> {
+        return client.post {
+            url("$INVITES_BY_TOKEN_URL/$token/$ACCEPT")
+            setBody(request)
+        }.toApiResponse<InviteAcceptResponseDto>(json)
+    }
+
+    override suspend fun declineInvite(token: String): ApiResponse<GuestInviteDto> {
+        return client.post {
+            url("$INVITES_BY_TOKEN_URL/$token/$DECLINE")
         }.toApiResponse<GuestInviteDto>(json)
     }
 

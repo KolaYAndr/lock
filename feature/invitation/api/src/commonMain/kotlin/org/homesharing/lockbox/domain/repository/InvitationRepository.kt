@@ -3,6 +3,7 @@ package org.homesharing.lockbox.domain.repository
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.guest_invite.GuestInvite
 import org.homesharing.lockbox.domain.model.invite.Invite
+import org.homesharing.lockbox.domain.model.invite_accept.InviteAccept
 import org.homesharing.lockbox.domain.model.invite_list.InviteList
 
 interface InvitationRepository {
@@ -45,6 +46,35 @@ interface InvitationRepository {
      * @return [Response] с гостевой проекцией инвайта
      */
     suspend fun getInviteByToken(
+        token: String,
+    ): Response<GuestInvite>
+
+    /**
+     * Принимает инвайт гостем (`POST /api/invites/by-token/{token}/accept`).
+     * Требует авторизации.
+     *
+     * Аутентифицированный гость принимает инвайт: сервер сверяет terms_version, личность
+     * и email, создаёт или находит пользователя, создаёт booking и contract, ставит PDF-джобу.
+     *
+     * @param token токен инвайта (string)
+     * @param termsVersion актуальная версия условий инвайта (≥ 1)
+     * @return [Response] с результатом принятия инвайта
+     */
+    suspend fun acceptInvite(
+        token: String,
+        termsVersion: Long,
+    ): Response<InviteAccept>
+
+    /**
+     * Отклоняет открытый инвайт гостем (`POST /api/invites/by-token/{token}/decline`).
+     * Требует авторизации.
+     *
+     * Гость отклоняет открытый инвайт (`status = declined`), возвращает гостевую проекцию.
+     *
+     * @param token токен инвайта (string)
+     * @return [Response] с обновлённой гостевой проекцией инвайта
+     */
+    suspend fun declineInvite(
         token: String,
     ): Response<GuestInvite>
 
