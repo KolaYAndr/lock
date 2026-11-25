@@ -1,0 +1,119 @@
+package org.homesharing.lockbox.data.network.api
+
+import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
+import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.api.response.toApiResponse
+import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
+import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
+import org.homesharing.lockbox.data.network.dto.invite.InviteDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.AcceptInviteRequestDto
+import org.homesharing.lockbox.data.network.dto.invite_accept.InviteAcceptResponseDto
+import org.homesharing.lockbox.data.network.dto.invite_list.InviteListDto
+
+// API endpoints
+private const val INVITES = "invites"
+private const val RESEND = "resend"
+private const val CANCEL = "cancel"
+private const val BY_TOKEN = "by-token"
+private const val ACCEPT = "accept"
+private const val DECLINE = "decline"
+
+// API arguments
+private const val FLAT_ID = "flat_id"
+private const val LIMIT = "limit"
+private const val CURSOR = "cursor"
+
+// API url
+private const val INVITES_URL = INVITES
+private const val INVITES_BY_TOKEN_URL = "$INVITES_URL/$BY_TOKEN"
+
+internal class InvitationApiImpl(
+    private val client: HttpClient,
+    private val json: Json,
+) : InvitationApi {
+    override suspend fun getInvites(
+        flatId: String?,
+        limit: Int,
+        cursor: String?,
+    ): ApiResponse<InviteListDto> {
+        return client.get {
+            url(INVITES_URL)
+            flatId?.let { parameter(FLAT_ID, it) }
+            parameter(LIMIT, limit)
+            cursor?.let { parameter(CURSOR, it) }
+        }.toApiResponse<InviteListDto>(json)
+    }
+
+    override suspend fun getInvite(id: String): ApiResponse<InviteDto> {
+        return client.get {
+            url("$INVITES_URL/$id")
+        }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun getInviteByToken(token: String): ApiResponse<GuestInviteDto> {
+        return client.get {
+            url("$INVITES_BY_TOKEN_URL/$token")
+        }.toApiResponse<GuestInviteDto>(json)
+    }
+
+    override suspend fun acceptInvite(
+        token: String,
+        request: AcceptInviteRequestDto,
+    ): ApiResponse<InviteAcceptResponseDto> {
+        return client.post {
+            url("$INVITES_BY_TOKEN_URL/$token/$ACCEPT")
+            setBody(request)
+        }.toApiResponse<InviteAcceptResponseDto>(json)
+    }
+
+    override suspend fun declineInvite(token: String): ApiResponse<GuestInviteDto> {
+        return client.post {
+            url("$INVITES_BY_TOKEN_URL/$token/$DECLINE")
+        }.toApiResponse<GuestInviteDto>(json)
+    }
+
+    override suspend fun updateInvite(
+        id: String,
+        request: InviteCreateRequestDto,
+    ): ApiResponse<InviteDto> {
+        return client.put {
+            url("$INVITES_URL/$id")
+            setBody(request)
+        }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun deleteInvite(id: String): ApiResponse<Unit> {
+        return client.delete {
+            url("$INVITES_URL/$id")
+        }.toApiResponse<Unit>(json)
+    }
+
+    override suspend fun resendInvite(id: String): ApiResponse<InviteDto> {
+        return client.post {
+            url("$INVITES_URL/$id/$RESEND")
+        }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun cancelInvite(id: String): ApiResponse<InviteDto> {
+        return client.post {
+            url("$INVITES_URL/$id/$CANCEL")
+        }.toApiResponse<InviteDto>(json)
+    }
+
+    override suspend fun createInvite(
+        request: InviteCreateRequestDto,
+    ): ApiResponse<InviteDto> {
+        return client.post {
+            url(INVITES_URL)
+            setBody(request)
+        }.toApiResponse<InviteDto>(json)
+    }
+}

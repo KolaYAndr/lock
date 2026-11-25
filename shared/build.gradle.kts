@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
-    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -14,6 +13,13 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+            export(projects.core.model)
+            export(projects.feature.auth.api)
+            export(projects.feature.account.api)
+            export(projects.feature.flat.api)
+            export(projects.feature.invitation.api)
+            export(projects.feature.contracts.api)
+            export(projects.feature.dashboards.api)
         }
     }
 
@@ -34,24 +40,22 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.bundles.ktor)
-            implementation(libs.ktor.client.auth)
-            implementation(libs.koin.core)
-            implementation(libs.paging)
-            implementation(libs.dateTime)
-        }
-        androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.koin.core)
-            implementation(libs.datastore)
-
-        }
-        jvmMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.datastore)
-        }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+            api(projects.core.model)
+            api(projects.core.security)
+            api(projects.core.network)
+            api(projects.feature.auth.api)
+            api(projects.feature.auth.impl)
+            api(projects.feature.account.api)
+            api(projects.feature.account.impl)
+            api(projects.feature.flat.api)
+            api(projects.feature.flat.impl)
+            api(projects.feature.invitation.api)
+            api(projects.feature.invitation.impl)
+            api(projects.feature.contracts.api)
+            api(projects.feature.contracts.impl)
+            api(projects.feature.dashboards.api)
+            api(projects.feature.dashboards.impl)
+            api(libs.koin.core)
         }
     }
 }

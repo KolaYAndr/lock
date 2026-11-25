@@ -1,13 +1,17 @@
 <resources>
     <string name="send_code_again">Send code again</string>
     <string name="receive_code">Receive code</string>
-    <string name="sign_in_account">Sign in to account</string>
+    <string name="check_in_online">Sign in to account</string>
     <string name="placeholder_email">Email</string>
-    <string name="profile_setup">Profile setup</string>
+    <string name="tell_us_about_yourself">Profile setup</string>
     <string name="full_name">Full name</string>
-    <string name="how_to_address_you">How should we address you?</string>
+    <string name="placeholder_first_name">First name</string>
+    <string name="placeholder_last_name">Last name</string>
+    <string name="how_to_address_you">Tell us about yourself</string>
+    <string name="set_your_name">Enter your first and last name — they will be shown in documents and reports</string>
     <string name="proceed">Proceed</string>
-    <string name="pick_a_role">Pick a role</string>
+    <string name="save_and_proceed">Save and proceed</string>
+    <string name="how_do_you_plan_to_use_app">Pick a role</string>
     <string name="owner">Owner</string>
     <string name="not_now">Not now</string>
     <string name="add_a_flat">Add a flat</string>
@@ -76,6 +80,8 @@
     <string name="flat">Flat</string>
     <string name="dates_and_conditions">Dates and conditions</string>
     <string name="dates">%1$s - %2$s\nCheck-in at %3$s, check-out at %4$s</string>
+    <string name="or">or</string>
+    <string name="get_code">Get code</string>
     <plurals name="guest_count">
         <item quantity="one">%d guest</item>
         <item quantity="few">%d guests</item>
@@ -89,4 +95,11 @@
     <string name="guest">Guest</string>
     <string name="sign_in">Sign in</string>
     <string name="change_full">Change</string>
+    <string name="flat_info">Flat information</string>
+    <string name="failed_to_load_flat_info">Failed to load flat information</string>
+    <string name="failed_to_load_flats">Failed to load flats</string>
+    <string name="failed_to_load_more_flats">Failed to load more flats</string>
+    <string name="retry">Retry</string>
+    <string name="search_placeholder">Search</string>
+    <string name="all_filter">All</string>
 </resources>

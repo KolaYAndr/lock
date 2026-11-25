@@ -9,6 +9,17 @@ plugins {
 }
 
 kotlin {
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "SharedUI"
+            isStatic = true
+            binaryOption("bundleId", "org.homesharing.lockbox.sharedUI")
+        }
+    }
+
     jvm()
 
     android {
@@ -47,6 +58,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.dateTime)
             implementation(libs.kotlinx.serialization.json)
+        }
+        androidMain.dependencies {
+            implementation(libs.compose.uiTooling)
         }
     }
 }

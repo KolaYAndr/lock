@@ -1,18 +1,21 @@
 package org.homesharing.lockbox.presentation.uikit.composable.button
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,9 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.uikit.modifier.paddedBorder
@@ -64,39 +65,48 @@ internal fun HomesharingButton(
         } else style.disabledBackgroundColor
     )
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Button(
+        onClick = onClick,
+        enabled = enabled && !loading,
+        interactionSource = interactionSource,
+        shape = HomesharingTheme.shape.roundedCornerShape16,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor,
+            contentColor = style.titleColor,
+            disabledContainerColor = backgroundColor,
+            disabledContentColor = style.disabledTitleColor
+        ),
+        elevation = null,
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         modifier = modifier
             .paddedBorder(borderColor)
-            .clip(HomesharingTheme.shape.roundedCornerShape16)
             .height(56.dp)
-            .background(backgroundColor)
-            .clickable(
-                enabled = enabled && !loading,
-                interactionSource = interactionSource,
-                onClick = onClick,
-                role = Role.Button
-            )
     ) {
-        if (loading) {
-            CircularProgressIndicator(
-                color = style.titleColor,
-                modifier = Modifier.size(24.dp)
-            )
-        } else {
-            Text(
-                text = title,
-                color = if (enabled) style.titleColor else style.disabledTitleColor,
-                style = HomesharingTheme.typography.bodyMedium,
-            )
-
-            subtitle?.let {
-                Text(
-                    text = it,
-                    color = if (enabled) style.subtitleColor else style.disabledSubtitleColor,
-                    style = HomesharingTheme.typography.bodyXSmall,
+        AnimatedContent(loading) { isLoading ->
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = style.titleColor,
+                    modifier = Modifier.size(24.dp)
                 )
+            } else {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = title,
+                        color = if (enabled) style.titleColor else style.disabledTitleColor,
+                        style = HomesharingTheme.typography.bodyMedium
+                    )
+
+                    subtitle?.let {
+                        Text(
+                            text = it,
+                            color = if (enabled) style.subtitleColor else style.disabledSubtitleColor,
+                            style = HomesharingTheme.typography.bodyXSmall,
+                        )
+                    }
+                }
             }
         }
     }

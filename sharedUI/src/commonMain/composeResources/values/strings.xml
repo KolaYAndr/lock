@@ -1,13 +1,18 @@
 <resources>
     <string name="send_code_again">Отправить код повторно</string>
     <string name="receive_code">Получить код</string>
-    <string name="sign_in_account">Войти в аккаунт</string>
+    <string name="check_in_online">Заселение онлайн.\nБез ключей, звонков и бумаг</string>
     <string name="placeholder_email">Электронная почта</string>
-    <string name="profile_setup">Настройка профиля</string>
+    <string name="tell_us_about_yourself">Настройка профиля</string>
     <string name="full_name">Полное имя</string>
-    <string name="how_to_address_you">Как к вам обращаться?</string>
+    <string name="placeholder_first_name">Имя</string>
+    <string name="placeholder_last_name">Фамилия</string>
+    <string name="how_to_address_you">Расскажите о себе</string>
+    <string name="set_your_name">Укажите имя и фамилию — они будут отображаться в документах и отчётах</string>
     <string name="proceed">Продолжить</string>
-    <string name="pick_a_role">Выберите роль</string>
+    <string name="save_and_proceed">Сохранить и продолжить</string>
+    <string name="how_do_you_plan_to_use_app">Как вы планируете использовать приложение?</string>
+    <string name="pick_a_role">Выберите роль — вы сможете изменить её позже в настройках</string>
     <string name="owner">Владелец</string>
     <string name="not_now">Не сейчас</string>
     <string name="add_a_flat">Добавьте помещение</string>
@@ -77,6 +82,8 @@
     <string name="flat">Помещение</string>
     <string name="dates_and_conditions">Даты и условия</string>
     <string name="dates">%1$s - %2$s\nЗаезд в %3$s, выезд в %4$s</string>
+    <string name="or">или</string>
+    <string name="get_code">Получить код</string>
     <plurals name="guest_count">
         <item quantity="one">%d гость</item>
         <item quantity="few">%d гостя</item>
@@ -90,4 +97,11 @@
     <string name="guest">Гость</string>
     <string name="sign_in">Войти</string>
     <string name="change_full">Изменить</string>
+    <string name="flat_info">Информация о помещении</string>
+    <string name="failed_to_load_flat_info">Не удалось загрузить информацию о квартире</string>
+    <string name="failed_to_load_flats">Не удалось загрузить квартиры</string>
+    <string name="failed_to_load_more_flats">Не удалось загрузить больше квартир</string>
+    <string name="retry">Повторить</string>
+    <string name="search_placeholder">Поиск</string>
+    <string name="all_filter">Все</string>
 </resources>

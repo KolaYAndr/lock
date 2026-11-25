@@ -2,6 +2,11 @@ package org.homesharing.lockbox.di
 
 val sharedAppModules = listOf(
     platformModule,
-    repositoryModule,
-    networkModule,
+    coreNetworkModule,
+    authModule,
+    accountModule,
+    flatModule,
+    invitationModule,
+    contractsModule,
+    dashboardsModule,
 )

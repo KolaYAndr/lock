@@ -2,6 +2,8 @@ package org.homesharing.lockbox.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -15,11 +17,12 @@ internal fun <T> ActionOnSharedFlow(
     flow: SharedFlow<T>,
     onFlowCollected: suspend (T) -> Unit,
 ) {
-    LaunchedEffect(lifecycleOwner.lifecycle) {
+    val currentOnFlowCollected by rememberUpdatedState(onFlowCollected)
+    LaunchedEffect(lifecycleOwner.lifecycle, flow) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
                 flow.collect { data ->
-                    onFlowCollected(data)
+                    currentOnFlowCollected(data)
                 }
             }
         }
