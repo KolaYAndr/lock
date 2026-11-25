@@ -67,6 +67,11 @@ project(":feature:contracts:api").projectDir = file("feature/contracts/api")
 include(":feature:contracts:impl")
 project(":feature:contracts:impl").projectDir = file("feature/contracts/impl")
 
+include(":feature:dashboards:api")
+project(":feature:dashboards:api").projectDir = file("feature/dashboards/api")
+include(":feature:dashboards:impl")
+project(":feature:dashboards:impl").projectDir = file("feature/dashboards/impl")
+
 include(":androidApp")
 include(":shared")
 include(":sharedUI")
