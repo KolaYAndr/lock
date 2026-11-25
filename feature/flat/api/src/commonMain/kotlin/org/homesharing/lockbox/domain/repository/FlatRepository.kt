@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.model.flat.Flat
 import org.homesharing.lockbox.domain.model.flat_detail.FlatDetail
+import org.homesharing.lockbox.domain.model.flat_files.FlatDocument
+import org.homesharing.lockbox.domain.model.flat_files.FlatDocumentType
 import org.homesharing.lockbox.domain.model.flat_list.FlatStatusFilter
 import org.homesharing.lockbox.domain.model.premise_type.PremiseType
 import org.homesharing.lockbox.domain.model.room.RoomInput
@@ -92,4 +94,33 @@ interface FlatRepository {
         livingArea: Double? = null,
         rooms: List<RoomInput> = emptyList(),
     ): Response<FlatDetail>
+
+    suspend fun archiveFlat(id: String): Response<FlatDetail>
+
+    suspend fun restoreFlat(id: String): Response<FlatDetail>
+
+    suspend fun getPhotos(id: String): Response<List<FlatDetail.Photo>>
+
+    suspend fun uploadPhoto(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+    ): Response<FlatDetail.Photo>
+
+    suspend fun reorderPhotos(id: String, photoIds: List<String>): Response<List<FlatDetail.Photo>>
+
+    suspend fun deletePhoto(id: String, photoId: String): Response<Unit>
+
+    suspend fun getDocuments(id: String): Response<List<FlatDocument>>
+
+    suspend fun uploadDocument(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        documentType: FlatDocumentType? = null,
+    ): Response<FlatDocument>
+
+    suspend fun deleteDocument(id: String, documentId: String): Response<Unit>
 }

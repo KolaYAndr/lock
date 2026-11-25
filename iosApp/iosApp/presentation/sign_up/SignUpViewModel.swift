@@ -13,11 +13,11 @@ import Combine
 internal enum SignUpStep: Int {
     case emailInput
     case passwordInput
-    case emailConfirmation
 }
 
 internal enum PasswordRepeatedError {
     case passwordsDontMatch
+    case passwordTooShort
     case userExists
     case unexpected
 }
@@ -35,14 +35,11 @@ internal final class SignUpViewModel: ObservableObject {
     @Published var passwordRepeatedError: PasswordRepeatedError? = nil
     @Published var signUpStep: SignUpStep = .emailInput
     
-    static let totalSteps: Int = 3
+    static let totalSteps: Int = 2
     
-    private let userExistsErrorMessage = "{\"errorMessage\":\"User exists with same email\"}"
-    private let passwordsDontMatchErrorCode = "web.exchange.bind.exception"
-
+    @Published private(set) var isRegistering = false
     private var cancellables: Set<AnyCancellable> = []
-    private var pollingTask: Task<Void, Never>? = nil
-    
+
     init() {
         $email
             .dropFirst()
@@ -60,30 +57,16 @@ internal final class SignUpViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func startPollingEmailConfirmation() {
-        pollingTask?.cancel()
-        pollingTask = Task { [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 1_500_000_000)
-                await self?.checkIfConfirmed()
-            }
-        }
-    }
-    
-    func stopPollingEmailConfirmation() {
-        pollingTask?.cancel()
-        pollingTask = nil
-    }
-    
     func toStep(_ nextStep: SignUpStep) {
-        switch (nextStep) {
+        guard !isRegistering else { return }
+        switch nextStep {
         case .passwordInput:
-            if email.isValidEmail {
+            if email.trimmingCharacters(in: .whitespacesAndNewlines).isValidEmail {
                 self.signUpStep = nextStep
             } else {
                 self.emailError = true
             }
-        default:
+        case .emailInput:
             self.signUpStep = nextStep
         }
     }
@@ -93,28 +76,30 @@ internal final class SignUpViewModel: ObservableObject {
         emailError = false
     }
 
-    func sendEmailConfirmation() {
-        Task {
-            do {
-                try await authRepository.sendConfirmation(email: email)
-            }
+    func register() {
+        guard !isRegistering else { return }
+        guard password == passwordRepeated else {
+            passwordRepeatedError = .passwordsDontMatch
+            return
         }
-    }
+        guard password.count >= 8 else {
+            passwordRepeatedError = .passwordTooShort
+            return
+        }
 
-    func checkIfConfirmed() async {
-        do {
-            try await authRepository.loadTokensInitially(username: email, password: password)
-        } catch { }
-    }
-    
-    func parsePasswordRepeatedError(message: String) -> PasswordRepeatedError {
-        switch message {
-        case userExistsErrorMessage:
-            return .userExists
-        case passwordsDontMatchErrorCode:
-            return .passwordsDontMatch
-        default:
-            return .unexpected
+        let email = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = password
+        isRegistering = true
+        Task {
+            defer { isRegistering = false }
+            do {
+                let response = try await authRepository.register(email: email, password: password)
+                if let failure = response as? ResponseFailure {
+                    passwordRepeatedError = failure.errorCode == "USER_ALREADY_EXISTS" ? .userExists : .unexpected
+                }
+            } catch {
+                passwordRepeatedError = .unexpected
+            }
         }
     }
 }

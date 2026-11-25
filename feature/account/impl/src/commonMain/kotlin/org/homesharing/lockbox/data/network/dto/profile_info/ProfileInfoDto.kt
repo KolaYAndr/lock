@@ -8,25 +8,25 @@ import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
 internal data class ProfileInfoDto(
     val id: String,
     @SerialName("email_verified")
-    val emailVerified: Boolean,
+    val emailVerified: Boolean? = null,
     @SerialName("active_role")
-    val activeRole: UserRoleDto,
+    val activeRole: UserRoleDto? = null,
     @SerialName("available_roles")
-    val availableRoles: List<UserRoleDto>,
+    val availableRoles: List<UserRoleDto> = emptyList(),
     @SerialName("identity_complete")
-    val identityComplete: Boolean,
+    val identityComplete: Boolean? = null,
     @SerialName("missing_identity_fields")
-    val missingIdentityFields: List<String>,
+    val missingIdentityFields: List<String> = emptyList(),
     @SerialName("first_name")
-    val firstName: String?,
+    val firstName: String? = null,
     @SerialName("last_name")
-    val lastName: String?,
+    val lastName: String? = null,
     @SerialName("middle_name")
-    val middleName: String?,
+    val middleName: String? = null,
     @SerialName("contact_info")
-    val contactInfo: ContactInfoDto?,
+    val contactInfo: ContactInfoDto? = null,
     @SerialName("legal_info")
-    val legalInfo: LegalInfoDto?,
+    val legalInfo: LegalInfoDto? = null,
 ) {
     @Serializable
     internal data class ContactInfoDto(
@@ -42,7 +42,7 @@ internal data class ProfileInfoDto(
         @SerialName("living_address")
         val livingAddress: String,
         @SerialName("birth_date")
-        val birthDate: String?,
+        val birthDate: String? = null,
         val passport: PassportDto,
     ) {
         @Serializable
@@ -53,9 +53,9 @@ internal data class ProfileInfoDto(
             val passportNumber: String,
             val issuer: String,
             @SerialName("issued_at")
-            val issuedAt: String?,
+            val issuedAt: String? = null,
             @SerialName("division_code")
-            val divisionCode: String?,
+            val divisionCode: String? = null,
         )
     }
 

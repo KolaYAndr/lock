@@ -96,6 +96,7 @@ internal struct PasswordInputStep : View {
     private func parsePasswordRepeatedError(_ pRE: PasswordRepeatedError?) -> String? {
         return switch pRE {
         case .passwordsDontMatch: String(localized: "passwords_dont_match")
+        case .passwordTooShort: String(localized: "password_at_least_8_characters")
         case .userExists: String(localized: "user_already_exists")
         case .unexpected: String(localized: "unknown_error")
         case .none: nil

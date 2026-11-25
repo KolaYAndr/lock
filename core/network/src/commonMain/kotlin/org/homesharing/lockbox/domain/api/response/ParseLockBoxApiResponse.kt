@@ -12,7 +12,7 @@ suspend fun <Dto : Any, Domain : Any> parseLockboxApiResponse(
 ): Response<Domain> = withContext(Dispatchers.IO) {
     try {
         when (val apiResponse = apiCall()) {
-            is ApiResponse.Failure -> Response.Failure(apiResponse.message)
+            is ApiResponse.Failure -> Response.Failure(apiResponse.message, apiResponse.errorCode)
             is ApiResponse.Success -> withContext(Dispatchers.Default) {
                 Response.Success(mapper(apiResponse.data))
             }
@@ -20,7 +20,6 @@ suspend fun <Dto : Any, Domain : Any> parseLockboxApiResponse(
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
-        e.printStackTrace()
         Response.Failure(e.message ?: "Unknown error")
     }
 }
@@ -30,13 +29,12 @@ suspend fun <Dto : Any> parseLockboxApiResponse(
 ): Response<Dto> = withContext(Dispatchers.IO) {
     try {
         when (val apiResponse = apiCall()) {
-            is ApiResponse.Failure -> Response.Failure(apiResponse.message)
+            is ApiResponse.Failure -> Response.Failure(apiResponse.message, apiResponse.errorCode)
             is ApiResponse.Success -> Response.Success(apiResponse.data)
         }
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
-        e.printStackTrace()
         Response.Failure(e.message ?: "Unknown error")
     }
 }

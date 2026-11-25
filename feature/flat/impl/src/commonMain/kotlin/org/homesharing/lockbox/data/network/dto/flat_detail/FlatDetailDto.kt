@@ -9,14 +9,14 @@ import org.homesharing.lockbox.data.network.dto.room.RoomTypeDto
 internal data class FlatDetailDto(
     val id: String,
     val name: String,
-    val description: String?,
+    val description: String? = null,
     @SerialName("premise_type")
     val premiseType: PremiseTypeDto,
     val address: AddressDto,
     @SerialName("full_address")
     val fullAddress: String,
     @SerialName("living_area")
-    val livingArea: Double?,
+    val livingArea: Double? = null,
     val rooms: List<RoomDto>,
     val status: FlatStatusDto,
     val photos: List<PhotoDto>,
@@ -26,19 +26,19 @@ internal data class FlatDetailDto(
     val activeInvitesCount: Int,
     @SerialName("has_documents")
     val hasDocuments: Boolean,
-    val invites: List<InviteListItemDto>?,
+    val invites: List<InviteListItemDto>? = null,
 ) {
     @Serializable
     internal data class AddressDto(
         val city: String,
-        val street: String?,
-        val house: String?,
-        val entrance: String?,
-        val apartment: String?,
-        val block: String?,
-        val building: String?,
-        val litera: String?,
-        val comment: String?,
+        val street: String? = null,
+        val house: String? = null,
+        val entrance: String? = null,
+        val apartment: String? = null,
+        val block: String? = null,
+        val building: String? = null,
+        val litera: String? = null,
+        val comment: String? = null,
     )
 
     @Serializable
@@ -46,7 +46,7 @@ internal data class FlatDetailDto(
         val id: String,
         val type: RoomTypeDto,
         val position: Int,
-        val name: String?,
+        val name: String? = null,
     )
 
     @Serializable
@@ -55,7 +55,7 @@ internal data class FlatDetailDto(
         val url: String,
         val position: Int,
         @SerialName("file_name")
-        val fileName: String?,
+        val fileName: String? = null,
     )
 
     @Serializable
@@ -73,10 +73,10 @@ internal data class FlatDetailDto(
         @SerialName("email_status")
         val emailStatus: String,
         @SerialName("flat_id")
-        val flatId: String?,
+        val flatId: String? = null,
         @SerialName("flat_name")
-        val flatName: String?,
+        val flatName: String? = null,
         @SerialName("flat_address")
-        val flatAddress: String?,
+        val flatAddress: String? = null,
     )
 }

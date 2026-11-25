@@ -2324,6 +2324,22 @@
         }
       }
     },
+    "password_at_least_8_characters" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use at least 8 characters."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Используйте минимум 8 символов."
+          }
+        }
+      }
+    },
     "passwords_dont_match" : {
       "localizations" : {
         "en" : {

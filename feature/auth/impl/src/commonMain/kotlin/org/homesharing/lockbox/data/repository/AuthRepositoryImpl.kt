@@ -1,5 +1,6 @@
 package org.homesharing.lockbox.data.repository
 
+import kotlinx.coroutines.CancellationException
 import org.homesharing.lockbox.data.network.api.AuthApi
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.AuthResponse
@@ -42,9 +43,11 @@ internal class AuthRepositoryImpl(
                     }
                     Response.Success(Unit)
                 }
-                is ApiResponse.Failure -> Response.Failure(response.message)
+                is ApiResponse.Failure -> Response.Failure(response.message, response.errorCode)
             }
-        } catch (t: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Exception) {
             Response.Failure(t.message.orEmpty())
         }
     }
@@ -63,7 +66,9 @@ internal class AuthRepositoryImpl(
                 }
                 is AuthResponse.Error -> Response.Failure(response.errorDescription)
             }
-        } catch (t: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Exception) {
             Response.Failure(t.message.orEmpty())
         }
     }
@@ -77,9 +82,11 @@ internal class AuthRepositoryImpl(
                     }
                     Response.Success(Unit)
                 }
-                is ApiResponse.Failure -> Response.Failure(response.message)
+                is ApiResponse.Failure -> Response.Failure(response.message, response.errorCode)
             }
-        } catch (t: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Exception) {
             Response.Failure(t.message.orEmpty())
         }
     }
@@ -105,9 +112,11 @@ internal class AuthRepositoryImpl(
                     }
                     Response.Success(response.data.toDomain())
                 }
-                is ApiResponse.Failure -> Response.Failure(response.message)
+                is ApiResponse.Failure -> Response.Failure(response.message, response.errorCode)
             }
-        } catch (t: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Exception) {
             Response.Failure(t.message.orEmpty())
         }
     }
@@ -164,9 +173,11 @@ internal class AuthRepositoryImpl(
             val refreshToken = tokenStorage.getRefreshToken()
             when (val response = api.logout(refreshToken)) {
                 is ApiResponse.Success -> Response.Success(Unit)
-                is ApiResponse.Failure -> Response.Failure(response.message)
+                is ApiResponse.Failure -> Response.Failure(response.message, response.errorCode)
             }
-        } catch (t: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Exception) {
             Response.Failure(t.message.orEmpty())
         } finally {
             tokenStorage.clearInfo()

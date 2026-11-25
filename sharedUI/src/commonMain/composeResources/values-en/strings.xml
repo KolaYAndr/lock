@@ -102,4 +102,7 @@
     <string name="retry">Retry</string>
     <string name="search_placeholder">Search</string>
     <string name="all_filter">All</string>
+    <string name="login_code_placeholder">Code from email</string>
+    <string name="verify_code">Verify code</string>
+    <string name="login_request_failed">The request failed. Check your details and try again.</string>
 </resources>

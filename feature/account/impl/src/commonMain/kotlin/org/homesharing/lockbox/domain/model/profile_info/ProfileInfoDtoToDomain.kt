@@ -6,7 +6,7 @@ import org.homesharing.lockbox.domain.model.role.toDomain
 internal fun ProfileInfoDto.toDomain() = ProfileInfo(
     id = id,
     emailVerified = emailVerified,
-    activeRole = activeRole.toDomain(),
+    activeRole = activeRole?.toDomain(),
     availableRoles = availableRoles.map { it.toDomain() },
     identityComplete = identityComplete,
     missingIdentityFields = missingIdentityFields,

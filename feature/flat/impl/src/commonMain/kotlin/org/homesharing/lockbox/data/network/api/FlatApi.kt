@@ -4,6 +4,9 @@ import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
+import org.homesharing.lockbox.data.network.dto.flat_files.FlatDocumentDto
+import org.homesharing.lockbox.data.network.dto.flat_files.FlatDocumentListDto
+import org.homesharing.lockbox.data.network.dto.flat_files.FlatPhotoListDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatStatusFilterDto
 import org.homesharing.lockbox.data.network.dto.flat_list.FlatSummaryListDto
 
@@ -67,4 +70,33 @@ internal interface FlatApi {
         id: String,
         request: CreateFlatRequestDto,
     ): ApiResponse<FlatDetailDto>
+
+    suspend fun archiveFlat(id: String): ApiResponse<FlatDetailDto>
+
+    suspend fun restoreFlat(id: String): ApiResponse<FlatDetailDto>
+
+    suspend fun getPhotos(id: String): ApiResponse<FlatPhotoListDto>
+
+    suspend fun uploadPhoto(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+    ): ApiResponse<FlatDetailDto.PhotoDto>
+
+    suspend fun reorderPhotos(id: String, photoIds: List<String>): ApiResponse<FlatPhotoListDto>
+
+    suspend fun deletePhoto(id: String, photoId: String): ApiResponse<Unit>
+
+    suspend fun getDocuments(id: String): ApiResponse<FlatDocumentListDto>
+
+    suspend fun uploadDocument(
+        id: String,
+        data: ByteArray,
+        fileName: String,
+        contentType: String,
+        documentType: String?,
+    ): ApiResponse<FlatDocumentDto>
+
+    suspend fun deleteDocument(id: String, documentId: String): ApiResponse<Unit>
 }

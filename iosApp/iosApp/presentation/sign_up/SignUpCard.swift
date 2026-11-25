@@ -31,7 +31,6 @@ struct SignUpCard: View {
                         switch viewModel.signUpStep {
                         case .emailInput: toSignIn()
                         case .passwordInput: viewModel.toStep(.emailInput)
-                        case .emailConfirmation: viewModel.toStep(.passwordInput)
                         }
                     }
                 )
@@ -53,21 +52,14 @@ struct SignUpCard: View {
                     passwordRepeated: $viewModel.passwordRepeated,
                     isPasswordRepeatedVisible: $viewModel.isPasswordRepeatedVisible,
                     passwordRepeatedError: viewModel.passwordRepeatedError,
-                    toNextStep: { viewModel.toStep(.emailConfirmation) }
+                    toNextStep: viewModel.register
                 ).padding(.horizontal, 16)
                     
-                    
-                case .emailConfirmation: ConfirmEmailStep(
-                    onChangeEmail: { viewModel.toStep(.emailInput) },
-                    sendEmailConfirmation: { viewModel.sendEmailConfirmation() },
-                    startPollingEmailConfirmation: { viewModel.startPollingEmailConfirmation() },
-                    stopPollingEmailConfirmation: { viewModel.stopPollingEmailConfirmation() },
-                    email: viewModel.email
-                ).padding(.horizontal, 16)
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .padding(.vertical, 4)
+            .disabled(viewModel.isRegistering)
         }
     }
 }

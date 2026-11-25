@@ -6,4 +6,7 @@ val sharedAppModules = listOf(
     authModule,
     accountModule,
     flatModule,
+    invitationModule,
+    contractModule,
+    dashboardModule,
 )
