@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestDashboardDto
+import org.homesharing.lockbox.data.network.dto.guest_process.GuestProcessListDto
 import org.homesharing.lockbox.data.network.dto.landlord_dashboard.LandlordDashboardDto
 
 internal interface DashboardsApi {
@@ -29,4 +30,20 @@ internal interface DashboardsApi {
     suspend fun getGuestDashboard(
         inviteId: String? = null,
     ): ApiResponse<GuestDashboardDto>
+
+    /**
+     * Получает пагинированный список приглашений и проживаний аккаунта гостя
+     * для явного выбора процесса (`GET /api/guest/processes`).
+     * Требует авторизации (Bearer token).
+     *
+     * Использует cursor-пагинацию по `created_at`/UUID по убыванию.
+     *
+     * @param limit размер страницы (1..100, по умолчанию 10)
+     * @param cursor курсор следующей страницы из `next_cursor`; при `null` возвращается первая страница
+     * @return [ApiResponse] со страницей процессов гостя [GuestProcessListDto] (200 OK)
+     */
+    suspend fun getGuestProcesses(
+        limit: Int = 10,
+        cursor: String? = null,
+    ): ApiResponse<GuestProcessListDto>
 }
