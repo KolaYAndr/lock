@@ -174,4 +174,19 @@ interface ContractsRepository {
         party: ContractParty,
         code: String,
     ): Response<Contract>
+
+    /**
+     * Отклоняет указанную версию контракта (`POST /api/contracts/{id}/reject`),
+     * переводя контракт в статус `Rejected` с опциональной причиной. Требует авторизации.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param versionId идентификатор версии контракта (uuid)
+     * @param reason опциональная причина отклонения
+     * @return [Response] с обновлённым контрактом
+     */
+    suspend fun rejectContract(
+        id: String,
+        versionId: String,
+        reason: String? = null,
+    ): Response<Contract>
 }

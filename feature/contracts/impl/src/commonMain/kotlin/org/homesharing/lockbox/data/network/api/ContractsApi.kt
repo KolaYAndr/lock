@@ -3,6 +3,7 @@ package org.homesharing.lockbox.data.network.api
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
+import org.homesharing.lockbox.data.network.dto.contract.ContractRejectRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.ContractConfirmationRequestDto
 import org.homesharing.lockbox.data.network.dto.contract_confirmation.OtpRequestResponseDto
@@ -146,5 +147,18 @@ internal interface ContractsApi {
     suspend fun confirmContract(
         id: String,
         request: ContractConfirmRequestDto,
+    ): ApiResponse<ContractDto>
+
+    /**
+     * Отклоняет указанную версию контракта (`POST /api/contracts/{id}/reject`),
+     * переводя контракт в статус `rejected` с опциональной причиной. Требует авторизации (Bearer token).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param request данные отклонения контракта [ContractRejectRequestDto]
+     * @return [ApiResponse] с обновлённым контрактом [ContractDto] (200 OK)
+     */
+    suspend fun rejectContract(
+        id: String,
+        request: ContractRejectRequestDto,
     ): ApiResponse<ContractDto>
 }
