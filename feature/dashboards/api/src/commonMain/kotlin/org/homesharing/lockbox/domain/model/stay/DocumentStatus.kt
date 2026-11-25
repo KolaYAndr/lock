@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model.landlord_dashboard
+package org.homesharing.lockbox.domain.model.stay
 
 enum class DocumentStatus {
     Pending,

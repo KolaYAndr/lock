@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.data.network.dto.landlord_dashboard
+package org.homesharing.lockbox.data.network.dto.stay
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.domain.repository
 
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.guest_dashboard.GuestDashboard
 import org.homesharing.lockbox.domain.model.landlord_dashboard.LandlordDashboard
 
 interface DashboardsRepository {
@@ -15,4 +16,17 @@ interface DashboardsRepository {
     suspend fun getLandlordDashboard(
         horizonDays: Int = 30,
     ): Response<LandlordDashboard>
+
+    /**
+     * Получает данные главного экрана гостя (`GET /api/guest/dashboard`):
+     * состояние текущего или выбранного процесса заселения, следующее действие для UI,
+     * данные приглашения, проживания и контракта.
+     * Требует авторизации.
+     *
+     * @param inviteId идентификатор приглашения для выбора процесса (uuid); при `null` выбирается самый приоритетный процесс
+     * @return [Response] с данными дашборда гостя
+     */
+    suspend fun getGuestDashboard(
+        inviteId: String? = null,
+    ): Response<GuestDashboard>
 }

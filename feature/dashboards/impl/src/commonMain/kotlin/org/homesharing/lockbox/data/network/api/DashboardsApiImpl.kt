@@ -8,16 +8,20 @@ import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestDashboardDto
 import org.homesharing.lockbox.data.network.dto.landlord_dashboard.LandlordDashboardDto
 
 // API endpoints
 private const val DASHBOARD = "dashboard"
+private const val GUEST = "guest"
 
 // API arguments
 private const val HORIZON_DAYS = "horizon_days"
+private const val INVITE_ID = "invite_id"
 
 // API url
 private const val DASHBOARD_URL = "$GO_BASE_ENDPOINT/$DASHBOARD"
+private const val GUEST_DASHBOARD_URL = "$GO_BASE_ENDPOINT/$GUEST/$DASHBOARD"
 
 internal class DashboardsApiImpl(
     private val client: HttpClient,
@@ -30,5 +34,14 @@ internal class DashboardsApiImpl(
             url(DASHBOARD_URL)
             parameter(HORIZON_DAYS, horizonDays)
         }.toApiResponse<LandlordDashboardDto>(json)
+    }
+
+    override suspend fun getGuestDashboard(
+        inviteId: String?,
+    ): ApiResponse<GuestDashboardDto> {
+        return client.get {
+            url(GUEST_DASHBOARD_URL)
+            inviteId?.let { parameter(INVITE_ID, it) }
+        }.toApiResponse<GuestDashboardDto>(json)
     }
 }

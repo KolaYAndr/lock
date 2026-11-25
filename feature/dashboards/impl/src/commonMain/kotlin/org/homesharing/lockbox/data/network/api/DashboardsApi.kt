@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestDashboardDto
 import org.homesharing.lockbox.data.network.dto.landlord_dashboard.LandlordDashboardDto
 
 internal interface DashboardsApi {
@@ -15,4 +16,17 @@ internal interface DashboardsApi {
     suspend fun getLandlordDashboard(
         horizonDays: Int = 30,
     ): ApiResponse<LandlordDashboardDto>
+
+    /**
+     * Получает данные главного экрана гостя (`GET /api/guest/dashboard`):
+     * состояние текущего или выбранного процесса заселения, следующее действие для UI,
+     * данные приглашения, проживания и контракта.
+     * Требует авторизации (Bearer token).
+     *
+     * @param inviteId идентификатор приглашения для выбора процесса (uuid); при `null` выбирается самый приоритетный процесс
+     * @return [ApiResponse] с данными дашборда гостя [GuestDashboardDto] (200 OK)
+     */
+    suspend fun getGuestDashboard(
+        inviteId: String? = null,
+    ): ApiResponse<GuestDashboardDto>
 }
