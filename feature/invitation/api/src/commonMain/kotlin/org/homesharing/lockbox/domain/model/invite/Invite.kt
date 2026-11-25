@@ -1,5 +1,7 @@
 package org.homesharing.lockbox.domain.model.invite
 
+import org.homesharing.lockbox.domain.model.InviteStatus
+
 data class Invite(
     val id: String,
     val status: InviteStatus,

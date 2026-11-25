@@ -1,7 +1,7 @@
 package org.homesharing.lockbox.domain.model.invite_list
 
+import org.homesharing.lockbox.domain.model.InviteStatus
 import org.homesharing.lockbox.domain.model.invite.InviteEmailStatus
-import org.homesharing.lockbox.domain.model.invite.InviteStatus
 
 data class InviteList(
     val items: List<InviteListItem>,

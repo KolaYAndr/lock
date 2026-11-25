@@ -11,7 +11,6 @@ import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
-import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.guest_invite.GuestInviteDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteDto
@@ -33,7 +32,7 @@ private const val LIMIT = "limit"
 private const val CURSOR = "cursor"
 
 // API url
-private const val INVITES_URL = "$GO_BASE_ENDPOINT/$INVITES"
+private const val INVITES_URL = INVITES
 private const val INVITES_BY_TOKEN_URL = "$INVITES_URL/$BY_TOKEN"
 
 internal class InvitationApiImpl(

@@ -1,7 +1,9 @@
 package org.homesharing.lockbox.presentation.flat_list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.filter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,7 @@ import org.homesharing.lockbox.domain.repository.FlatRepository
 internal class FlatListViewModel(
     flatRepository: FlatRepository,
 ) : ViewModel() {
-    private val rawFlats = flatRepository.getFlatsFlow()
+    private val rawFlats = flatRepository.getFlatsFlow().cachedIn(viewModelScope)
 
     private val _type = MutableStateFlow<FlatTypeFilter>(FlatTypeFilter.All)
     val type = _type.asStateFlow()

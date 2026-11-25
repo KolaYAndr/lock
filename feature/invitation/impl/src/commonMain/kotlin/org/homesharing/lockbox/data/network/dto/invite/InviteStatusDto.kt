@@ -8,6 +8,9 @@ internal enum class InviteStatusDto {
     @SerialName("sent")
     Sent,
 
+    @SerialName("opened")
+    Opened,
+
     @SerialName("accepted")
     Accepted,
 

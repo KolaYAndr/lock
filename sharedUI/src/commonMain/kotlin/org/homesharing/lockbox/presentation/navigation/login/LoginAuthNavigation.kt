@@ -8,11 +8,11 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import org.homesharing.lockbox.presentation.login.LoginScreen
 import org.homesharing.lockbox.presentation.navigation.navBackstackSaver
 import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
 import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
 import org.homesharing.lockbox.presentation.uikit.animation.popExitTransition
-import org.homesharing.lockbox.presentation.login.LoginScreen
 
 @Composable
 internal fun LoginAuthNavigation(
@@ -32,7 +32,9 @@ internal fun LoginAuthNavigation(
         },
         backStack = backstack,
         onBack = {
-            backstack.removeLastOrNull()
+            if (backstack.size > 1) {
+                backstack.removeLastOrNull()
+            }
         },
         transitionSpec = enterTransition,
         popTransitionSpec = exitTransition,

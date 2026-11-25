@@ -79,7 +79,7 @@ private fun FlatDetailedScreen(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    item {
+                    item(key = "top_bar", contentType = "top_bar") {
                         CenterAlignedTopAppBar(
                             title = {
                                 Text(
@@ -100,7 +100,7 @@ private fun FlatDetailedScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(Res.drawable.ic_chevron_left),
-                                        contentDescription = null,
+                                        contentDescription = "Back",
                                     )
                                 }
                             },
@@ -108,7 +108,7 @@ private fun FlatDetailedScreen(
                         )
                     }
 
-                    item {
+                    item(key = "flat_image", contentType = "image") {
                         Image(
                             painter = painterResource(Res.drawable.ic_flat),
                             contentDescription = null,
@@ -118,7 +118,7 @@ private fun FlatDetailedScreen(
                         )
                     }
 
-                    item {
+                    item(key = "premise_type", contentType = "text") {
                         Text(
                             text = when (state.premiseType) {
                                 PremiseType.RESIDENTIAL -> stringResource(Res.string.living)
@@ -132,7 +132,7 @@ private fun FlatDetailedScreen(
                         )
                     }
 
-                    item {
+                    item(key = "flat_name", contentType = "title") {
                         Text(
                             text = state.name,
                             style = HomesharingTheme.typography.titleLarge,
@@ -141,7 +141,7 @@ private fun FlatDetailedScreen(
                     }
 
 
-                    item {
+                    item(key = "flat_address", contentType = "text") {
                         Text(
                             text = state.address,
                             style = HomesharingTheme.typography.bodyMedium,

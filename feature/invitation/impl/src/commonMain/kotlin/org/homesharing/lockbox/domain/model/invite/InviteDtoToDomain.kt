@@ -9,6 +9,7 @@ import org.homesharing.lockbox.data.network.dto.invite.InviteEmailStatusDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteEventActorTypeDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteEventTypeDto
 import org.homesharing.lockbox.data.network.dto.invite.InviteStatusDto
+import org.homesharing.lockbox.domain.model.InviteStatus
 
 internal fun InviteDto.toDomain() = Invite(
     id = id,
@@ -77,6 +78,7 @@ internal fun InviteDto.InviteEventDto.ChangedFieldDto.toDomain() =
 
 internal fun InviteStatusDto.toDomain(): InviteStatus = when (this) {
     InviteStatusDto.Sent -> InviteStatus.Sent
+    InviteStatusDto.Opened -> InviteStatus.Opened
     InviteStatusDto.Accepted -> InviteStatus.Accepted
     InviteStatusDto.Declined -> InviteStatus.Declined
     InviteStatusDto.Revoked -> InviteStatus.Revoked

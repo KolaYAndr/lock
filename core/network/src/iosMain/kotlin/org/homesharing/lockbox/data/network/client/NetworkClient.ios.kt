@@ -9,6 +9,6 @@ actual val networkEngine: HttpClientEngine = Darwin.create()
 
 actual val myLogger: Logger = object : Logger {
     override fun log(message: String) {
-        NSLog(message)
+        NSLog("%@", message)
     }
 }

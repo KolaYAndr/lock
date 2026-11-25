@@ -15,8 +15,10 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
@@ -25,35 +27,15 @@ import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 
 private const val API = "api"
-private const val V1 = "v1"
-
-const val KEYCLOACK_BASE_ENDPOINT = "https://api.lockboxes.ru"
-const val KOTLIN_BASE_ENDPOINT = "https://kotlin.ingress.lockboxes.ru/$API/$V1"
 const val GO_BASE_ENDPOINT = "https://go.ingress.lockboxes.ru/$API"
 
-private const val REALM = "realms/lockbox"
-private const val PROTOCOL = "protocol"
-private const val OPENID_CONNECT_TOKEN = "openid-connect/token"
-const val TOKEN_URL =
-    "$KEYCLOACK_BASE_ENDPOINT:8443/$REALM/$PROTOCOL/$OPENID_CONNECT_TOKEN"
-
-private const val CLIENT_TIMEOUT = 5_000L
+private const val CLIENT_TIMEOUT = 15_000L
 private const val AUTH = "auth"
 private const val REFRESH = "refresh"
-private const val REFRESH_URL = "$GO_BASE_ENDPOINT/$AUTH/$REFRESH"
+private const val REFRESH_URL = "$AUTH/$REFRESH"
 
 expect val networkEngine: HttpClientEngine
 expect val myLogger: Logger
-
-internal suspend fun HttpClient.refreshToken(
-    refreshToken: String,
-    json: Json,
-): ApiResponse<TokenResponseDto> {
-    return post {
-        url(REFRESH_URL)
-        setBody(RefreshTokenRequest(refreshToken))
-    }.toApiResponse<TokenResponseDto>(json)
-}
 
 fun createNetworkClient(
     engine: HttpClientEngine,
@@ -62,13 +44,19 @@ fun createNetworkClient(
 ): HttpClient {
     return HttpClient(engine) {
         install(HttpTimeout) {
+            connectTimeoutMillis = CLIENT_TIMEOUT
             socketTimeoutMillis = CLIENT_TIMEOUT
             requestTimeoutMillis = CLIENT_TIMEOUT
         }
 
         install(Logging) {
-            level = LogLevel.ALL
+            level = LogLevel.HEADERS
             logger = myLogger
+            sanitizeHeader { header ->
+                header.equals(HttpHeaders.Authorization, ignoreCase = true) ||
+                    header.equals(HttpHeaders.Cookie, ignoreCase = true) ||
+                    header.equals(HttpHeaders.SetCookie, ignoreCase = true)
+            }
         }
 
         install(ContentNegotiation) {
@@ -81,6 +69,10 @@ fun createNetworkClient(
         install(Auth) {
             bearer {
                 cacheTokens = false
+                sendWithoutRequest { request ->
+                    val requestUrl = request.url.buildString()
+                    requestUrl.startsWith(GO_BASE_ENDPOINT)
+                }
                 loadTokens {
                     val accessToken = tokenStorage.getAccessToken()
                     val refreshToken = tokenStorage.getRefreshToken()
@@ -94,9 +86,17 @@ fun createNetworkClient(
                         ?: tokenStorage.getRefreshToken().takeIf { it.isNotBlank() }
                         ?: return@refreshTokens null
 
-                    val response = runCatching {
-                        client.refreshToken(currentRefreshToken, json)
-                    }.getOrNull()
+                    val response = try {
+                        client.post {
+                            url(REFRESH_URL)
+                            markAsRefreshTokenRequest()
+                            setBody(RefreshTokenRequest(currentRefreshToken))
+                        }.toApiResponse<TokenResponseDto>(json)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (_: Exception) {
+                        return@refreshTokens null
+                    }
 
                     when (response) {
                         is ApiResponse.Success -> {
@@ -110,7 +110,8 @@ fun createNetworkClient(
                                 refreshToken = response.data.refreshToken
                             )
                         }
-                        else -> {
+
+                        is ApiResponse.Failure -> {
                             tokenStorage.clearInfo()
                             null
                         }
@@ -120,6 +121,7 @@ fun createNetworkClient(
         }
 
         defaultRequest {
+            url("$GO_BASE_ENDPOINT/")
             contentType(ContentType.Application.Json)
         }
     }

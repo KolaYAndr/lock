@@ -1,12 +1,12 @@
 package org.homesharing.lockbox.domain.model.contract
 
-import org.homesharing.lockbox.domain.model.contract_list.ContractDocumentStatus
-import org.homesharing.lockbox.domain.model.contract_list.ContractStatus
+import org.homesharing.lockbox.domain.model.ContractStatus
+import org.homesharing.lockbox.domain.model.DocumentStatus
 
 data class Contract(
     val id: String,
     val status: ContractStatus,
-    val documentStatus: ContractDocumentStatus,
+    val documentStatus: DocumentStatus,
     val currentVersionId: String?,
     val confirmations: List<Confirmation>,
     val events: List<Event>,

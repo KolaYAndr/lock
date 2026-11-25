@@ -1,7 +1,6 @@
 package org.homesharing.lockbox.domain.repository
 
 import org.homesharing.lockbox.domain.api.response.Response
-import org.homesharing.lockbox.domain.model.confirm_email.ConfirmEmail
 import org.homesharing.lockbox.domain.model.otp.OtpResponse
 import org.homesharing.lockbox.domain.model.otp.OtpVerifyResult
 import org.homesharing.lockbox.domain.model.sessions.Sessions
@@ -10,12 +9,6 @@ import org.homesharing.lockbox.domain.model.sessions.Sessions
  * Репозиторий для аутентификации и авторизации пользователей.
  */
 interface AuthRepository {
-    suspend fun signUp(
-        username: String,
-        password: String,
-        passwordRepeated: String,
-    ): Response<Unit>
-
     /**
      * Создаёт аккаунт и сразу выполняет вход (auto-login), сохраняя полученные токены.
      *
@@ -24,11 +17,6 @@ interface AuthRepository {
      * @return [Response] с результатом регистрации
      */
     suspend fun register(email: String, password: String): Response<Unit>
-
-    suspend fun loadTokensInitially(
-        username: String,
-        password: String,
-    ): Response<Unit>
 
     /**
      * Обменивает email и пароль на пару токенов через Keycloak password grant
@@ -39,8 +27,6 @@ interface AuthRepository {
      * @return [Response] с результатом входа
      */
     suspend fun login(email: String, password: String): Response<Unit>
-
-    suspend fun sendConfirmation(email: String): Response<ConfirmEmail>
 
     /**
      * Запрашивает отправку одноразового кода (OTP) на указанный email.

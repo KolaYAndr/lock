@@ -23,7 +23,10 @@ internal class LockboxCipher {
 
     private val keyStoreFile: File by lazy {
         val appDataDir = File(System.getProperty("user.home"), ".lockbox")
-        if (!appDataDir.exists()) appDataDir.mkdirs()
+        if (!appDataDir.exists()) {
+            appDataDir.mkdirs()
+            restrictDirectoryToOwner(appDataDir)
+        }
         File(appDataDir, KEYSTORE_FILE_NAME)
     }
 
@@ -60,21 +63,44 @@ internal class LockboxCipher {
                 setOf(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE)
             )
         } catch (_: UnsupportedOperationException) {
-            // Non-POSIX filesystem (e.g. Windows) — rely on the default user-profile ACLs.
+            file.setReadable(false, false)
+            file.setReadable(true, true)
+            file.setWritable(false, false)
+            file.setWritable(true, true)
+        }
+    }
+
+    private fun restrictDirectoryToOwner(dir: File) {
+        try {
+            Files.setPosixFilePermissions(
+                dir.toPath(),
+                setOf(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.OWNER_EXECUTE,
+                )
+            )
+        } catch (_: UnsupportedOperationException) {
+            dir.setReadable(false, false)
+            dir.setReadable(true, true)
+            dir.setWritable(false, false)
+            dir.setWritable(true, true)
+            dir.setExecutable(false, false)
+            dir.setExecutable(true, true)
         }
     }
 
     fun encrypt(plainText: String): Pair<ByteArray, ByteArray> {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-        return Pair(cipher.iv, cipher.doFinal(plainText.toByteArray()))
+        return Pair(cipher.iv, cipher.doFinal(plainText.toByteArray(Charsets.UTF_8)))
     }
 
     fun decrypt(iv: ByteArray, cipherText: ByteArray): String {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         val spec = GCMParameterSpec(GCM_TAG_LENGTH, iv)
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
-        return String(cipher.doFinal(cipherText))
+        return String(cipher.doFinal(cipherText), Charsets.UTF_8)
     }
 
     fun toBase64(bytes: ByteArray): String = Base64.getEncoder().encodeToString(bytes)

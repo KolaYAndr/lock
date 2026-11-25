@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,8 +37,16 @@ internal class TokenStorageImpl(
         decryptToken(REFRESH_TOKEN_KEY, REFRESH_TOKEN_IV_KEY)
 
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
-        saveToken(accessToken, ACCESS_TOKEN_KEY, ACCESS_TOKEN_IV_KEY)
-        saveToken(refreshToken, REFRESH_TOKEN_KEY, REFRESH_TOKEN_IV_KEY)
+        withContext(Dispatchers.IO) {
+            val (accessIv, encryptedAccess) = cipher.encrypt(accessToken)
+            val (refreshIv, encryptedRefresh) = cipher.encrypt(refreshToken)
+            dataStore.edit { prefs ->
+                prefs[ACCESS_TOKEN_IV_KEY] = cipher.toBase64(accessIv)
+                prefs[ACCESS_TOKEN_KEY] = cipher.toBase64(encryptedAccess)
+                prefs[REFRESH_TOKEN_IV_KEY] = cipher.toBase64(refreshIv)
+                prefs[REFRESH_TOKEN_KEY] = cipher.toBase64(encryptedRefresh)
+            }
+        }
     }
 
     override suspend fun clearInfo() {
@@ -56,22 +65,12 @@ internal class TokenStorageImpl(
 
         return@withContext try {
             cipher.decrypt(cipher.fromBase64(iv), cipher.fromBase64(tokenData))
-        } catch (_: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
             // Если расшифровка не удалась (например, ключ инвалидирован), лучше очистить данные
             clearInfo()
             ""
-        }
-    }
-
-    private suspend fun saveToken(
-        token: String,
-        tokenKey: Preferences.Key<String>,
-        ivKey: Preferences.Key<String>,
-    ) = withContext(Dispatchers.IO) {
-        val (iv, encrypted) = cipher.encrypt(token)
-        dataStore.edit { prefs ->
-            prefs[ivKey] = cipher.toBase64(iv)
-            prefs[tokenKey] = cipher.toBase64(encrypted)
         }
     }
 

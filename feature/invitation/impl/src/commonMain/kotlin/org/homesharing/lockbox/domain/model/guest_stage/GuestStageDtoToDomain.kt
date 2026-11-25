@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.domain.model.guest_stage
 
 import org.homesharing.lockbox.data.network.dto.guest_stage.GuestStageDto
+import org.homesharing.lockbox.domain.model.GuestStage
 
 internal fun GuestStageDto.toDomain(): GuestStage = when (this) {
     GuestStageDto.NoInvite -> GuestStage.NoInvite

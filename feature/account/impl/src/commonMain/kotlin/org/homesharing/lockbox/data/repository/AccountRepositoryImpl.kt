@@ -7,7 +7,6 @@ import org.homesharing.lockbox.data.network.dto.avatar.AvatarUploadResponseDto
 import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocumentListDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 import org.homesharing.lockbox.data.network.token.TokenStorage
 import org.homesharing.lockbox.domain.api.response.Response
 import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
@@ -19,8 +18,6 @@ import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.profile_info.toDomain
 import org.homesharing.lockbox.domain.model.role.UserRole
 import org.homesharing.lockbox.domain.model.role.toDto
-import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
-import org.homesharing.lockbox.domain.model.update_account.toDomain
 import org.homesharing.lockbox.domain.repository.AccountRepository
 
 internal class AccountRepositoryImpl(
@@ -43,12 +40,6 @@ internal class AccountRepositoryImpl(
                 api.sendImage(data = data)
             },
             mapper = AvatarUploadResponseDto::message,
-        )
-
-    override suspend fun deactivateUser(): Response<UpdateAccount> =
-        parseLockboxApiResponse(
-            apiCall = { api.deactivateUser() },
-            mapper = UpdateAccountDto::toDomain
         )
 
     override suspend fun getProfileInfo(): Response<ProfileInfo> {

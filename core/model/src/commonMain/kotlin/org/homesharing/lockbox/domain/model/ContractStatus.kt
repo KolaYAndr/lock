@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model.stay
+package org.homesharing.lockbox.domain.model
 
 enum class ContractStatus {
     Draft,

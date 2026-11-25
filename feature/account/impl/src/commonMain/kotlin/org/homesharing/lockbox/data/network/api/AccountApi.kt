@@ -8,7 +8,6 @@ import org.homesharing.lockbox.data.network.dto.personal_document.PersonalDocume
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoDto
 import org.homesharing.lockbox.data.network.dto.profile_info.ProfileInfoRequestDto
 import org.homesharing.lockbox.data.network.dto.role.UserRoleDto
-import org.homesharing.lockbox.data.network.dto.update_account.UpdateAccountDto
 
 internal interface AccountApi {
     /**
@@ -35,8 +34,6 @@ internal interface AccountApi {
     suspend fun sendImage(
         data: ByteArray
     ): ApiResponse<AvatarUploadResponseDto>
-
-    suspend fun deactivateUser(): ApiResponse<UpdateAccountDto>
 
     /**
      * Получает профиль текущего пользователя (`GET /api/profile-info`).

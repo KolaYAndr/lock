@@ -1,7 +1,7 @@
 package org.homesharing.lockbox.domain.model.contract_version
 
+import org.homesharing.lockbox.domain.model.DocumentStatus
 import org.homesharing.lockbox.domain.model.contract.Contract
-import org.homesharing.lockbox.domain.model.contract_list.ContractDocumentStatus
 
 data class ContractVersion(
     val id: String,
@@ -9,7 +9,7 @@ data class ContractVersion(
     val number: Int,
     val snapshot: Contract,
     val snapshotSha256: String,
-    val documentStatus: ContractDocumentStatus,
+    val documentStatus: DocumentStatus,
     val pdfSha256: String?,
     val downloadUrl: String?,
     val confirmations: List<Contract.Confirmation>,

@@ -1,7 +1,7 @@
 package org.homesharing.lockbox.domain.model.guest_invite
 
+import org.homesharing.lockbox.domain.model.InviteStatus
 import org.homesharing.lockbox.domain.model.invite.Invite
-import org.homesharing.lockbox.domain.model.invite.InviteStatus
 
 data class GuestInvite(
     val termsVersion: Long,

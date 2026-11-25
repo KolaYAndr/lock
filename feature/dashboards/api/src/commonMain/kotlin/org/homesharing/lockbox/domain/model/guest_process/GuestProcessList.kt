@@ -1,6 +1,6 @@
 package org.homesharing.lockbox.domain.model.guest_process
 
-import org.homesharing.lockbox.domain.model.guest_dashboard.InviteStatus
+import org.homesharing.lockbox.domain.model.InviteStatus
 import org.homesharing.lockbox.domain.model.stay.StayListItem
 
 data class GuestProcessList(

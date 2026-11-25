@@ -1,7 +1,9 @@
 package org.homesharing.lockbox.domain.model.guest_dashboard
 
-import org.homesharing.lockbox.domain.model.stay.ContractStatus
-import org.homesharing.lockbox.domain.model.stay.DocumentStatus
+import org.homesharing.lockbox.domain.model.ContractStatus
+import org.homesharing.lockbox.domain.model.DocumentStatus
+import org.homesharing.lockbox.domain.model.GuestStage
+import org.homesharing.lockbox.domain.model.InviteStatus
 import org.homesharing.lockbox.domain.model.stay.StayListItem
 
 data class GuestDashboard(

@@ -56,12 +56,15 @@ internal class FlatRepositoryImpl(
         limit: Int,
         cursor: String?,
         status: FlatStatusFilter,
-    ): Flow<ItemSnapshotList<Flat>> =
-        Pager(
+    ): Flow<ItemSnapshotList<Flat>> {
+        val pageSize = limit.coerceIn(1, 100)
+        return Pager(
             config = PagingConfig(
-                pageSize = PAGE_SIZE,
+                pageSize = pageSize,
+                initialLoadSize = pageSize,
                 enablePlaceholders = false,
             ),
+            initialKey = cursor,
             pagingSourceFactory = { FlatPagingSource(api, status.toDto()) }
         ).flow
             .asItemSnapshotListFlow()
@@ -72,6 +75,7 @@ internal class FlatRepositoryImpl(
                     items = snapshot.items.map { it.toDomain() }
                 )
             }
+    }
 
     override suspend fun getFlat(
         id: String,

@@ -2,7 +2,6 @@ package org.homesharing.lockbox.data.network.token
 
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.allocArrayOf
@@ -43,11 +42,10 @@ import platform.Security.kSecReturnData
 import platform.Security.kSecValueData
 import platform.posix.memcpy
 
-@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class, BetaInteropApi::class)
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 internal class Keychain(private val service: String) {
 
-    fun set(key: String, value: String) {
-        platform.Foundation.NSLog("Keychain: set key=$key, valueLength=${value.length}")
+    fun set(key: String, value: String): Boolean {
         delete(key)
 
         val account = cfString(key)
@@ -60,12 +58,13 @@ internal class Keychain(private val service: String) {
             kSecValueData to data,
             kSecAttrAccessible to kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
         )
-        SecItemAdd(attributes, null)
+        val status = attributes?.let { SecItemAdd(it, null) } ?: -1
 
-        CFRelease(attributes)
+        attributes?.let { CFRelease(it) }
         account?.let { CFRelease(it) }
         svc?.let { CFRelease(it) }
         data?.let { CFRelease(it) }
+        return status == errSecSuccess
     }
 
     fun get(key: String): String? {
@@ -77,7 +76,11 @@ internal class Keychain(private val service: String) {
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanTrue,
             kSecMatchLimit to kSecMatchLimitOne,
-        )
+        ) ?: run {
+            account?.let { CFRelease(it) }
+            svc?.let { CFRelease(it) }
+            return null
+        }
 
         val result: CFTypeRef? = memScoped {
             val out = alloc<CFTypeRefVar>()
@@ -85,7 +88,6 @@ internal class Keychain(private val service: String) {
             if (status == errSecSuccess) {
                 out.value
             } else {
-                platform.Foundation.NSLog("Keychain: get key=$key failed with status=$status")
                 null
             }
         }
@@ -96,12 +98,10 @@ internal class Keychain(private val service: String) {
 
         if (result == null) return null
         val nsData = CFBridgingRelease(result) as? NSData ?: return null
-        val stringValue = nsData.toUtf8String()
-        platform.Foundation.NSLog("Keychain: get key=$key, valueLength=${stringValue.length}")
-        return stringValue
+        return nsData.toUtf8String()
     }
 
-    fun delete(key: String) {
+    fun delete(key: String): Boolean {
         val account = cfString(key)
         val svc = cfString(service)
         val query = cfDictionaryOf(
@@ -109,11 +109,12 @@ internal class Keychain(private val service: String) {
             kSecAttrService to svc,
             kSecAttrAccount to account,
         )
-        SecItemDelete(query)
+        val status = query?.let { SecItemDelete(it) } ?: -1
 
-        CFRelease(query)
+        query?.let { CFRelease(it) }
         account?.let { CFRelease(it) }
         svc?.let { CFRelease(it) }
+        return status == errSecSuccess
     }
 
     private fun cfString(value: String): CFStringRef? =
@@ -141,8 +142,9 @@ internal class Keychain(private val service: String) {
         return bytes.decodeToString()
     }
 
-    private fun cfDictionaryOf(vararg pairs: Pair<CFStringRef?, CFTypeRef?>): CFDictionaryRef =
+    private fun cfDictionaryOf(vararg pairs: Pair<CFStringRef?, CFTypeRef?>): CFDictionaryRef? =
         memScoped {
+            if (pairs.any { it.first == null || it.second == null }) return@memScoped null
             CFDictionaryCreate(
                 allocator = kCFAllocatorDefault,
                 keys = allocArrayOf(pairs.map { it.first }).reinterpret(),
@@ -150,6 +152,6 @@ internal class Keychain(private val service: String) {
                 numValues = pairs.size.convert(),
                 keyCallBacks = kCFTypeDictionaryKeyCallBacks.ptr,
                 valueCallBacks = kCFTypeDictionaryValueCallBacks.ptr,
-            )!!
+            )
         }
 }

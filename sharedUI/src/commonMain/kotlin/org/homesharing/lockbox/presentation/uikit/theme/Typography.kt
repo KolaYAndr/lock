@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.presentation.uikit.theme
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -19,14 +20,16 @@ internal fun interFamily() = FontFamily(
 @Composable
 internal fun homesharingTypography(): HomesharingTypography {
     val inter = interFamily()
-    return HomesharingTypography(
-        titleLarge = TitleLarge.copy(fontFamily = inter),
-        titleMedium = TitleMedium.copy(fontFamily = inter),
-        titleSmall = TitleSmall.copy(fontFamily = inter),
-        bodyMedium = BodyMedium.copy(fontFamily = inter),
-        bodySmall = BodySmall.copy(fontFamily = inter),
-        bodyXSmall = BodyXSmall.copy(fontFamily = inter),
-    )
+    return remember(inter) {
+        HomesharingTypography(
+            titleLarge = TitleLarge.copy(fontFamily = inter),
+            titleMedium = TitleMedium.copy(fontFamily = inter),
+            titleSmall = TitleSmall.copy(fontFamily = inter),
+            bodyMedium = BodyMedium.copy(fontFamily = inter),
+            bodySmall = BodySmall.copy(fontFamily = inter),
+            bodyXSmall = BodyXSmall.copy(fontFamily = inter),
+        )
+    }
 }
 
 internal val TitleLarge = TextStyle(

@@ -6,10 +6,16 @@ import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentLi
 import org.homesharing.lockbox.domain.model.personal_document.PersonalDocumentType
 import org.homesharing.lockbox.domain.model.profile_info.ProfileInfo
 import org.homesharing.lockbox.domain.model.role.UserRole
-import org.homesharing.lockbox.domain.model.update_account.UpdateAccount
 
 interface AccountRepository {
+    /**
+     * Выполняет локальный выход из аккаунта, очищая сохранённые токены из хранилища.
+     */
     suspend fun logOut()
+
+    /**
+     * Поток состояния авторизации пользователя (`true`, если локальные токены присутствуют).
+     */
     val loggedIn: Flow<Boolean>
     /**
      * Получает presigned URL на аватар текущего пользователя.
@@ -29,7 +35,6 @@ interface AccountRepository {
      * @return [Response] с сообщением о результате загрузки
      */
     suspend fun sendImage(data: ByteArray): Response<String>
-    suspend fun deactivateUser(): Response<UpdateAccount>
 
     /**
      * Получает профиль текущего пользователя.

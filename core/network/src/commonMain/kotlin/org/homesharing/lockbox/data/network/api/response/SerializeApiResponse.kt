@@ -2,6 +2,7 @@ package org.homesharing.lockbox.data.network.api.response
 
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 suspend inline fun <reified T> HttpResponse.toApiResponse(json: Json): ApiResponse<T> {
@@ -17,7 +18,14 @@ suspend inline fun <reified T> HttpResponse.toApiResponse(json: Json): ApiRespon
         }
 
         else -> {
-            json.decodeFromString<ApiResponse.Failure>(responseBody)
+            try {
+                json.decodeFromString<ApiResponse.Failure>(responseBody)
+            } catch (_: SerializationException) {
+                ApiResponse.Failure(
+                    errorCode = status.value.toString(),
+                    message = responseBody.ifBlank { status.description },
+                )
+            }
         }
     }
 }

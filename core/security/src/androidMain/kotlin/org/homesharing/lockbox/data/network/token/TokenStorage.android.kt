@@ -5,6 +5,7 @@ import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -44,7 +45,9 @@ internal class TokenStorageImpl(
             val decodedIv = cipher.fromBase64(accessIv)
             val decodedData = cipher.fromBase64(accessTokenData)
             cipher.decrypt(decodedIv, decodedData)
-        } catch (_: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
             // Если расшифровка не удалась (например, ключ инвалидирован), лучше очистить данные
             clearInfo()
             ""
@@ -62,36 +65,30 @@ internal class TokenStorageImpl(
             val decodedIv = cipher.fromBase64(refreshIv)
             val decodedData = cipher.fromBase64(refreshTokenData)
             cipher.decrypt(decodedIv, decodedData)
-        } catch (_: Throwable) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
             clearInfo()
             ""
         }
     }
 
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
-        saveAccessToken(accessToken)
-        saveRefreshToken(refreshToken)
+        withContext(Dispatchers.IO) {
+            val (accessIv, encryptedAccess) = cipher.encrypt(accessToken)
+            val (refreshIv, encryptedRefresh) = cipher.encrypt(refreshToken)
+            dataStore.edit { prefs ->
+                prefs[ACCESS_TOKEN_IV_KEY] = cipher.toBase64(accessIv)
+                prefs[ACCESS_TOKEN_KEY] = cipher.toBase64(encryptedAccess)
+                prefs[REFRESH_TOKEN_IV_KEY] = cipher.toBase64(refreshIv)
+                prefs[REFRESH_TOKEN_KEY] = cipher.toBase64(encryptedRefresh)
+            }
+        }
     }
 
     override suspend fun clearInfo() {
         dataStore.edit { preferences ->
             preferences.clear()
-        }
-    }
-
-    private suspend fun saveRefreshToken(token: String) = withContext(Dispatchers.IO) {
-        val (iv, encrypted) = cipher.encrypt(token)
-        dataStore.edit { prefs ->
-            prefs[REFRESH_TOKEN_IV_KEY] = cipher.toBase64(iv)
-            prefs[REFRESH_TOKEN_KEY] = cipher.toBase64(encrypted)
-        }
-    }
-
-    private suspend fun saveAccessToken(token: String) = withContext(Dispatchers.IO) {
-        val (iv, encrypted) = cipher.encrypt(token)
-        dataStore.edit { prefs ->
-            prefs[ACCESS_TOKEN_IV_KEY] = cipher.toBase64(iv)
-            prefs[ACCESS_TOKEN_KEY] = cipher.toBase64(encrypted)
         }
     }
 

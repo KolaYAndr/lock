@@ -28,8 +28,8 @@ internal class LoginViewModel(
 
     fun singIn() {
         viewModelScope.launch {
-            authRepository.loadTokensInitially(
-                username = uiState.value.email,
+            authRepository.login(
+                email = uiState.value.email,
                 password = uiState.value.password,
             )
         }
@@ -37,9 +37,8 @@ internal class LoginViewModel(
 
     fun getCode() {
         viewModelScope.launch {
-            authRepository.loadTokensInitially(
-                username = uiState.value.email,
-                password = uiState.value.password,
+            authRepository.requestOtp(
+                email = uiState.value.email,
             )
         }
     }

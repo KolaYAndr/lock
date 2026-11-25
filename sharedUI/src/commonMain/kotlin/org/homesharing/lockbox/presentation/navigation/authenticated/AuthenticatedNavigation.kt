@@ -3,29 +3,30 @@ package org.homesharing.lockbox.presentation.navigation.authenticated
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import org.homesharing.lockbox.presentation.flat_detailed.FlatDetailedScreen
-import org.homesharing.lockbox.presentation.flat_list.FlatListScreen
-import org.homesharing.lockbox.presentation.navigation.navBackstackSaver
-import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
-import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
-import org.homesharing.lockbox.presentation.uikit.animation.popExitTransition
 import org.homesharing.lockbox.presentation.add_flat_flow.add_or_import_flat.AddFlatScreen
 import org.homesharing.lockbox.presentation.add_flat_flow.flat_address.FlatAddressScreen
 import org.homesharing.lockbox.presentation.add_flat_flow.flat_created.FlatCreatedScreen
 import org.homesharing.lockbox.presentation.add_flat_flow.flat_data.FlatDataScreen
 import org.homesharing.lockbox.presentation.add_flat_flow.flat_rooms.FlatRoomsScreen
+import org.homesharing.lockbox.presentation.flat_detailed.FlatDetailedScreen
+import org.homesharing.lockbox.presentation.flat_list.FlatListScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.check_in_setup.CheckInSetupScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.check_invitation.CheckInvitationScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_info.GuestInfoScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_invited.GuestInvitedScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.invitation_details.GuestInvitationScreen
+import org.homesharing.lockbox.presentation.navigation.navBackstackSaver
 import org.homesharing.lockbox.presentation.setup_profile_flow.name_setup.NameSetupScreen
 import org.homesharing.lockbox.presentation.setup_profile_flow.role_picker.RolePickerScreen
+import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
+import org.homesharing.lockbox.presentation.uikit.animation.exitTransition
+import org.homesharing.lockbox.presentation.uikit.animation.popExitTransition
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -91,13 +92,13 @@ internal fun HomesharingNavigation(
                         backstack.removeLastOrNull()
                     },
                     onChangeAddress = {
-                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
                     },
                     onChangeFlatType = {
-                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
                     },
                     onChangeRooms = {
-                        backstack.add(AuthenticatedRoutes.FlatRooms)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatRooms)
                     }
                 )
             }
@@ -147,16 +148,16 @@ internal fun HomesharingNavigation(
                         backstack.removeLastOrNull()
                     },
                     onChangeDates = {
-                        backstack.add(AuthenticatedRoutes.GuestInfo)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.GuestInfo)
                     },
                     onChangeSetup = {
-                        backstack.add(AuthenticatedRoutes.CheckInSetup)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.CheckInSetup)
                     },
                     onChangeFlatInfo = {
-                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
                     },
                     onChangeGuestInfo = {
-                        backstack.add(AuthenticatedRoutes.GuestInfo)
+                        backstack.popUpToOrAdd(AuthenticatedRoutes.GuestInfo)
                     }
                 )
             }
@@ -185,7 +186,9 @@ internal fun HomesharingNavigation(
         },
         backStack = backstack,
         onBack = {
-            backstack.removeLastOrNull()
+            if (backstack.size > 1) {
+                backstack.removeLastOrNull()
+            }
         },
         transitionSpec = enterTransition,
         popTransitionSpec = exitTransition,
@@ -195,4 +198,15 @@ internal fun HomesharingNavigation(
             rememberViewModelStoreNavEntryDecorator(),
         )
     )
+}
+
+private fun <T : Any> SnapshotStateList<T>.popUpToOrAdd(target: T) {
+    val index = indexOfLast { it == target }
+    if (index >= 0) {
+        while (size > index + 1) {
+            removeLastOrNull()
+        }
+    } else {
+        add(target)
+    }
 }

@@ -16,7 +16,6 @@ import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
-import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.create_flat.CreateFlatRequestDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatDetailDto
 import org.homesharing.lockbox.data.network.dto.flat_detail.FlatIncludeDto
@@ -48,7 +47,7 @@ private const val DOCUMENT = "document"
 private const val DOC_TYPE = "doc_type"
 
 // API url
-private const val FLATS_URL = "$GO_BASE_ENDPOINT/$FLATS"
+private const val FLATS_URL = FLATS
 
 internal class FlatApiImpl(
     private val client: HttpClient,

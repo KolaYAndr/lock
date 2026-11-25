@@ -20,7 +20,7 @@ val coreNetworkModule = module {
         Json {
             explicitNulls = false
             ignoreUnknownKeys = true
-            prettyPrint = true
+            prettyPrint = false
             isLenient = true
         }
     }

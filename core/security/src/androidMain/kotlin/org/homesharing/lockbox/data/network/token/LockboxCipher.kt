@@ -3,8 +3,10 @@ package org.homesharing.lockbox.data.network.token
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.security.keystore.StrongBoxUnavailableException
 import android.util.Base64
 import java.security.KeyStore
+import java.security.ProviderException
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -28,16 +30,23 @@ internal class LockboxCipher {
         val existingKey = keyStore.getEntry(keyAlias, null) as? KeyStore.SecretKeyEntry
         if (existingKey != null) return existingKey.secretKey
 
-        return try {
-            createKey(useStrongBox = true)
-        } catch (_: Exception) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                createKey(useStrongBox = true)
+            } catch (e: Exception) {
+                if (e is StrongBoxUnavailableException || e is ProviderException) {
+                    createKey(useStrongBox = false)
+                } else {
+                    throw e
+                }
+            }
+        } else {
             createKey(useStrongBox = false)
         }
     }
 
     private fun createKey(useStrongBox: Boolean): SecretKey {
-        val keyGenerator =
-            KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
         val builder = KeyGenParameterSpec.Builder(
             keyAlias,
             KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
@@ -58,14 +67,14 @@ internal class LockboxCipher {
     fun encrypt(plainText: String): Pair<ByteArray, ByteArray> {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getOrCreateSecretKey())
-        return Pair(cipher.iv, cipher.doFinal(plainText.toByteArray()))
+        return Pair(cipher.iv, cipher.doFinal(plainText.toByteArray(Charsets.UTF_8)))
     }
 
     fun decrypt(iv: ByteArray, cipherText: ByteArray): String {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         val spec = GCMParameterSpec(GCM_TAG_LENGTH, iv)
         cipher.init(Cipher.DECRYPT_MODE, getOrCreateSecretKey(), spec)
-        return String(cipher.doFinal(cipherText))
+        return String(cipher.doFinal(cipherText), Charsets.UTF_8)
     }
 
     fun toBase64(bytes: ByteArray): String = Base64.encodeToString(bytes, Base64.NO_WRAP)

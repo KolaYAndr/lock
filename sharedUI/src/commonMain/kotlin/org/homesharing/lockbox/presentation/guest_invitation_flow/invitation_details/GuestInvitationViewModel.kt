@@ -126,7 +126,7 @@ internal class GuestInvitationViewModel : ViewModel() {
     private fun onGuestNumberChanged(value: String) {
         _guestInvitation.update {
             it.copy(
-                guestNumber = value.toInt(),
+                guestNumber = value.toIntOrNull(),
                 guestError = false
             )
         }
@@ -135,7 +135,7 @@ internal class GuestInvitationViewModel : ViewModel() {
     private fun onDepositChanged(value: String) {
         _guestInvitation.update {
             it.copy(
-                deposit = value.toInt(),
+                deposit = value.toIntOrNull(),
             )
         }
     }

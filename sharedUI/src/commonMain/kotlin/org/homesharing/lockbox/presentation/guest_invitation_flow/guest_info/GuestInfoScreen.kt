@@ -27,8 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -37,17 +35,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
-import lockbox.sharedui.generated.resources.ic_chevron_left
-import lockbox.sharedui.generated.resources.ic_close
 import lockbox.sharedui.generated.resources.full_name
 import lockbox.sharedui.generated.resources.guest_info
 import lockbox.sharedui.generated.resources.guest_invitation
+import lockbox.sharedui.generated.resources.ic_chevron_left
+import lockbox.sharedui.generated.resources.ic_close
 import lockbox.sharedui.generated.resources.placeholder_email
 import lockbox.sharedui.generated.resources.proceed
 import lockbox.sharedui.generated.resources.will_send_invitation_on_that_email
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -169,7 +169,7 @@ private fun GuestInfoScreen(
                 }
             ),
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
+                keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done,
                 capitalization = KeyboardCapitalization.Words
             ),

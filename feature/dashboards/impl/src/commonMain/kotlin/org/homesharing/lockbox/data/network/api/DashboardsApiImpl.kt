@@ -7,7 +7,6 @@ import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
-import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestDashboardDto
 import org.homesharing.lockbox.data.network.dto.guest_process.GuestProcessListDto
 import org.homesharing.lockbox.data.network.dto.landlord_dashboard.LandlordDashboardDto
@@ -24,9 +23,9 @@ private const val LIMIT = "limit"
 private const val CURSOR = "cursor"
 
 // API url
-private const val DASHBOARD_URL = "$GO_BASE_ENDPOINT/$DASHBOARD"
-private const val GUEST_DASHBOARD_URL = "$GO_BASE_ENDPOINT/$GUEST/$DASHBOARD"
-private const val GUEST_PROCESSES_URL = "$GO_BASE_ENDPOINT/$GUEST/$PROCESSES"
+private const val DASHBOARD_URL = DASHBOARD
+private const val GUEST_DASHBOARD_URL = "$GUEST/$DASHBOARD"
+private const val GUEST_PROCESSES_URL = "$GUEST/$PROCESSES"
 
 internal class DashboardsApiImpl(
     private val client: HttpClient,

@@ -29,10 +29,10 @@ internal class FlatPagingSource(
                 is ApiResponse.Failure -> LoadResult.Error(Throwable(apiResponse.message))
                 is ApiResponse.Success -> {
                     val endOfPagination =
-                        apiResponse.data.items.size < size || apiResponse.data.nextCursor == null
+                        apiResponse.data.nextCursor == null || apiResponse.data.items.isEmpty()
                     LoadResult.Page(
                         data = apiResponse.data.items,
-                        prevKey = cursor,
+                        prevKey = null,
                         nextKey = if (endOfPagination) null else apiResponse.data.nextCursor
                     )
                 }

@@ -3,6 +3,8 @@ package org.homesharing.lockbox.domain.model.contract_list
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractDocumentStatusDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractStatusDto
+import org.homesharing.lockbox.domain.model.ContractStatus
+import org.homesharing.lockbox.domain.model.DocumentStatus
 
 internal fun ContractListDto.toDomain() = ContractList(
     items = items.map { it.toDomain() },
@@ -27,9 +29,9 @@ internal fun ContractStatusDto.toDomain(): ContractStatus = when (this) {
     ContractStatusDto.Cancelled -> ContractStatus.Cancelled
 }
 
-internal fun ContractDocumentStatusDto.toDomain(): ContractDocumentStatus = when (this) {
-    ContractDocumentStatusDto.Pending -> ContractDocumentStatus.Pending
-    ContractDocumentStatusDto.Created -> ContractDocumentStatus.Created
-    ContractDocumentStatusDto.Failed -> ContractDocumentStatus.Failed
-    ContractDocumentStatusDto.None -> ContractDocumentStatus.None
+internal fun ContractDocumentStatusDto.toDomain(): DocumentStatus = when (this) {
+    ContractDocumentStatusDto.Pending -> DocumentStatus.Pending
+    ContractDocumentStatusDto.Created -> DocumentStatus.Created
+    ContractDocumentStatusDto.Failed -> DocumentStatus.Failed
+    ContractDocumentStatusDto.None -> DocumentStatus.None
 }

@@ -4,6 +4,8 @@ import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestDashboardDt
 import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestNextActionDto
 import org.homesharing.lockbox.data.network.dto.guest_dashboard.GuestStageDto
 import org.homesharing.lockbox.data.network.dto.guest_dashboard.InviteStatusDto
+import org.homesharing.lockbox.domain.model.GuestStage
+import org.homesharing.lockbox.domain.model.InviteStatus
 import org.homesharing.lockbox.domain.model.stay.toDomain
 
 internal fun GuestDashboardDto.toDomain() = GuestDashboard(

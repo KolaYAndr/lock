@@ -1,8 +1,6 @@
 package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
-import org.homesharing.lockbox.data.network.api.response.AuthResponse
-import org.homesharing.lockbox.data.network.dto.confirm_email.ConfirmEmailDto
 import org.homesharing.lockbox.data.network.dto.login.LoginRequestDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpResponseDto
 import org.homesharing.lockbox.data.network.dto.otp.OtpVerifyResponseDto
@@ -17,12 +15,6 @@ import org.homesharing.lockbox.data.network.dto.token.TokenResponseDto
  * Сетевой API для аутентификации и авторизации пользователей.
  */
 internal interface AuthApi {
-    suspend fun signUp(
-        username: String,
-        password: String,
-        passwordRepeated: String,
-    ): ApiResponse<Unit>
-
     /**
      * Создаёт аккаунт и сразу выполняет вход (auto-login).
      * Публичный эндпоинт, авторизация не требуется.
@@ -34,11 +26,6 @@ internal interface AuthApi {
         request: RegisterRequestDto,
     ): ApiResponse<TokenResponseDto>
 
-    suspend fun loadTokensInitially(
-        username: String,
-        password: String,
-    ): AuthResponse
-
     /**
      * Обменивает email и пароль на пару токенов через Keycloak password grant.
      * Публичный эндпоинт, авторизация не требуется.
@@ -49,8 +36,6 @@ internal interface AuthApi {
     suspend fun login(
         request: LoginRequestDto,
     ): ApiResponse<TokenResponseDto>
-
-    suspend fun confirmEmail(email: String): ApiResponse<ConfirmEmailDto>
 
     /**
      * Запрашивает отправку одноразового кода (OTP) на указанный email.

@@ -4,6 +4,8 @@ import org.homesharing.lockbox.data.network.dto.stay.ContractStatusDto
 import org.homesharing.lockbox.data.network.dto.stay.DocumentStatusDto
 import org.homesharing.lockbox.data.network.dto.stay.PlannedPhaseDto
 import org.homesharing.lockbox.data.network.dto.stay.StayListItemDto
+import org.homesharing.lockbox.domain.model.ContractStatus
+import org.homesharing.lockbox.domain.model.DocumentStatus
 
 internal fun StayListItemDto.toDomain() = StayListItem(
     bookingId = bookingId,

@@ -26,7 +26,7 @@ internal data class FlatDetailDto(
     val activeInvitesCount: Int,
     @SerialName("has_documents")
     val hasDocuments: Boolean,
-    val invites: List<InviteListItemDto>?,
+    val invites: List<InviteListItemDto>? = null,
 ) {
     @Serializable
     internal data class AddressDto(

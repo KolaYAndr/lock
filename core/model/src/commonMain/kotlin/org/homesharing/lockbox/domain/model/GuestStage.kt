@@ -1,4 +1,4 @@
-package org.homesharing.lockbox.domain.model.guest_stage
+package org.homesharing.lockbox.domain.model
 
 enum class GuestStage {
     NoInvite,

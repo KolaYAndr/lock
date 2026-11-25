@@ -1,5 +1,8 @@
 package org.homesharing.lockbox.domain.model.stay
 
+import org.homesharing.lockbox.domain.model.ContractStatus
+import org.homesharing.lockbox.domain.model.DocumentStatus
+
 data class StayListItem(
     val bookingId: String,
     val contractId: String?,

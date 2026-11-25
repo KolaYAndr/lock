@@ -10,7 +10,6 @@ import io.ktor.client.request.url
 import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
-import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
 import org.homesharing.lockbox.data.network.dto.contract.ContractCancelRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
@@ -38,7 +37,7 @@ private const val LIMIT = "limit"
 private const val CURSOR = "cursor"
 
 // API url
-private const val CONTRACTS_URL = "$GO_BASE_ENDPOINT/$CONTRACTS"
+private const val CONTRACTS_URL = CONTRACTS
 
 internal class ContractsApiImpl(
     private val client: HttpClient,
