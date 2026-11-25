@@ -18,6 +18,7 @@ kotlin {
             export(projects.feature.account.api)
             export(projects.feature.flat.api)
             export(projects.feature.invitation.api)
+            export(projects.feature.contracts.api)
         }
     }
 
@@ -49,6 +50,8 @@ kotlin {
             api(projects.feature.flat.impl)
             api(projects.feature.invitation.api)
             api(projects.feature.invitation.impl)
+            api(projects.feature.contracts.api)
+            api(projects.feature.contracts.impl)
             api(libs.koin.core)
         }
     }

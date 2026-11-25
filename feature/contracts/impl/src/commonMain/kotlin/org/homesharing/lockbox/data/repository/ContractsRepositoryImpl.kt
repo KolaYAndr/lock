@@ -1,0 +1,23 @@
+package org.homesharing.lockbox.data.repository
+
+import org.homesharing.lockbox.data.network.api.ContractsApi
+import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
+import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.api.response.parseLockboxApiResponse
+import org.homesharing.lockbox.domain.model.contract_list.ContractList
+import org.homesharing.lockbox.domain.model.contract_list.toDomain
+import org.homesharing.lockbox.domain.repository.ContractsRepository
+
+internal class ContractsRepositoryImpl(
+    private val api: ContractsApi,
+) : ContractsRepository {
+    override suspend fun getContracts(
+        limit: Int,
+        cursor: String?,
+    ): Response<ContractList> {
+        return parseLockboxApiResponse(
+            apiCall = { api.getContracts(limit = limit, cursor = cursor) },
+            mapper = ContractListDto::toDomain,
+        )
+    }
+}

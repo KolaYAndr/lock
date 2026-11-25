@@ -62,6 +62,11 @@ project(":feature:invitation:api").projectDir = file("feature/invitation/api")
 include(":feature:invitation:impl")
 project(":feature:invitation:impl").projectDir = file("feature/invitation/impl")
 
+include(":feature:contracts:api")
+project(":feature:contracts:api").projectDir = file("feature/contracts/api")
+include(":feature:contracts:impl")
+project(":feature:contracts:impl").projectDir = file("feature/contracts/impl")
+
 include(":androidApp")
 include(":shared")
 include(":sharedUI")

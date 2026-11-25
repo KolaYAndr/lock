@@ -1,0 +1,37 @@
+package org.homesharing.lockbox.data.network.api
+
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.url
+import kotlinx.serialization.json.Json
+import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.api.response.toApiResponse
+import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
+
+// API endpoints
+private const val CONTRACTS = "contracts"
+
+// API arguments
+private const val LIMIT = "limit"
+private const val CURSOR = "cursor"
+
+// API url
+private const val CONTRACTS_URL = "$GO_BASE_ENDPOINT/$CONTRACTS"
+
+internal class ContractsApiImpl(
+    private val client: HttpClient,
+    private val json: Json,
+) : ContractsApi {
+    override suspend fun getContracts(
+        limit: Int,
+        cursor: String?,
+    ): ApiResponse<ContractListDto> {
+        return client.get {
+            url(CONTRACTS_URL)
+            parameter(LIMIT, limit)
+            cursor?.let { parameter(CURSOR, it) }
+        }.toApiResponse<ContractListDto>(json)
+    }
+}
