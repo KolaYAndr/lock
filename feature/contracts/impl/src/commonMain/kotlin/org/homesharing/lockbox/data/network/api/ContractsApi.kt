@@ -1,6 +1,8 @@
 package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
+import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract_list.ContractListDto
 
 internal interface ContractsApi {
@@ -18,4 +20,17 @@ internal interface ContractsApi {
         limit: Int = 10,
         cursor: String? = null,
     ): ApiResponse<ContractListDto>
+
+    /**
+     * Создаёт новый контракт (черновик) для текущего пользователя (`POST /api/contracts`).
+     * Требует авторизации (Bearer token).
+     *
+     * Валидирует данные сторон, квартиры и бронирования.
+     *
+     * @param request данные создаваемого контракта [ContractCreateRequestDto]
+     * @return [ApiResponse] с созданным контрактом [ContractDto] (201 Created)
+     */
+    suspend fun createContract(
+        request: ContractCreateRequestDto,
+    ): ApiResponse<ContractDto>
 }
