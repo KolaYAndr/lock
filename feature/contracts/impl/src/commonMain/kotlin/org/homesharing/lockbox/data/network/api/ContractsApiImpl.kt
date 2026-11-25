@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
 import org.homesharing.lockbox.data.network.api.response.toApiResponse
 import org.homesharing.lockbox.data.network.client.GO_BASE_ENDPOINT
+import org.homesharing.lockbox.data.network.dto.contract.ContractCancelRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractRejectRequestDto
@@ -30,6 +31,7 @@ private const val VERSIONS = "versions"
 private const val CONFIRMATION_CODE = "confirmation-code"
 private const val CONFIRM = "confirm"
 private const val REJECT = "reject"
+private const val CANCEL = "cancel"
 
 // API arguments
 private const val LIMIT = "limit"
@@ -131,6 +133,16 @@ internal class ContractsApiImpl(
     ): ApiResponse<ContractDto> {
         return client.post {
             url("$CONTRACTS_URL/$id/$REJECT")
+            setBody(request)
+        }.toApiResponse<ContractDto>(json)
+    }
+
+    override suspend fun cancelContract(
+        id: String,
+        request: ContractCancelRequestDto,
+    ): ApiResponse<ContractDto> {
+        return client.post {
+            url("$CONTRACTS_URL/$id/$CANCEL")
             setBody(request)
         }.toApiResponse<ContractDto>(json)
     }

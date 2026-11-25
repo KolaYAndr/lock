@@ -189,4 +189,17 @@ interface ContractsRepository {
         versionId: String,
         reason: String? = null,
     ): Response<Contract>
+
+    /**
+     * Отменяет контракт владельцем (`POST /api/contracts/{id}/cancel`),
+     * переводя его в статус `Cancelled` с опциональной причиной. Требует авторизации.
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param reason опциональная причина отмены
+     * @return [Response] с обновлённым контрактом
+     */
+    suspend fun cancelContract(
+        id: String,
+        reason: String? = null,
+    ): Response<Contract>
 }

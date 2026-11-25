@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.network.api
 
 import org.homesharing.lockbox.data.network.api.response.ApiResponse
+import org.homesharing.lockbox.data.network.dto.contract.ContractCancelRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractRejectRequestDto
@@ -160,5 +161,18 @@ internal interface ContractsApi {
     suspend fun rejectContract(
         id: String,
         request: ContractRejectRequestDto,
+    ): ApiResponse<ContractDto>
+
+    /**
+     * Отменяет контракт владельцем (`POST /api/contracts/{id}/cancel`),
+     * переводя его в статус `cancelled` с опциональной причиной. Требует авторизации (Bearer token).
+     *
+     * @param id идентификатор контракта (uuid)
+     * @param request данные отмены контракта [ContractCancelRequestDto] (минимум `{}`)
+     * @return [ApiResponse] с обновлённым контрактом [ContractDto] (200 OK)
+     */
+    suspend fun cancelContract(
+        id: String,
+        request: ContractCancelRequestDto,
     ): ApiResponse<ContractDto>
 }

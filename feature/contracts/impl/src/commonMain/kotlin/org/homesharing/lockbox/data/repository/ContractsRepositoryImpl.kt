@@ -1,6 +1,7 @@
 package org.homesharing.lockbox.data.repository
 
 import org.homesharing.lockbox.data.network.api.ContractsApi
+import org.homesharing.lockbox.data.network.dto.contract.ContractCancelRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractCreateRequestDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractDto
 import org.homesharing.lockbox.data.network.dto.contract.ContractRejectRequestDto
@@ -173,6 +174,18 @@ internal class ContractsRepositoryImpl(
 
         return parseLockboxApiResponse(
             apiCall = { api.rejectContract(id = id, request = request) },
+            mapper = ContractDto::toDomain,
+        )
+    }
+
+    override suspend fun cancelContract(
+        id: String,
+        reason: String?,
+    ): Response<Contract> {
+        val request = ContractCancelRequestDto(reason = reason)
+
+        return parseLockboxApiResponse(
+            apiCall = { api.cancelContract(id = id, request = request) },
             mapper = ContractDto::toDomain,
         )
     }
