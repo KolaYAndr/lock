@@ -35,7 +35,7 @@ internal class FlatDetailedViewModel(
         )
 
     private suspend fun loadState(): FlatDetailedUiState =
-        when (val response = flatRepository.getFlat(id)) {
+        when (val response = flatRepository.getFlat(id, includeInvites = false)) {
             is Response.Failure -> {
                 FlatDetailedUiState.Failed
             }

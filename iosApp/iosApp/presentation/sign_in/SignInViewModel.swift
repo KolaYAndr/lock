@@ -65,13 +65,13 @@ final class SignInViewModel: ObservableObject {
         
         Task { @MainActor in
             do {
-                let response = try await authRepository.loadTokensInitially(
-                    username: trimmedEmail,
+                let response = try await authRepository.login(
+                    email: trimmedEmail,
                     password: password
                 )
                 
                 if let failure = response as? ResponseFailure {
-                    self.passwordError = parsePasswordError(message: failure.message)
+                    self.passwordError = parsePasswordError(message: failure.errorCode ?? failure.message)
                 }
             } catch {
                 self.passwordError = .unexpected

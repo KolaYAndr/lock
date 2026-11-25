@@ -43,6 +43,9 @@ import lockbox.sharedui.generated.resources.ic_eye
 import lockbox.sharedui.generated.resources.ic_eye_off
 import lockbox.sharedui.generated.resources.lockbox_logo_horizontal
 import lockbox.sharedui.generated.resources.or
+import lockbox.sharedui.generated.resources.login_code_placeholder
+import lockbox.sharedui.generated.resources.login_request_failed
+import lockbox.sharedui.generated.resources.verify_code
 import lockbox.sharedui.generated.resources.password_placeholder
 import lockbox.sharedui.generated.resources.placeholder_email
 import lockbox.sharedui.generated.resources.sign_in
@@ -61,24 +64,26 @@ internal fun LoginScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     LoginScreen(
         modifier = Modifier.fillMaxSize(),
-        email = state.email,
-        password = state.password,
+        state = state,
         onChangeEmail = viewModel::onEmailChange,
-        onChangePassword = viewModel::onPasswordChangeChange,
-        signIn = viewModel::singIn,
-        getCode = viewModel::getCode
+        onChangePassword = viewModel::onPasswordChange,
+        onChangeCode = viewModel::onCodeChange,
+        signIn = viewModel::signIn,
+        getCode = viewModel::requestCode,
+        verifyCode = viewModel::verifyCode,
     )
 }
 
 @Composable
 private fun LoginScreen(
     modifier: Modifier = Modifier,
-    email: String,
-    password: String,
+    state: LoginUiState,
     onChangeEmail: (String) -> Unit,
     onChangePassword: (String) -> Unit,
+    onChangeCode: (String) -> Unit,
     signIn: () -> Unit,
     getCode: () -> Unit,
+    verifyCode: () -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -122,8 +127,8 @@ private fun LoginScreen(
             )
 
             HomesharingInput(
-                value = email,
-                onValueChange = onChangeEmail,
+                value = state.email,
+                onValueChange = { if (!state.isSubmitting) onChangeEmail(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
@@ -136,7 +141,7 @@ private fun LoginScreen(
                 ),
                 trailingIcon = painterResource(Res.drawable.ic_close),
                 trailingIconAction = {
-                    onChangeEmail("")
+                    if (!state.isSubmitting) onChangeEmail("")
                 },
                 placeholderText = stringResource(Res.string.placeholder_email),
                 modifier = Modifier
@@ -147,8 +152,8 @@ private fun LoginScreen(
 
             var isSeen by remember { mutableStateOf(true) }
             HomesharingInput(
-                value = password,
-                onValueChange = onChangePassword,
+                value = state.password,
+                onValueChange = { if (!state.isSubmitting) onChangePassword(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done,
@@ -177,7 +182,7 @@ private fun LoginScreen(
             HomesharingButton(
                 title = stringResource(Res.string.sign_in),
                 onClick = signIn,
-                enabled = email.isNotBlank() && password.isNotBlank(),
+                enabled = !state.isSubmitting && state.email.isNotBlank() && state.password.isNotBlank(),
                 modifier = Modifier
                     .padding(top = 11.dp)
                     .padding(horizontal = 11.dp)
@@ -210,13 +215,39 @@ private fun LoginScreen(
 
             HomesharingButton(
                 title = stringResource(Res.string.get_code),
-                enabled = email.isNotBlank(),
+                enabled = !state.isSubmitting && state.email.isNotBlank(),
                 onClick = getCode,
                 modifier = Modifier
                     .padding(top = 11.dp)
                     .padding(horizontal = 11.dp)
                     .fillMaxWidth()
             )
+
+            if (state.isCodeRequested) {
+                HomesharingInput(
+                    value = state.code,
+                    onValueChange = { if (!state.isSubmitting) onChangeCode(it) },
+                    placeholderText = stringResource(Res.string.login_code_placeholder),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { verifyCode() }),
+                    modifier = Modifier.padding(top = 11.dp, start = 11.dp, end = 11.dp).fillMaxWidth(),
+                )
+                HomesharingButton(
+                    title = stringResource(Res.string.verify_code),
+                    enabled = !state.isSubmitting && state.code.length == 6,
+                    onClick = verifyCode,
+                    modifier = Modifier.padding(top = 11.dp, start = 11.dp, end = 11.dp).fillMaxWidth(),
+                )
+            }
+
+            if (state.hasError) {
+                Text(
+                    text = stringResource(Res.string.login_request_failed),
+                    style = HomesharingTheme.typography.bodyMedium,
+                    color = HomesharingTheme.colors.black,
+                    modifier = Modifier.padding(top = 11.dp, start = 11.dp, end = 11.dp),
+                )
+            }
         }
     }
 }

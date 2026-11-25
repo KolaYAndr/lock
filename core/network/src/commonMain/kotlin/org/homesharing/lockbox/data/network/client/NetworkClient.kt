@@ -8,9 +8,6 @@ import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
@@ -43,17 +40,6 @@ private const val REFRESH = "refresh"
 private const val REFRESH_URL = "$GO_BASE_ENDPOINT/$AUTH/$REFRESH"
 
 expect val networkEngine: HttpClientEngine
-expect val myLogger: Logger
-
-internal suspend fun HttpClient.refreshToken(
-    refreshToken: String,
-    json: Json,
-): ApiResponse<TokenResponseDto> {
-    return post {
-        url(REFRESH_URL)
-        setBody(RefreshTokenRequest(refreshToken))
-    }.toApiResponse<TokenResponseDto>(json)
-}
 
 fun createNetworkClient(
     engine: HttpClientEngine,
@@ -64,11 +50,6 @@ fun createNetworkClient(
         install(HttpTimeout) {
             socketTimeoutMillis = CLIENT_TIMEOUT
             requestTimeoutMillis = CLIENT_TIMEOUT
-        }
-
-        install(Logging) {
-            level = LogLevel.ALL
-            logger = myLogger
         }
 
         install(ContentNegotiation) {
@@ -95,7 +76,11 @@ fun createNetworkClient(
                         ?: return@refreshTokens null
 
                     val response = runCatching {
-                        client.refreshToken(currentRefreshToken, json)
+                        client.post {
+                            markAsRefreshTokenRequest()
+                            url(REFRESH_URL)
+                            setBody(RefreshTokenRequest(currentRefreshToken))
+                        }.toApiResponse<TokenResponseDto>(json)
                     }.getOrNull()
 
                     when (response) {

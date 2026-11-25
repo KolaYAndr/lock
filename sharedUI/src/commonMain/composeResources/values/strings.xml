@@ -104,4 +104,7 @@
     <string name="retry">Повторить</string>
     <string name="search_placeholder">Поиск</string>
     <string name="all_filter">Все</string>
+    <string name="login_code_placeholder">Код из письма</string>
+    <string name="verify_code">Подтвердить код</string>
+    <string name="login_request_failed">Не удалось выполнить запрос. Проверьте данные и попробуйте ещё раз.</string>
 </resources>

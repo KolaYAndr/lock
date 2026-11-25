@@ -60,6 +60,19 @@ project(":feature:flat:impl").projectDir = file("feature/flat/impl")
 include(":feature:invitation:api")
 project(":feature:invitation:api").projectDir = file("feature/invitation/api")
 
+include(":feature:invitation:impl")
+project(":feature:invitation:impl").projectDir = file("feature/invitation/impl")
+
+include(":feature:contract:api")
+project(":feature:contract:api").projectDir = file("feature/contract/api")
+include(":feature:contract:impl")
+project(":feature:contract:impl").projectDir = file("feature/contract/impl")
+
+include(":feature:dashboard:api")
+project(":feature:dashboard:api").projectDir = file("feature/dashboard/api")
+include(":feature:dashboard:impl")
+project(":feature:dashboard:impl").projectDir = file("feature/dashboard/impl")
+
 include(":androidApp")
 include(":shared")
 include(":sharedUI")

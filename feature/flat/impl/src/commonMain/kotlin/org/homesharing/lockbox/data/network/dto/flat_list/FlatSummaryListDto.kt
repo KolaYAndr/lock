@@ -15,16 +15,16 @@ internal data class FlatSummaryListDto(
     internal data class FlatSummaryDto(
         val id: String,
         val name: String,
-        val description: String?,
+        val description: String? = null,
         @SerialName("premise_type")
         val premiseType: PremiseTypeDto,
         @SerialName("full_address")
         val fullAddress: String,
         @SerialName("living_area")
-        val livingArea: Double?,
+        val livingArea: Double? = null,
         val status: FlatStatusDto,
         @SerialName("cover_photo_url")
-        val coverPhotoUrl: String?,
+        val coverPhotoUrl: String? = null,
         @SerialName("active_invites_count")
         val activeInvitesCount: Int,
     )
