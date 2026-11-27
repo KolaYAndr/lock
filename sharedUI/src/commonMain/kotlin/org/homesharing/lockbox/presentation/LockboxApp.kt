@@ -30,7 +30,7 @@ fun LockboxApp(
                 label = "splash",
             ) { showSplash ->
                 if (showSplash) {
-                    SplashContent()
+                    LoadingContent()
                 } else {
                     val isLoggedIn = loginState == LoginState.LoggedIn
                     AnimatedContent(
@@ -41,9 +41,9 @@ fun LockboxApp(
                         contentKey = { it },
                     ) { logged ->
                         if (logged) {
-                            HomesharingNavigation()
+                            HomesharingNavigation(modifier = Modifier.fillMaxSize())
                         } else {
-                            LoginAuthNavigation()
+                            LoginAuthNavigation(modifier = Modifier.fillMaxSize())
                         }
                     }
                 }

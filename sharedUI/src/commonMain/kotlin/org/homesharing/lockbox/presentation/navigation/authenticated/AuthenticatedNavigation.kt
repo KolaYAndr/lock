@@ -1,14 +1,14 @@
 package org.homesharing.lockbox.presentation.navigation.authenticated
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import org.homesharing.lockbox.presentation.LoadingContent
 import org.homesharing.lockbox.presentation.add_flat_flow.add_or_import_flat.AddFlatScreen
 import org.homesharing.lockbox.presentation.add_flat_flow.flat_address.FlatAddressScreen
 import org.homesharing.lockbox.presentation.add_flat_flow.flat_created.FlatCreatedScreen
@@ -21,7 +21,6 @@ import org.homesharing.lockbox.presentation.guest_invitation_flow.check_invitati
 import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_info.GuestInfoScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_invited.GuestInvitedScreen
 import org.homesharing.lockbox.presentation.guest_invitation_flow.invitation_details.GuestInvitationScreen
-import org.homesharing.lockbox.presentation.navigation.navBackstackSaver
 import org.homesharing.lockbox.presentation.setup_profile_flow.name_setup.NameSetupScreen
 import org.homesharing.lockbox.presentation.setup_profile_flow.role_picker.RolePickerScreen
 import org.homesharing.lockbox.presentation.uikit.animation.enterTransition
@@ -33,131 +32,121 @@ import org.koin.core.parameter.parametersOf
 @Composable
 internal fun HomesharingNavigation(
     modifier: Modifier = Modifier,
+    navigator: AuthenticatedNavigationViewModel = koinViewModel(),
 ) {
-    val backstack = rememberSaveable(
-        saver = navBackstackSaver(AuthenticatedRoutes.serializer())
-    ) {
-        mutableStateListOf(AuthenticatedRoutes.NameSetup)
-    }
-    NavDisplay(
+    Crossfade(
         modifier = modifier,
-        entryProvider = entryProvider {
+        targetState = navigator.backstack.isEmpty(),
+        label = "authenticated_loading",
+    ) { isEmpty ->
+        if (isEmpty) {
+            LoadingContent(modifier = Modifier.fillMaxSize())
+        } else {
+            NavDisplay(
+                modifier = Modifier.fillMaxSize(),
+                entryProvider = entryProvider {
             entry<AuthenticatedRoutes.NameSetup> {
                 NameSetupScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.PickRole)
+                        navigator.navigateTo(AuthenticatedRoutes.PickRole)
                     }
                 )
             }
             entry<AuthenticatedRoutes.PickRole> {
                 RolePickerScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.AddFlat)
+                        navigator.navigateTo(AuthenticatedRoutes.AddFlat)
                     }
                 )
             }
             entry<AuthenticatedRoutes.AddFlat> {
                 AddFlatScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.FlatAddress)
+                        navigator.navigateTo(AuthenticatedRoutes.FlatAddress)
                     }
                 )
             }
             entry<AuthenticatedRoutes.FlatAddress> {
                 FlatAddressScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.FlatRooms)
+                        navigator.navigateTo(AuthenticatedRoutes.FlatRooms)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    }
+                    onNavBack = navigator::popBack,
                 )
             }
             entry<AuthenticatedRoutes.FlatRooms> {
                 FlatRoomsScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.CheckFlatData)
+                        navigator.navigateTo(AuthenticatedRoutes.CheckFlatData)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    }
+                    onNavBack = navigator::popBack,
                 )
             }
             entry<AuthenticatedRoutes.CheckFlatData> {
                 FlatDataScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.FlatCreated)
+                        navigator.navigateTo(AuthenticatedRoutes.FlatCreated)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    },
+                    onNavBack = navigator::popBack,
                     onChangeAddress = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
                     },
                     onChangeFlatType = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
                     },
                     onChangeRooms = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatRooms)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.FlatRooms)
                     }
                 )
             }
             entry<AuthenticatedRoutes.FlatCreated> {
                 FlatCreatedScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.GuestInfo)
+                        navigator.navigateTo(AuthenticatedRoutes.GuestInfo)
                     }
                 )
             }
             entry<AuthenticatedRoutes.GuestInfo> {
                 GuestInfoScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.GuestInvitation)
+                        navigator.navigateTo(AuthenticatedRoutes.GuestInvitation)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    }
+                    onNavBack = navigator::popBack,
                 )
             }
             entry<AuthenticatedRoutes.GuestInvitation> {
                 GuestInvitationScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.CheckInSetup)
+                        navigator.navigateTo(AuthenticatedRoutes.CheckInSetup)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    }
+                    onNavBack = navigator::popBack,
                 )
             }
             entry<AuthenticatedRoutes.CheckInSetup> {
                 CheckInSetupScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.CheckInvitation)
+                        navigator.navigateTo(AuthenticatedRoutes.CheckInvitation)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    }
+                    onNavBack = navigator::popBack,
                 )
             }
             entry<AuthenticatedRoutes.CheckInvitation> {
                 CheckInvitationScreen(
                     onProceed = {
-                        backstack.add(AuthenticatedRoutes.InvitationSent)
+                        navigator.navigateTo(AuthenticatedRoutes.InvitationSent)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    },
+                    onNavBack = navigator::popBack,
                     onChangeDates = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.GuestInfo)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.GuestInfo)
                     },
                     onChangeSetup = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.CheckInSetup)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.CheckInSetup)
                     },
                     onChangeFlatInfo = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.FlatAddress)
                     },
                     onChangeGuestInfo = {
-                        backstack.popUpToOrAdd(AuthenticatedRoutes.GuestInfo)
+                        navigator.popUpToOrAdd(AuthenticatedRoutes.GuestInfo)
                     }
                 )
             }
@@ -169,44 +158,29 @@ internal fun HomesharingNavigation(
                     viewModel = koinViewModel {
                         parametersOf(route.flatId)
                     },
-                    onNavBack = {
-                        backstack.removeLastOrNull()
-                    }
+                    onNavBack = navigator::popBack,
                 )
             }
             entry<AuthenticatedRoutes.FlatList> {
                 FlatListScreen(
                     onNavigateToDetails = { id ->
-                        backstack.add(
+                        navigator.navigateTo(
                             AuthenticatedRoutes.FlatDetailed(id)
                         )
                     }
                 )
             }
         },
-        backStack = backstack,
-        onBack = {
-            if (backstack.size > 1) {
-                backstack.removeLastOrNull()
-            }
-        },
+        backStack = navigator.backstack,
+        onBack = navigator::popBack,
         transitionSpec = enterTransition,
         popTransitionSpec = exitTransition,
         predictivePopTransitionSpec = popExitTransition,
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator(),
-        )
-    )
-}
-
-private fun <T : Any> SnapshotStateList<T>.popUpToOrAdd(target: T) {
-    val index = indexOfLast { it == target }
-    if (index >= 0) {
-        while (size > index + 1) {
-            removeLastOrNull()
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
+                )
+            )
         }
-    } else {
-        add(target)
     }
 }

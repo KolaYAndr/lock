@@ -47,6 +47,8 @@ internal fun LoginAuthNavigation(
                     viewModel = koinViewModel {
                         parametersOf(route.email, route.resendAfter)
                     },
+                    onNewUser = {},
+                    onExistingUser = {},
                     onNavBack = {
                         backstack.removeLastOrNull()
                     },

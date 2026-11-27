@@ -22,15 +22,7 @@ internal class LoginOtpViewModel(
     resendAfter: Int,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        LoginOtpUiState(
-            email = email,
-            code = "",
-            isResendAvailable = resendAfter <= 0,
-            isLoading = false,
-            isError = false,
-        )
-    )
+    private val _uiState = MutableStateFlow(LoginOtpUiState.getInitial(email = email))
     val uiState = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<LoginOtpEvent>()
@@ -68,7 +60,12 @@ internal class LoginOtpViewModel(
             when (val response = authRepository.verifyOtp(email = email, code = _uiState.value.code)) {
                 is Response.Success -> {
                     _uiState.update { it.copy(isLoading = false) }
-                    _events.emit(LoginOtpEvent.Verified(isNewUser = response.data.isNewUser))
+                    val event = if (response.data.isNewUser) {
+                        LoginOtpEvent.NewUser
+                    } else {
+                        LoginOtpEvent.ExistingUser
+                    }
+                    _events.emit(event)
                 }
 
                 is Response.Failure -> {
@@ -126,7 +123,17 @@ internal data class LoginOtpUiState(
     val isResendAvailable: Boolean,
     val isLoading: Boolean,
     val isError: Boolean,
-)
+) {
+    companion object {
+        fun getInitial(email: String) = LoginOtpUiState(
+            email = email,
+            code = "",
+            isResendAvailable = false,
+            isLoading = false,
+            isError = false,
+        )
+    }
+}
 
 internal sealed interface LoginOtpIntent {
     data class CodeChanged(val value: String) : LoginOtpIntent
@@ -135,5 +142,6 @@ internal sealed interface LoginOtpIntent {
 }
 
 internal sealed interface LoginOtpEvent {
-    data class Verified(val isNewUser: Boolean) : LoginOtpEvent
+    data object NewUser : LoginOtpEvent
+    data object ExistingUser : LoginOtpEvent
 }

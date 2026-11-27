@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
 
 @Composable
-internal fun SplashContent(
+internal fun LoadingContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -31,8 +31,8 @@ internal fun SplashContent(
 
 @Preview
 @Composable
-private fun PreviewSplashContent() {
+private fun PreviewLoadingContent() {
     HomesharingTheme {
-        SplashContent()
+        LoadingContent()
     }
 }

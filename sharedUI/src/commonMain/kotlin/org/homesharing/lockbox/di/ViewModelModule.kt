@@ -13,12 +13,14 @@ import org.homesharing.lockbox.presentation.guest_invitation_flow.guest_info.Gue
 import org.homesharing.lockbox.presentation.guest_invitation_flow.invitation_details.GuestInvitationViewModel
 import org.homesharing.lockbox.presentation.login.LoginViewModel
 import org.homesharing.lockbox.presentation.login_otp.LoginOtpViewModel
+import org.homesharing.lockbox.presentation.navigation.authenticated.AuthenticatedNavigationViewModel
 import org.homesharing.lockbox.presentation.setup_profile_flow.name_setup.NameSetupViewModel
 import org.homesharing.lockbox.presentation.setup_profile_flow.role_picker.RolePickerViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
+    viewModelOf(::AuthenticatedNavigationViewModel)
     viewModelOf(::LoginViewModel)
     viewModelOf(::LoginOtpViewModel)
     viewModelOf(::NameSetupViewModel)

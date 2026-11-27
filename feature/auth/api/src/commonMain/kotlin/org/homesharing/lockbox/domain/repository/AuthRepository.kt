@@ -1,6 +1,8 @@
 package org.homesharing.lockbox.domain.repository
 
+import kotlinx.coroutines.flow.StateFlow
 import org.homesharing.lockbox.domain.api.response.Response
+import org.homesharing.lockbox.domain.model.auth.AuthEntryType
 import org.homesharing.lockbox.domain.model.otp.OtpResponse
 import org.homesharing.lockbox.domain.model.otp.OtpVerifyResult
 import org.homesharing.lockbox.domain.model.sessions.Sessions
@@ -96,6 +98,17 @@ interface AuthRepository {
      * @return [Response] с результатом операции
      */
     suspend fun closeOtherSessions(): Response<Unit>
+
+    /**
+     * Поток типа текущего входа (новый или существующий пользователь) после аутентификации
+     * в рамках текущей сессии, или `null` при холодном старте / после выхода.
+     */
+    val authEntryType: StateFlow<AuthEntryType?>
+
+    /**
+     * Сбрасывает сохранённый тип входа в `null`.
+     */
+    fun clearAuthEntryType()
 
     /**
      * Выполняет выход из текущей сессии и очищает локально сохранённые токены.

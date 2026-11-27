@@ -47,7 +47,8 @@ private const val OTP_LENGTH = 6
 @Composable
 internal fun LoginOtpScreen(
     viewModel: LoginOtpViewModel = koinViewModel(),
-    onVerified: (isNewUser: Boolean) -> Unit = {},
+    onNewUser: () -> Unit = {},
+    onExistingUser: () -> Unit = {},
     onNavBack: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,7 +58,8 @@ internal fun LoginOtpScreen(
         flow = viewModel.events,
         onFlowCollected = { event ->
             when (event) {
-                is LoginOtpEvent.Verified -> onVerified(event.isNewUser)
+                LoginOtpEvent.NewUser -> onNewUser()
+                LoginOtpEvent.ExistingUser -> onExistingUser()
             }
         },
     )
@@ -178,12 +180,8 @@ private fun LoginOtpScreen(
 private fun PreviewLoginOtpScreen() {
     HomesharingTheme {
         LoginOtpScreen(
-            state = LoginOtpUiState(
+            state = LoginOtpUiState.getInitial(
                 email = "you@example.com",
-                code = "123",
-                isResendAvailable = false,
-                isLoading = false,
-                isError = false,
             ),
             onIntent = {},
             onNavBack = {},
