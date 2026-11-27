@@ -128,7 +128,7 @@ private fun CheckInSetupScreen(
             style = HomesharingTheme.typography.bodyMedium,
             color = HomesharingTheme.colors.black,
             modifier = Modifier
-                .padding(top = 8.dp, bottom = 23.dp)
+                .padding(top = 8.dp, bottom = 28.dp)
                 .padding(horizontal = 16.dp)
         )
 
@@ -150,7 +150,7 @@ private fun CheckInSetupScreen(
                 onCheck = { onCheck(perk) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 11.dp),
+                    .padding(horizontal = 16.dp),
             )
         }
 
@@ -168,8 +168,8 @@ private fun CheckInSetupScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
-                .padding(top = 18.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 28.dp)
                 .heightIn(min = 96.dp)
         )
 
@@ -187,7 +187,7 @@ private fun CheckInSetupScreen(
             onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp, vertical = 19.dp)
+                .padding(horizontal = 16.dp, vertical = 24.dp)
                 .navigationBarsPadding()
         )
     }

@@ -114,7 +114,7 @@ private fun RolePickerScreen(
         AnimatedContent(
             targetState = pickedRole != null,
             contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(horizontal = 11.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) { hasPickedRole ->
             if (!hasPickedRole) {
                 HomesharingButton(

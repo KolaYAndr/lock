@@ -144,7 +144,7 @@ private fun GuestInfoScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .padding(top = 24.dp)
                 .focusRequester(emailFocusRequester)
         )
@@ -177,7 +177,7 @@ private fun GuestInfoScreen(
             trailingIconAction = { onChangeName("") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
                 .focusRequester(fullNameFocusRequester)
         )
@@ -188,7 +188,7 @@ private fun GuestInfoScreen(
             enabled = guestInfo.fullName.isNotEmpty() && guestInfo.email.isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .padding(top = 24.dp, bottom = 16.dp)
                 .navigationBarsPadding()
         )

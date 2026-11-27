@@ -124,7 +124,7 @@ private fun AddFlatScreen(
         AnimatedContent(
             targetState = addType != null,
             contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(horizontal = 11.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) { pickedType ->
             if (!pickedType) {
                 HomesharingButton(

@@ -15,21 +15,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.add_guest
-import lockbox.sharedui.generated.resources.ic_flat
 import lockbox.sharedui.generated.resources.flat_created
 import lockbox.sharedui.generated.resources.go_to_flat
+import lockbox.sharedui.generated.resources.ic_flat
 import lockbox.sharedui.generated.resources.now_you_can_add_guest
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButtonDefaults
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FlatCreatedScreen(
@@ -76,7 +76,7 @@ internal fun FlatCreatedScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
         )
 
         HomesharingButton(
@@ -86,7 +86,7 @@ internal fun FlatCreatedScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp, bottom = 16.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .navigationBarsPadding()
         )
     }

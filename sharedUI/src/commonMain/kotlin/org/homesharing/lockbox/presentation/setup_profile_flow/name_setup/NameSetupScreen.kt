@@ -28,13 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
-import lockbox.sharedui.generated.resources.ic_close
 import lockbox.sharedui.generated.resources.how_to_address_you
+import lockbox.sharedui.generated.resources.ic_close
 import lockbox.sharedui.generated.resources.placeholder_first_name
 import lockbox.sharedui.generated.resources.placeholder_last_name
-import lockbox.sharedui.generated.resources.tell_us_about_yourself
 import lockbox.sharedui.generated.resources.save_and_proceed
 import lockbox.sharedui.generated.resources.set_your_name
+import lockbox.sharedui.generated.resources.tell_us_about_yourself
 import org.homesharing.lockbox.presentation.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
@@ -118,8 +118,8 @@ private fun NameSetupScreen(
             onValueChange = { onIntent(NameSetupAction.FirstNameChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 19.dp)
-                .padding(horizontal = 11.dp)
+                .padding(top = 24.dp)
+                .padding(horizontal = 16.dp)
                 .focusRequester(firstNameFocusRequester),
             keyboardActions = KeyboardActions(
                 onNext = { lastNameFocusRequester.requestFocus() }
@@ -140,8 +140,8 @@ private fun NameSetupScreen(
             onValueChange = { onIntent(NameSetupAction.LastNameChanged(it)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 11.dp)
-                .padding(horizontal = 11.dp)
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
                 .focusRequester(lastNameFocusRequester),
             keyboardActions = KeyboardActions(
                 onDone = { onIntent(NameSetupAction.Proceed) }
@@ -163,8 +163,8 @@ private fun NameSetupScreen(
             enabled = nameSetupState.firstName.isNotBlank() && nameSetupState.lastName.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 11.dp)
-                .padding(horizontal = 11.dp)
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
         )
     }
 }

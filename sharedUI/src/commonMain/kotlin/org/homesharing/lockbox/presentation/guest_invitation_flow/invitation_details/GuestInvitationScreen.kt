@@ -140,8 +140,8 @@ private fun GuestInvitationScreen(
             onClearDates = { onIntent(GuestInvitationIntent.ClearDates) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
-                .padding(top = 19.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp)
         )
 
         val checkOutRequester = remember { FocusRequester() }
@@ -151,9 +151,9 @@ private fun GuestInvitationScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
-                .padding(top = 11.dp),
-            horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.Start),
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             HomesharingTimeInput(
@@ -199,8 +199,8 @@ private fun GuestInvitationScreen(
                 keyboardType = KeyboardType.Number,
             ),
             modifier = Modifier
-                .padding(horizontal = 11.dp)
-                .padding(top = 11.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
                 .fillMaxWidth()
                 .focusRequester(guestNumberRequester)
         )
@@ -218,8 +218,8 @@ private fun GuestInvitationScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
-                .padding(top = 11.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
                 .focusRequester(depositRequester)
         )
 
@@ -229,8 +229,8 @@ private fun GuestInvitationScreen(
             onClick = { onIntent(GuestInvitationIntent.ProceedClicked) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp)
-                .padding(top = 19.dp, bottom = 11.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp, bottom = 16.dp)
                 .navigationBarsPadding()
         )
     }

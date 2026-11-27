@@ -22,20 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
-import lockbox.sharedui.generated.resources.ic_calendar_days
-import lockbox.sharedui.generated.resources.ic_camera
 import lockbox.sharedui.generated.resources.check_in_report
 import lockbox.sharedui.generated.resources.check_in_setup
 import lockbox.sharedui.generated.resources.check_invitation
 import lockbox.sharedui.generated.resources.check_out_report
-import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.dates
 import lockbox.sharedui.generated.resources.dates_and_conditions
 import lockbox.sharedui.generated.resources.deposit
@@ -43,16 +38,19 @@ import lockbox.sharedui.generated.resources.flat
 import lockbox.sharedui.generated.resources.guest
 import lockbox.sharedui.generated.resources.guest_count
 import lockbox.sharedui.generated.resources.guest_invitation
+import lockbox.sharedui.generated.resources.ic_calendar_days
+import lockbox.sharedui.generated.resources.ic_camera
+import lockbox.sharedui.generated.resources.ic_chevron_left
 import lockbox.sharedui.generated.resources.ic_hand_coins
 import lockbox.sharedui.generated.resources.ic_house
 import lockbox.sharedui.generated.resources.ic_id_card
 import lockbox.sharedui.generated.resources.ic_mail
-import lockbox.sharedui.generated.resources.request_passport
-import lockbox.sharedui.generated.resources.send_invitation
-import lockbox.sharedui.generated.resources.sign_deal_online
 import lockbox.sharedui.generated.resources.ic_signature
 import lockbox.sharedui.generated.resources.ic_user
 import lockbox.sharedui.generated.resources.ic_users
+import lockbox.sharedui.generated.resources.request_passport
+import lockbox.sharedui.generated.resources.send_invitation
+import lockbox.sharedui.generated.resources.sign_deal_online
 import org.homesharing.lockbox.domain.model.check_in_setup.CheckInSetup
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.changeable.HomesharingChangeablePropertyContainer
@@ -60,7 +58,9 @@ import org.homesharing.lockbox.presentation.uikit.composable.chip.HomesharingChi
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
 import org.homesharing.lockbox.presentation.uikit.composable.property.HomesharingProperty
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -261,7 +261,7 @@ private fun CheckInvitationScreen(
             onValueChange = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(11.dp)
+                .padding(16.dp)
         )
 
         HomesharingButton(
@@ -269,7 +269,7 @@ private fun CheckInvitationScreen(
             onClick = onProceed,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(11.dp)
+                .padding(16.dp)
                 .navigationBarsPadding(),
         )
     }

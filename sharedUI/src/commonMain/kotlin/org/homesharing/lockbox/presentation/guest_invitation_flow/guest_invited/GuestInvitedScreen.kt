@@ -15,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,12 +23,14 @@ import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.create_one_more
 import lockbox.sharedui.generated.resources.go_to_check_in
 import lockbox.sharedui.generated.resources.go_to_main_screen
-import lockbox.sharedui.generated.resources.invitation_sent
 import lockbox.sharedui.generated.resources.ic_letter
+import lockbox.sharedui.generated.resources.invitation_sent
 import lockbox.sharedui.generated.resources.we_sent_link_to_guest_email
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButtonDefaults
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun GuestInvitedScreen() {
@@ -75,7 +75,7 @@ internal fun GuestInvitedScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 40.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
         )
 
         HomesharingButton(
@@ -85,7 +85,7 @@ internal fun GuestInvitedScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
         )
 
         HomesharingButton(
@@ -95,7 +95,7 @@ internal fun GuestInvitedScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp, bottom = 16.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .navigationBarsPadding()
         )
     }

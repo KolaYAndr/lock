@@ -272,7 +272,7 @@ private fun FlatRoomsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
         )
 
         HomesharingButton(
@@ -281,7 +281,7 @@ private fun FlatRoomsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, bottom = 16.dp)
-                .padding(horizontal = 11.dp)
+                .padding(horizontal = 16.dp)
                 .navigationBarsPadding(),
             style = HomesharingButtonDefaults.secondary()
         )

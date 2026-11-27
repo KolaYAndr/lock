@@ -32,6 +32,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.check_in_dates
 import lockbox.sharedui.generated.resources.check_in_dates_separated
@@ -40,16 +46,10 @@ import lockbox.sharedui.generated.resources.ic_close
 import org.homesharing.lockbox.presentation.uikit.composable.date_picker.HomesharingDatePicker
 import org.homesharing.lockbox.presentation.uikit.modifier.paddedBorder
 import org.homesharing.lockbox.presentation.uikit.theme.HomesharingTheme
-import kotlin.time.Clock
-import kotlin.time.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format.MonthNames
-import kotlinx.datetime.format.Padding
-import kotlinx.datetime.format.char
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 private val checkInDateFormat = LocalDate.Format {
     monthName(MonthNames.ENGLISH_ABBREVIATED)
@@ -245,7 +245,6 @@ internal fun HomesharingDateInput(
 
         AnimatedVisibility(
             visible = showDatePicker,
-            modifier = Modifier.padding(horizontal = 5.dp)
         ) {
             HomesharingDatePicker(
                 datePickerState = state,
@@ -264,7 +263,7 @@ private fun PreviewHomesharingDateInput() {
         HomesharingDateInput(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 11.dp),
+                .padding(horizontal = 16.dp),
             startDateMillis = startDateMillis,
             endDateMillis = endDateMillis,
             onDateRangeChanged = { start, end ->

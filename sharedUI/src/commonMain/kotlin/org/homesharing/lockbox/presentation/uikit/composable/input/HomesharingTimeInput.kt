@@ -147,7 +147,7 @@ private fun PreviewHomesharingTimeInput() {
             placeholderText = "Дата",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(11.dp)
+                .padding(16.dp)
         )
     }
 }

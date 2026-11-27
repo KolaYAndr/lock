@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,7 +94,8 @@ private fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        val focusRequester = remember { FocusRequester() }
+        val emailFocusRequester = remember { FocusRequester() }
+        val passwordFocusRequester = remember { FocusRequester() }
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -126,6 +128,10 @@ private fun LoginScreen(
                     .padding(top = 24.dp)
             )
 
+            LaunchedEffect(Unit) {
+                emailFocusRequester.requestFocus()
+            }
+
             HomesharingInput(
                 value = email,
                 onValueChange = onChangeEmail,
@@ -136,7 +142,7 @@ private fun LoginScreen(
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = {
-                        focusRequester.requestFocus()
+                        passwordFocusRequester.requestFocus()
                     }
                 ),
                 trailingIcon = painterResource(Res.drawable.ic_close),
@@ -145,9 +151,10 @@ private fun LoginScreen(
                 },
                 placeholderText = stringResource(Res.string.placeholder_email),
                 modifier = Modifier
-                    .padding(top = 19.dp)
-                    .padding(horizontal = 11.dp)
+                    .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
+                    .focusRequester(emailFocusRequester)
             )
 
             var isSeen by remember { mutableStateOf(true) }
@@ -174,9 +181,9 @@ private fun LoginScreen(
                 placeholderText = stringResource(Res.string.password_placeholder),
                 modifier = Modifier
                     .padding(top = 16.dp)
-                    .padding(horizontal = 11.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
-                    .focusRequester(focusRequester)
+                    .focusRequester(passwordFocusRequester)
             )
 
             HomesharingButton(
@@ -184,18 +191,18 @@ private fun LoginScreen(
                 onClick = signIn,
                 enabled = email.isNotBlank() && password.isNotBlank(),
                 modifier = Modifier
-                    .padding(top = 11.dp)
-                    .padding(horizontal = 11.dp)
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
             )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 19.dp)
+                    .padding(top = 24.dp)
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(15.dp)
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 HomesharingDivider(
                     modifier = Modifier.weight(1f)
@@ -218,8 +225,8 @@ private fun LoginScreen(
                 enabled = email.isNotBlank(),
                 onClick = getCode,
                 modifier = Modifier
-                    .padding(top = 11.dp)
-                    .padding(horizontal = 11.dp)
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
             )
         }
