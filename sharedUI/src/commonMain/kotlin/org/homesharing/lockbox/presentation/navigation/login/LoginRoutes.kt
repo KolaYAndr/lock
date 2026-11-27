@@ -7,4 +7,11 @@ import kotlinx.serialization.Serializable
 internal sealed interface LoginRoutes : NavKey {
     @Serializable
     data object Login : LoginRoutes
+
+    @Serializable
+    data class LoginOtp(
+        val email: String,
+        val resendAfter: Int,
+        val expiresIn: Int,
+    ) : LoginRoutes
 }

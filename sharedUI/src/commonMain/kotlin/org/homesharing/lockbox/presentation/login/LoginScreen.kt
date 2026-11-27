@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import lockbox.sharedui.generated.resources.Res
 import lockbox.sharedui.generated.resources.background
@@ -50,6 +51,7 @@ import lockbox.sharedui.generated.resources.or
 import lockbox.sharedui.generated.resources.password_placeholder
 import lockbox.sharedui.generated.resources.placeholder_email
 import lockbox.sharedui.generated.resources.sign_in
+import org.homesharing.lockbox.presentation.ActionOnSharedFlow
 import org.homesharing.lockbox.presentation.uikit.composable.button.HomesharingButton
 import org.homesharing.lockbox.presentation.uikit.composable.divider.HomesharingDivider
 import org.homesharing.lockbox.presentation.uikit.composable.input.HomesharingInput
@@ -61,8 +63,24 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
+    onNavigateToLoginOtp: (email: String, resendAfter: Int, expiresIn: Int) -> Unit = { _, _, _ -> },
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ActionOnSharedFlow(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        flow = viewModel.events,
+        onFlowCollected = { event ->
+            when (event) {
+                is LoginEvent.NavigateToLoginOtp -> onNavigateToLoginOtp(
+                    event.email,
+                    event.resendAfter,
+                    event.expiresIn,
+                )
+            }
+        },
+    )
+
     LoginScreen(
         modifier = Modifier.fillMaxSize(),
         email = state.email,
@@ -237,6 +255,13 @@ private fun LoginScreen(
 @Composable
 private fun PreviewLoginScreen() {
     HomesharingTheme {
-        LoginScreen()
+        LoginScreen(
+            email = "",
+            password = "",
+            onChangeEmail = {},
+            onChangePassword = {},
+            signIn = {},
+            getCode = {},
+        )
     }
 }

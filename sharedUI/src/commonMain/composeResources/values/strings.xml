@@ -104,4 +104,7 @@
     <string name="retry">Повторить</string>
     <string name="search_placeholder">Поиск</string>
     <string name="all_filter">Все</string>
+    <string name="check_your_email">Проверьте почту</string>
+    <string name="otp_sent_to">Мы отправили 6-значный код на\n%1$s</string>
+    <string name="check_spam_folder">Проверьте папку «Спам», если письмо не пришло.</string>
 </resources>

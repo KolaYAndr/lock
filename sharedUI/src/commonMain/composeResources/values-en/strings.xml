@@ -102,4 +102,7 @@
     <string name="retry">Retry</string>
     <string name="search_placeholder">Search</string>
     <string name="all_filter">All</string>
+    <string name="check_your_email">Check your email</string>
+    <string name="otp_sent_to">We sent a 6-digit code to\n%1$s</string>
+    <string name="check_spam_folder">Check your Spam folder if you haven\'t received the email.</string>
 </resources>
